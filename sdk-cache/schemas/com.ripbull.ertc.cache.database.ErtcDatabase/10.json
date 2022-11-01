@@ -1,0 +1,1709 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 10,
+    "identityHash": "0e929f9d6c4d583d1cac2d241b898dc6",
+    "entities": [
+      {
+        "tableName": "single_chat",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `createdAt` INTEGER, `message` TEXT, `read` INTEGER, `type` TEXT, `sender_id` TEXT, `thread_id` TEXT, `next_msg_id` TEXT, `last_msg_id` TEXT, `status` TEXT, `msg_type` TEXT, `msg_unique_id` TEXT, `media_path` TEXT, `media_thumbnail` TEXT, `contact_name` TEXT, `phone_contact_list` TEXT, `email_contact_list` TEXT, `isStarredChat` TEXT, `gif_path` TEXT, `media_name` TEXT, `local_media_path` TEXT, `download_status` TEXT, `send_to_channel` INTEGER, `parent_msg_id` TEXT, `parent_msg` TEXT, `event_type` TEXT, `delete_type` TEXT, `forward_msg_unique_id` TEXT, `is_forward_message` INTEGER, `update_type` TEXT, `client_created_at` INTEGER, `custom_data` TEXT, `is_followed` INTEGER, `chat_report_id` TEXT, `report_type` TEXT, `reason` TEXT, `mentions` TEXT, `mentioned_users` TEXT, `address` TEXT, `latitude` REAL, `longitude` REAL, PRIMARY KEY(`id`), FOREIGN KEY(`thread_id`) REFERENCES `thread`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "read",
+            "columnName": "read",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "senderAppUserId",
+            "columnName": "sender_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threadId",
+            "columnName": "thread_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nextMessageId",
+            "columnName": "next_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastMessageId",
+            "columnName": "last_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "msgType",
+            "columnName": "msg_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "msgUniqueId",
+            "columnName": "msg_unique_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediaPath",
+            "columnName": "media_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediaThumbnail",
+            "columnName": "media_thumbnail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contactName",
+            "columnName": "contact_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phoneContactList",
+            "columnName": "phone_contact_list",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "emailContactList",
+            "columnName": "email_contact_list",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isStarredChat",
+            "columnName": "isStarredChat",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gifPath",
+            "columnName": "gif_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediaName",
+            "columnName": "media_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localMediaPath",
+            "columnName": "local_media_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "downloadStatus",
+            "columnName": "download_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sendToChannel",
+            "columnName": "send_to_channel",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parentMsgId",
+            "columnName": "parent_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parentMsg",
+            "columnName": "parent_msg",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chatEventType",
+            "columnName": "event_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deleteType",
+            "columnName": "delete_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "forwardMsgUniqueId",
+            "columnName": "forward_msg_unique_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isForwardMessage",
+            "columnName": "is_forward_message",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updateType",
+            "columnName": "update_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "clientCreatedAt",
+            "columnName": "client_created_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "customData",
+            "columnName": "custom_data",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isFollowed",
+            "columnName": "is_followed",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chatReportId",
+            "columnName": "chat_report_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reportType",
+            "columnName": "report_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reason",
+            "columnName": "reason",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mentions",
+            "columnName": "mentions",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mentionedUsers",
+            "columnName": "mentioned_users",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_single_chat_id_thread_id",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "thread_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_single_chat_id_thread_id` ON `${TABLE_NAME}` (`id`, `thread_id`)"
+          },
+          {
+            "name": "index_single_chat_msg_unique_id_thread_id",
+            "unique": true,
+            "columnNames": [
+              "msg_unique_id",
+              "thread_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_single_chat_msg_unique_id_thread_id` ON `${TABLE_NAME}` (`msg_unique_id`, `thread_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "thread",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "thread_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "single_chat_meta_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `message_id` TEXT, `key` TEXT, `value` TEXT, FOREIGN KEY(`message_id`) REFERENCES `thread`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageId",
+            "columnName": "message_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_single_chat_meta_data_message_id",
+            "unique": false,
+            "columnNames": [
+              "message_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_single_chat_meta_data_message_id` ON `${TABLE_NAME}` (`message_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "thread",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "message_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "tenant",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `api_key` TEXT NOT NULL, `name_space` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apiKey",
+            "columnName": "api_key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namespace",
+            "columnName": "name_space",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "tenant_config",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`tenant_id` TEXT NOT NULL, `config_key` TEXT NOT NULL, `config_value` TEXT NOT NULL, PRIMARY KEY(`tenant_id`, `config_key`), FOREIGN KEY(`tenant_id`) REFERENCES `tenant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "config_key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "config_value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "tenant_id",
+            "config_key"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "tenant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `tenant_id` TEXT, `name` TEXT, `app_state` TEXT, `login_type` TEXT, `profile_pic` TEXT, `profile_thumb` TEXT, `profile_status` TEXT, `login_timestamp` INTEGER, `user_chat_id` TEXT, `availability_status` TEXT, `blocked_status` TEXT, `notification_settings` TEXT, `valid_till` INTEGER, `valid_till_value` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`tenant_id`) REFERENCES `tenant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "appState",
+            "columnName": "app_state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loginType",
+            "columnName": "login_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePic",
+            "columnName": "profile_pic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profileThumb",
+            "columnName": "profile_thumb",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profileStatus",
+            "columnName": "profile_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loginTimestamp",
+            "columnName": "login_timestamp",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userChatId",
+            "columnName": "user_chat_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "availabilityStatus",
+            "columnName": "availability_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "blockedStatus",
+            "columnName": "blocked_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "notificationSettings",
+            "columnName": "notification_settings",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "validTill",
+            "columnName": "valid_till",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "validTillValue",
+            "columnName": "valid_till_value",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_user_id_tenant_id",
+            "unique": false,
+            "columnNames": [
+              "id",
+              "tenant_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_id_tenant_id` ON `${TABLE_NAME}` (`id`, `tenant_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tenant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "group",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`group_id` TEXT NOT NULL, `tenant_id` TEXT NOT NULL, `thread_id` TEXT NOT NULL, `group_type` TEXT, `name` TEXT, `login_type` TEXT, `group_pic` TEXT, `group_thumb` TEXT, `group_desc` TEXT, `login_timestamp` INTEGER NOT NULL, `group_users` TEXT, `joined` INTEGER, `participants_count` INTEGER, `group_status` TEXT, PRIMARY KEY(`group_id`), FOREIGN KEY(`tenant_id`) REFERENCES `tenant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "groupId",
+            "columnName": "group_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "threadId",
+            "columnName": "thread_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "groupType",
+            "columnName": "group_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loginType",
+            "columnName": "login_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupPic",
+            "columnName": "group_pic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupThumb",
+            "columnName": "group_thumb",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupDesc",
+            "columnName": "group_desc",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "loginTimestamp",
+            "columnName": "login_timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "groupUsers",
+            "columnName": "group_users",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "joined",
+            "columnName": "joined",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "participantsCount",
+            "columnName": "participants_count",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groupStatus",
+            "columnName": "group_status",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "group_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_group_group_id",
+            "unique": false,
+            "columnNames": [
+              "group_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_group_group_id` ON `${TABLE_NAME}` (`group_id`)"
+          },
+          {
+            "name": "index_group_tenant_id",
+            "unique": false,
+            "columnNames": [
+              "tenant_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_group_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tenant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "group_metadata",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `group_id` TEXT NOT NULL, `key` TEXT NOT NULL, `value` TEXT NOT NULL, FOREIGN KEY(`group_id`) REFERENCES `group`(`group_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "groupId",
+            "columnName": "group_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_group_metadata_group_id",
+            "unique": false,
+            "columnNames": [
+              "group_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_group_metadata_group_id` ON `${TABLE_NAME}` (`group_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "group",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "group_id"
+            ],
+            "referencedColumns": [
+              "group_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "user_metadata",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` TEXT, `key` TEXT, `value` TEXT, FOREIGN KEY(`user_id`) REFERENCES `user`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_user_metadata_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_metadata_user_id` ON `${TABLE_NAME}` (`user_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "user",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "user_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "thread",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `tenant_id` TEXT NOT NULL, `sender_chat_id` TEXT NOT NULL, `recipient_chat_id` TEXT NOT NULL, `message_count` INTEGER NOT NULL, `read` INTEGER NOT NULL, `unread_count` INTEGER NOT NULL, `creation_date` INTEGER NOT NULL, `has_deleted` INTEGER NOT NULL, `creator_tenant_id` TEXT NOT NULL, `creator_user_id` TEXT NOT NULL, `sender_user_id` TEXT NOT NULL, `recipient_user_id` TEXT NOT NULL, `updated_at` INTEGER NOT NULL, `notification_settings` TEXT, `valid_till` INTEGER NOT NULL, `valid_till_value` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`tenant_id`) REFERENCES `tenant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderChatId",
+            "columnName": "sender_chat_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipientChatId",
+            "columnName": "recipient_chat_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageCount",
+            "columnName": "message_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "read",
+            "columnName": "read",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unReadCount",
+            "columnName": "unread_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "creationDate",
+            "columnName": "creation_date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasDeleted",
+            "columnName": "has_deleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "creatorTenantId",
+            "columnName": "creator_tenant_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "creatorUserId",
+            "columnName": "creator_user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderUserId",
+            "columnName": "sender_user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipientUserId",
+            "columnName": "recipient_user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notificationSettings",
+            "columnName": "notification_settings",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "validTill",
+            "columnName": "valid_till",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "validTillValue",
+            "columnName": "valid_till_value",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_thread_tenant_id",
+            "unique": false,
+            "columnNames": [
+              "tenant_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_thread_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tenant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "thread_user_link",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sender_id` TEXT NOT NULL, `recipient_id` TEXT NOT NULL, `thread_id` TEXT NOT NULL, FOREIGN KEY(`thread_id`) REFERENCES `thread`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderId",
+            "columnName": "sender_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recipientId",
+            "columnName": "recipient_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "threadId",
+            "columnName": "thread_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_thread_user_link_thread_id",
+            "unique": false,
+            "columnNames": [
+              "thread_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_thread_user_link_thread_id` ON `${TABLE_NAME}` (`thread_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "thread",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "thread_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "thread_meta_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thread_id` TEXT NOT NULL, `key` TEXT NOT NULL, `value` TEXT NOT NULL, FOREIGN KEY(`thread_id`) REFERENCES `thread`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "threadId",
+            "columnName": "thread_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "key",
+            "columnName": "key",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_thread_meta_data_thread_id",
+            "unique": false,
+            "columnNames": [
+              "thread_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_thread_meta_data_thread_id` ON `${TABLE_NAME}` (`thread_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "thread",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "thread_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "eKeys",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `keyId` TEXT, `deviceId` TEXT, `publicKey` TEXT, `privateKey` TEXT, `ertcUserId` TEXT, `tenant_id` TEXT, `time` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "keyId",
+            "columnName": "keyId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deviceId",
+            "columnName": "deviceId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "publicKey",
+            "columnName": "publicKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "privateKey",
+            "columnName": "privateKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ertcUserId",
+            "columnName": "ertcUserId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_eKeys_keyId_deviceId_ertcUserId",
+            "unique": true,
+            "columnNames": [
+              "keyId",
+              "deviceId",
+              "ertcUserId"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_eKeys_keyId_deviceId_ertcUserId` ON `${TABLE_NAME}` (`keyId`, `deviceId`, `ertcUserId`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "chat_thread",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `createdAt` INTEGER, `message` TEXT, `read` INTEGER, `type` TEXT, `sender_id` TEXT, `thread_id` TEXT, `next_msg_id` TEXT, `last_msg_id` TEXT, `status` TEXT, `msg_type` TEXT, `msg_unique_id` TEXT, `media_path` TEXT, `media_thumbnail` TEXT, `media_name` TEXT, `local_media_path` TEXT, `download_status` TEXT, `contact_name` TEXT, `phone_contact_list` TEXT, `email_contact_list` TEXT, `isStarredChat` TEXT, `gif_path` TEXT, `send_to_channel` INTEGER, `delete_type` TEXT, `parent_msg_id` TEXT, `update_type` TEXT, `client_created_at` INTEGER, `custom_data` TEXT, `chat_report_id` TEXT, `report_type` TEXT, `reason` TEXT, `mentions` TEXT, `mentioned_users` TEXT, `address` TEXT, `latitude` REAL, `longitude` REAL, PRIMARY KEY(`id`), FOREIGN KEY(`parent_msg_id`) REFERENCES `single_chat`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "read",
+            "columnName": "read",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "senderAppUserId",
+            "columnName": "sender_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "threadId",
+            "columnName": "thread_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nextMessageId",
+            "columnName": "next_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastMessageId",
+            "columnName": "last_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "msgType",
+            "columnName": "msg_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "msgUniqueId",
+            "columnName": "msg_unique_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediaPath",
+            "columnName": "media_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediaThumbnail",
+            "columnName": "media_thumbnail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mediaName",
+            "columnName": "media_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "localMediaPath",
+            "columnName": "local_media_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "downloadStatus",
+            "columnName": "download_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contactName",
+            "columnName": "contact_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phoneContactList",
+            "columnName": "phone_contact_list",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "emailContactList",
+            "columnName": "email_contact_list",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isStarredChat",
+            "columnName": "isStarredChat",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gifPath",
+            "columnName": "gif_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sendToChannel",
+            "columnName": "send_to_channel",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deleteType",
+            "columnName": "delete_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parentMsgId",
+            "columnName": "parent_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updateType",
+            "columnName": "update_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "clientCreatedAt",
+            "columnName": "client_created_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "customData",
+            "columnName": "custom_data",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chatReportId",
+            "columnName": "chat_report_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reportType",
+            "columnName": "report_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reason",
+            "columnName": "reason",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mentions",
+            "columnName": "mentions",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mentionedUsers",
+            "columnName": "mentioned_users",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_chat_thread_id_parent_msg_id",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "parent_msg_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_chat_thread_id_parent_msg_id` ON `${TABLE_NAME}` (`id`, `parent_msg_id`)"
+          },
+          {
+            "name": "index_chat_thread_msg_unique_id_thread_id",
+            "unique": true,
+            "columnNames": [
+              "msg_unique_id",
+              "thread_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_chat_thread_msg_unique_id_thread_id` ON `${TABLE_NAME}` (`msg_unique_id`, `thread_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "single_chat",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "parent_msg_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "download",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `url` TEXT, `etag` TEXT, `dir_path` TEXT, `file_name` TEXT, `msg_id` TEXT, `total_bytes` INTEGER, `downloaded_bytes` INTEGER, `last_modified_at` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eTag",
+            "columnName": "etag",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dirPath",
+            "columnName": "dir_path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileName",
+            "columnName": "file_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "msgId",
+            "columnName": "msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalBytes",
+            "columnName": "total_bytes",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "downloadedBytes",
+            "columnName": "downloaded_bytes",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastModifiedAt",
+            "columnName": "last_modified_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "chat_reaction",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `unicode` TEXT NOT NULL, `thread_id` TEXT, `user_chat_id` TEXT, `chat_msg_id` TEXT, `chat_thread_msg_id` TEXT, `total_count` INTEGER, FOREIGN KEY(`chat_msg_id`) REFERENCES `single_chat`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`chat_thread_msg_id`) REFERENCES `chat_thread`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unicode",
+            "columnName": "unicode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "threadId",
+            "columnName": "thread_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userChatId",
+            "columnName": "user_chat_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chatMsgId",
+            "columnName": "chat_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "chatThreadMsgId",
+            "columnName": "chat_thread_msg_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalCount",
+            "columnName": "total_count",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_chat_reaction_id_chat_msg_id_chat_thread_msg_id",
+            "unique": true,
+            "columnNames": [
+              "id",
+              "chat_msg_id",
+              "chat_thread_msg_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_chat_reaction_id_chat_msg_id_chat_thread_msg_id` ON `${TABLE_NAME}` (`id`, `chat_msg_id`, `chat_thread_msg_id`)"
+          },
+          {
+            "name": "index_chat_reaction_chat_msg_id_unicode_user_chat_id",
+            "unique": true,
+            "columnNames": [
+              "chat_msg_id",
+              "unicode",
+              "user_chat_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_chat_reaction_chat_msg_id_unicode_user_chat_id` ON `${TABLE_NAME}` (`chat_msg_id`, `unicode`, `user_chat_id`)"
+          },
+          {
+            "name": "index_chat_reaction_chat_thread_msg_id_unicode_user_chat_id",
+            "unique": true,
+            "columnNames": [
+              "chat_thread_msg_id",
+              "unicode",
+              "user_chat_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_chat_reaction_chat_thread_msg_id_unicode_user_chat_id` ON `${TABLE_NAME}` (`chat_thread_msg_id`, `unicode`, `user_chat_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "single_chat",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "chat_msg_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "chat_thread",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "chat_thread_msg_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "domain_filter",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`domain` TEXT NOT NULL, `tenant_id` TEXT, `action_type` TEXT, PRIMARY KEY(`domain`), FOREIGN KEY(`tenant_id`) REFERENCES `tenant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "domain",
+            "columnName": "domain",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actionType",
+            "columnName": "action_type",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "domain"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_domain_filter_tenant_id",
+            "unique": false,
+            "columnNames": [
+              "tenant_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_domain_filter_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tenant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "profanity_filter",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`keyword` TEXT NOT NULL, `tenant_id` TEXT, `regex` TEXT, `action_type` TEXT, PRIMARY KEY(`keyword`), FOREIGN KEY(`tenant_id`) REFERENCES `tenant`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "keyword",
+            "columnName": "keyword",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tenantId",
+            "columnName": "tenant_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "regex",
+            "columnName": "regex",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actionType",
+            "columnName": "action_type",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "keyword"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_profanity_filter_tenant_id",
+            "unique": false,
+            "columnNames": [
+              "tenant_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_profanity_filter_tenant_id` ON `${TABLE_NAME}` (`tenant_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "tenant",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "tenant_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0e929f9d6c4d583d1cac2d241b898dc6')"
+    ]
+  }
+}

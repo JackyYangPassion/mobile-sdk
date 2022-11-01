@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "message": "Success.",
+  "result": {
+    "chats": [
+      {
+        "msgUniqueId": "5c5dcfec2ac43bc9626fb9eb",
+        "replyThreadFeatureData": {
+          "baseMsgUniqueId": "5e3841dea49618da0b379480",
+          "replyMsgConfig": 1
+        }
+      }
+    ]
+  },
+  "errorCode": "E00000"
+}

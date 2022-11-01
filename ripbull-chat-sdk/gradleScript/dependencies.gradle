@@ -1,0 +1,77 @@
+import dependencies.*
+
+apply from: Deps.common
+
+dependencies {
+
+  //RxJava
+  implementation Deps.RxJava.rxAndroid
+  implementation Deps.RxJava.rxjava2
+  implementation Deps.RxJava.rxAndroid
+  implementation Deps.RxJava.rxrelay2
+
+  //Paging
+  implementation Deps.Paging.runtime
+  implementation Deps.Paging.rxjava2
+  testImplementation Deps.Paging.testCommon
+
+  implementation Deps.Retrofit2.retrofit
+  /*//Retrofit
+  implementation Deps.OkHttp3.loggingInterceptor
+  implementation Deps.Retrofit2.adapterRxjava2
+  implementation Deps.Retrofit2.converterGson
+  implementation Deps.Retrofit2.retrofit*/
+
+  //FCM
+  //implementation Deps.Firebase.firebase_core
+  implementation Deps.Firebase.firebase_messaging
+
+  //Emoji Decoder
+  implementation Deps.External.emojiDecoder
+
+  //StreamAPI(java 8 API for lower version than 23)
+  implementation Deps.External.streamAPI
+
+  // room
+  implementation Deps.Room.rxjava2
+  implementation Deps.Room.runtime
+  kapt Deps.Room.annotationProcessor
+
+  implementation Deps.Gson.gson
+
+
+//  implementation project(Deps.Module.newRelic)
+
+  // Unblock to development
+  implementation project(':sdk-cache')
+  implementation project(':sdk-remote')
+  implementation project(':sdk-mqtt')
+  implementation project(':sdk-downloader')
+
+//  compile(name:'sdk-remote-debug', ext:'aar')
+//  compile(name:'sdk-cache-debug', ext:'aar')
+//  compile(name:'sdk-mqtt-debug', ext:'aar')
+//  compile(name:'sdk-downloader-debug', ext:'aar')
+  //implementation fileTree(include: ['*.aar'], dir: 'libs')
+  //implementation files('libs/sdkremote.aar')
+  //implementation Deps.Module.remote
+  //implementation Deps.Module.mqtt
+  //implementation Deps.Module.cache
+  //implementation Deps.Module.downloader
+  //implementation files('/Users/dinesh3.kumar/Projects/eRTC-Android/ripbull-chat-sdk/libs/sdkremote.aar')
+
+  //Logging
+  implementation Deps.Logging.timber
+
+  implementation Deps.KotlinXLibs.kotlinAndroid
+
+  /*implementation Deps.Socket.socket_io_client, {
+    // excluding org.json which is provided by Android
+    exclude group: 'org.json', module: 'json'
+  }*/
+
+
+  implementation Deps.AndroidXLibs.localbroadcastmanager
+
+  testImplementation Deps.Test.mmockk
+}

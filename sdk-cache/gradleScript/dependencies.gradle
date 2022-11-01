@@ -1,0 +1,17 @@
+import dependencies.*;
+
+apply from: Deps.common
+
+dependencies {
+
+  // room
+  implementation Deps.Room.rxjava2
+  implementation Deps.Room.runtime
+  kapt "org.xerial:sqlite-jdbc:3.36.0"
+  kapt Deps.Room.annotationProcessor
+
+  implementation Deps.Gson.gson
+  implementation Deps.AndroidXLibs.annotationProcessor
+
+  androidTestImplementation Deps.Test.android_test_room
+}

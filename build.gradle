@@ -1,0 +1,127 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext.kotlin_version = '1.6.0'
+    ext.jacocoVersion = '0.8.5'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.3.4'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+        classpath 'com.google.firebase:perf-plugin:1.3.4'
+        classpath "org.jacoco:org.jacoco.core:$jacocoVersion"
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.18.0'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+plugins {
+  id "io.gitlab.arturbosch.detekt" version "1.15.0-RC1"
+}
+def detektVersion = "1.15.0-RC1"
+
+allprojects {
+    apply plugin: 'com.jfrog.artifactory'
+    apply plugin: 'maven-publish'
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://artifactory.ripbullertc.com/artifactory/ext-sdk-new/"
+        }
+        flatDir {
+            dirs 'libs'
+            dirs project(':ripbull-chat-sdk').file('libs')
+        }
+        maven { url "https://jitpack.io" }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+/*task codeCoverageReport(type: JacocoReport, dependsOn: 'testStagingDebugUnitTest') {
+  group = "Reporting"
+  description = "Generate Jacoco coverage reports after running tests."
+  reports {
+    xml.enabled = true
+    html.enabled = true
+  }
+  classDirectories = fileTree(
+      dir: 'build/intermediates/classes/staging/debug/com/ripbull/ertc',
+      excludes: androidExclusion
+  )
+  sourceDirectories = files('src/main/java/com/ripbull/ertc')
+  executionData = files('build/jacoco/testStagingDebugUnitTest.exec')
+}
+
+task getCoverage(type: Exec, dependsOn: 'codeCoverageReport') {
+  group = "Reporting"
+  commandLine "open", "$buildDir/reports/jacoco/codeCoverageReport/html/index.html"
+}*/
+
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+dependencies {
+    detekt "io.gitlab.arturbosch.detekt:detekt-cli:$detektVersion"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
+}
+
+detekt {
+    toolVersion = "$detektVersion"
+    input = files("${project.rootDir}/app/src/main/java",
+            "${project.rootDir}/coreSdk/src/main/java",
+            "${project.rootDir}/coreAttachment/src/main/java",
+            "${project.rootDir}/permissions/src/main/java")
+    parallel = false
+    config = files("${project.rootDir}/detekt-config.yml")
+    buildUponDefaultConfig = false
+    //baseline = file("${project.rootDir}/baseline.xml")
+    autoCorrect = true
+    failFast = false
+    disableDefaultRuleSets = false
+    debug = false
+    ignoreFailures = false
+    ignoredBuildTypes = ["release"]
+    ignoredFlavors = ["prod"]
+    ignoredVariants = ["prodRelease"]
+    reports {
+        xml {
+            enabled = true
+            destination = file("${project.rootDir}/build/report/detekt/detekt.xml")
+        }
+        html {
+            enabled = true
+            destination = file("${project.rootDir}/build/report/detekt/detekt.html")
+        }
+    }
+}
+
+artifactory {
+    contextUrl = "$context_url"
+    publish {
+        repository {
+            // The Artifactory repository key to publish to
+            repoKey = "$repoKey"
+            username = "$artifactory_username"
+            password = "$artifactory_password"
+        }
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('aar')
+            publishArtifacts = true
+
+            // Properties to be attached to the published artifacts.
+            properties = ['qa.level': 'basic', 'dev.team': 'core']
+            // Publish generated POM files to Artifactory (true by default)
+            publishPom = true
+        }
+    }
+}
+

@@ -1,0 +1,10 @@
+import dependencies.*;
+
+apply from: Deps.common
+
+dependencies {
+  // room
+  implementation Deps.Mqtt.client
+  implementation Deps.AndroidXLibs.localbroadcastmanager
+  implementation Deps.AndroidXLibs.annotationProcessor
+}

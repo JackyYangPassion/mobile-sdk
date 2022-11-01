@@ -1,0 +1,6 @@
+include ':ripbull-chat-sdk'
+include ':sdk-remote'
+include ':sdk-mqtt'
+include ':sdk-cache'
+include ':sdk-downloader'
+//include ':app-sdk-testing'

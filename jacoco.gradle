@@ -1,0 +1,170 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "$jacocoVersion"
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    group "Reporting"
+    description "Generate Jacoco coverage reports."
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.destination file("${rootProject.buildDir}/coverage-report")
+    }
+
+    def javaClasses = []
+    def kotlinClasses = []
+    def javaSrc = []
+    def kotlinSrc = []
+    def execution = []
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+
+    rootProject.subprojects.each { proj ->
+        javaClasses   << fileTree(dir: "$proj.buildDir/intermediates/javac/debug", excludes: fileFilter)
+        kotlinClasses << fileTree(dir: "$proj.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+        javaSrc       << "$proj.projectDir/src/main/java"
+        kotlinSrc     << "$proj.projectDir/src/main/kotlin"
+        execution     << fileTree(dir: proj.buildDir,
+                includes: ['jacoco/testDebugUnitTest.exec',
+                           'outputs/code_coverage/debugAndroidTest/connected/**/*.ec'])
+    }
+
+    sourceDirectories.setFrom files([javaSrc, kotlinSrc])
+    classDirectories.setFrom files([javaClasses, kotlinClasses])
+
+    print execution
+
+    executionData.setFrom files(execution)
+
+    doLast() {
+        print "file://${reports.html.destination}/index.html"
+    }
+}
+
+
+//UI Test Coverage filtered (we need to run unit tests of App to be able to use Jacoco to filter)
+task createUiTestReport(type: JacocoReport, dependsOn: [':app:testProdAutomationTestUnitTest', ':app:createAutomationTestAndroidTestCoverageReport']) {
+    reports {
+        html.enabled = true
+    }
+    def fileFilter = [
+            //Android stuff
+            '**/R.class',
+            '**/BR.class',
+            '**/R$*.class',
+            '**/BR$*.class',
+            '**/BuildConfig.*',
+            'android/**/*.*',
+            //Data Binding
+            '**/*databinding',
+            '**/*binders',
+            '**/*layouts',
+            '**/Manifest*.*',
+            //Test mocks
+            '**/*Mock.*',
+            '**/*Test*.*'
+    ]
+//To support Java coverage on Unit tests
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/automationTest", excludes: fileFilter)
+    //To support Kotlin coverage on Unit tests
+    def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/automationTest", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+    def debugSrc = "${project.projectDir}/src/debug/java"
+    sourceDirectories.setFrom files([mainSrc], [debugSrc])
+    def appAndroidTests = fileTree(dir: "${buildDir}/outputs/code-coverage/connected/", includes: ["*.ec"])
+    classDirectories.setFrom files([debugTree], [kotlinDebugTree])
+    executionData.setFrom files("${buildDir}/jacoco/testProdAutomationTestUnitTest.exec", appAndroidTests)
+}
+//Global Test Coverage
+task createGlobalTestReport(type: JacocoReport,
+        dependsOn: [':app:createUiTestReport', ':sdk:createUnitTestReport']) {
+    reports {
+        html.enabled = true
+    }
+    def fileFilter = [
+            //Android stuff
+            '**/R.class',
+            '**/BR.class',
+            '**/R$*.class',
+            '**/BR$*.class',
+            '**/BuildConfig.*',
+            'android/**/*.*',
+            //Data Binding
+            '**/*databinding',
+            '**/*binders',
+            '**/*layouts',
+            '**/Manifest*.*',
+            //Test mocks
+            '**/*Mock.*',
+            '**/*Test*.*'
+    ]
+//To support Java coverage on Unit tests
+    def debugAppTree = fileTree(dir: "${buildDir}/intermediates/classes/automationTest", excludes: fileFilter)
+    //To support Kotlin coverage on Unit tests
+    def debugKotlinAppTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/automationTest", excludes: fileFilter)
+    def debugSdkTree = fileTree(dir: "../sdk/build/intermediates/classes/automationTest", excludes: fileFilter)
+    def debugKotlinSdkTree = fileTree(dir: "../sdk/build/tmp/kotlin-classes/automationTest", excludes: fileFilter)
+    def mainAppSrc = "${project.projectDir}/src/main/java"
+    def debugAppSrc = "${project.projectDir}/src/debug/java"
+    def mainSdkSrc = "../sdk/src/main/java"
+    def debugSdkSrc = "../sdk/src/debug/java"
+    sourceDirectories.setFrom files([mainAppSrc, debugAppSrc,
+                               mainSdkSrc, debugSdkSrc])
+    classDirectories.setFrom files([debugAppTree, debugSdkTree,
+                              debugKotlinAppTree, debugKotlinSdkTree])
+    def appAndroidTests = fileTree(dir: "${buildDir}/outputs/code-coverage/connected/", includes: ["*.ec"])
+    executionData.setFrom files("${buildDir}/jacoco/testProdAutomationTestUnitTest.exec"
+            , "../sdk/build/jacoco/testProdAutomationTestUnitTest.exec"
+            , appAndroidTests
+    )
+}
+
+//Unit Test Coverage filtered
+task createUnitTestReport(type: JacocoReport,
+        dependsOn: [':app:testProdAutomationTestUnitTest',
+                    ':ripbull-chat-sdk:testProdAutomationTestUnitTest',
+                    ':sdk-downloader:testAutomationTestUnitTest',
+                    ':sdk-mqtt:testAutomationTestUnitTest',
+                    ':sdk-remote:testAutomationTestUnitTest',
+                    ':sdk-cache:testAutomationTestUnitTest']) {
+    reports {
+        html {
+            enabled = true
+            destination = file("${project.rootDir}/build/report/jacoco/unit-test-coverage.html")
+        }
+    }
+    def fileFilter = [
+            //Android stuff
+            '**/R.class',
+            '**/BR.class',
+            '**/R$*.class',
+            '**/BR$*.class',
+            '**/BuildConfig.*',
+            'android/**/*.*',
+            '**/Manifest*.*',
+            //Data Binding
+            '**/*databinding/**/*.*',
+            //Test mocks
+            '**/*Mock.*',
+            '**/*Test*.*',
+            //Data classes (without any logic)
+            "**/services/**/model/**"]
+//To support Java coverage on Unit tests
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/automationTest", excludes: fileFilter)
+    //To support Kotlin coverage on Unit tests
+    def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/automationTest", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+    def debugSrc = "${project.projectDir}/src/debug/java"
+    sourceDirectories.setFrom files([mainSrc, debugSrc])
+    classDirectories.setFrom files([debugTree], [kotlinDebugTree])
+    executionData.setFrom files("${buildDir}/jacoco/testProdAutomationTestUnitTest.exec")
+}
