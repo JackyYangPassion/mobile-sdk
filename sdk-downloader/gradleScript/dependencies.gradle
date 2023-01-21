@@ -1,7 +1,0 @@
-import dependencies.*;
-
-apply from: Deps.common
-
-dependencies {
-  implementation Deps.AndroidXLibs.annotationProcessor
-}

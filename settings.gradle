@@ -1,6 +1,17 @@
-include ':ripbull-chat-sdk'
-include ':sdk-remote'
-include ':sdk-mqtt'
-include ':sdk-cache'
-include ':sdk-downloader'
-//include ':app-sdk-testing'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "InAppChat"
+include ':app'
+include ':InAppChat'
