@@ -18,11 +18,11 @@ import io.inappchat.inappchat.core.type.NetworkEvent
 import io.inappchat.inappchat.data.common.Result
 import io.inappchat.inappchat.group.mapper.GroupRecord
 import io.inappchat.inappchat.user.mapper.UserRecord
-import com.ripbull.ertc.cache.database.entity.EKeyTable
+import io.inappchat.inappchat.cache.database.entity.EKeyTable
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.SingleEmitter
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.SingleEmitter
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class FakeChatRepository : ChatRepository {

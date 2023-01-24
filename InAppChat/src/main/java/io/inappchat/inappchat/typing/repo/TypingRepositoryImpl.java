@@ -5,6 +5,7 @@ import static io.inappchat.inappchat.mqtt.utils.Constants.TYPING_STATUS_TOPIC;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+
 import io.inappchat.inappchat.cache.database.entity.Group;
 import io.inappchat.inappchat.cache.database.entity.Thread;
 import io.inappchat.inappchat.cache.database.entity.User;
@@ -22,12 +23,13 @@ import io.inappchat.inappchat.mqtt.model.TypingIndicator;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.ObservableSource;
-import io.reactivex.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+
 import java.util.ArrayList;
 
-/** Created by DK on 2019-05-04. */
+/**
+ * Created by DK on 2019-05-04.
+ */
 public class TypingRepositoryImpl extends BaseRepository implements TypingRepository {
 
   public static TypingRepository newInstance(DataManager dataManager) {
@@ -37,7 +39,7 @@ public class TypingRepositoryImpl extends BaseRepository implements TypingReposi
   private final Gson gson;
   private EventHandler eventHandler;
   private DataManager dataManager;
-  private String chatUserId,deviceId;
+  private String chatUserId, deviceId;
 
   public TypingRepositoryImpl(DataManager dataManager) {
     super(dataManager);
@@ -47,14 +49,14 @@ public class TypingRepositoryImpl extends BaseRepository implements TypingReposi
   }
 
   public String getChatUserId() {
-    if(this.chatUserId == null){
+    if (this.chatUserId == null) {
       this.chatUserId = this.dataManager.preference().getChatUserId();
     }
     return this.chatUserId;
   }
 
   public String getDeviceId() {
-    if(this.deviceId == null){
+    if (this.deviceId == null) {
       this.deviceId = this.dataManager.preference().getDeviceId();
     }
     return this.deviceId;
@@ -64,20 +66,20 @@ public class TypingRepositoryImpl extends BaseRepository implements TypingReposi
   @Override
   public Observable<TypingIndicatorRecord> subscribe(String threadId) {
     return typingIndicatorReceiver(
-        this.eventHandler.source()
-            .filter(NetworkEvent.filterType(EventType.TYPING_STATE_CHANGED)))
-        .filter(typingIndicatorRecord -> typingIndicatorRecord.getThreadId().equals(threadId));
+            this.eventHandler.source()
+                    .filter(NetworkEvent.filterType(EventType.TYPING_STATE_CHANGED)))
+            .filter(typingIndicatorRecord -> typingIndicatorRecord.getThreadId().equals(threadId));
   }
 
   @Override
   public Completable publish(@NonNull String threadId, TypingState state) {
     return Completable.create(
-            e -> {
-              Thread thread = db().threadDao().getThreadByIdInSync(threadId);
-              publishTyping(state, thread);
-              e.onComplete();
-            })
-        .subscribeOn(Schedulers.single());
+                    e -> {
+                      Thread thread = db().threadDao().getThreadByIdInSync(threadId);
+                      publishTyping(state, thread);
+                      e.onComplete();
+                    })
+            .subscribeOn(Schedulers.single());
   }
 
   private void publishTyping(TypingState typingState, Thread thread) {
@@ -85,8 +87,8 @@ public class TypingRepositoryImpl extends BaseRepository implements TypingReposi
       ArrayList<String> participants = new ArrayList<>();
       participants.add(thread.getRecipientChatId());
       TypingIndicator typingIndicator =
-          new TypingIndicator(thread.getTenantId(), thread.getType(), participants, thread.getId(),
-              thread.getSenderChatId(), typingState.getState(), getName());
+              new TypingIndicator(thread.getTenantId(), thread.getType(), participants, thread.getId(),
+                      thread.getSenderChatId(), typingState.getState(), getName());
       this.eventHandler.publish(TYPING_STATUS_TOPIC, gson.toJson(typingIndicator));
     } else if (thread.getType().equals(ChatType.GROUP.getType())) {
       Group group = db().groupDao().getGroupByIdInSync(getTenantId(), thread.getRecipientChatId());
@@ -97,32 +99,32 @@ public class TypingRepositoryImpl extends BaseRepository implements TypingReposi
         }
       }
       TypingIndicator typingIndicator =
-          new TypingIndicator(thread.getTenantId(), thread.getType(), participants, thread.getId(),
-              getChatUserId(), typingState.getState(), getName());
+              new TypingIndicator(thread.getTenantId(), thread.getType(), participants, thread.getId(),
+                      getChatUserId(), typingState.getState(), getName());
 
       this.eventHandler.publish(TYPING_STATUS_TOPIC, gson.toJson(typingIndicator));
     }
   }
 
   private Observable<TypingIndicatorRecord> typingIndicatorReceiver(
-      Observable<NetworkEvent> receivedMessage) {
+          Observable<NetworkEvent> receivedMessage) {
     return receivedMessage.flatMap(
-        (Function<NetworkEvent, ObservableSource<TypingIndicatorRecord>>)
+
             networkEvent ->
-                Observable.create(
-                        (ObservableOnSubscribe<TypingIndicatorRecord>)
-                            e -> {
-                              TypingIndicator status =
-                                  gson.fromJson(
-                                      networkEvent.message().getMessage(), TypingIndicator.class);
-                              e.onNext(
-                                  new TypingIndicatorRecord(
-                                      status.getThreadId(),
-                                      status.getThreadType(),
-                                      status.getTypingStatusEvent(),
-                                      status.getERTCUserId(),
-                                      status.getName()));
-                            })
-                    .subscribeOn(Schedulers.single()));
+                    Observable.create(
+                                    (ObservableOnSubscribe<TypingIndicatorRecord>)
+                                            e -> {
+                                              TypingIndicator status =
+                                                      gson.fromJson(
+                                                              networkEvent.message().getMessage(), TypingIndicator.class);
+                                              e.onNext(
+                                                      new TypingIndicatorRecord(
+                                                              status.getThreadId(),
+                                                              status.getThreadType(),
+                                                              status.getTypingStatusEvent(),
+                                                              status.getERTCUserId(),
+                                                              status.getName()));
+                                            })
+                            .subscribeOn(Schedulers.single()));
   }
 }

@@ -1,6 +1,6 @@
 package io.inappchat.inappchat.chat
 
-import com.ripbull.ertc.cache.database.entity.Location
+import io.inappchat.inappchat.cache.database.entity.Location
 
 object FakeRepoData {
   const val TENANT_ID = "5e540ba9e978107d1900db70";

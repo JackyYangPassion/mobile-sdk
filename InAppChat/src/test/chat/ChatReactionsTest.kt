@@ -1,6 +1,6 @@
 package io.inappchat.inappchat.chat
 
-import com.ripbull.ertc.cache.database.entity.ChatReactionEntity
+import io.inappchat.inappchat.cache.database.entity.ChatReactionEntity
 import org.junit.Assert
 import org.junit.Test
 

@@ -12,32 +12,32 @@ import io.reactivex.rxjava3.core.Single
 /** Created by DK on 24/02/19.  */
 interface ThreadRepository {
 
-  fun getThreadByIdSync(threadId: String): Thread?
+    fun getThreadByIdSync(threadId: String): Thread?
 
-  fun getThreadByIdAsync(threadId: String): Single<Thread?>
+    fun getThreadByIdAsync(threadId: String): Single<Thread>
 
-  fun createThread(
-    tenantId: String?,
-    currentUser: User?,
-    recipientUser: User?
-  ): Single<String?>
+    fun createThread(
+        tenantId: String?,
+        currentUser: User?,
+        recipientUser: User?
+    ): Single<String>
 
-  fun hasThread(
-    tenantId: String?,
-    currentUser: User?,
-    recipientUser: User?
-  ): Single<List<ThreadUserLink?>?>
+    fun hasThread(
+        tenantId: String?,
+        currentUser: User?,
+        recipientUser: User?
+    ): Single<List<ThreadUserLink>>
 
-  fun getThreads(tenantId: String): Flowable<MutableList<ThreadRecord>>?
+    fun getThreads(tenantId: String): Flowable<MutableList<ThreadRecord>>?
 
-  fun insertThreadData(
-    response: CreateThreadResponse,
-    chatUserId: String,
-    tenantId: String,
-    currentUser : User,
-    recipientUser : User,
-    lastMessage : MessageResponse? = null
-  )
+    fun insertThreadData(
+        response: CreateThreadResponse,
+        chatUserId: String,
+        tenantId: String,
+        currentUser: User,
+        recipientUser: User,
+        lastMessage: MessageResponse? = null
+    )
 
-  fun getThread(tenantId: String, threadId: String): Single<ThreadRecord>
+    fun getThread(tenantId: String, threadId: String): Single<ThreadRecord>
 }

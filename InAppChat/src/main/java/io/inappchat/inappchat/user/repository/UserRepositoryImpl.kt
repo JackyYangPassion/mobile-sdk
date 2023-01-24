@@ -2,6 +2,7 @@ package io.inappchat.inappchat.user.repository
 
 import androidx.annotation.RestrictTo
 import com.google.gson.Gson
+import io.inappchat.inappchat.InAppChat
 import io.inappchat.inappchat.cache.database.dao.UserDao
 import io.inappchat.inappchat.cache.database.entity.ChatReactionWithUsers
 import io.inappchat.inappchat.cache.database.entity.User
@@ -21,7 +22,6 @@ import io.inappchat.inappchat.core.type.EventType
 import io.inappchat.inappchat.core.type.NetworkEvent
 import io.inappchat.inappchat.data.DataManager
 import io.inappchat.inappchat.data.common.Result
-import io.inappchat.inappchat.InAppChat
 import io.inappchat.inappchat.user.mapper.UserMapper
 import io.inappchat.inappchat.user.mapper.UserMetaDataRecord
 import io.inappchat.inappchat.user.mapper.UserRecord
@@ -30,10 +30,12 @@ import io.inappchat.inappchat.utils.Utils
 import io.inappchat.inappchat.utils.transform
 import io.inappchat.inappchat.cache.database.entity.EKeyTable
 import io.inappchat.inappchat.mqtt.model.UserMetaData
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.create
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Call
 import java.io.IOException
@@ -115,8 +117,8 @@ class UserRepositoryImpl private constructor(
                                         val finalUserRecord = userRecord.copy(
                                             ertcId = userResponse.eRTCUserId,
                                             userChatId = userResponse.eRTCUserId,
-                                            blockedStatus = userResponse.statusDetails.blockedStatus,
-                                            availabilityStatus = userResponse.statusDetails.availabilityStatus,
+                                            blockedStatus = userResponse.statusDetails?.blockedStatus,
+                                            availabilityStatus = userResponse.statusDetails?.availabilityStatus,
                                             tenantId = tenantId
                                         )
                                         finalUserListRecord.add(finalUserRecord)
@@ -208,8 +210,8 @@ class UserRepositoryImpl private constructor(
                                             val finalUserRecord = userRecord.copy(
                                                 ertcId = userResponse.eRTCUserId,
                                                 userChatId = userResponse.eRTCUserId,
-                                                blockedStatus = userResponse.statusDetails.blockedStatus,
-                                                availabilityStatus = userResponse.statusDetails.availabilityStatus,
+                                                blockedStatus = userResponse.statusDetails?.blockedStatus,
+                                                availabilityStatus = userResponse.statusDetails?.availabilityStatus,
                                                 tenantId = tenantId
                                             )
                                             finalUserListRecord.add(finalUserRecord)
@@ -262,29 +264,29 @@ class UserRepositoryImpl private constructor(
     override fun getNewUsers(
         tenantId: String,
         addUpdateOrDelete: String
-    ): Flowable<List<UserRecord>> {
+    ): Flowable<List<UserRecord>>? {
         val localSingle =
             getLocalUsers(tenantId)
         val remoteSingle =
             getUpdatedUsers(tenantId, addUpdateOrDelete).map { users: List<UserRecord> ->
                 when {
                     "addUpdated".equals(addUpdateOrDelete, ignoreCase = true) -> {
-                        saveUsersInSync(users.transform { userRecord: UserRecord ->
+                        saveUsersInSync(users.transform { userRecord: UserRecord? ->
                             UserMapper.transform(userRecord)
                         })
                         for ((id) in users) {
-                            id.let {
+                            id?.let {
                                 dataManager.db().threadDao()
                                     .updateUserUpdatedAt(it, System.currentTimeMillis())
                             }
                         }
                     }
                     "inactive" == addUpdateOrDelete -> {
-                        saveUsersInSync(users.transform { userRecord: UserRecord ->
+                        saveUsersInSync(users.transform { userRecord: UserRecord? ->
                             UserMapper.transform(userRecord)
                         })
                         for ((id) in users) {
-                            id.let {
+                            id?.let {
                                 dataManager.db().threadDao()
                                     .updateUserUpdatedAt(it, System.currentTimeMillis())
                             }
@@ -292,10 +294,10 @@ class UserRepositoryImpl private constructor(
                     }
                     else -> {
                         for ((id) in users) {
-                            id.let {
+                            id?.let {
                                 userDao.deleteUser(it)
                                 dataManager.db().threadDao().getThreadIdByUserId(it)
-                                    .let { threadId ->
+                                    ?.let { threadId ->
                                         dataManager.db().singleChatDao().deleteByThreadId(threadId)
                                     }
                                 dataManager.db().threadDao().deleteThreadByUserId(it)
@@ -312,11 +314,11 @@ class UserRepositoryImpl private constructor(
         )
     }
 
-    override fun getChatUsers(tenantId: String): Flowable<List<UserRecord>> {
-        return getLocalUsers(tenantId).subscribeOn(Schedulers.computation()).flatMap {
+    override fun getChatUsers(tenantId: String): Flowable<List<UserRecord>>? {
+        return getLocalUsers(tenantId)?.subscribeOn(Schedulers.computation())?.flatMap {
             if (it.size <= 0) {
                 getRemoteUsers(tenantId).flatMapPublisher { users: List<UserRecord> ->
-                    saveUsersInSync(users.transform { userRecord: UserRecord ->
+                    saveUsersInSync(users.transform { userRecord: UserRecord? ->
                         UserMapper.transform(
                             userRecord
                         )
@@ -326,12 +328,12 @@ class UserRepositoryImpl private constructor(
             } else {
                 Flowable.just(it)
             }
-        } : Flowable.empty()
+        }
     }
 
     override fun getChatUsersRemote(tenantId: String): Single<List<UserRecord>> {
         return getRemoteUsers(tenantId).flatMap { users ->
-            saveUsersInSync(users.transform { userRecord: UserRecord ->
+            saveUsersInSync(users.transform { userRecord: UserRecord? ->
                 UserMapper.transform(
                     userRecord
                 )
@@ -380,13 +382,13 @@ class UserRepositoryImpl private constructor(
         return chatReactionWithUsersSingle.flatMap { chatReactionWithUsers: List<ChatReactionWithUsers> ->
             val arrayListOf = arrayListOf<UserRecord>()
             chatReactionWithUsers.forEach { chatReactionWithUser ->
-                chatReactionWithUser.users.transform { user: User ->
+                chatReactionWithUser.users?.transform { user: User ->
                     UserMapper.transform(
                         User(
                             user.id, tenantId, user.name
                         )
                     )
-                }.let { arrayListOf.addAll(it) }
+                }?.let { arrayListOf.addAll(it) }
             }
             Single.just(arrayListOf)
         }
@@ -394,11 +396,11 @@ class UserRepositoryImpl private constructor(
 
     override fun getUsersInSync(
         tenantId: String,
-        lastUserId: String
+        lastUserId: String?
     ): List<User> {
         val result: List<User> =
             ArrayList()
-        val call: Call<UserListResponse> =
+        val call =
             dataManager.network().api().getUsersInSync(tenantId, lastUserId)
         try {
             val response = call.execute()
@@ -407,7 +409,7 @@ class UserRepositoryImpl private constructor(
                     val body = response.body()
                     val userList = body!!.userList
                     val loginType = AccountDetails.Type.EMAIL.value
-                    return userList.transform { userResponse: UserResponse ->
+                    return userList.transform { userResponse: UserResponse? ->
                         UserMapper.from(
                             userResponse!!, tenantId, loginType,
                             dataManager.preference().userServer
@@ -423,18 +425,18 @@ class UserRepositoryImpl private constructor(
 
     override fun getLastUser(tenantId: String): Single<UserRecord> {
         return userDao.getLastUser(tenantId)
-            .flatMap { user: User ->
+            .flatMap { user: User? ->
                 Single.just(
                     UserMapper.transform(user)
                 )
             }
     }
 
-    override fun getLastUserInSync(tenantId: String): User {
+    override fun getLastUserInSync(tenantId: String): User? {
         return userDao.getLastUserInSync(tenantId)
     }
 
-    override fun saveUsersInSync(userList: MutableList<User>): Boolean {
+    override fun saveUsersInSync(userList: MutableList<User>): Boolean? {
         userDao.insertWithReplace(userList)
         return true
     }
@@ -444,14 +446,14 @@ class UserRepositoryImpl private constructor(
         userId: String
     ): Flowable<UserRecord> {
         return userDao.getUserByIdFlowable(tenantId, userId)
-            .flatMap { user: User ->
+            .flatMap { user: User? ->
                 Flowable.just(
                     UserMapper.transform(user)
                 )
             }
     }
 
-    override fun logout(): Single<Result> {
+    override fun logout(): Single<Result>? {
         val tenantId =
             Objects.requireNonNull(dataManager.preference().tenantId)
         val userId =
@@ -466,7 +468,7 @@ class UserRepositoryImpl private constructor(
         return Single.zip(
             dataManager.network().api().chatLogout(tenantId!!, chatUserId!!, request),
             dataManager.network().api().userLogout(tenantId, userId!!, request),
-            BiFunction { _: Response, _: Response ->
+            BiFunction { _: Response?, _: Response? ->
                 dataManager.db().tenantDao().deleteAll()
                 dataManager.db().threadDao().deleteAll()
                 dataManager.db().singleChatDao().deleteAll()
@@ -474,7 +476,6 @@ class UserRepositoryImpl private constructor(
                 dataManager.db().ekeyDao().deleteAll()
                 userDao.deleteAll()
                 dataManager.mqtt().removeConnectionAndSubscription()
-                FirebaseInstanceId.getInstance().deleteInstanceId()
                 InAppChat.fcm().clearNotification()
                 dataManager.preference().clearData()
                 dataManager.db().downloadMediaDao().clear()
@@ -486,7 +487,7 @@ class UserRepositoryImpl private constructor(
     override fun updateProfile(
         tenantId: String, userId: String,
         profileStatus: String, mediaPath: String, mediaType: String
-    ): Single<Result> {
+    ): Single<Result>? {
         if (noInternetConnection()) {
             throw UnsupportedOperationException("Network unavailable")
         }
@@ -501,7 +502,7 @@ class UserRepositoryImpl private constructor(
                 profileStatus,
                 Utils.getMimeType(mediaPath, mediaType)
             )
-            .flatMap { response: UserResponse ->
+            .flatMap { response: UserResponse? ->
                 val userEntity =
                     userDao.getUserByIdInSync(tenantId, preference.appUserId)
 
@@ -521,20 +522,20 @@ class UserRepositoryImpl private constructor(
             }
     }
 
-    override fun getProfile(appUserId: String): Single<UserRecord> {
+    override fun getProfile(appUserId: String): Single<UserRecord>? {
         return dataManager.network()
             .api()
             .getProfile(appUserId)
-            .flatMap { userResponse: UserResponse ->
+            .flatMap { userResponse: UserResponse? ->
                 Single.just(
                     UserMapper.transform(userResponse, dataManager.preference().userServer)
                 )
             }
     }
 
-    override fun getLoggedInUser(): Flowable<UserRecord> {
+    override fun getLoggedInUser(): Flowable<UserRecord>? {
         return userDao.getUserByIdFlowable(tenantId, appUserId)
-            .flatMap { user: User ->
+            .flatMap { user: User? ->
                 Flowable.just(
                     UserMapper.transform(user)
                 )
@@ -543,7 +544,7 @@ class UserRepositoryImpl private constructor(
 
     override fun setUserAvailability(
         tenantId: String, availabilityStatus: AvailabilityStatus
-    ): Single<Result> {
+    ): Single<Result>? {
         if (noInternetConnection()) {
             throw UnsupportedOperationException("Network unavailable")
         }
@@ -571,7 +572,7 @@ class UserRepositoryImpl private constructor(
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun subscribeToUserMetaData(): Observable<UserRecord> {
+    override fun subscribeToUserMetaData(): Observable<UserRecord>? {
         return eventHandler.source()
             .filter(NetworkEvent.filterType(EventType.USER_META_DATA_UPDATED))
             .flatMap { networkEvent ->
@@ -599,7 +600,7 @@ class UserRepositoryImpl private constructor(
 
     override fun removeProfilePic(
         tenantId: String, userId: String
-    ): Single<Result> {
+    ): Single<Result>? {
         if (noInternetConnection()) {
             throw UnsupportedOperationException("Network unavailable")
         }
@@ -609,7 +610,7 @@ class UserRepositoryImpl private constructor(
                 tenantId,
                 userId
             )
-            .flatMap { response: UserResponse ->
+            .flatMap { response: UserResponse? ->
                 val userEntity =
                     userDao.getUserByIdInSync(tenantId, preference.appUserId)
 
@@ -629,7 +630,7 @@ class UserRepositoryImpl private constructor(
             }
     }
 
-    override fun deactivate(): Single<Result> {
+    override fun deactivate(): Single<Result>? {
         dataManager.db().tenantDao().deleteAll()
         dataManager.db().threadDao().deleteAll()
         dataManager.db().singleChatDao().deleteAll()
@@ -637,14 +638,13 @@ class UserRepositoryImpl private constructor(
         dataManager.db().ekeyDao().deleteAll()
         userDao.deleteAll()
         dataManager.mqtt().removeConnectionAndSubscription()
-        FirebaseInstanceId.getInstance().deleteInstanceId()
         InAppChat.fcm().clearNotification()
         dataManager.preference().clearData()
         dataManager.db().downloadMediaDao().clear()
         return Single.just(Result(true, "User are forcefully logged out", ""))
     }
 
-    override fun metaDataOn(appUserId: String): Observable<UserMetaDataRecord> {
+    override fun metaDataOn(appUserId: String): Observable<UserMetaDataRecord>? {
         return eventHandler.source()
             .filter(NetworkEvent.filterType(EventType.USER_META_DATA_UPDATED))
             .filter { it.userMetaDataRecord() != null }
@@ -670,12 +670,12 @@ class UserRepositoryImpl private constructor(
                             UserInfoRequest(users, arrayListOf("availabilityStatus"))
                         ).blockingGet()
 
-                    response.let { response ->
+                    response?.let { response ->
                         if (response.userList != null) {
                             for (user in response.userList!!) {
                                 userDao.updateAvailabilityStatusById(
                                     user.appUserId,
-                                    user.statusDetails.availabilityStatus
+                                    user.statusDetails?.availabilityStatus
                                 )
                             }
                         }

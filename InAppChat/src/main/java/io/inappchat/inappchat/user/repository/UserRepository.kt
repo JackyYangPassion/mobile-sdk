@@ -15,16 +15,16 @@ import io.reactivex.rxjava3.core.Single
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface UserRepository {
-    //fun getLocalUsers(tenantId: String): Flowable<MutableList<UserRecord>>
-    //fun getRemoteUsers(tenantId: String): Single<MutableList<UserRecord>>
-    //fun getUpdatedUsers(tenantId: String, addUpdateOrDelete: String): Single<MutableList<UserRecord>>
+    //fun getLocalUsers(tenantId: String): Flowable<MutableList<UserRecord>>?
+    //fun getRemoteUsers(tenantId: String): Single<MutableList<UserRecord>>?
+    //fun getUpdatedUsers(tenantId: String, addUpdateOrDelete: String): Single<MutableList<UserRecord>>?
 
     fun getNewUsers(
         tenantId: String,
         addUpdateOrDelete: String
-    ): Flowable<List<UserRecord>>
+    ): Flowable<List<UserRecord>>?
 
-    fun getChatUsers(tenantId: String): Flowable<List<UserRecord>>
+    fun getChatUsers(tenantId: String): Flowable<List<UserRecord>>?
     fun getChatUsersRemote(tenantId: String): Single<List<UserRecord>>
     fun getMentionedUsers(tenantId: String): Single<List<UserRecord>>
     fun getReactionedUsers(
@@ -37,46 +37,46 @@ interface UserRepository {
     fun getUsersInSync(
         tenantId: String,
         lastUserId: String?
-    ): List<User>
+    ): List<User>?
 
-    fun getLastUser(tenantId: String): Single<UserRecord>
-    fun getLastUserInSync(tenantId: String): User
-    fun saveUsersInSync(userList: List<User>): Boolean
+    fun getLastUser(tenantId: String): Single<UserRecord>?
+    fun getLastUserInSync(tenantId: String): User?
+    fun saveUsersInSync(userList: MutableList<User>): Boolean?
     fun getUserById(
         tenantId: String,
         userId: String
-    ): Flowable<UserRecord>
+    ): Flowable<UserRecord>?
 
-    fun logout(): Single<Result>
+    fun logout(): Single<Result>?
     fun updateProfile(
         tenantId: String,
         userId: String,
         profileStatus: String,
         mediaPath: String,
         mediaType: String
-    ): Single<Result>
+    ): Single<Result>?
 
-    fun getProfile(appUserId: String): Single<UserRecord>
+    fun getProfile(appUserId: String): Single<UserRecord>?
 
-    fun getLoggedInUser(): Flowable<UserRecord>
+    fun getLoggedInUser(): Flowable<UserRecord>?
 
-    //fun getUserInfo(tenantId: String, appUserIds: List<String>): Single<List<UserRecord>>
+    //fun getUserInfo(tenantId: String, appUserIds: List<String>?): Single<List<UserRecord>>?
 
     fun setUserAvailability(
         tenantId: String,
         availabilityStatus: AvailabilityStatus
-    ): Single<Result>
+    ): Single<Result>?
 
-    fun subscribeToUserMetaData(): Observable<UserRecord>
+    fun subscribeToUserMetaData(): Observable<UserRecord>?
 
     fun removeProfilePic(
         tenantId: String,
         userId: String
-    ): Single<Result>
+    ): Single<Result>?
 
-    fun deactivate(): Single<Result>
+    fun deactivate(): Single<Result>?
 
-    fun metaDataOn(appUserId: String): Observable<UserMetaDataRecord>
+    fun metaDataOn(appUserId: String): Observable<UserMetaDataRecord>?
 
     fun fetchLatestUserStatus(): Single<Result>
 

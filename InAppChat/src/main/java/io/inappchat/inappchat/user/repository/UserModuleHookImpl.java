@@ -23,6 +23,7 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleSource;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class UserModuleHookImpl implements UserModuleHook, UserModule {

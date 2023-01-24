@@ -1,6 +1,6 @@
 package io.inappchat.inappchat.chat
 
-import com.ripbull.ertc.cache.database.entity.SingleChat
+import io.inappchat.inappchat.cache.database.entity.SingleChat
 
 /**
  * Created by DK on 01/06/20.
