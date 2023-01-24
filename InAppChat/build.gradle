@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'maven-publish'
+    id "com.jfrog.artifactory" version "4.31.0"
 }
 
 def libraryVersion = '2.0.0'
@@ -128,4 +129,29 @@ private static String getFlavor(project) {
     }
     return flavor
 
+}
+
+def Properties properties = new Properties()
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+artifactory {
+    contextUrl = properties.getProperty("context_url")
+    publish {
+        repository {
+            // The Artifactory repository key to publish to
+            repoKey = properties.getProperty("repoKey")
+            username = properties.getProperty("artifactory_username")
+            password = properties.getProperty("artifactory_password")
+        }
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('aar')
+            publishArtifacts = true
+
+            // Properties to be attached to the published artifacts.
+            properties = ['qa.level': 'basic', 'dev.team': 'core']
+            // Publish generated POM files to Artifactory (true by default)
+            publishPom = true
+        }
+    }
 }
