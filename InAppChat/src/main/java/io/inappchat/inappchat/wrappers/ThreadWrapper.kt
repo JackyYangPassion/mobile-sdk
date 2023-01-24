@@ -8,7 +8,7 @@ import io.inappchat.inappchat.mqtt.listener.ReceivedMessage
 import io.inappchat.inappchat.remote.model.response.ClearChatHistoryResponse
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Created by DK on 12/06/20.

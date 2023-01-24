@@ -15,7 +15,7 @@ import io.inappchat.inappchat.e2e.E2EMapper;
 import io.inappchat.inappchat.e2e.ECDHUtils;
 import io.inappchat.inappchat.user.mapper.UserMapper;
 import io.inappchat.inappchat.utils.Constants;
-import io.inappchat.inappchat.eRTCSDK;
+import io.inappchat.inappchat.InAppChat;
 import io.inappchat.inappchat.cache.database.dao.UserDao;
 import io.inappchat.inappchat.cache.database.entity.EKeyTable;
 import io.inappchat.inappchat.cache.database.entity.Tenant;
@@ -338,7 +338,7 @@ public class AuthenticationRepositoryImpl extends UseCase<DataManager>
           data().db().userDao().deleteAll();
           data().mqtt().removeConnectionAndSubscription();
           FirebaseInstanceId.getInstance().deleteInstanceId();
-          eRTCSDK.fcm().clearNotification();
+          InAppChat.fcm().clearNotification();
           data().preference().clearData();
           data().db().downloadMediaDao().clear();
           return new Result(response.getSuccess(), response.getMessage(), response.getErrorCode());

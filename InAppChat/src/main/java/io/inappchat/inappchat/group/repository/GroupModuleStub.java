@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import io.inappchat.inappchat.R;
 import io.inappchat.inappchat.core.ChatSDKException;
 import io.inappchat.inappchat.data.common.Result;
-import io.inappchat.inappchat.eRTCSDK;
+import io.inappchat.inappchat.InAppChat;
 import io.inappchat.inappchat.group.GroupModule;
 import io.inappchat.inappchat.group.mapper.GroupRecord;
 import io.inappchat.inappchat.utils.Constants;
@@ -19,7 +19,7 @@ public class GroupModuleStub implements GroupModule {
   private Context appContext;
 
   public static GroupModule newInstance() {
-    return new GroupModuleStub(eRTCSDK.getAppContext());
+    return new GroupModuleStub(InAppChat.getAppContext());
   }
 
   private GroupModuleStub(Context context) {

@@ -6,7 +6,7 @@ import io.inappchat.inappchat.UserConfiguration;
 import io.inappchat.inappchat.core.ChatSDKException;
 import io.inappchat.inappchat.core.type.AccountDetails;
 import io.inappchat.inappchat.data.common.Result;
-import io.inappchat.inappchat.eRTCSDK;
+import io.inappchat.inappchat.InAppChat;
 import io.inappchat.inappchat.utils.Constants;
 import io.reactivex.rxjava3.core.Single;
 
@@ -16,7 +16,7 @@ public class AuthenticationModuleStub implements AuthenticationModule {
   private Context appContext;
 
   public static AuthenticationModule newInstance() {
-    return new AuthenticationModuleStub(eRTCSDK.getAppContext());
+    return new AuthenticationModuleStub(InAppChat.getAppContext());
   }
 
   private AuthenticationModuleStub(Context context) {

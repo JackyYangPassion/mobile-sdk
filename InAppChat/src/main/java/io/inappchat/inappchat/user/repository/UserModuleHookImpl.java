@@ -23,8 +23,6 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.core.SingleSource;
-import io.reactivex.functions.Function;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public class UserModuleHookImpl implements UserModuleHook, UserModule {
@@ -56,7 +54,7 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
 
     private Single<Boolean> isFeatureEnabled(String feature) {
         return getTenantDao().getTenantConfigValue(getTenantId(), feature)
-                .flatMap((Function<String, SingleSource<Boolean>>) flag -> Single.just(flag.equals("1")));
+                .flatMap(flag -> Single.just(flag.equals("1")));
     }
 
     private Single<Boolean> isSubscriptionAvailable() {
@@ -81,7 +79,7 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
     @Override
     public Flowable<List<UserRecord>> getChatUsers() {
         return isSubscriptionAvailable().toFlowable()
-                .flatMap((Function<Boolean, Flowable<List<UserRecord>>>) aBoolean -> aBoolean
+                .flatMap(aBoolean -> aBoolean
                         ? userModule.getChatUsers() : stub.getChatUsers());
     }
 
@@ -94,28 +92,28 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
     @Override
     public Single<List<UserRecord>> getReactionedUsers(List<String> reactionUnicodes, String msgId, String threadId, ChatType chatType) {
         return isSubscriptionAvailable()
-                .flatMap(aBoolean -> aBoolean ? userModule.getReactionedUsers(reactionUnicodes, msgId, threadId,chatType) : stub.getReactionedUsers(reactionUnicodes, msgId, threadId,chatType));
+                .flatMap(aBoolean -> aBoolean ? userModule.getReactionedUsers(reactionUnicodes, msgId, threadId, chatType) : stub.getReactionedUsers(reactionUnicodes, msgId, threadId, chatType));
     }
 
     @Override
     public Flowable<UserRecord> getUserById(@NonNull String id) {
         return isSubscriptionAvailable().toFlowable()
                 .flatMap(
-                        (Function<Boolean, Flowable<UserRecord>>) aBoolean -> aBoolean ? userModule.getUserById(
+                        aBoolean -> aBoolean ? userModule.getUserById(
                                 id) : stub.getUserById(id));
     }
 
     @Override
     public Single<Boolean> fetchMoreUsers() {
         return isSubscriptionAvailable().flatMap(
-                (Function<Boolean, SingleSource<Boolean>>) aBoolean -> aBoolean
+                aBoolean -> aBoolean
                         ? userModule.fetchMoreUsers() : stub.fetchMoreUsers());
     }
 
     @Override
     public Flowable<List<UserRecord>> getNewUsers(String addUpdateOrDelete) {
         return isSubscriptionAvailable().toFlowable()
-                .flatMap((Function<Boolean, Publisher<List<UserRecord>>>) aBoolean -> aBoolean
+                .flatMap(aBoolean -> aBoolean
                         ? userModule.getNewUsers(addUpdateOrDelete) : stub.getNewUsers(addUpdateOrDelete));
     }
 
@@ -130,12 +128,12 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
                                         @NonNull String mediaType) {
         if (mediaPath == null || mediaPath.isEmpty()) {
             return canUpdateUserStatus().flatMap(
-                    (Function<Boolean, SingleSource<Result>>) aBoolean -> aBoolean ? userModule.updateProfile(
+                    aBoolean -> aBoolean ? userModule.updateProfile(
                             profileStatus, mediaPath, mediaType)
                             : stub.updateProfile(profileStatus, mediaPath, mediaType));
         }
         return canUpdateProfile().flatMap(
-                (Function<Boolean, SingleSource<Result>>) aBoolean -> aBoolean ? userModule.updateProfile(
+                aBoolean -> aBoolean ? userModule.updateProfile(
                         profileStatus, mediaPath, mediaType)
                         : stub.updateProfile(profileStatus, mediaPath, mediaType));
     }
@@ -149,7 +147,7 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
     @Override
     public Flowable<UserRecord> getLoggedInUser() {
         return isSubscriptionAvailable().toFlowable().flatMap(
-            aBoolean -> aBoolean ? userModule.getLoggedInUser() : stub.getLoggedInUser());
+                aBoolean -> aBoolean ? userModule.getLoggedInUser() : stub.getLoggedInUser());
     }
 
     @Override
@@ -160,7 +158,7 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
     @Override
     public Single setUserAvailability(AvailabilityStatus availabilityStatus) {
         return canGetAvailabilityStatus().flatMap(
-                (Function<Boolean, SingleSource<?>>) aBoolean -> aBoolean ? userModule.setUserAvailability(
+                aBoolean -> aBoolean ? userModule.setUserAvailability(
                         availabilityStatus) : stub.setUserAvailability(availabilityStatus));
     }
 
@@ -175,7 +173,7 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
 
     @Override
     public Single<Result> removeProfilePic() {
-        return canUpdateProfile().flatMap((Function<Boolean, SingleSource<Result>>) aBoolean -> aBoolean
+        return canUpdateProfile().flatMap(aBoolean -> aBoolean
                 ? userModule.removeProfilePic() : stub.removeProfilePic());
     }
 
@@ -193,8 +191,8 @@ public class UserModuleHookImpl implements UserModuleHook, UserModule {
     @Override
     public Single<Result> fetchLatestUserStatus() {
         return canGetAvailabilityStatus().flatMap(
-            (Function<Boolean, SingleSource<Result>>) aBoolean -> aBoolean
-                ? userModule.fetchLatestUserStatus() : stub.fetchLatestUserStatus());
+                aBoolean -> aBoolean
+                        ? userModule.fetchLatestUserStatus() : stub.fetchLatestUserStatus());
     }
 
     @Override

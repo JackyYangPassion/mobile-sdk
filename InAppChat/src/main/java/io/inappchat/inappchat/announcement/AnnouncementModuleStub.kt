@@ -4,7 +4,7 @@ import android.content.Context
 import io.inappchat.inappchat.R
 import io.inappchat.inappchat.announcement.mapper.AnnouncementRecord
 import io.inappchat.inappchat.core.ChatSDKException
-import io.inappchat.inappchat.eRTCSDK
+import io.inappchat.inappchat.InAppChat
 import io.inappchat.inappchat.utils.Constants
 import io.reactivex.rxjava3.core.Observable
 
@@ -24,7 +24,7 @@ class AnnouncementModuleStub private constructor(private val appContext: Context
 
   companion object {
     fun newInstance(): AnnouncementModule {
-      return AnnouncementModuleStub(eRTCSDK.getAppContext())
+      return AnnouncementModuleStub(InAppChat.appContext)
     }
   }
 }

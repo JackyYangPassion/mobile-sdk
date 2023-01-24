@@ -10,14 +10,14 @@ import io.inappchat.inappchat.chat.mapper.MessageRecord;
 import io.inappchat.inappchat.core.event.EventHandler;
 import io.inappchat.inappchat.core.type.NetworkEvent;
 import io.inappchat.inappchat.data.DataManager;
-import io.inappchat.inappchat.eRTCSDK;
+import io.inappchat.inappchat.InAppChat;
 import io.inappchat.inappchat.utils.Logger;
 import io.inappchat.inappchat.mqtt.utils.Constants;
 
 import java.util.Objects;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FcmModuleImpl implements FcmModule {
 
@@ -25,10 +25,10 @@ public class FcmModuleImpl implements FcmModule {
   private DataManager dataManager;
   private EventHandler eventHandler;
 
-  private static final String TAG = ERTCFirebaseMessagingService.class.getSimpleName();
+  private static final String TAG = IACFirebaseMessagingService.class.getSimpleName();
 
     public static FcmModuleImpl newInstance(EventHandler eventHandler, DataManager dataManager) {
-    return new FcmModuleImpl(eRTCSDK.getAppContext(), eventHandler, dataManager);
+    return new FcmModuleImpl(InAppChat.getAppContext(), eventHandler, dataManager);
   }
 
   private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -75,14 +75,14 @@ public class FcmModuleImpl implements FcmModule {
           switch (eventType) {
             case Constants.USER_DB_UPDATED:
               if (Objects.requireNonNull(remoteMessage.getData().get("message")).contains("addUpdated")) {
-                compositeDisposable.add(eRTCSDK.user()
+                compositeDisposable.add(InAppChat.user()
                     .getNewUsers("addUpdated")
                     .subscribeOn(Schedulers.io())
                     .subscribe(userRecords -> {
                       // No handler
                     }, Throwable::printStackTrace));
               } else if (Objects.requireNonNull(remoteMessage.getData().get("message")).contains("deleted")) {
-                eRTCSDK.event().messageFromFcm(eventType,
+                InAppChat.event().messageFromFcm(eventType,
                     new FcmMessageImpl(
                         eventType,
                         remoteMessage.getData().get("message"),
@@ -91,7 +91,7 @@ public class FcmModuleImpl implements FcmModule {
                     )
                 );
               } else if (Objects.requireNonNull(remoteMessage.getData().get("message")).contains("inactive")) {
-                compositeDisposable.add(eRTCSDK.user()
+                compositeDisposable.add(InAppChat.user()
                     .getNewUsers("inactive")
                     .subscribeOn(Schedulers.io())
                     .subscribe(userRecords -> {
@@ -101,7 +101,7 @@ public class FcmModuleImpl implements FcmModule {
               break;
             case Constants.TENANT_CONFIG_MODIFIED:
             case Constants.LOGOUT:
-              eRTCSDK.event().messageFromFcm(
+              InAppChat.event().messageFromFcm(
                   eventType,
                   new FcmMessageImpl(eventType, "", "", "")
               );
@@ -114,11 +114,11 @@ public class FcmModuleImpl implements FcmModule {
               String message = remoteMessage.getData().get("message");
               String title = remoteMessage.getData().get("title");
               String body = remoteMessage.getData().get("body");
-              eRTCSDK.event().messageFromFcm(eventType + ":",
+              InAppChat.event().messageFromFcm(eventType + ":",
                   new FcmMessageImpl(eventType + ":", message, title, body));
               break;
             case Constants.USER_SELF_UPDATE:
-              eRTCSDK.event().messageFromFcm(eventType + ":",
+              InAppChat.event().messageFromFcm(eventType + ":",
                   new FcmMessageImpl(
                       eventType + ":",
                       remoteMessage.getData().get("message"),
@@ -130,7 +130,7 @@ public class FcmModuleImpl implements FcmModule {
             case Constants.CHAT_HISTORY_CLEARED:
             case Constants.CHAT_SETTING_UPDATED:
             case Constants.ANNOUNCEMENT:
-              eRTCSDK.event().messageFromFcm(eventType,
+              InAppChat.event().messageFromFcm(eventType,
                   new FcmMessageImpl(
                       eventType,
                       remoteMessage.getData().get("message"),
@@ -198,7 +198,7 @@ public class FcmModuleImpl implements FcmModule {
         }*/
         // JSONObject messageObject = new JSONObject(message);
 
-        NotificationUtils.Companion.showNotificationMessage(title, body, threadId, eRTCSDK.getAppContext());
+        NotificationUtils.Companion.showNotificationMessage(title, body, threadId, InAppChat.getAppContext());
       }
 
     } catch (Exception e) {

@@ -26,7 +26,7 @@ import io.inappchat.inappchat.data.DataManager
 import io.inappchat.inappchat.data.common.Result
 import io.inappchat.inappchat.e2e.E2EMapper
 import io.inappchat.inappchat.e2e.ECDHUtils
-import io.inappchat.inappchat.eRTCSDK
+import io.inappchat.inappchat.InAppChat
 import io.inappchat.inappchat.fcm.NotificationRecord
 import io.inappchat.inappchat.group.mapper.GroupMapper
 import io.inappchat.inappchat.group.mapper.GroupRecord
@@ -65,11 +65,11 @@ import io.inappchat.inappchat.remote.model.response.GroupResponse
 import io.inappchat.inappchat.remote.model.response.TenantDetailResponse
 import com.ripbull.mqtt.model.MessageReadStatus
 import io.inappchat.inappchat.downloader.utils.Status
-import io.reactivex.Completable
-import io.reactivex.CompletableEmitter
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.CompletableEmitter
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 
 /** Created by DK on 16/03/19.  */
@@ -1382,7 +1382,7 @@ class ChatWrapper(private val dataManager: DataManager, private val eventHandler
       dataManager.db().userDao().deleteAll()
       dataManager.mqtt().removeConnectionAndSubscription()
       FirebaseInstanceId.getInstance().deleteInstanceId()
-      eRTCSDK.fcm().clearNotification()
+      InAppChat.fcm().clearNotification()
       dataManager.preference().clearData()
       dataManager.db().downloadMediaDao().clear()
       e.onNext(Result(true, "You are logged out successfully.", ""))

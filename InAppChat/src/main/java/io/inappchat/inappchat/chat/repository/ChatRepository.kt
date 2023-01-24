@@ -21,7 +21,7 @@ import io.inappchat.inappchat.data.common.Result
 import io.inappchat.inappchat.group.mapper.GroupRecord
 import io.inappchat.inappchat.user.mapper.UserRecord
 import io.inappchat.inappchat.cache.database.entity.EKeyTable
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single

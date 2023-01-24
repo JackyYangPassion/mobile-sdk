@@ -6,23 +6,25 @@ import io.inappchat.inappchat.mqtt.listener.MqttEventHandler;
 import io.inappchat.inappchat.mqtt.listener.ReceivedMessage;
 import io.inappchat.inappchat.downloader.handler.DownloadEventHandler;
 
-import io.reactivex.Completable;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
-/** Created by DK on 04/04/19. */
+/**
+ * Created by DK on 04/04/19.
+ */
 public interface EventHandler extends MqttEventHandler, DownloadEventHandler {
-  void messageFromFcm(String topic, ReceivedMessage message) throws Exception;
+    void messageFromFcm(String topic, ReceivedMessage message) throws Exception;
 
-  PublishSubject<NetworkEvent> source();
+    PublishSubject<NetworkEvent> source();
 
-  Observable<ChatEvent> sourceOnMain();
+    Observable<ChatEvent> sourceOnMain();
 
-  PublishSubject<ChatEvent> chatEventSource();
+    PublishSubject<ChatEvent> chatEventSource();
 
-  void publish(String topic, String message);
+    void publish(String topic, String message);
 
-  Completable markAsRead(String threadId,String appUserId, String parentMsgId);
+    Completable markAsRead(String threadId, String appUserId, String parentMsgId);
 
 
 }

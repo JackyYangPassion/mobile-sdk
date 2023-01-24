@@ -2,12 +2,12 @@ package io.inappchat.inappchat.fcm;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import io.inappchat.inappchat.eRTCSDK;
+import io.inappchat.inappchat.InAppChat;
 import io.inappchat.inappchat.utils.Logger;
 
-public class ERTCFirebaseMessagingService extends FirebaseMessagingService {
+public class IACFirebaseMessagingService extends FirebaseMessagingService {
 
-  private static final String TAG = ERTCFirebaseMessagingService.class.getSimpleName();
+  private static final String TAG = IACFirebaseMessagingService.class.getSimpleName();
 
   @Override
   public void onCreate() {
@@ -17,7 +17,7 @@ public class ERTCFirebaseMessagingService extends FirebaseMessagingService {
 
   @Override
   public void onMessageReceived(RemoteMessage remoteMessage) {
-   eRTCSDK.fcm().onMessageReceived(remoteMessage);
+   InAppChat.fcm().onMessageReceived(remoteMessage);
   }
 
   @Override
@@ -29,6 +29,6 @@ public class ERTCFirebaseMessagingService extends FirebaseMessagingService {
   @Override
   public void onNewToken(String token) {
     super.onNewToken(token);
-    eRTCSDK.saveFCMToken(token);
+    InAppChat.saveFCMToken(token);
   }
 }

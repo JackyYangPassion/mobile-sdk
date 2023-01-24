@@ -32,7 +32,7 @@ import io.inappchat.inappchat.thread.mapper.ThreadRecord
 import io.inappchat.inappchat.user.mapper.UserRecord
 import io.inappchat.inappchat.utils.Constants
 import io.inappchat.inappchat.cache.database.dao.TenantDao
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single

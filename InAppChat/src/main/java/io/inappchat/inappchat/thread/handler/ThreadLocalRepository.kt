@@ -19,7 +19,7 @@ import io.inappchat.inappchat.remote.model.response.MessageResponse
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 
 /** Created by DK on 24/02/19.  */

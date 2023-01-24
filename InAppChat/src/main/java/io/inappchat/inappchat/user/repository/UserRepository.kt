@@ -15,69 +15,70 @@ import io.reactivex.rxjava3.core.Single
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface UserRepository {
-  //fun getLocalUsers(tenantId: String): Flowable<MutableList<UserRecord>>?
-  //fun getRemoteUsers(tenantId: String): Single<MutableList<UserRecord>>?
-  //fun getUpdatedUsers(tenantId: String, addUpdateOrDelete: String): Single<MutableList<UserRecord>>?
+    //fun getLocalUsers(tenantId: String): Flowable<MutableList<UserRecord>>
+    //fun getRemoteUsers(tenantId: String): Single<MutableList<UserRecord>>
+    //fun getUpdatedUsers(tenantId: String, addUpdateOrDelete: String): Single<MutableList<UserRecord>>
 
-  fun getNewUsers(
-    tenantId: String,
-    addUpdateOrDelete: String
-  ): Flowable<List<UserRecord>>?
-  fun getChatUsers(tenantId: String): Flowable<List<UserRecord>>?
-  fun getChatUsersRemote(tenantId: String): Single<List<UserRecord>>
-  fun getMentionedUsers(tenantId: String): Single<List<UserRecord>>
-  fun getReactionedUsers(
-    reactionUnicodes: List<String>,
-    msgId: String,
-    threadId: String,
-    chatType: ChatType
-  ): Single<List<UserRecord>>
+    fun getNewUsers(
+        tenantId: String,
+        addUpdateOrDelete: String
+    ): Flowable<List<UserRecord>>
 
-  fun getUsersInSync(
-    tenantId: String,
-    lastUserId: String?
-  ): List<User?>?
+    fun getChatUsers(tenantId: String): Flowable<List<UserRecord>>
+    fun getChatUsersRemote(tenantId: String): Single<List<UserRecord>>
+    fun getMentionedUsers(tenantId: String): Single<List<UserRecord>>
+    fun getReactionedUsers(
+        reactionUnicodes: List<String>,
+        msgId: String,
+        threadId: String,
+        chatType: ChatType
+    ): Single<List<UserRecord>>
 
-  fun getLastUser(tenantId: String): Single<UserRecord>?
-  fun getLastUserInSync(tenantId: String): User?
-  fun saveUsersInSync(userList: MutableList<User>): Boolean?
-  fun getUserById(
-    tenantId: String,
-    userId: String
-  ): Flowable<UserRecord>?
+    fun getUsersInSync(
+        tenantId: String,
+        lastUserId: String?
+    ): List<User>
 
-  fun logout(): Single<Result?>?
-  fun updateProfile(
-    tenantId: String,
-    userId: String,
-    profileStatus: String,
-    mediaPath: String,
-    mediaType: String
-  ): Single<Result?>?
+    fun getLastUser(tenantId: String): Single<UserRecord>
+    fun getLastUserInSync(tenantId: String): User
+    fun saveUsersInSync(userList: List<User>): Boolean
+    fun getUserById(
+        tenantId: String,
+        userId: String
+    ): Flowable<UserRecord>
 
-  fun getProfile(appUserId: String): Single<UserRecord?>?
+    fun logout(): Single<Result>
+    fun updateProfile(
+        tenantId: String,
+        userId: String,
+        profileStatus: String,
+        mediaPath: String,
+        mediaType: String
+    ): Single<Result>
 
-  fun getLoggedInUser(): Flowable<UserRecord?>?
+    fun getProfile(appUserId: String): Single<UserRecord>
 
-  //fun getUserInfo(tenantId: String, appUserIds: List<String?>?): Single<List<UserRecord?>?>?
+    fun getLoggedInUser(): Flowable<UserRecord>
 
-  fun setUserAvailability(
-    tenantId: String,
-    availabilityStatus: AvailabilityStatus
-  ): Single<Result?>?
+    //fun getUserInfo(tenantId: String, appUserIds: List<String>): Single<List<UserRecord>>
 
-  fun subscribeToUserMetaData(): Observable<UserRecord>?
+    fun setUserAvailability(
+        tenantId: String,
+        availabilityStatus: AvailabilityStatus
+    ): Single<Result>
 
-  fun removeProfilePic(
-    tenantId: String,
-    userId: String
-  ): Single<Result?>?
+    fun subscribeToUserMetaData(): Observable<UserRecord>
 
-  fun deactivate(): Single<Result?>?
+    fun removeProfilePic(
+        tenantId: String,
+        userId: String
+    ): Single<Result>
 
-  fun metaDataOn(appUserId: String): Observable<UserMetaDataRecord?>?
+    fun deactivate(): Single<Result>
 
-  fun fetchLatestUserStatus(): Single<Result?>
+    fun metaDataOn(appUserId: String): Observable<UserMetaDataRecord>
 
-  fun subscribeToLogout(): Observable<Result>
+    fun fetchLatestUserStatus(): Single<Result>
+
+    fun subscribeToLogout(): Observable<Result>
 }

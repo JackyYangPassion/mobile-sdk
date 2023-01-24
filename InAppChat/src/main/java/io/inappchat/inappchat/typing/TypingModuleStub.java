@@ -4,10 +4,10 @@ import android.content.Context;
 import io.inappchat.inappchat.R;
 import io.inappchat.inappchat.core.ChatSDKException;
 import io.inappchat.inappchat.core.type.TypingState;
-import io.inappchat.inappchat.eRTCSDK;
+import io.inappchat.inappchat.InAppChat;
 import io.inappchat.inappchat.typing.mapper.TypingIndicatorRecord;
 import io.inappchat.inappchat.utils.Constants;
-import io.reactivex.Completable;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 /**
@@ -18,7 +18,7 @@ public class TypingModuleStub implements TypingModule{
   private Context appContext;
 
   public static TypingModule newInstance() {
-    return new TypingModuleStub(eRTCSDK.getAppContext());
+    return new TypingModuleStub(InAppChat.getAppContext());
   }
 
   private TypingModuleStub(Context context) {

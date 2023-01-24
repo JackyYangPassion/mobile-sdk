@@ -14,10 +14,9 @@ import android.os.Build
 import android.text.TextUtils
 import androidx.core.app.NotificationCompat
 import io.inappchat.inappchat.R
-import io.inappchat.inappchat.eRTCSDK
-import org.apache.commons.lang.StringEscapeUtils
+import io.inappchat.inappchat.InAppChat
+import org.apache.commons.text.StringEscapeUtils
 import java.text.SimpleDateFormat
-import java.util.Arrays
 import java.util.Date
 import java.util.Locale
 
@@ -35,13 +34,13 @@ class NotificationUtils {
       if (TextUtils.isEmpty(message)) return
       val packageManager = context.packageManager
       val preferenceManager = NotificationPreferenceManager(context)
-      var intent = eRTCSDK.getFcmIntent()
+      var intent = InAppChat.fcmIntent
       // Log.e(TAG, "intent: " + intent);
       if (intent != null) {
         intent.putExtra("threadId", threadId)
       } else {
         intent = packageManager.getLaunchIntentForPackage(context.packageName)
-        intent.putExtra("threadId", threadId)
+        intent?.putExtra("threadId", threadId)
       }
       val resultPendingIntent =
         PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -164,12 +163,12 @@ class NotificationUtils {
 
     protected fun uriDecoder(serverResponse: CharSequence): String? {
       val data =
-        StringEscapeUtils.unescapeHtml(serverResponse.toString())
+        StringEscapeUtils.unescapeHtml3(serverResponse.toString())
       return StringEscapeUtils.unescapeXml(data)
     }
 
     private fun uriEncode(toServer: CharSequence): CharSequence? {
-      return StringEscapeUtils.escapeXml(toServer.toString())
+      return StringEscapeUtils.escapeXml11(toServer.toString())
     }
 
     private fun getAppIcon(context: Context): Int {

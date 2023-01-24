@@ -14,7 +14,7 @@ import io.inappchat.inappchat.mqtt.model.ChatReaction
 import io.inappchat.inappchat.mqtt.utils.Constants.CHAT_REACTION
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Created by DK on 12/06/20.

@@ -44,12 +44,12 @@ import io.inappchat.inappchat.remote.NetworkConfig
 import io.inappchat.inappchat.remote.NetworkManager
 import io.inappchat.inappchat.remote.model.response.Reactions
 import io.inappchat.inappchat.downloader.handler.DownloadRepository
-import io.reactivex.Completable
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket

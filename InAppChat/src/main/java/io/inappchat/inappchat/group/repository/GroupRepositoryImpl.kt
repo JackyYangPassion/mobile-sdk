@@ -21,7 +21,7 @@ import io.inappchat.inappchat.cache.database.entity.EKeyTable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket

@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace 'io.inappchat.inappchat'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         minSdk 21
@@ -43,6 +43,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+    implementation 'org.apache.commons:commons-text:1.10.0'
+    runtimeOnly 'org.jetbrains.kotlinx:kotlinx-coroutines-rx3:1.6.4'
 
 
     implementation 'androidx.core:core-ktx:1.9.0'
@@ -57,9 +59,14 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
+    def paging_version = "3.1.1"
+    implementation "androidx.paging:paging-runtime:$paging_version"
+    testImplementation "androidx.paging:paging-common:$paging_version"
+    implementation "androidx.paging:paging-rxjava3:$paging_version"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha17"
 
-    implementation 'com.rollbar:rollbar-java:1.+'
-    implementation 'com.rollbar:rollbar-android:1.+@aar'
+    implementation 'com.rollbar:rollbar-java:1.9.0'
+    implementation 'com.rollbar:rollbar-android:1.9.0@aar'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

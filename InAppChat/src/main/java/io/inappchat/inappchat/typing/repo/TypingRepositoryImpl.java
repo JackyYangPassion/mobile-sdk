@@ -19,12 +19,12 @@ import io.inappchat.inappchat.data.DataManager;
 import io.inappchat.inappchat.typing.mapper.TypingIndicatorRecord;
 import io.inappchat.inappchat.mqtt.model.TypingIndicator;
 
-import io.reactivex.Completable;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
 import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.ArrayList;
 
 /** Created by DK on 2019-05-04. */

@@ -6,7 +6,7 @@ import io.inappchat.inappchat.core.type.TypingState;
 import io.inappchat.inappchat.data.DataManager;
 import io.inappchat.inappchat.typing.mapper.TypingIndicatorRecord;
 import io.inappchat.inappchat.utils.Constants;
-import io.reactivex.Completable;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleSource;

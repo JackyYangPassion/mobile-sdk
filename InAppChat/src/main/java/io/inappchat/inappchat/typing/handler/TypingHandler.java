@@ -1,6 +1,6 @@
 package io.inappchat.inappchat.typing.handler;
 
-import io.reactivex.Completable;
+import io.reactivex.rxjava3.core.Completable;
 
 /** Created by DK on 05/04/19. */
 public interface TypingHandler {
