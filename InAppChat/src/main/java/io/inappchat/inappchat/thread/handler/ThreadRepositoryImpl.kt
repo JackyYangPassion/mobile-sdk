@@ -80,6 +80,6 @@ class ThreadRepositoryImpl private constructor(
         return local.hasThread(tenantId, currentUser, recipientUser)
     }
 
-    override fun getThreads(tenantId: String): Flowable<MutableList<ThreadRecord>>? =
+    override fun getThreads(tenantId: String): Flowable<List<ThreadRecord>> =
         local.getThreads(tenantId)
 }

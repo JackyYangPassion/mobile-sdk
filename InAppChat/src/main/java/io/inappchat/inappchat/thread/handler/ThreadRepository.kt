@@ -28,7 +28,7 @@ interface ThreadRepository {
         recipientUser: User?
     ): Single<List<ThreadUserLink>>
 
-    fun getThreads(tenantId: String): Flowable<MutableList<ThreadRecord>>?
+    fun getThreads(tenantId: String): Flowable<List<ThreadRecord>>
 
     fun insertThreadData(
         response: CreateThreadResponse,

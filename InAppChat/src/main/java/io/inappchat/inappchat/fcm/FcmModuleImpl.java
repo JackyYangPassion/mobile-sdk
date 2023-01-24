@@ -16,7 +16,7 @@ import io.inappchat.inappchat.mqtt.utils.Constants;
 
 import java.util.Objects;
 
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FcmModuleImpl implements FcmModule {

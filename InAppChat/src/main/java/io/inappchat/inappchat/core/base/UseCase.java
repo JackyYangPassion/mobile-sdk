@@ -1,7 +1,7 @@
 package io.inappchat.inappchat.core.base;
 
 import io.reactivex.rxjava3.core.SingleTransformer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /** Created by DK on 05/12/18. */

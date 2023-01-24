@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleSource;
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.functions.Function;
 
 /** Created by DK on 05/12/18. */
 public class TypingModuleHookImpl implements TypingModuleHook, TypingModule {

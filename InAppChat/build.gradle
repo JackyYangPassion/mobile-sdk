@@ -1,8 +1,10 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
+    id 'maven-publish'
 }
+
+def libraryVersion = '2.0.0'
 
 android {
     namespace 'io.inappchat.inappchat'
@@ -18,10 +20,28 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "ENV", '"production"'
+            buildConfigField 'String', 'BASE_URL', '"https://prov.inappchat.io"'
+        }
+        debug {
+            debuggable true
+            buildConfigField 'String', "ENV", '"dev"'
+            buildConfigField 'String', 'BASE_URL', '"https://prov-dev.inappchat.io"'
+        }
+        staging {
+            initWith debug
+            buildConfigField 'String', "ENV", '"staging"'
+            buildConfigField 'String', 'BASE_URL', '"https://prov-stage.inappchat.io"'
+        }
+        qa {
+            initWith debug
+            buildConfigField 'String', "ENV", '"qa"'
+            buildConfigField 'String', 'BASE_URL', '"https://prov-qa.inappchat.io"'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -71,4 +91,46 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId android.namespace
+            version = libraryVersion
+            artifactId project.getName()
+            // Tell maven to prepare the generated "*.aar" file for publishing
+            artifact("$buildDir/outputs/aar/${project.getName()}-${getFlavor(project)}-release.aar")
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.implementation.allDependencies.each {
+                    if (it.group != null && it.name != null && it.version != null && it.version != 'unspecified') {
+                        def dependencyNode = dependencies.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+
+                // include sub-module dependencies into POM xml file
+                def submoduleDependencies = new XmlParser().parse("$projectDir/sub-module-dependencies.xml")
+                submoduleDependencies.dependency.each {
+                    def dependencyNode = dependencies.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', it.groupId.text())
+                    dependencyNode.appendNode('artifactId', it.artifactId.text())
+                    dependencyNode.appendNode('version', it.version.text())
+                }
+            }
+        }
+    }
+}
+
+private static String getFlavor(project) {
+    def flavor = 'dev'
+    if (project.hasProperty('paramEnv')) {
+        flavor = project.property('paramEnv')
+    }
+    return flavor
+
 }

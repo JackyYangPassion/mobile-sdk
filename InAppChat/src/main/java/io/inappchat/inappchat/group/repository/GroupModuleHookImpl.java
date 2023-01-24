@@ -13,7 +13,7 @@ import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleSource;
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.functions.Function;
 import java.util.List;
 import org.reactivestreams.Publisher;
 

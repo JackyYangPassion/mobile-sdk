@@ -10,7 +10,7 @@ import java.io.IOException
 import java.lang.Exception
 import java.net.SocketTimeoutException
 
-class Error<T : Throwable?>(private val callback: ErrorCallback) : Consumer<T> {
+class Error<T : Throwable>(private val callback: ErrorCallback) : Consumer<T> {
     interface ErrorCallback {
         fun onError(httpCode: Int, status: Status?, message: String?)
     }

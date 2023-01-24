@@ -51,11 +51,7 @@ import io.inappchat.inappchat.thread.handler.ThreadRepository
 import io.inappchat.inappchat.thread.mapper.ThreadMapper
 import io.inappchat.inappchat.user.mapper.UserMapper
 import io.inappchat.inappchat.user.mapper.UserRecord
-import io.inappchat.inappchat.utils.Constants
 import io.inappchat.inappchat.utils.Constants.TenantConfig
-import io.inappchat.inappchat.utils.DisposableList
-import io.inappchat.inappchat.utils.Logger
-import io.inappchat.inappchat.utils.Utils
 import io.inappchat.inappchat.wrappers.UserWrapper
 import io.inappchat.inappchat.cache.database.dao.ChatReactionDao
 import io.inappchat.inappchat.cache.database.dao.ChatThreadDao
@@ -96,13 +92,11 @@ import io.inappchat.inappchat.remote.model.response.MessageResponse
 import io.inappchat.inappchat.remote.util.HeaderUtils
 import io.inappchat.inappchat.downloader.handler.DownloadRepository
 import io.inappchat.inappchat.downloader.request.DownloadRequestBuilder
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Flowable
+import io.inappchat.inappchat.utils.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.core.SingleEmitter
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
+import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.io.IOException
@@ -334,18 +328,7 @@ class ChatRepositoryImpl private constructor(
         customData: String?
     ): Single<MessageRecord> {
 
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            if (thread == null) {
-                if (message.chatType == ChatType.SINGLE || message.chatType == ChatType.SINGLE_CHAT_THREAD) {
-                    throw UnsupportedOperationException("User not found")
-                } else {
-                    throw UnsupportedOperationException("Channel not found")
-                }
-            } else {
-                e.onSuccess(thread)
-            }
-        }.flatMap { thread: Thread? ->
+        return getThread(threadId, message).flatMap { thread: Thread? ->
             if (noInternetConnection() && message.message.isNullOrEmpty()) {
                 throw UnsupportedOperationException("Network unavailable")
             }
@@ -544,8 +527,7 @@ class ChatRepositoryImpl private constructor(
                         }
                     }
                 }
-
-                return@onErrorReturn null
+                throw it
             }.doOnError {
                 it.printStackTrace()
                 it.message?.let { error ->
@@ -580,18 +562,7 @@ class ChatRepositoryImpl private constructor(
         customData: String?
     ): Single<MessageRecord> {
 
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            if (thread == null) {
-                if (message.chatType == ChatType.SINGLE || message.chatType == ChatType.SINGLE_CHAT_THREAD) {
-                    throw UnsupportedOperationException("User not found")
-                } else {
-                    throw UnsupportedOperationException("Channel not found")
-                }
-            } else {
-                e.onSuccess(thread)
-            }
-        }.flatMap { thread: Thread? ->
+        return getThread(threadId).flatMap { thread: Thread ->
             if (noInternetConnection()) {
                 throw UnsupportedOperationException("Network unavailable")
             }
@@ -1009,7 +980,7 @@ class ChatRepositoryImpl private constructor(
                 // username : <tenantId>/<X-Request-Signature>/<X-Nonce>
                 val time = System.currentTimeMillis()
                 val requestSignature = HeaderUtils.getHeaderSignature(
-                    preference.mqttApiKey, preference.packageName, time
+                    preference.mqttApiKey!!, preference.packageName!!, time
                 )
                 val userName = "$tenantId"
                 val password = "$requestSignature:$time:${preference.chatToken}"
@@ -1157,18 +1128,7 @@ class ChatRepositoryImpl private constructor(
     }
 
     override fun editMessage(threadId: String, message: Message): Single<MessageRecord> {
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            if (thread == null) {
-                if (message.chatType == ChatType.SINGLE || message.chatType == ChatType.SINGLE_CHAT_THREAD) {
-                    throw UnsupportedOperationException("User not found")
-                } else {
-                    throw UnsupportedOperationException("Channel not found")
-                }
-            } else {
-                e.onSuccess(thread)
-            }
-        }.flatMap { _: Thread? ->
+        return getThread(threadId, message).flatMap { _: Thread? ->
             if (noInternetConnection()) {
                 throw UnsupportedOperationException("Network unavailable")
             }
@@ -1271,13 +1231,7 @@ class ChatRepositoryImpl private constructor(
         deviceId: String,
         parallelDeviceList: ArrayList<EKeyTable>?
     ): Single<MessageRecord> {
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            thread?.let { e.onSuccess(it) }
-        }.flatMap { thread: Thread? ->
-            if (noInternetConnection()) {
-                throw UnsupportedOperationException("Network unavailable")
-            }
+        return getThread(threadId, message).flatMap { thread: Thread ->
 
             val msgId =
                 if (message.chatType.type == ChatType.SINGLE.type || message.chatType.type == ChatType.GROUP.type) {
@@ -1628,24 +1582,31 @@ class ChatRepositoryImpl private constructor(
         }
     }
 
+    private fun getThread(id: String, message: Message? = null) = Single.fromCallable {
+        threadRepository.getThreadByIdSync(id)
+            ?: if (message?.chatType == ChatType.SINGLE || message?.chatType == ChatType.SINGLE_CHAT_THREAD) {
+                throw UnsupportedOperationException("User not found")
+            } else {
+                throw UnsupportedOperationException("Channel not found")
+            }
+    }
+
+    private fun getThread(id: String, message: MessageRecord) = Single.fromCallable {
+        threadRepository.getThreadByIdSync(id)
+            ?: if (message.type == ChatType.SINGLE.type || message.type == ChatType.SINGLE_CHAT_THREAD.type) {
+                throw UnsupportedOperationException("User not found")
+            } else {
+                throw UnsupportedOperationException("Channel not found")
+            }
+    }
+
+
     override fun deleteMessage(
         deleteType: String,
         threadId: String,
         messageList: ArrayList<Message>
     ): Single<List<MessageRecord>> {
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            if (thread == null) {
-                val message = messageList[0]
-                if (message.chatType == ChatType.SINGLE || message.chatType == ChatType.SINGLE_CHAT_THREAD) {
-                    throw UnsupportedOperationException("User not found")
-                } else {
-                    throw UnsupportedOperationException("Channel not found")
-                }
-            } else {
-                e.onSuccess(thread)
-            }
-        }.flatMap { _: Thread? ->
+        return getThread(threadId, messageList.getOrNull(0)).flatMap { _: Thread? ->
 
             if (noInternetConnection()) {
                 throw UnsupportedOperationException("Network unavailable")
@@ -2093,17 +2054,18 @@ class ChatRepositoryImpl private constructor(
                     userList.forEach { user ->
                         if (isE2E) {
                             // here we have to handle e2e for forward chat
-                            var threadId =
+                            val threadId =
                                 dataManager.db().threadDao().getThreadIdByRecipientId(user.id)
                                     .blockingGet()
                             if (threadId == null) {
                                 val currentUser = userDao.getUserByIdInSync(tenantId, appUserId)
                                 val recipientUser = userDao.getUserByIdInSync(tenantId, user.id)
-                                threadId = createThread(tenantId, currentUser, recipientUser)
+                                val nextThreadId =
+                                    createThread(tenantId, currentUser, recipientUser)
                                 forwardE2EMessage(
                                     message = message.copy(chatType = ChatType.SINGLE),
                                     tenantId = tenantId,
-                                    threadId = threadId,
+                                    threadId = nextThreadId,
                                     deviceId = deviceId,
                                     customData = customData,
                                     forwardChat = forwardChat
@@ -2495,18 +2457,7 @@ class ChatRepositoryImpl private constructor(
         messageRecord: MessageRecord,
         isFollowed: Boolean
     ): Single<MessageRecord> {
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            if (thread == null) {
-                if (messageRecord.type == ChatType.SINGLE.type || messageRecord.type == ChatType.SINGLE_CHAT_THREAD.type) {
-                    throw UnsupportedOperationException("User not found")
-                } else {
-                    throw UnsupportedOperationException("Channel not found")
-                }
-            } else {
-                e.onSuccess(thread)
-            }
-        }.flatMap { _: Thread? ->
+        return getThread(threadId, messageRecord).flatMap { _: Thread? ->
             if (noInternetConnection()) {
                 throw UnsupportedOperationException("Network unavailable")
             }
@@ -2580,18 +2531,7 @@ class ChatRepositoryImpl private constructor(
         reportType: String,
         reason: String
     ): Single<MessageRecord> {
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            if (thread == null) {
-                if (messageRecord.type == ChatType.SINGLE.type || messageRecord.type == ChatType.SINGLE_CHAT_THREAD.type) {
-                    throw UnsupportedOperationException("User not found")
-                } else {
-                    throw UnsupportedOperationException("Channel not found")
-                }
-            } else {
-                e.onSuccess(thread)
-            }
-        }.flatMap { _: Thread? ->
+        return getThread(threadId, messageRecord).flatMap { _: Thread? ->
             val msgId =
                 if (messageRecord.type == ChatType.SINGLE.type || messageRecord.type == ChatType.GROUP.type) {
                     val singleChat =
@@ -2694,10 +2634,7 @@ class ChatRepositoryImpl private constructor(
         msgId: String,
         parentMsgId: String?
     ): Single<MessageRecord> {
-        return Single.create { e: SingleEmitter<Thread?> ->
-            val thread = threadRepository.getThreadByIdSync(threadId)
-            thread?.let { e.onSuccess(it) }
-        }.flatMap { thread: Thread? ->
+        return getThread(threadId).flatMap { thread: Thread? ->
 
             if (thread == null) {
                 throw UnsupportedOperationException("There is no thread with this threadId")
@@ -2842,8 +2779,7 @@ class ChatRepositoryImpl private constructor(
                         }
                     }
                 }
-
-                return@onErrorReturn null
+                throw it
             }.doOnError {
                 it.printStackTrace()
                 it.message?.let { error ->

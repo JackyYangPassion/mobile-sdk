@@ -57,7 +57,7 @@ class ThreadLocalRepository constructor(
             .hasThread(currentUser!!.id, recipientUser!!.id)
     }
 
-    override fun getThreads(tenantId: String): Flowable<MutableList<ThreadRecord>> {
+    override fun getThreads(tenantId: String): Flowable<List<ThreadRecord>> {
         return threadDao.getThreads(tenantId)
             .flatMap { threadEmbeddedList: List<ThreadEmbedded> ->
                 var list: MutableList<ThreadRecord> =
@@ -97,7 +97,7 @@ class ThreadLocalRepository constructor(
                 }
                 val comparator = compareByDescending<ThreadRecord> { it.lastMessage.timestamp }
                 list = list.sortedWith(comparator).toMutableList()
-                Flowable.just(list)
+                Flowable.just((list.toList()))
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -40,10 +40,10 @@ abstract class BaseModule protected constructor(dataManager: DataManager) {
         return data().preference().chatUserId
     }
 
-    protected val fCMToken: String?
-        protected get() = data().preference().fcmToken
-    protected val deviceId: String?
-        protected get() = data().preference().deviceId
+    protected val fcmToken: String
+        protected get() = data().preference().fcmToken!!
+    protected val deviceId: String
+        protected get() = data().preference().deviceId!!
     private var cachedUser: User? = null
 
     init {

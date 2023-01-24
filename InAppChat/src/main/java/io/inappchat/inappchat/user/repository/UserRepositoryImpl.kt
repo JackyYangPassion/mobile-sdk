@@ -68,7 +68,7 @@ class UserRepositoryImpl private constructor(
         return userDao.getUsers(tenantId, appUserId)
             .flatMap { users: List<User> ->
                 val transform =
-                    users.transform { user: User ->
+                    users.transform { user ->
                         UserMapper.transform(
                             User(
                                 user.id, tenantId, user.name, user.appState,
