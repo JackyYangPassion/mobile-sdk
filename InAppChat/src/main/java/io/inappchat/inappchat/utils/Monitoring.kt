@@ -6,12 +6,13 @@ package io.inappchat.inappchat.utils
 
 import android.content.Context
 import com.rollbar.android.Rollbar
+import io.inappchat.inappchat.BuildConfig
 
 object Monitoring {
     lateinit var logger: Rollbar
     fun setup(context: Context) {
         logger = Rollbar(
-            context, "3fd589b8d11b4c89aedafa3e1c6af534", "production", true,
+            context, "3fd589b8d11b4c89aedafa3e1c6af534", BuildConfig.ENV, true,
             false, null, "full", -1,
             false
         )

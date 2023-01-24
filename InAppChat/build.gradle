@@ -30,11 +30,6 @@ android {
             buildConfigField 'String', "ENV", '"dev"'
             buildConfigField 'String', 'BASE_URL', '"https://prov-dev.inappchat.io"'
         }
-        staging {
-            initWith debug
-            buildConfigField 'String', "ENV", '"staging"'
-            buildConfigField 'String', 'BASE_URL', '"https://prov-stage.inappchat.io"'
-        }
         qa {
             initWith debug
             buildConfigField 'String', "ENV", '"qa"'

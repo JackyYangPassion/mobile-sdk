@@ -8,13 +8,11 @@ import android.text.TextUtils
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
-import com.rollbar.android.Rollbar
 import io.inappchat.inappchat.announcement.repository.AnnouncementModuleHook
 import io.inappchat.inappchat.chat.repository.ChatModuleHook
 import io.inappchat.inappchat.core.event.EventHandler
 import io.inappchat.inappchat.data.DataManager
 import io.inappchat.inappchat.data.DataManagerImpl
-import io.inappchat.inappchat.data.common.Result
 import io.inappchat.inappchat.downloader.FileDownloader
 import io.inappchat.inappchat.fcm.FcmModule
 import io.inappchat.inappchat.group.GroupModule
@@ -27,7 +25,6 @@ import io.inappchat.inappchat.tenant.AuthenticationModule
 import io.inappchat.inappchat.typing.TypingModule
 import io.inappchat.inappchat.user.UserModule
 import io.inappchat.inappchat.utils.Monitoring
-import io.reactivex.rxjava3.core.Single
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 import java.lang.ref.WeakReference

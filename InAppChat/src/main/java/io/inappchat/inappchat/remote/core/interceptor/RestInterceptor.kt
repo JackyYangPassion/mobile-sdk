@@ -154,6 +154,13 @@ class RestInterceptor(nwConfig: NetworkConfig) : Interceptor {
                     )
                     else -> {
                         //callback.onError(333, com.jio.bapp.network.Status.UNEXPECTED, e.message)
+                        Monitoring.error(
+                            ex,
+                            mapOf(
+                                "url" to chain.request().url(),
+                                "method" to chain.request().method()
+                            )
+                        )
                         ErtcException(
                             ErtcException.Error.UnknownError(Constants.HTTP_CODE_UNEXPECTED),
                             ex.message ?: "Unknown error",
