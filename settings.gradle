@@ -12,6 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "InAppChat"
+rootProject.name = "inappchat"
 include ':app'
-include ':InAppChat'
+include ':sdk'

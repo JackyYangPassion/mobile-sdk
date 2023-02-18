@@ -1,7 +1,8 @@
 package io.inappchat.InAppChat.Example
 
 import android.app.Application
-import io.inappchat.inappchat.InAppChat
+import android.util.Log
+import io.inappchat.sdk.InAppChat
 
 class MainApplication : Application() {
 
