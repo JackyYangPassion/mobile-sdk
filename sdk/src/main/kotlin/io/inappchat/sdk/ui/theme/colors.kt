@@ -1,5 +1,7 @@
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
+@Stable
 data class Colors(
     val light: Boolean = false,
     val bubble: Color = if (light) Color(0xFFF0F0F0) else Color(0xFF2B2B2B),

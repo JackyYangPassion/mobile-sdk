@@ -1,15 +1,18 @@
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
+@Stable
 data class FontStyle(
     val size: TextUnit = 14.sp,
     val weight: FontWeight = FontWeight.Normal,
     val family: FontFamily = FontFamily.Default
 )
 
+@Stable
 data class Fonts(
     val title: FontStyle = FontStyle(size = 22.sp),
     val title2: FontStyle = FontStyle(size = 17.sp),
