@@ -15,7 +15,8 @@
 
 package io.inappchat.sdk.models
 
-import io.inappchat.sdk.models.BaseMsgResponderSchema
+import io.inappchat.sdk.models.APIUser
+import io.inappchat.sdk.models.AvailabilityStatus
 import io.inappchat.sdk.models.NotificationSettings
 
 import com.squareup.moshi.Json
@@ -25,7 +26,7 @@ import com.squareup.moshi.Json
  *
  * @param threadId Optional. Thread id only applicable for notificationSettingsChangedThread
  * @param notificationSettings 
- * @param availabilityStatus Optional. Only applicable for availabilityStatusChanged. Availability status i.e. online/away/invisible/dnd
+ * @param availabilityStatus 
  * @param blockedStatus Optional. Only applicable for userBlockedStatusChanged. Blocked status i.e. blocked/unblocked
  * @param targetUser 
  */
@@ -40,16 +41,26 @@ data class UserSelfUpdateEventData (
     @Json(name = "notificationSettings")
     val notificationSettings: NotificationSettings? = null,
 
-    /* Optional. Only applicable for availabilityStatusChanged. Availability status i.e. online/away/invisible/dnd */
     @Json(name = "availabilityStatus")
-    val availabilityStatus: kotlin.String? = null,
+    val availabilityStatus: AvailabilityStatus? = null,
 
     /* Optional. Only applicable for userBlockedStatusChanged. Blocked status i.e. blocked/unblocked */
     @Json(name = "blockedStatus")
-    val blockedStatus: kotlin.String? = null,
+    val blockedStatus: UserSelfUpdateEventData.BlockedStatus? = null,
 
     @Json(name = "targetUser")
-    val targetUser: BaseMsgResponderSchema? = null
+    val targetUser: APIUser? = null
 
-)
+) {
+
+    /**
+     * Optional. Only applicable for userBlockedStatusChanged. Blocked status i.e. blocked/unblocked
+     *
+     * Values: blocked,unblocked
+     */
+    enum class BlockedStatus(val value: kotlin.String) {
+        @Json(name = "blocked") blocked("blocked"),
+        @Json(name = "unblocked") unblocked("unblocked");
+    }
+}
 

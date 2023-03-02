@@ -1,11 +1,11 @@
 # DraftApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/RBN/Socket-Server/1.0.0*
+All URIs are relative to *https://chat.inappchat.io/v3*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**draftUpdate**](DraftApi.md#draftUpdate) | **POST** {version}/tenants/{tenantId}/{eRTCUserId}/draft/ | Draft API
-[**getDrafts**](DraftApi.md#getDrafts) | **GET** {version}/tenants/{tenantId}/{eRTCUserId}/draft/ | Draft API
+[**getDrafts**](DraftApi.md#getDrafts) | **GET** draft | Draft API
+[**updateDraft**](DraftApi.md#updateDraft) | **POST** draft | Draft API
 
 
 
@@ -21,32 +21,14 @@ Send chat over a thread
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(DraftApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <chatServer apiKey>~<bundleId>~<epoch timeStamp>
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
 val deviceid : kotlin.String = deviceid_example // kotlin.String | Source device ID
-val sendereRTCUserId : kotlin.String = sendereRTCUserId_example // kotlin.String | eRTC user Id of sender. eg. 5c56c9a2218aec4b4a8a976e
-val senderTimeStampMs : java.math.BigDecimal = 8.14 // java.math.BigDecimal | epoch timestamp (in ms) of message creation generated on sender device
-val threadId : kotlin.String = threadId_example // kotlin.String | Thread ID which represents a user or a group. eg. 5c56c9a2218aec4b4a8a976f. This is exclusive peer to recipientAppUserId.
-val recipientAppUserId : kotlin.String = recipientAppUserId_example // kotlin.String | App user Id of receiver. eg. abc@def.com. This is exclusive peer to threadId.
-val message : kotlin.String = message_example // kotlin.String | message text. rg. 'hello'
-val msgType : kotlin.String = msgType_example // kotlin.String | message type. Required only for text/contact/location message. Other supported values are gif/sticker
-val file : java.io.File = BINARY_DATA_HERE // java.io.File | Media chat file
-val metadata : kotlin.String = metadata_example // kotlin.String | JSON object which can be used for client reference in request/response context. Server will not do any processing on this object. eg. { \\\"abc\\\" : \\\"def\\\" }
-val location : kotlin.String = location_example // kotlin.String | JSON object of location. check locationSchema below
-val contact : kotlin.String = contact_example // kotlin.String | JSON object of contact. check contactSchema below
-val gify : kotlin.String = gify_example // kotlin.String | gify url
-val mentions : kotlin.String = mentions_example // kotlin.String | User mentions list. Please check mentionsSchemaChatRequest below. For example, [{\\\"type\\\":\\\"user\\\",\\\"value\\\":\\\"5c56c9a2218aec4b4a8a976f\\\"}, {\\\"type\\\":\\\"generic\\\",\\\"value\\\":\\\"channel\\\"]
-val media : kotlin.String = media_example // kotlin.String | This is only allowed in forward messages. i.e. if forwardChatFeatureData exists. JSON object of Details in-case it is a forward chat. eg.{\\\"path\\\" : \\\"file/chat/5eef7e13df287e0ebaac34b35eef97669c612ed1ca595314_1598610192772.jpeg\\\",\\\"name\\\" : \\\"WhatsApp Image 2020-08-25 at 2.36.35 PM.jpeg\\\",\\\"thumbnail\\\" : \\\"file/imageThumbnail/chat/5eef7e13df287e0ebaac34b35eef97669c612ed1ca595314_1598610192772.jpeg\\\"}. Please check mediaSchema in models
-val msgCorrelationId : kotlin.String = msgCorrelationId_example // kotlin.String | Client generated unique identifier used to trace message delivery till receiver
-val customData : kotlin.String = customData_example // kotlin.String | JSON object which can be used for customer specific data which is not supported in InAppChat chat model. eg. { \\\"abc\\\" : \\\"def\\\" }
+val threadId : kotlin.String = threadId_example // kotlin.String | Get draft for a particular thread
+val baseMsgUniqueId : kotlin.String = baseMsgUniqueId_example // kotlin.String | Get thread for a reply thread, this is base message id
 
 launch(Dispatchers.IO) {
-    val result : GetDrafts200Response = webService.draftUpdate(version, tenantId, eRTCUserId, authorization, xRequestSignature, xNonce, deviceid, sendereRTCUserId, senderTimeStampMs, threadId, recipientAppUserId, message, msgType, file, metadata, location, contact, gify, mentions, media, msgCorrelationId, customData)
+    val result : APIMessage = webService.getDrafts(deviceid, threadId, baseMsgUniqueId)
 }
 ```
 
@@ -54,40 +36,23 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;chatServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **xNonce** | **kotlin.String**| epoch timestamp |
  **deviceid** | **kotlin.String**| Source device ID |
- **sendereRTCUserId** | **kotlin.String**| eRTC user Id of sender. eg. 5c56c9a2218aec4b4a8a976e |
- **senderTimeStampMs** | **java.math.BigDecimal**| epoch timestamp (in ms) of message creation generated on sender device |
- **threadId** | **kotlin.String**| Thread ID which represents a user or a group. eg. 5c56c9a2218aec4b4a8a976f. This is exclusive peer to recipientAppUserId. | [optional]
- **recipientAppUserId** | **kotlin.String**| App user Id of receiver. eg. abc@def.com. This is exclusive peer to threadId. | [optional]
- **message** | **kotlin.String**| message text. rg. &#39;hello&#39; | [optional]
- **msgType** | **kotlin.String**| message type. Required only for text/contact/location message. Other supported values are gif/sticker | [optional]
- **file** | **java.io.File**| Media chat file | [optional]
- **metadata** | **kotlin.String**| JSON object which can be used for client reference in request/response context. Server will not do any processing on this object. eg. { \\\&quot;abc\\\&quot; : \\\&quot;def\\\&quot; } | [optional]
- **location** | **kotlin.String**| JSON object of location. check locationSchema below | [optional]
- **contact** | **kotlin.String**| JSON object of contact. check contactSchema below | [optional]
- **gify** | **kotlin.String**| gify url | [optional]
- **mentions** | **kotlin.String**| User mentions list. Please check mentionsSchemaChatRequest below. For example, [{\\\&quot;type\\\&quot;:\\\&quot;user\\\&quot;,\\\&quot;value\\\&quot;:\\\&quot;5c56c9a2218aec4b4a8a976f\\\&quot;}, {\\\&quot;type\\\&quot;:\\\&quot;generic\\\&quot;,\\\&quot;value\\\&quot;:\\\&quot;channel\\\&quot;] | [optional]
- **media** | **kotlin.String**| This is only allowed in forward messages. i.e. if forwardChatFeatureData exists. JSON object of Details in-case it is a forward chat. eg.{\\\&quot;path\\\&quot; : \\\&quot;file/chat/5eef7e13df287e0ebaac34b35eef97669c612ed1ca595314_1598610192772.jpeg\\\&quot;,\\\&quot;name\\\&quot; : \\\&quot;WhatsApp Image 2020-08-25 at 2.36.35 PM.jpeg\\\&quot;,\\\&quot;thumbnail\\\&quot; : \\\&quot;file/imageThumbnail/chat/5eef7e13df287e0ebaac34b35eef97669c612ed1ca595314_1598610192772.jpeg\\\&quot;}. Please check mediaSchema in models | [optional]
- **msgCorrelationId** | **kotlin.String**| Client generated unique identifier used to trace message delivery till receiver | [optional]
- **customData** | **kotlin.String**| JSON object which can be used for customer specific data which is not supported in InAppChat chat model. eg. { \\\&quot;abc\\\&quot; : \\\&quot;def\\\&quot; } | [optional]
+ **threadId** | **kotlin.String**| Get draft for a particular thread | [optional]
+ **baseMsgUniqueId** | **kotlin.String**| Get thread for a reply thread, this is base message id | [optional]
 
 ### Return type
 
-[**GetDrafts200Response**](GetDrafts200Response.md)
+[**APIMessage**](APIMessage.md)
 
 ### Authorization
 
 
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
- - **Content-Type**: multipart/form-data
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 
@@ -103,19 +68,27 @@ Send chat over a thread
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(DraftApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <chatServer apiKey>~<bundleId>~<epoch timeStamp>
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
 val deviceid : kotlin.String = deviceid_example // kotlin.String | Source device ID
-val threadId : kotlin.String = threadId_example // kotlin.String | Get draft for a particular thread
-val baseMsgUniqueId : kotlin.String = baseMsgUniqueId_example // kotlin.String | Get thread for a reply thread, this is base message id
+val senderTimeStampMs : java.math.BigDecimal = 8.14 // java.math.BigDecimal | epoch timestamp (in ms) of message creation generated on sender device
+val threadId : kotlin.String = threadId_example // kotlin.String | Thread ID which represents a user or a group. eg. 5c56c9a2218aec4b4a8a976f. This is mutually exclusive with recipientAppUserId.
+val recipientAppUserId : kotlin.String = recipientAppUserId_example // kotlin.String | App user Id of receiver. eg. abc@def.com. This is mutually exclusive with threadId.
+val message : kotlin.String = message_example // kotlin.String | message text. rg. 'hello'
+val msgType : MessageType =  // MessageType | 
+val file : java.io.File = BINARY_DATA_HERE // java.io.File | File share
+val replyThreadFeatureData : Reply =  // Reply | 
+val location : Location =  // Location | 
+val contact : Contact =  // Contact | 
+val gif : kotlin.String = gif_example // kotlin.String | gify url
+val mentions : kotlin.collections.List<Mention> =  // kotlin.collections.List<Mention> | 
+val forwardChatFeatureData : Forward =  // Forward | 
+val media : Media =  // Media | 
+val msgCorrelationId : kotlin.String = msgCorrelationId_example // kotlin.String | Client generated unique identifier used to trace message delivery till receiver
+val encryptedChatList : kotlin.collections.List<EncryptedMessage> =  // kotlin.collections.List<EncryptedMessage> | List of user+device wise eencrypted chat objects.
 
 launch(Dispatchers.IO) {
-    val result : GetDrafts200Response = webService.getDrafts(version, tenantId, eRTCUserId, authorization, xRequestSignature, xNonce, deviceid, threadId, baseMsgUniqueId)
+    val result : APIMessage = webService.updateDraft(deviceid, senderTimeStampMs, threadId, recipientAppUserId, message, msgType, file, replyThreadFeatureData, location, contact, gif, mentions, forwardChatFeatureData, media, msgCorrelationId, encryptedChatList)
 }
 ```
 
@@ -123,26 +96,35 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;chatServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **xNonce** | **kotlin.String**| epoch timestamp |
  **deviceid** | **kotlin.String**| Source device ID |
- **threadId** | **kotlin.String**| Get draft for a particular thread | [optional]
- **baseMsgUniqueId** | **kotlin.String**| Get thread for a reply thread, this is base message id | [optional]
+ **senderTimeStampMs** | **java.math.BigDecimal**| epoch timestamp (in ms) of message creation generated on sender device |
+ **threadId** | **kotlin.String**| Thread ID which represents a user or a group. eg. 5c56c9a2218aec4b4a8a976f. This is mutually exclusive with recipientAppUserId. | [optional]
+ **recipientAppUserId** | **kotlin.String**| App user Id of receiver. eg. abc@def.com. This is mutually exclusive with threadId. | [optional]
+ **message** | **kotlin.String**| message text. rg. &#39;hello&#39; | [optional]
+ **msgType** | [**MessageType**](MessageType.md)|  | [optional] [enum: text, image, audio, video, gif, file, contact, location]
+ **file** | **java.io.File**| File share | [optional]
+ **replyThreadFeatureData** | [**Reply**](Reply.md)|  | [optional]
+ **location** | [**Location**](Location.md)|  | [optional]
+ **contact** | [**Contact**](Contact.md)|  | [optional]
+ **gif** | **kotlin.String**| gify url | [optional]
+ **mentions** | [**kotlin.collections.List&lt;Mention&gt;**](Mention.md)|  | [optional]
+ **forwardChatFeatureData** | [**Forward**](Forward.md)|  | [optional]
+ **media** | [**Media**](Media.md)|  | [optional]
+ **msgCorrelationId** | **kotlin.String**| Client generated unique identifier used to trace message delivery till receiver | [optional]
+ **encryptedChatList** | [**kotlin.collections.List&lt;EncryptedMessage&gt;**](EncryptedMessage.md)| List of user+device wise eencrypted chat objects. | [optional]
 
 ### Return type
 
-[**GetDrafts200Response**](GetDrafts200Response.md)
+[**APIMessage**](APIMessage.md)
 
 ### Authorization
 
 
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 

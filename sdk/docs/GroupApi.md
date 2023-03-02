@@ -1,26 +1,30 @@
 # GroupApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/RBN/Socket-Server/1.0.0*
+All URIs are relative to *https://chat.inappchat.io/v3*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**addParticipantsPost**](GroupApi.md#addParticipantsPost) | **POST** {version}/tenants}/{tenantId}/{eRTCUserId}/group/{groupId}/addParticipants | Add participants to group
-[**createOrUpdateGroupPost**](GroupApi.md#createOrUpdateGroupPost) | **POST** {version}/tenants/{tenantId}/{eRTCUserId}/group | Create or Update group
-[**deleteGroupProfilePic**](GroupApi.md#deleteGroupProfilePic) | **DELETE** {version}/tenants/{tenantId}/{eRTCUserId}/group/{groupId}/removeProfilePic | Remove group profile pic
-[**getGroupByGroupIdGet**](GroupApi.md#getGroupByGroupIdGet) | **GET** {version}/tenants/{tenantId}/{eRTCUserId}/group/{groupId} | Get group by groupId
-[**getGroupByThreadIdGet**](GroupApi.md#getGroupByThreadIdGet) | **GET** {version}/tenants/{tenantId}/{eRTCUserId}/group/{threadId}/groupByThreadId | Get group by threadId
-[**makeDismissAdminPost**](GroupApi.md#makeDismissAdminPost) | **POST** {version}/tenants/{tenantId}/{eRTCUserId}/group/{groupId}/makeDismissAdmin/{action} | Make or Dismiss a group user as admin
-[**removeParticipantsPost**](GroupApi.md#removeParticipantsPost) | **POST** {version}/tenants/{tenantId}/{eRTCUserId}/group/{groupId}/removeParticipants | Delete participants from group
-[**restrictParticipants**](GroupApi.md#restrictParticipants) | **POST** {version}/tenants}/{tenantId}/{eRTCUserId}/group/{groupId}/restrictParticipants | Ban or mute users
-[**unrestrictParticipants**](GroupApi.md#unrestrictParticipants) | **POST** {version}/tenants}/{tenantId}/{eRTCUserId}/group/{groupId}/unrestrictParticipants | UnBan or unmute users
-[**userGroupsFilter**](GroupApi.md#userGroupsFilter) | **GET** {version}/tenants/{tenantId}/{eRTCUserId}/group | Get user groups
-[**userGroupsGet**](GroupApi.md#userGroupsGet) | **GET** {version}/tenants/{tenantId}/{eRTCUserId}/group/userGroups | Get user groups
+[**acceptGroupInvite**](GroupApi.md#acceptGroupInvite) | **POST** group/{gid}/invites/accept | accept group invitation
+[**addParticipant**](GroupApi.md#addParticipant) | **PUT** group/{gid}/participants/{uid} | Add participant to group
+[**createGroup**](GroupApi.md#createGroup) | **POST** groups | Create or Update group
+[**deleteGroup**](GroupApi.md#deleteGroup) | **DELETE** group/{gid} | 
+[**dismissGroupInvite**](GroupApi.md#dismissGroupInvite) | **POST** group/{gid}/invites/dismiss | dismiss group invitation
+[**getGroup**](GroupApi.md#getGroup) | **GET** group/{gid} | Get group by groupId
+[**getGroups**](GroupApi.md#getGroups) | **GET** groups | Get user groups
+[**getInvites**](GroupApi.md#getInvites) | **GET** group/invites | get group invitation
+[**groupAddAdmin**](GroupApi.md#groupAddAdmin) | **PUT** group/{gid}/admin/{uid} | Make a user an admin
+[**groupDismissAdmin**](GroupApi.md#groupDismissAdmin) | **DELETE** group/{gid}/admin/{uid} | Dismiss a group admin
+[**inviteUser**](GroupApi.md#inviteUser) | **POST** group/{gid}/invite | create group invitation
+[**moderateGroup**](GroupApi.md#moderateGroup) | **POST** group/{gid}/moderate | 
+[**removeGroupImage**](GroupApi.md#removeGroupImage) | **DELETE** group/{gid}/image | Remove group profile pic
+[**removeParticipant**](GroupApi.md#removeParticipant) | **DELETE** group/{gid}/participants/{uid} | Remove participant from group
+[**updateGroup**](GroupApi.md#updateGroup) | **PUT** group/{gid} | 
 
 
 
-Add participants to group
+accept group invitation
 
-Add participants to group
+Accept group invitation
 
 ### Example
 ```kotlin
@@ -30,18 +34,12 @@ Add participants to group
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val groupId : kotlin.String = groupId_example // kotlin.String | Group ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val body : AddRemoveParticipantsRequest =  // AddRemoveParticipantsRequest | 
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
 
 launch(Dispatchers.IO) {
-    val result : CreateOrUpdateGroupPost200Response = webService.addParticipantsPost(authorization, xRequestSignature, version, tenantId, eRTCUserId, groupId, xNonce, body)
+    val result : APIThread = webService.acceptGroupInvite(gid)
 }
 ```
 
@@ -49,32 +47,72 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **groupId** | **kotlin.String**| Group ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **body** | [**AddRemoveParticipantsRequest**](AddRemoveParticipantsRequest.md)|  | [optional]
+ **gid** | **kotlin.String**| Group ID |
 
 ### Return type
 
-[**CreateOrUpdateGroupPost200Response**](CreateOrUpdateGroupPost200Response.md)
+[**APIThread**](APIThread.md)
 
 ### Authorization
 
-No authorization required
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
+
+Add participant to group
+
+Add participant to group
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+val uid : kotlin.String = uid_example // kotlin.String | the user's id
+
+launch(Dispatchers.IO) {
+    webService.addParticipant(gid, uid)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+ **uid** | **kotlin.String**| the user&#39;s id |
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 
 Create or Update group
 
-Create of Update group. For profilePic use multipart/formdata and in this case stringify participants list.
+Create a group. For profilePic use multipart/formdata and in this case stringify participants list.
 
 ### Example
 ```kotlin
@@ -84,17 +122,16 @@ Create of Update group. For profilePic use multipart/formdata and in this case s
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val body : GroupRequest =  // GroupRequest | 
+val name : kotlin.String = name_example // kotlin.String | Group Name
+val participants : kotlin.collections.List<kotlin.String> =  // kotlin.collections.List<kotlin.String> | List of participants
+val groupType : kotlin.String = groupType_example // kotlin.String | Type of group. for example privte/public. only private is supported as of now.
+val description : kotlin.String = description_example // kotlin.String | Description of group. Optional. Min length 2.
+val profilePic : java.io.File = BINARY_DATA_HERE // java.io.File | The image for the group
 
 launch(Dispatchers.IO) {
-    val result : CreateOrUpdateGroupPost200Response = webService.createOrUpdateGroupPost(authorization, xRequestSignature, version, tenantId, eRTCUserId, xNonce, body)
+    val result : APIGroup = webService.createGroup(name, participants, groupType, description, profilePic)
 }
 ```
 
@@ -102,31 +139,31 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **body** | [**GroupRequest**](GroupRequest.md)|  | [optional]
+ **name** | **kotlin.String**| Group Name |
+ **participants** | [**kotlin.collections.List&lt;kotlin.String&gt;**](kotlin.String.md)| List of participants |
+ **groupType** | **kotlin.String**| Type of group. for example privte/public. only private is supported as of now. | [optional] [enum: public, private]
+ **description** | **kotlin.String**| Description of group. Optional. Min length 2. | [optional]
+ **profilePic** | **java.io.File**| The image for the group | [optional]
 
 ### Return type
 
-[**CreateOrUpdateGroupPost200Response**](CreateOrUpdateGroupPost200Response.md)
+[**APIGroup**](APIGroup.md)
 
 ### Authorization
 
-No authorization required
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 
-Remove group profile pic
 
-Remove group profile pic
+
+Delete a group
 
 ### Example
 ```kotlin
@@ -136,17 +173,12 @@ Remove group profile pic
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val groupId : kotlin.String = groupId_example // kotlin.String | Group ID
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
 
 launch(Dispatchers.IO) {
-    val result : DeleteGroupProfilePic200Response = webService.deleteGroupProfilePic(authorization, xRequestSignature, xNonce, version, tenantId, eRTCUserId, groupId)
+    webService.deleteGroup(gid)
 }
 ```
 
@@ -154,26 +186,65 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **groupId** | **kotlin.String**| Group ID |
+ **gid** | **kotlin.String**| Group ID |
 
 ### Return type
 
-[**DeleteGroupProfilePic200Response**](DeleteGroupProfilePic200Response.md)
+null (empty response body)
 
 ### Authorization
 
-No authorization required
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/json
+ - **Accept**: Not defined
+
+
+dismiss group invitation
+
+Dissmiss group invitation
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+
+launch(Dispatchers.IO) {
+    webService.dismissGroupInvite(gid)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 
 Get group by groupId
@@ -188,17 +259,12 @@ Get group by groupId
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val groupId : kotlin.String = groupId_example // kotlin.String | Group ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
 
 launch(Dispatchers.IO) {
-    val result : CreateOrUpdateGroupPost200Response = webService.getGroupByGroupIdGet(authorization, xRequestSignature, version, tenantId, eRTCUserId, groupId, xNonce)
+    val result : APIGroup = webService.getGroup(gid)
 }
 ```
 
@@ -206,279 +272,17 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **groupId** | **kotlin.String**| Group ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
+ **gid** | **kotlin.String**| Group ID |
 
 ### Return type
 
-[**CreateOrUpdateGroupPost200Response**](CreateOrUpdateGroupPost200Response.md)
+[**APIGroup**](APIGroup.md)
 
 ### Authorization
 
-No authorization required
 
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-Get group by threadId
-
-Get group by threadId
-
-### Example
-```kotlin
-// Import classes:
-//import io.inappchat.sdk.*
-//import io.inappchat.sdk.infrastructure.*
-//import io.inappchat.sdk.models.*
-
-val apiClient = ApiClient()
-val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val threadId : kotlin.String = threadId_example // kotlin.String | Thread ID received in chat object
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-
-launch(Dispatchers.IO) {
-    val result : CreateOrUpdateGroupPost200Response = webService.getGroupByThreadIdGet(authorization, xRequestSignature, version, tenantId, eRTCUserId, threadId, xNonce)
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **threadId** | **kotlin.String**| Thread ID received in chat object |
- **xNonce** | **kotlin.String**| epoch timestamp |
-
-### Return type
-
-[**CreateOrUpdateGroupPost200Response**](CreateOrUpdateGroupPost200Response.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-Make or Dismiss a group user as admin
-
-Make or Dismiss a group user as admin
-
-### Example
-```kotlin
-// Import classes:
-//import io.inappchat.sdk.*
-//import io.inappchat.sdk.infrastructure.*
-//import io.inappchat.sdk.models.*
-
-val apiClient = ApiClient()
-val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val groupId : kotlin.String = groupId_example // kotlin.String | Group ID
-val action : kotlin.String = action_example // kotlin.String | Action: make/dimiss
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val body : MakeDismissAdminPostRequest =  // MakeDismissAdminPostRequest | 
-
-launch(Dispatchers.IO) {
-    val result : CreateOrUpdateGroupPost200Response = webService.makeDismissAdminPost(authorization, xRequestSignature, version, tenantId, eRTCUserId, groupId, action, xNonce, body)
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **groupId** | **kotlin.String**| Group ID |
- **action** | **kotlin.String**| Action: make/dimiss |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **body** | [**MakeDismissAdminPostRequest**](MakeDismissAdminPostRequest.md)|  | [optional]
-
-### Return type
-
-[**CreateOrUpdateGroupPost200Response**](CreateOrUpdateGroupPost200Response.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-Delete participants from group
-
-Delete participants from group
-
-### Example
-```kotlin
-// Import classes:
-//import io.inappchat.sdk.*
-//import io.inappchat.sdk.infrastructure.*
-//import io.inappchat.sdk.models.*
-
-val apiClient = ApiClient()
-val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val groupId : kotlin.String = groupId_example // kotlin.String | Group ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val body : AddRemoveParticipantsRequest =  // AddRemoveParticipantsRequest | 
-
-launch(Dispatchers.IO) {
-    val result : CreateOrUpdateGroupPost200Response = webService.removeParticipantsPost(authorization, xRequestSignature, version, tenantId, eRTCUserId, groupId, xNonce, body)
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **groupId** | **kotlin.String**| Group ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **body** | [**AddRemoveParticipantsRequest**](AddRemoveParticipantsRequest.md)|  | [optional]
-
-### Return type
-
-[**CreateOrUpdateGroupPost200Response**](CreateOrUpdateGroupPost200Response.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-Ban or mute users
-
-Ban or mute users
-
-### Example
-```kotlin
-// Import classes:
-//import io.inappchat.sdk.*
-//import io.inappchat.sdk.infrastructure.*
-//import io.inappchat.sdk.models.*
-
-val apiClient = ApiClient()
-val webService = apiClient.createWebservice(GroupApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API key
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val groupId : kotlin.String = groupId_example // kotlin.String | Group ID
-val body : RestrictParticipantsRequest =  // RestrictParticipantsRequest | Unique AppID of the user to get
-
-launch(Dispatchers.IO) {
-    val result : Thread200Response = webService.restrictParticipants(version, tenantId, eRTCUserId, groupId, body)
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API key |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **groupId** | **kotlin.String**| Group ID |
- **body** | [**RestrictParticipantsRequest**](RestrictParticipantsRequest.md)| Unique AppID of the user to get |
-
-### Return type
-
-[**Thread200Response**](Thread200Response.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-UnBan or unmute users
-
-UnBan or unmute users
-
-### Example
-```kotlin
-// Import classes:
-//import io.inappchat.sdk.*
-//import io.inappchat.sdk.infrastructure.*
-//import io.inappchat.sdk.models.*
-
-val apiClient = ApiClient()
-val webService = apiClient.createWebservice(GroupApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API key
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val groupId : kotlin.String = groupId_example // kotlin.String | Group ID
-val body : UnrestrictParticipantsRequest =  // UnrestrictParticipantsRequest | Unique AppID of the user to get
-
-launch(Dispatchers.IO) {
-    val result : Thread200Response = webService.unrestrictParticipants(version, tenantId, eRTCUserId, groupId, body)
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API key |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **groupId** | **kotlin.String**| Group ID |
- **body** | [**UnrestrictParticipantsRequest**](UnrestrictParticipantsRequest.md)| Unique AppID of the user to get |
-
-### Return type
-
-[**Thread200Response**](Thread200Response.md)
-
-### Authorization
-
-No authorization required
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
@@ -488,7 +292,7 @@ No authorization required
 
 Get user groups
 
-Filter All groups where user is participant or group is public
+Get groups where user is participant or group is public
 
 ### Example
 ```kotlin
@@ -498,19 +302,15 @@ Filter All groups where user is participant or group is public
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val keyword : kotlin.String = keyword_example // kotlin.String | Get only public or private group
+val limit : kotlin.Int = 56 // kotlin.Int | limit value for pagination. i.e. page-size. default 10
+val skip : kotlin.Int = 56 // kotlin.Int | skip value for pagination. i.e. index. default 0
 val groupType : kotlin.String = groupType_example // kotlin.String | Filter by group type
 val joined : kotlin.String = joined_example // kotlin.String | Get only joined/not joined groups
 
 launch(Dispatchers.IO) {
-    val result : UserGroupsFilter200Response = webService.userGroupsFilter(authorization, xRequestSignature, version, tenantId, eRTCUserId, xNonce, keyword, groupType, joined)
+    val result : kotlin.collections.List<APIGroup> = webService.getGroups(limit, skip, groupType, joined)
 }
 ```
 
@@ -518,23 +318,20 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **keyword** | **kotlin.String**| Get only public or private group | [optional]
+ **limit** | **kotlin.Int**| limit value for pagination. i.e. page-size. default 10 | [optional] [default to 20]
+ **skip** | **kotlin.Int**| skip value for pagination. i.e. index. default 0 | [optional] [default to 0]
  **groupType** | **kotlin.String**| Filter by group type | [optional] [enum: public, private]
  **joined** | **kotlin.String**| Get only joined/not joined groups | [optional] [enum: yes, no]
 
 ### Return type
 
-[**UserGroupsFilter200Response**](UserGroupsFilter200Response.md)
+[**kotlin.collections.List&lt;APIGroup&gt;**](APIGroup.md)
 
 ### Authorization
 
-No authorization required
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
@@ -542,9 +339,9 @@ No authorization required
  - **Accept**: application/json
 
 
-Get user groups
+get group invitation
 
-Get All groups where user is participant
+Get group invitations for user
 
 ### Example
 ```kotlin
@@ -554,16 +351,52 @@ Get All groups where user is participant
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(GroupApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
 
 launch(Dispatchers.IO) {
-    val result : UserGroupsFilter200Response = webService.userGroupsGet(authorization, xRequestSignature, version, tenantId, eRTCUserId, xNonce)
+    val result : kotlin.collections.List<Invite> = webService.getInvites()
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**kotlin.collections.List&lt;Invite&gt;**](Invite.md)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+Make a user an admin
+
+Make a user an admin
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val uid : kotlin.String = uid_example // kotlin.String | the user's id
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+
+launch(Dispatchers.IO) {
+    webService.groupAddAdmin(uid, gid)
 }
 ```
 
@@ -571,23 +404,289 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
+ **uid** | **kotlin.String**| the user&#39;s id |
+ **gid** | **kotlin.String**| Group ID |
 
 ### Return type
 
-[**UserGroupsFilter200Response**](UserGroupsFilter200Response.md)
+null (empty response body)
 
 ### Authorization
 
-No authorization required
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+Dismiss a group admin
+
+Dismiss a group admin
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val uid : kotlin.String = uid_example // kotlin.String | the user's id
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+
+launch(Dispatchers.IO) {
+    webService.groupDismissAdmin(uid, gid)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **uid** | **kotlin.String**| the user&#39;s id |
+ **gid** | **kotlin.String**| Group ID |
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+create group invitation
+
+Invite new participant to group
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+val requestBody : kotlin.collections.List<kotlin.String> =  // kotlin.collections.List<kotlin.String> | array of user ids to invite
+
+launch(Dispatchers.IO) {
+    webService.inviteUser(gid, requestBody)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+ **requestBody** | [**kotlin.collections.List&lt;kotlin.String&gt;**](kotlin.String.md)| array of user ids to invite |
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+
+
+
+Moderate a group. Ban or mute users
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+val moderateGroupInput : ModerateGroupInput =  // ModerateGroupInput | Unique AppID of the user to get
+
+launch(Dispatchers.IO) {
+    webService.moderateGroup(gid, moderateGroupInput)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+ **moderateGroupInput** | [**ModerateGroupInput**](ModerateGroupInput.md)| Unique AppID of the user to get |
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
+
+
+Remove group profile pic
+
+Remove group profile pic
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+
+launch(Dispatchers.IO) {
+    webService.removeGroupImage(gid)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+Remove participant from group
+
+Remove participant from group
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+val uid : kotlin.String = uid_example // kotlin.String | the user's id
+
+launch(Dispatchers.IO) {
+    webService.removeParticipant(gid, uid)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+ **uid** | **kotlin.String**| the user&#39;s id |
+
+### Return type
+
+null (empty response body)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+
+
+Update a group
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(GroupApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+val updateGroupInput : UpdateGroupInput =  // UpdateGroupInput | 
+
+launch(Dispatchers.IO) {
+    val result : APIGroup = webService.updateGroup(gid, updateGroupInput)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+ **updateGroupInput** | [**UpdateGroupInput**](UpdateGroupInput.md)|  |
+
+### Return type
+
+[**APIGroup**](APIGroup.md)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

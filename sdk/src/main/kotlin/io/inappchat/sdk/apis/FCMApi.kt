@@ -6,8 +6,8 @@ import retrofit2.Response
 import okhttp3.RequestBody
 import com.squareup.moshi.Json
 
-import io.inappchat.sdk.models.FcmValidationRequest
-import io.inappchat.sdk.models.Thread200Response
+import io.inappchat.sdk.models.APIThread
+import io.inappchat.sdk.models.FCMValidationInput
 
 interface FCMApi {
     /**
@@ -16,12 +16,10 @@ interface FCMApi {
      * Responses:
      *  - 200: Thread data
      *
-     * @param version API key
-     * @param tenantId Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-     * @param body Unique AppID of the user to get
-     * @return [Thread200Response]
+     * @param fcMValidationInput Unique AppID of the user to get
+     * @return [APIThread]
      */
-    @POST("{version}/tenants/{tenantId}/fcmValidation")
-    suspend fun fCMValidationPost(@Path("version") version: kotlin.String, @Path("tenantId") tenantId: kotlin.String, @Body body: FcmValidationRequest): Response<Thread200Response>
+    @POST("fcmValidation")
+    suspend fun fCMValidationPost(@Body fcMValidationInput: FCMValidationInput): Response<APIThread>
 
 }

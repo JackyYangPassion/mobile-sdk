@@ -1,10 +1,10 @@
 # FCMApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/RBN/Socket-Server/1.0.0*
+All URIs are relative to *https://chat.inappchat.io/v3*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**fCMValidationPost**](FCMApi.md#fCMValidationPost) | **POST** {version}/tenants/{tenantId}/fcmValidation | FCM Validation
+[**fCMValidationPost**](FCMApi.md#fCMValidationPost) | **POST** fcmValidation | FCM Validation
 
 
 
@@ -20,13 +20,12 @@ Endpoint to just validate FCM notification by App teams
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(FCMApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API key
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val body : FcmValidationRequest =  // FcmValidationRequest | Unique AppID of the user to get
+val fcMValidationInput : FCMValidationInput =  // FCMValidationInput | Unique AppID of the user to get
 
 launch(Dispatchers.IO) {
-    val result : Thread200Response = webService.fCMValidationPost(version, tenantId, body)
+    val result : APIThread = webService.fCMValidationPost(fcMValidationInput)
 }
 ```
 
@@ -34,20 +33,20 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API key |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **body** | [**FcmValidationRequest**](FcmValidationRequest.md)| Unique AppID of the user to get |
+ **fcMValidationInput** | [**FCMValidationInput**](FCMValidationInput.md)| Unique AppID of the user to get |
 
 ### Return type
 
-[**Thread200Response**](Thread200Response.md)
+[**APIThread**](APIThread.md)
 
 ### Authorization
 
 
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

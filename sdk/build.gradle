@@ -104,7 +104,7 @@ dependencies {
 openApiGenerate {
     generatorName = "kotlin"
     inputSpec = "$rootDir/openapi.yaml".toString()
-    outputDir = "$rootDir/gen".toString()
+    outputDir = "$rootDir/sdk".toString()
     configOptions = [
             "annotationLibrary"       : "swagger1",
             "apiPackage"              : "io.inappchat.sdk.api",

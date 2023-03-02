@@ -15,8 +15,8 @@
 
 package io.inappchat.sdk.models
 
-import io.inappchat.sdk.models.GroupUpdateEventChangeData
-import io.inappchat.sdk.models.GroupUpdateEventUserDetails
+import io.inappchat.sdk.models.APIUser
+import io.inappchat.sdk.models.GroupUpdatEventChangeData
 
 import com.squareup.moshi.Json
 
@@ -32,10 +32,10 @@ data class GroupUpdateEventData (
 
     /* Optional. Applicable for participantsAdded/participantsRemoved/adminMade/adminDismissed */
     @Json(name = "eventTriggeredOnUserList")
-    val eventTriggeredOnUserList: kotlin.collections.List<GroupUpdateEventUserDetails>? = null,
+    val eventTriggeredOnUserList: kotlin.collections.List<APIUser>? = null,
 
     @Json(name = "changeData")
-    val changeData: GroupUpdateEventChangeData? = null
+    val changeData: GroupUpdatEventChangeData? = null
 
 )
 

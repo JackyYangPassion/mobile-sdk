@@ -31,7 +31,7 @@ data class NotificationSettings (
 
     /* Allow from values. It can be all/mentions/none. When it is include in thread response, can have value just for requesting used. */
     @Json(name = "allowFrom")
-    val allowFrom: kotlin.String? = null,
+    val allowFrom: NotificationSettings.AllowFrom,
 
     /* When setting should reset */
     @Json(name = "validTill")
@@ -41,5 +41,17 @@ data class NotificationSettings (
     @Json(name = "validTillDisplayValue")
     val validTillDisplayValue: kotlin.String? = null
 
-)
+) {
+
+    /**
+     * Allow from values. It can be all/mentions/none. When it is include in thread response, can have value just for requesting used.
+     *
+     * Values: all,mentions,none
+     */
+    enum class AllowFrom(val value: kotlin.String) {
+        @Json(name = "all") all("all"),
+        @Json(name = "mentions") mentions("mentions"),
+        @Json(name = "none") none("none");
+    }
+}
 

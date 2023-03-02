@@ -1,6 +1,7 @@
 package io.inappchat.sdk.infrastructure
 
 import io.inappchat.sdk.auth.ApiKeyAuth
+import io.inappchat.sdk.auth.HttpBearerAuth
 
 import okhttp3.Call
 import okhttp3.Interceptor
@@ -59,11 +60,28 @@ class ApiClient(
     ) : this(baseUrl, okHttpClientBuilder, serializerBuilder) {
         authNames.forEach { authName ->
             val auth = when (authName) {
-                "sdk_key" -> ApiKeyAuth("header", "sdkkey")
+                "ApiKeyAuth" -> ApiKeyAuth("header", "X-API-Key")"BearerAuth" -> HttpBearerAuth("bearer")
                 else -> throw RuntimeException("auth name $authName not found in available auth names")
             }
             addAuthorization(authName, auth)
         }
+    }
+
+    constructor(
+        baseUrl: String = defaultBasePath,
+        okHttpClientBuilder: OkHttpClient.Builder? = null,
+        serializerBuilder: Moshi.Builder = Serializer.moshiBuilder,
+        authName: String,
+        bearerToken: String
+    ) : this(baseUrl, okHttpClientBuilder, serializerBuilder, arrayOf(authName)) {
+        setBearerToken(bearerToken)
+    }
+
+    fun setBearerToken(bearerToken: String): ApiClient {
+        apiAuthorizations.values.runOnFirst<Interceptor, HttpBearerAuth> {
+            this.bearerToken = bearerToken
+        }
+        return this
     }
 
     /**
@@ -112,7 +130,7 @@ class ApiClient(
 
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(baseUrlKey, "https://virtserver.swaggerhub.com/RBN/Socket-Server/1.0.0")
+            System.getProperties().getProperty(baseUrlKey, "https://chat.inappchat.io/v3")
         }
     }
 }

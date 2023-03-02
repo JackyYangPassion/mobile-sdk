@@ -1,14 +1,14 @@
 # ThreadApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/RBN/Socket-Server/1.0.0*
+All URIs are relative to *https://chat.inappchat.io/v3*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**thread**](ThreadApi.md#thread) | **POST** {version}/tenants/{tenantId}/{eRTCUserId}/thread/ | Thread Creation API
-[**threadGet**](ThreadApi.md#threadGet) | **GET** {version}/tenants/{tenantId}/{eRTCUserId}/thread/{threadId} | Thread Get API
-[**threadHistoryGet**](ThreadApi.md#threadHistoryGet) | **GET** {version}/tenants/{tenantId}/{eRTCUserId}/thread/history | Load thread history
-[**threadHistoryGetV2**](ThreadApi.md#threadHistoryGetV2) | **GET** V2/tenants/{tenantId}/{eRTCUserId}/thread/history | Load thread history
-[**threadUpdatePost**](ThreadApi.md#threadUpdatePost) | **POST** {version}/tenants/{tenantId}/{eRTCUserId}/thread/{threadId} | Thread Update API
+[**createThread**](ThreadApi.md#createThread) | **POST** user/{uid}/thread | Thread Creation API
+[**getGroupThread**](ThreadApi.md#getGroupThread) | **GET** group/{gid}/thread | 
+[**getThread**](ThreadApi.md#getThread) | **GET** thread/{tid} | Thread Get API
+[**getThreads**](ThreadApi.md#getThreads) | **GET** threads | Load thread history
+[**updateThread**](ThreadApi.md#updateThread) | **PUT** thread/{tid} | Thread Update API
 
 
 
@@ -24,17 +24,12 @@ Get or Create Thread request before starting chat session with any user. This AP
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(ThreadApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <chatServer apiKey>~<bundleId>~<epoch timeStamp>
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val body : ThreadRequest =  // ThreadRequest | Unique AppID of the user to get
+val uid : kotlin.String = uid_example // kotlin.String | the user's id
 
 launch(Dispatchers.IO) {
-    val result : Thread200Response = webService.thread(version, tenantId, eRTCUserId, authorization, xRequestSignature, xNonce, body)
+    val result : APIThread = webService.createThread(uid)
 }
 ```
 
@@ -42,21 +37,60 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;chatServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **body** | [**ThreadRequest**](ThreadRequest.md)| Unique AppID of the user to get |
+ **uid** | **kotlin.String**| the user&#39;s id |
 
 ### Return type
 
-[**Thread200Response**](Thread200Response.md)
+[**APIThread**](APIThread.md)
 
 ### Authorization
 
 
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+
+
+Get a thread belonging to a group
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
+val webService = apiClient.createWebservice(ThreadApi::class.java)
+val gid : kotlin.String = gid_example // kotlin.String | Group ID
+
+launch(Dispatchers.IO) {
+    val result : APIThread = webService.getGroupThread(gid)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **gid** | **kotlin.String**| Group ID |
+
+### Return type
+
+[**APIThread**](APIThread.md)
+
+### Authorization
+
+
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
@@ -76,17 +110,12 @@ Get any existing thread
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(ThreadApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val threadId : kotlin.String = threadId_example // kotlin.String | Thread ID
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <chatServer apiKey>~<bundleId>~<epoch timeStamp>
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
+val tid : kotlin.String = tid_example // kotlin.String | The Thread ID
 
 launch(Dispatchers.IO) {
-    val result : Thread200Response = webService.threadGet(version, tenantId, eRTCUserId, threadId, authorization, xRequestSignature, xNonce)
+    val result : APIThread = webService.getThread(tid)
 }
 ```
 
@@ -94,21 +123,17 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **threadId** | **kotlin.String**| Thread ID |
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;chatServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **xNonce** | **kotlin.String**| epoch timestamp |
+ **tid** | **kotlin.String**| The Thread ID |
 
 ### Return type
 
-[**Thread200Response**](Thread200Response.md)
+[**APIThread**](APIThread.md)
 
 ### Authorization
 
 
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
@@ -128,19 +153,14 @@ Load thread history
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(ThreadApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val skip : kotlin.String = skip_example // kotlin.String | skip value for pagination. i.e. index. default 0
-val limit : kotlin.String = limit_example // kotlin.String | limit value for pagination. i.e. page-size. default 10
-val threadType : kotlin.String = threadType_example // kotlin.String | threadType in-case specific type threads are needed. supported values single/group. Don't provide this field if all threads to be returned in unified way.
+val skip : kotlin.Int = 56 // kotlin.Int | skip value for pagination. i.e. index. default 0
+val limit : kotlin.Int = 56 // kotlin.Int | limit value for pagination. i.e. page-size. default 10
+val threadType : kotlin.String = threadType_example // kotlin.String | threadType in-case specific type threads are needed. Don't provide this field if all threads to be returned in unified way.
 
 launch(Dispatchers.IO) {
-    val result : ThreadHistoryGet200Response = webService.threadHistoryGet(authorization, xRequestSignature, version, tenantId, eRTCUserId, xNonce, skip, limit, threadType)
+    val result : kotlin.collections.List<APIThread> = webService.getThreads(skip, limit, threadType)
 }
 ```
 
@@ -148,77 +168,19 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **skip** | **kotlin.String**| skip value for pagination. i.e. index. default 0 | [optional]
- **limit** | **kotlin.String**| limit value for pagination. i.e. page-size. default 10 | [optional]
- **threadType** | **kotlin.String**| threadType in-case specific type threads are needed. supported values single/group. Don&#39;t provide this field if all threads to be returned in unified way. | [optional]
+ **skip** | **kotlin.Int**| skip value for pagination. i.e. index. default 0 | [optional] [default to 0]
+ **limit** | **kotlin.Int**| limit value for pagination. i.e. page-size. default 10 | [optional] [default to 20]
+ **threadType** | **kotlin.String**| threadType in-case specific type threads are needed. Don&#39;t provide this field if all threads to be returned in unified way. | [optional] [enum: single, group]
 
 ### Return type
 
-[**ThreadHistoryGet200Response**](ThreadHistoryGet200Response.md)
+[**kotlin.collections.List&lt;APIThread&gt;**](APIThread.md)
 
 ### Authorization
 
-No authorization required
 
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-Load thread history
-
-Load thread history
-
-### Example
-```kotlin
-// Import classes:
-//import io.inappchat.sdk.*
-//import io.inappchat.sdk.infrastructure.*
-//import io.inappchat.sdk.models.*
-
-val apiClient = ApiClient()
-val webService = apiClient.createWebservice(ThreadApi::class.java)
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <userServer apiKey>~<bundleId>~<epoch timeStamp>
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val skip : kotlin.String = skip_example // kotlin.String | skip value for pagination. i.e. index. default 0
-val limit : kotlin.String = limit_example // kotlin.String | limit value for pagination. i.e. page-size. default 10
-val threadType : kotlin.String = threadType_example // kotlin.String | threadType in-case specific type threads are needed. supported values single/group. Don't provide this field if all threads to be returned in unified way.
-
-launch(Dispatchers.IO) {
-    val result : ThreadHistoryGetV2200Response = webService.threadHistoryGetV2(authorization, xRequestSignature, tenantId, eRTCUserId, xNonce, skip, limit, threadType)
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;userServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **skip** | **kotlin.String**| skip value for pagination. i.e. index. default 0 | [optional]
- **limit** | **kotlin.String**| limit value for pagination. i.e. page-size. default 10 | [optional]
- **threadType** | **kotlin.String**| threadType in-case specific type threads are needed. supported values single/group. Don&#39;t provide this field if all threads to be returned in unified way. | [optional]
-
-### Return type
-
-[**ThreadHistoryGetV2200Response**](ThreadHistoryGetV2200Response.md)
-
-### Authorization
-
-No authorization required
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
@@ -238,18 +200,13 @@ Update any existing thread
 //import io.inappchat.sdk.models.*
 
 val apiClient = ApiClient()
+apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(ThreadApi::class.java)
-val version : kotlin.String = version_example // kotlin.String | API version
-val tenantId : kotlin.String = tenantId_example // kotlin.String | Tenant Id. Example 5f61c2c3fee2af1f303a16d7
-val eRTCUserId : kotlin.String = eRTCUserId_example // kotlin.String | eRTC user ID
-val threadId : kotlin.String = threadId_example // kotlin.String | Thread ID
-val authorization : kotlin.String = authorization_example // kotlin.String | Authorization Token
-val xRequestSignature : kotlin.String = xRequestSignature_example // kotlin.String | sha256 of <chatServer apiKey>~<bundleId>~<epoch timeStamp>
-val xNonce : kotlin.String = xNonce_example // kotlin.String | epoch timestamp
-val body : ThreadUpdateRequest =  // ThreadUpdateRequest | Unique AppID of the user to get
+val tid : kotlin.String = tid_example // kotlin.String | The Thread ID
+val updateThreadInput : UpdateThreadInput =  // UpdateThreadInput | Thread settings
 
 launch(Dispatchers.IO) {
-    val result : Thread200Response = webService.threadUpdatePost(version, tenantId, eRTCUserId, threadId, authorization, xRequestSignature, xNonce, body)
+    webService.updateThread(tid, updateThreadInput)
 }
 ```
 
@@ -257,25 +214,21 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **version** | **kotlin.String**| API version |
- **tenantId** | **kotlin.String**| Tenant Id. Example 5f61c2c3fee2af1f303a16d7 |
- **eRTCUserId** | **kotlin.String**| eRTC user ID |
- **threadId** | **kotlin.String**| Thread ID |
- **authorization** | **kotlin.String**| Authorization Token |
- **xRequestSignature** | **kotlin.String**| sha256 of &lt;chatServer apiKey&gt;~&lt;bundleId&gt;~&lt;epoch timeStamp&gt; |
- **xNonce** | **kotlin.String**| epoch timestamp |
- **body** | [**ThreadUpdateRequest**](ThreadUpdateRequest.md)| Unique AppID of the user to get |
+ **tid** | **kotlin.String**| The Thread ID |
+ **updateThreadInput** | [**UpdateThreadInput**](UpdateThreadInput.md)| Thread settings |
 
 ### Return type
 
-[**Thread200Response**](Thread200Response.md)
+null (empty response body)
 
 ### Authorization
 
 
+Configure BearerAuth:
+    ApiClient().setBearerToken("TOKEN")
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
 
