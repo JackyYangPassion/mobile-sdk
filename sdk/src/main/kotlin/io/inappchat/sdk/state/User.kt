@@ -19,8 +19,8 @@ import java.time.LocalDateTime
 
 @Stable
 data class User(
-    val id: String
-) {
+    override val id: String
+) : Identifiable {
     var email by mutableStateOf("")
     var username by mutableStateOf("")
     var displayName by mutableStateOf<String?>("")

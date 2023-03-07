@@ -28,7 +28,7 @@ abstract class Pager<T : Identifiable>(
         }
     }
 
-    val isSinglePage: Boolean get() = false
+    open val isSinglePage: Boolean get() = false
 
     fun loadMoreIfEmpty() {
         if (items.isEmpty()) {

@@ -15,7 +15,7 @@ import io.inappchat.sdk.models.Participant
 fun Participant.user(): User = User.get(this)
 
 @Stable
-data class Group(val id: String) {
+data class Group(override val id: String) : Identifiable {
 
     init {
         Chats.current.cache.groups[id] = this
