@@ -10,6 +10,7 @@ import io.inappchat.sdk.apis.*
 import io.inappchat.sdk.auth.ApiKeyAuth
 import io.inappchat.sdk.auth.HttpBearerAuth
 import io.inappchat.sdk.infrastructure.ApiClient
+import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletionHandler
@@ -183,7 +184,7 @@ object API {
         return cfg
     }
 
-    suspend fun fetchMessages(thread: String, pageSize: Int, currentMsgId: String? = null) =
+    suspend fun getMessages(thread: String, pageSize: Int, currentMsgId: String? = null) =
         chat.getMessages(thread, pageSize = pageSize, currentMsgId = currentMsgId).result()
             .map(Message::get)
 

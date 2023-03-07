@@ -33,7 +33,7 @@ data class Attachment(val url: String, val kind: AttachmentKind, val type: Strin
 
 @Stable
 data class Message(
-    val id: String,
+    override val id: String,
     val createdAt: LocalDateTime,
     val userID: String,
     val parentID: String?,
@@ -42,7 +42,7 @@ data class Message(
     val reactions: SnapshotStateList<Reaction> = mutableStateListOf(),
     val location: Location? = null,
     val contact: Contact? = null,
-) {
+) : Identifiable {
     var text by mutableStateOf("")
     var markdown by mutableStateOf("")
     var replyCount by mutableStateOf(0)
