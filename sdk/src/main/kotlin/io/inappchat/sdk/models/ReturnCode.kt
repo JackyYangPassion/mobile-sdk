@@ -15,21 +15,33 @@
 
 package io.inappchat.sdk.models
 
-import io.inappchat.sdk.models.ReceiverReturnCode
 
 import com.squareup.moshi.Json
 
 /**
  * 
  *
- * @param returnCode 
+ * @param returnCode Return code associated with individual key object.
  */
 
 
 data class ReturnCode (
 
+    /* Return code associated with individual key object. */
     @Json(name = "returnCode")
-    val returnCode: ReceiverReturnCode? = null
+    val returnCode: ReturnCode.ReturnCode? = null
 
-)
+) {
+
+    /**
+     * Return code associated with individual key object.
+     *
+     * Values: receiverKeyNotActive,receiverKeyInvalid,receiverNewDeviceKeyAvailable
+     */
+    enum class ReturnCode(val value: kotlin.String) {
+        @Json(name = "receiverKeyNotActive") receiverKeyNotActive("receiverKeyNotActive"),
+        @Json(name = "receiverKeyInvalid") receiverKeyInvalid("receiverKeyInvalid"),
+        @Json(name = "receiverNewDeviceKeyAvailable") receiverNewDeviceKeyAvailable("receiverNewDeviceKeyAvailable");
+    }
+}
 

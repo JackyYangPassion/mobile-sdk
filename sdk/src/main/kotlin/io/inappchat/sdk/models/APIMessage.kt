@@ -21,6 +21,7 @@ import io.inappchat.sdk.models.Forward
 import io.inappchat.sdk.models.Location
 import io.inappchat.sdk.models.Media
 import io.inappchat.sdk.models.Mention
+import io.inappchat.sdk.models.MessageStatus
 import io.inappchat.sdk.models.MessageType
 import io.inappchat.sdk.models.Reaction
 import io.inappchat.sdk.models.Reply
@@ -54,6 +55,7 @@ import com.squareup.moshi.Json
  * @param replyMsgCount The number of replies to this message
  * @param replies 
  * @param encryptedChatList 
+ * @param status 
  */
 
 
@@ -144,7 +146,10 @@ data class APIMessage (
     val replies: kotlin.collections.List<APIMessage>? = null,
 
     @Json(name = "encryptedChatList")
-    val encryptedChatList: kotlin.collections.List<EncryptedMessage>? = null
+    val encryptedChatList: kotlin.collections.List<EncryptedMessage>? = null,
+
+    @Json(name = "status")
+    val status: MessageStatus? = null
 
 ) {
 

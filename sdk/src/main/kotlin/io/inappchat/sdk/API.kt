@@ -10,7 +10,7 @@ import io.inappchat.sdk.apis.*
 import io.inappchat.sdk.auth.ApiKeyAuth
 import io.inappchat.sdk.auth.HttpBearerAuth
 import io.inappchat.sdk.infrastructure.ApiClient
-import io.inappchat.sdk.state.user.User
+import io.inappchat.sdk.state.User
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletionHandler
 import kotlinx.coroutines.suspendCancellableCoroutine

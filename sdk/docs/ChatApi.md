@@ -11,9 +11,9 @@ Method | HTTP request | Description
 [**getMessages**](ChatApi.md#getMessages) | **GET** thread/{tid}/messages | Load chat history
 [**getReplies**](ChatApi.md#getReplies) | **GET** message/{mid}/replies | 
 [**getReplyThreads**](ChatApi.md#getReplyThreads) | **GET** reply-threads | List reply threads
-[**react**](ChatApi.md#react) | **PUT** meessage/{mid}/reactions/{emoji} | Chat Reaction API
+[**react**](ChatApi.md#react) | **PUT** message/{mid}/reactions/{emoji} | Chat Reaction API
 [**sendMessage**](ChatApi.md#sendMessage) | **POST** message | Send a chat message
-[**unreact**](ChatApi.md#unreact) | **DELETE** meessage/{mid}/reactions/{emoji} | 
+[**unreact**](ChatApi.md#unreact) | **DELETE** message/{mid}/reactions/{emoji} | 
 [**updateMessage**](ChatApi.md#updateMessage) | **PUT** message/{mid} | Edit Message API
 
 

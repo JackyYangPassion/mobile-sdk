@@ -456,7 +456,18 @@ paths:
                     title: ChatStatus
                     properties:
                       returnCode:
-                        $ref: '#/components/schemas/SenderReturnCode'
+                        type: string
+                        title: SenderReturnCode
+                        enum:
+                          - senderKeyValidityExpired,
+                          - receiverKeyValidationError
+                          - senderNewDeviceKeyAvailable
+                          - success
+                        description: >
+                          return code for e2e encrypted chat request. 
+                          It can be senderKeyValidityExpired (new key to be provided in keyList, also new device key if there) 
+                          / receiverKeyValidationError / senderNewDeviceKeyAvailable (new device key to be provided in keyList, 
+                          also same device key if validity expired) / success
                       retryRequired:
                         type: boolean
                       keyList:
@@ -468,7 +479,13 @@ paths:
                               title: ReturnCode
                               properties:
                                 returnCode:
-                                  $ref: '#/components/schemas/ReceiverReturnCode'
+                                  type: string
+                                  title: ReceiverReturnCode
+                                  description: Return code associated with individual key object.
+                                  enum:
+                                    - receiverKeyNotActive
+                                    - receiverKeyInvalid
+                                    - receiverNewDeviceKeyAvailable
                     required:
                       - returnCode
                       - retryRequired
@@ -526,10 +543,12 @@ paths:
                   description: 'Follow/unfollow thread'
                   type: boolean
                   example: true
+                status:
+                  $ref: '#/components/schemas/MessageStatus'
       responses:
         204:
           description: Operation completed successfully
-  /meessage/{mid}/reactions/{emoji}:
+  /message/{mid}/reactions/{emoji}:
     parameters:
       - $ref: '#/components/parameters/midPath'
       - in: path
@@ -1304,7 +1323,18 @@ paths:
               $ref: '#/components/schemas/LoginInput'
       responses:
         '200':
-          $ref: '#/components/responses/auth'
+          description: The User info
+          content:
+            application/json:
+              schema:
+                title: UserInfo
+                properties:
+                  user:
+                    $ref: '#/components/schemas/APIUser'
+                  notificationSettings:
+                    $ref: '#/components/schemas/NotificationSettings'
+                required:
+                  - user
   /users/{uid}/avatar:
     parameters:
       - $ref: '#/components/parameters/uidPath'
@@ -1657,6 +1687,10 @@ components:
       title: AvailabilityStatus
       enum: [online, away, invisible, dnd, offline]
       example: 'online'
+    MessageStatus:
+      description: A messages read state, can only be marked as such by recipients in a one to one
+      type: string
+      enum: [delivered, seen]
     APIUser:
       title: User
       type: object
@@ -1835,6 +1869,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EncryptedMessage'
+        status:
+          $ref: '#/components/schemas/MessageStatus'
       required:
         - sendereRTCUserId
         - createdAt
@@ -2628,44 +2664,26 @@ components:
           type: string
       required:
         - tenantId
-    SenderReturnCode:
-      type: string
-      enum:
-        - senderKeyValidityExpired,
-        - receiverKeyValidationError
-        - senderNewDeviceKeyAvailable
-        - success
-      description: >
-        return code for e2e encrypted chat request. 
-        It can be senderKeyValidityExpired (new key to be provided in keyList, also new device key if there) 
-        / receiverKeyValidationError / senderNewDeviceKeyAvailable (new device key to be provided in keyList, 
-        also same device key if validity expired) / success
-    ReceiverReturnCode:
-      type: string
-      description: Return code associated with individual key object.
-      enum:
-        - receiverKeyNotActive
-        - receiverKeyInvalid
-        - receiverNewDeviceKeyAvailable
+    Auth:
+      type: object
+      description: An auth response
+      properties:
+        token:
+          $ref: '#/components/schemas/Token'
+        user:
+          $ref: '#/components/schemas/APIUser'
+        notificationSettings:
+          $ref: '#/components/schemas/NotificationSettings'
+      required:
+        - user
+        - token
   responses:
     auth:
       description: User token and profile
       content:
         application/json:
           schema:
-            title: Auth
-            type: object
-            description: An auth response
-            properties:
-              token:
-                $ref: '#/components/schemas/Token'
-              user:
-                $ref: '#/components/schemas/APIUser'
-              notificationSettings:
-                $ref: '#/components/schemas/NotificationSettings'
-            required:
-              - token
-              - user
+            $ref: '#/components/schemas/Auth'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

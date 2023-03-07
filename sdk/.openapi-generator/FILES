@@ -47,6 +47,7 @@ docs/LoginPasswordInput.md
 docs/Media.md
 docs/Mention.md
 docs/MessageResponse.md
+docs/MessageStatus.md
 docs/MessageType.md
 docs/ModerateGroupInput.md
 docs/MsgReadEvent.md
@@ -57,7 +58,6 @@ docs/Participant.md
 docs/PhoneNumber.md
 docs/Reaction.md
 docs/ReactionEvent.md
-docs/ReceiverReturnCode.md
 docs/Reply.md
 docs/Report.md
 docs/ReportCategory.md
@@ -72,7 +72,6 @@ docs/SearchQuery.md
 docs/SearchResults.md
 docs/SelfUpdateItem.md
 docs/SenderKeyDetails.md
-docs/SenderReturnCode.md
 docs/Stub.md
 docs/SyncContactsInput.md
 docs/TenantUpdateEvent.md
@@ -85,6 +84,7 @@ docs/UpdateMessageInput.md
 docs/UpdateThreadInput.md
 docs/UpdateUserInput.md
 docs/UserApi.md
+docs/UserInfo.md
 docs/UserSelfUpdateEvent.md
 docs/UserSelfUpdateEventData.md
 gradle/wrapper/gradle-wrapper.jar
@@ -157,6 +157,7 @@ src/main/kotlin/io/inappchat/sdk/models/LoginPasswordInput.kt
 src/main/kotlin/io/inappchat/sdk/models/Media.kt
 src/main/kotlin/io/inappchat/sdk/models/Mention.kt
 src/main/kotlin/io/inappchat/sdk/models/MessageResponse.kt
+src/main/kotlin/io/inappchat/sdk/models/MessageStatus.kt
 src/main/kotlin/io/inappchat/sdk/models/MessageType.kt
 src/main/kotlin/io/inappchat/sdk/models/ModerateGroupInput.kt
 src/main/kotlin/io/inappchat/sdk/models/MsgReadEvent.kt
@@ -167,7 +168,6 @@ src/main/kotlin/io/inappchat/sdk/models/Participant.kt
 src/main/kotlin/io/inappchat/sdk/models/PhoneNumber.kt
 src/main/kotlin/io/inappchat/sdk/models/Reaction.kt
 src/main/kotlin/io/inappchat/sdk/models/ReactionEvent.kt
-src/main/kotlin/io/inappchat/sdk/models/ReceiverReturnCode.kt
 src/main/kotlin/io/inappchat/sdk/models/Reply.kt
 src/main/kotlin/io/inappchat/sdk/models/Report.kt
 src/main/kotlin/io/inappchat/sdk/models/ReportCategory.kt
@@ -181,7 +181,6 @@ src/main/kotlin/io/inappchat/sdk/models/SearchQuery.kt
 src/main/kotlin/io/inappchat/sdk/models/SearchResults.kt
 src/main/kotlin/io/inappchat/sdk/models/SelfUpdateItem.kt
 src/main/kotlin/io/inappchat/sdk/models/SenderKeyDetails.kt
-src/main/kotlin/io/inappchat/sdk/models/SenderReturnCode.kt
 src/main/kotlin/io/inappchat/sdk/models/Stub.kt
 src/main/kotlin/io/inappchat/sdk/models/SyncContactsInput.kt
 src/main/kotlin/io/inappchat/sdk/models/TenantUpdateEvent.kt
@@ -192,5 +191,6 @@ src/main/kotlin/io/inappchat/sdk/models/UpdateMessageEvent.kt
 src/main/kotlin/io/inappchat/sdk/models/UpdateMessageInput.kt
 src/main/kotlin/io/inappchat/sdk/models/UpdateThreadInput.kt
 src/main/kotlin/io/inappchat/sdk/models/UpdateUserInput.kt
+src/main/kotlin/io/inappchat/sdk/models/UserInfo.kt
 src/main/kotlin/io/inappchat/sdk/models/UserSelfUpdateEvent.kt
 src/main/kotlin/io/inappchat/sdk/models/UserSelfUpdateEventData.kt

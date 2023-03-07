@@ -150,7 +150,7 @@ interface ChatApi {
      * @param emoji The emoji to react with
      * @return [Unit]
      */
-    @PUT("meessage/{mid}/reactions/{emoji}")
+    @PUT("message/{mid}/reactions/{emoji}")
     suspend fun react(@Path("mid") mid: kotlin.String, @Path("emoji") emoji: kotlin.String): Response<Unit>
 
     /**
@@ -191,7 +191,7 @@ interface ChatApi {
      * @param emoji The emoji to react with
      * @return [Unit]
      */
-    @DELETE("meessage/{mid}/reactions/{emoji}")
+    @DELETE("message/{mid}/reactions/{emoji}")
     suspend fun unreact(@Path("mid") mid: kotlin.String, @Path("emoji") emoji: kotlin.String): Response<Unit>
 
     /**

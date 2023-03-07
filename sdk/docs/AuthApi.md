@@ -29,7 +29,7 @@ val webService = apiClient.createWebservice(AuthApi::class.java)
 val loginInput : LoginInput =  // LoginInput | 
 
 launch(Dispatchers.IO) {
-    val result : Auth = webService.auth0Login(loginInput)
+    val result : UserInfo = webService.auth0Login(loginInput)
 }
 ```
 
@@ -41,7 +41,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Auth**](Auth.md)
+[**UserInfo**](UserInfo.md)
 
 ### Authorization
 

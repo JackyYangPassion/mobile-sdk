@@ -11,19 +11,20 @@ import io.inappchat.sdk.models.LoginInput
 import io.inappchat.sdk.models.LoginPasswordInput
 import io.inappchat.sdk.models.NFTLoginInput
 import io.inappchat.sdk.models.ResetPasswordInput
+import io.inappchat.sdk.models.UserInfo
 
 interface AuthApi {
     /**
      * Verify User information
      * verify user information, device information
      * Responses:
-     *  - 200: User token and profile
+     *  - 200: The User info
      *
      * @param loginInput 
-     * @return [Auth]
+     * @return [UserInfo]
      */
     @POST("auth/auth0/login")
-    suspend fun auth0Login(@Body loginInput: LoginInput): Response<Auth>
+    suspend fun auth0Login(@Body loginInput: LoginInput): Response<UserInfo>
 
     /**
      * Change Password

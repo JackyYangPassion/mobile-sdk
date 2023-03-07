@@ -57,9 +57,9 @@ Class | Method | HTTP request | Description
 *ChatApi* | [**getMessages**](docs/ChatApi.md#getmessages) | **GET** thread/{tid}/messages | Load chat history
 *ChatApi* | [**getReplies**](docs/ChatApi.md#getreplies) | **GET** message/{mid}/replies | 
 *ChatApi* | [**getReplyThreads**](docs/ChatApi.md#getreplythreads) | **GET** reply-threads | List reply threads
-*ChatApi* | [**react**](docs/ChatApi.md#react) | **PUT** meessage/{mid}/reactions/{emoji} | Chat Reaction API
+*ChatApi* | [**react**](docs/ChatApi.md#react) | **PUT** message/{mid}/reactions/{emoji} | Chat Reaction API
 *ChatApi* | [**sendMessage**](docs/ChatApi.md#sendmessage) | **POST** message | Send a chat message
-*ChatApi* | [**unreact**](docs/ChatApi.md#unreact) | **DELETE** meessage/{mid}/reactions/{emoji} | 
+*ChatApi* | [**unreact**](docs/ChatApi.md#unreact) | **DELETE** message/{mid}/reactions/{emoji} | 
 *ChatApi* | [**updateMessage**](docs/ChatApi.md#updatemessage) | **PUT** message/{mid} | Edit Message API
 *ChatReportApi* | [**approveChatReport**](docs/ChatReportApi.md#approvechatreport) | **PUT** reports/{chatReportId}/approve | 
 *ChatReportApi* | [**createChatReport**](docs/ChatReportApi.md#createchatreport) | **POST** message/{mid}/report | 
@@ -152,6 +152,7 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.Media](docs/Media.md)
  - [io.inappchat.sdk.models.Mention](docs/Mention.md)
  - [io.inappchat.sdk.models.MessageResponse](docs/MessageResponse.md)
+ - [io.inappchat.sdk.models.MessageStatus](docs/MessageStatus.md)
  - [io.inappchat.sdk.models.MessageType](docs/MessageType.md)
  - [io.inappchat.sdk.models.ModerateGroupInput](docs/ModerateGroupInput.md)
  - [io.inappchat.sdk.models.MsgReadEvent](docs/MsgReadEvent.md)
@@ -162,7 +163,6 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.PhoneNumber](docs/PhoneNumber.md)
  - [io.inappchat.sdk.models.Reaction](docs/Reaction.md)
  - [io.inappchat.sdk.models.ReactionEvent](docs/ReactionEvent.md)
- - [io.inappchat.sdk.models.ReceiverReturnCode](docs/ReceiverReturnCode.md)
  - [io.inappchat.sdk.models.Reply](docs/Reply.md)
  - [io.inappchat.sdk.models.Report](docs/Report.md)
  - [io.inappchat.sdk.models.ReportCategory](docs/ReportCategory.md)
@@ -176,7 +176,6 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.SearchResults](docs/SearchResults.md)
  - [io.inappchat.sdk.models.SelfUpdateItem](docs/SelfUpdateItem.md)
  - [io.inappchat.sdk.models.SenderKeyDetails](docs/SenderKeyDetails.md)
- - [io.inappchat.sdk.models.SenderReturnCode](docs/SenderReturnCode.md)
  - [io.inappchat.sdk.models.Stub](docs/Stub.md)
  - [io.inappchat.sdk.models.SyncContactsInput](docs/SyncContactsInput.md)
  - [io.inappchat.sdk.models.TenantUpdateEvent](docs/TenantUpdateEvent.md)
@@ -187,6 +186,7 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.UpdateMessageInput](docs/UpdateMessageInput.md)
  - [io.inappchat.sdk.models.UpdateThreadInput](docs/UpdateThreadInput.md)
  - [io.inappchat.sdk.models.UpdateUserInput](docs/UpdateUserInput.md)
+ - [io.inappchat.sdk.models.UserInfo](docs/UserInfo.md)
  - [io.inappchat.sdk.models.UserSelfUpdateEvent](docs/UserSelfUpdateEvent.md)
  - [io.inappchat.sdk.models.UserSelfUpdateEventData](docs/UserSelfUpdateEventData.md)
 

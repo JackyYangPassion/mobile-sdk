@@ -5,7 +5,6 @@
 package io.inappchat.sdk.state
 
 import androidx.compose.runtime.Stable
-import io.inappchat.sdk.state.user.User
 import java.util.UUID
 
 @Stable

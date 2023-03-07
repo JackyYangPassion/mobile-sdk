@@ -15,6 +15,7 @@
 
 package io.inappchat.sdk.models
 
+import io.inappchat.sdk.models.MessageStatus
 
 import com.squareup.moshi.Json
 
@@ -24,6 +25,7 @@ import com.squareup.moshi.Json
  * @param message message text. it can be present for any msgType value
  * @param isStarred If message is starred
  * @param follow Follow/unfollow thread
+ * @param status 
  */
 
 
@@ -39,7 +41,10 @@ data class UpdateMessageInput (
 
     /* Follow/unfollow thread */
     @Json(name = "follow")
-    val follow: kotlin.Boolean? = null
+    val follow: kotlin.Boolean? = null,
+
+    @Json(name = "status")
+    val status: MessageStatus? = null
 
 )
 

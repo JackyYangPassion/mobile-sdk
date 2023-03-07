@@ -16,14 +16,13 @@
 package io.inappchat.sdk.models
 
 import io.inappchat.sdk.models.ChatStatusKeyListInner
-import io.inappchat.sdk.models.SenderReturnCode
 
 import com.squareup.moshi.Json
 
 /**
  * 
  *
- * @param returnCode 
+ * @param returnCode return code for e2e encrypted chat request.  It can be senderKeyValidityExpired (new key to be provided in keyList, also new device key if there)  / receiverKeyValidationError / senderNewDeviceKeyAvailable (new device key to be provided in keyList,  also same device key if validity expired) / success 
  * @param retryRequired 
  * @param keyList 
  */
@@ -31,8 +30,9 @@ import com.squareup.moshi.Json
 
 data class ChatStatus (
 
+    /* return code for e2e encrypted chat request.  It can be senderKeyValidityExpired (new key to be provided in keyList, also new device key if there)  / receiverKeyValidationError / senderNewDeviceKeyAvailable (new device key to be provided in keyList,  also same device key if validity expired) / success  */
     @Json(name = "returnCode")
-    val returnCode: SenderReturnCode,
+    val returnCode: ChatStatus.ReturnCode,
 
     @Json(name = "retryRequired")
     val retryRequired: kotlin.Boolean,
@@ -40,5 +40,18 @@ data class ChatStatus (
     @Json(name = "keyList")
     val keyList: kotlin.collections.List<ChatStatusKeyListInner>
 
-)
+) {
+
+    /**
+     * return code for e2e encrypted chat request.  It can be senderKeyValidityExpired (new key to be provided in keyList, also new device key if there)  / receiverKeyValidationError / senderNewDeviceKeyAvailable (new device key to be provided in keyList,  also same device key if validity expired) / success 
+     *
+     * Values: senderKeyValidityExpiredComma,receiverKeyValidationError,senderNewDeviceKeyAvailable,success
+     */
+    enum class ReturnCode(val value: kotlin.String) {
+        @Json(name = "senderKeyValidityExpired,") senderKeyValidityExpiredComma("senderKeyValidityExpired,"),
+        @Json(name = "receiverKeyValidationError") receiverKeyValidationError("receiverKeyValidationError"),
+        @Json(name = "senderNewDeviceKeyAvailable") senderNewDeviceKeyAvailable("senderNewDeviceKeyAvailable"),
+        @Json(name = "success") success("success");
+    }
+}
 

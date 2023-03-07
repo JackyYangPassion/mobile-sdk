@@ -28,6 +28,7 @@ Name | Type | Description | Notes
 **replyMsgCount** | **kotlin.Int** | The number of replies to this message |  [optional]
 **replies** | [**kotlin.collections.List&lt;APIMessage&gt;**](APIMessage.md) |  |  [optional]
 **encryptedChatList** | [**kotlin.collections.List&lt;EncryptedMessage&gt;**](EncryptedMessage.md) |  |  [optional]
+**status** | [**MessageStatus**](MessageStatus.md) |  |  [optional]
 
 
 <a name="ChatReportStatus"></a>
