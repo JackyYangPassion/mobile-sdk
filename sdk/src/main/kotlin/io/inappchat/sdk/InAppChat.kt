@@ -5,10 +5,17 @@
 package io.inappchat.sdk
 
 import android.content.Context
+import android.content.SharedPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 object InAppChat {
 
     lateinit var appContext: Context
+    lateinit var prefs: SharedPreferences
     var namespace: String
         get() = _namespace
         private set(ns) {
@@ -25,7 +32,10 @@ object InAppChat {
 
     fun init(appContext: Context, namespace: String, apiKey: String) {
         this.appContext = appContext
+        this.prefs = appContext.getSharedPreferences("inappchat", Context.MODE_PRIVATE)
         this.namespace = namespace
         this.apiKey = apiKey
     }
+
+    val scope = CoroutineScope(Dispatchers.Main)
 }
