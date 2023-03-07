@@ -2,89 +2,54 @@
  * Copyright (c) 2023.
  */
 
-package io.inappchat.sdk.state.user
+package io.inappchat.sdk.state
 
-import android.os.Parcelable
-import androidx.annotation.NonNull
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import io.inappchat.sdk.API
 import io.inappchat.sdk.extensions.contains
 import io.inappchat.sdk.models.APIUser
 import io.inappchat.sdk.models.AvailabilityStatus
 import io.inappchat.sdk.models.Participant
-import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.utils.localDateTime
 import io.inappchat.sdk.utils.op
-import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
-@Parcelize
-@Entity(tableName = "users")
+@Stable
 data class User(
-    @PrimaryKey(autoGenerate = false)
-    @NonNull
-    @ColumnInfo(name = "id")
-    val id: String,
-
-    @ColumnInfo(name = "email")
-    @NonNull
-    var email: String,
-
-    @ColumnInfo(name = "username")
-    @NonNull
-    var username: String,
-
-    @ColumnInfo(name = "display_name")
-    var displayName: String?,
-
-    @ColumnInfo(name = "avatar")
-    var avatar: String?,
-
-    @ColumnInfo(name = "last_seen")
-    var lastSeen: LocalDateTime?,
-
-    @ColumnInfo(name = "status")
-    var status: AvailabilityStatus,
-
-    @ColumnInfo(name = "status_message")
-    var statusMessage: String?,
-
-    @ColumnInfo(name = "blocked")
-    var blocked: Boolean,
-
-    @ColumnInfo(name = "haveContact")
-    var haveContact: Boolean
-) : Parcelable {
+    val id: String
+) {
+    var email by mutableStateOf("")
+    var username by mutableStateOf("")
+    var displayName by mutableStateOf<String?>("")
+    var avatar by mutableStateOf<String?>(null)
+    var lastSeen by mutableStateOf<LocalDateTime?>(null)
+    var status by mutableStateOf(AvailabilityStatus.offline)
+    var statusMessage by mutableStateOf<String?>(null)
+    var blocked by mutableStateOf(false)
+    var haveContact: Boolean by mutableStateOf(false)
 
     constructor(user: APIUser, blocked: Boolean = false, haveContact: Boolean = false) : this(
-        user.eRTCUserId,
-        user.appUserId,
-        user.name ?: "",
-        user.name,
-        user.profilePic ?: user.profilePicThumb,
-        user.loginTimeStamp?.localDateTime(),
-        user.availabilityStatus ?: AvailabilityStatus.offline,
-        user.profileStatus,
-        blocked, haveContact
-    )
+        user.eRTCUserId
+    ) {
+        this.email = user.appUserId
+        this.username = user.name ?: ""
+        this.displayName = user.name
+        this.avatar = user.profilePic ?: user.profilePicThumb
+        this.lastSeen = user.loginTimeStamp?.localDateTime()
+        this.status = user.availabilityStatus ?: AvailabilityStatus.offline
+        this.statusMessage = user.profileStatus
+        this.blocked = blocked
+        this.haveContact = haveContact
+    }
 
     constructor(participant: Participant) : this(
-        participant.eRTCUserId,
-        participant.appUserId,
-        "",
-        null,
-        null,
-        null,
-        AvailabilityStatus.offline,
-        null,
-        false, false
-    )
+        participant.eRTCUserId
+    ) {
+        this.email = participant.appUserId
+    }
 
     init {
         fetch()
@@ -147,5 +112,9 @@ data class User(
             }
             return User(user)
         }
+
+        fun fetched(id: String) =
+            get(id) ?: User(id)
+
     }
 }
