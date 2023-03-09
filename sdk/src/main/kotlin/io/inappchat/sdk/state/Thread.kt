@@ -11,8 +11,8 @@ import io.inappchat.sdk.models.NotificationSettings
 import io.inappchat.sdk.utils.op
 
 @Stable
-data class Thread(val id: String, val user: User? = null, val group: Group? = null) :
-    Pager<Message>() {
+data class Thread(override val id: String, val user: User? = null, val group: Group? = null) :
+    Pager<Message>(), Identifiable {
 
     var unreadCount by mutableStateOf(0)
     var typingUsers = mutableStateListOf<User>()
@@ -78,8 +78,8 @@ data class Thread(val id: String, val user: User? = null, val group: Group? = nu
         })
     }
 
-    override suspend fun load(isRefresh: Boolean): List<Message> {
-        return API.getMessages(id, skip(isRefresh), items.lastOrNull()?.id)
+    override suspend fun load(skip: Int, limit: Int): List<Message> {
+        return API.getMessages(id, skip, items.lastOrNull()?.id)
     }
 
     companion object {
@@ -95,6 +95,14 @@ data class Thread(val id: String, val user: User? = null, val group: Group? = nu
                 return t
             }
             return Thread(thread)
+        }
+
+        fun fetch(id: String) {
+            if (Chats.current.cache.threadFetches.contains(id)) return
+            Chats.current.cache.threadFetches.add(id)
+            op({
+                API.getThread(id)
+            })
         }
     }
 }

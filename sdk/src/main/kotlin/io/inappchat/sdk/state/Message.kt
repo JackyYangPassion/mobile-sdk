@@ -53,6 +53,7 @@ data class Message(
 
     val replies by lazy { RepliesPager(this) }
     val user = User.fetched(userID)
+    val thread: Thread? get() = Thread.get(threadID)
 
     constructor(msg: APIMessage) : this(
         msg.msgUniqueId,
@@ -75,6 +76,10 @@ data class Message(
                 parent = bg { API.getMessage(parentId) }
             })
         }
+        if (thread == null) {
+            Thread.fetch(threadID)
+        }
+
     }
 
     fun update(msg: APIMessage) {

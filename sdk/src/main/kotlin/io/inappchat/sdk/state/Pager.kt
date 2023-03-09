@@ -58,7 +58,7 @@ abstract class Pager<T : Identifiable>(
         loading = true
         val pager = this
         op({
-            val items = bg { load(true) }
+            val items = bg { load(0, pageSize) }
             pager.items.removeAll { true }
             pager.items.addAll(items)
             hasMore = items.size >= pageSize
@@ -72,13 +72,13 @@ abstract class Pager<T : Identifiable>(
         loading = true
         val pager = this
         op({
-            val items = bg { load(false) }
+            val items = bg { load(items.size, pageSize) }
             pager.items.addAll(items)
             hasMore = items.size >= pageSize
             loading = false
         })
     }
 
-    abstract suspend fun load(isRefresh: Boolean): List<T>
+    abstract suspend fun load(skip: Int, limit: Int): List<T>
 
 }
