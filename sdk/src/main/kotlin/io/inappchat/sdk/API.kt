@@ -4,22 +4,34 @@
 
 package io.inappchat.sdk
 
+import android.content.ContentResolver
+import android.net.Uri
+import android.support.v4.os.IResultReceiver.Default
 import android.util.Log
+import androidx.core.net.toUri
 import com.moczul.ok2curl.CurlInterceptor
 import io.inappchat.sdk.apis.*
 import io.inappchat.sdk.auth.ApiKeyAuth
 import io.inappchat.sdk.auth.HttpBearerAuth
 import io.inappchat.sdk.infrastructure.ApiClient
-import io.inappchat.sdk.state.Message
-import io.inappchat.sdk.state.User
+import io.inappchat.sdk.models.*
+import io.inappchat.sdk.state.*
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletionHandler
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.logging.HttpLoggingInterceptor
+import okio.BufferedSink
 import okio.IOException
+import okio.source
 import org.json.JSONObject
+import java.io.File
+import java.math.BigDecimal
 import java.security.MessageDigest
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -77,6 +89,11 @@ class ContinuationCallback(
     }
 }
 
+fun APIMessage.m() = Message.get(this)
+fun APIGroup.g() = Group.get(this)
+fun APIThread.t() = io.inappchat.sdk.state.Thread.get(this)
+fun APIUser.u() = User.get(this)
+
 object API {
     lateinit var deviceId: String
     var cfg: JSONObject? = null
@@ -93,9 +110,10 @@ object API {
     var refreshToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
         InAppChat.prefs.edit().putString("refresh-token", newValue).apply()
     }
-    var tokenExpiresAt: Date? by Delegates.observable(null) { property, oldValue, newValue ->
+    var tokenExpiresAt: LocalDateTime? by Delegates.observable(null) { property, oldValue, newValue ->
         if (newValue != null) {
-            InAppChat.prefs.edit().putLong("token-expires", newValue.time).apply()
+            InAppChat.prefs.edit().putLong("token-expires", newValue.toEpochSecond(ZoneOffset.UTC))
+                .apply()
         } else {
             InAppChat.prefs.edit().remove("token-expires").apply()
         }
@@ -129,6 +147,7 @@ object API {
         search = client.createService(SearchApi::class.java)
         thread = client.createService(ThreadApi::class.java)
         user = client.createService(UserApi::class.java)
+        _default = client.createService(DefaultApi::class.java)
         return client
     }
 
@@ -140,6 +159,7 @@ object API {
     lateinit var search: SearchApi
     lateinit var thread: ThreadApi
     lateinit var user: UserApi
+    lateinit var _default: DefaultApi
 
     fun init() {
         var deviceId = InAppChat.prefs
@@ -189,11 +209,134 @@ object API {
         chat.getMessages(thread, pageSize = pageSize, currentMsgId = currentMsgId).result()
             .map(Message::get)
 
-    suspend fun sendText(thread: String, text: String, inReplyTo: String?): Message {
-        val msg = chat.sendMessage()
+
+    fun reply(to: String?): Reply? =
+        to?.let { Reply(baseMsgUniqueId = it, replyMsgConfig = BigDecimal.ONE) }
+
+    suspend fun updateMessageStatus(mid: String, status: MessageStatus) {
+        chat.updateMessage(mid, UpdateMessageInput(status = status)).result()
     }
 
-    suspend fun getUser(id: String): User = user.getUser(id).result().let(User::get)
+    suspend fun send(
+        thread: String,
+        inReplyTo: String?,
+        text: String? = null,
+        attachment: Attachment? = null,
+        gif: String? = null,
+        location: Location? = null,
+        contact: Contact? = null,
+        mediaType: MediaType = "application/octet-stream".toMediaType()
+    ) =
+        chat.sendMessage(
+            senderTimeStampMs = System.currentTimeMillis().toBigDecimal(),
+            thread,
+            message = text,
+            gif = gif,
+            location = location,
+            msgType = attachment?.let { MessageType.valueOf(it.kind.value) }
+                ?: gif?.let { MessageType.gif },
+            contact = contact,
+            file = attachment?.let {
+                MultipartBody.Part.create(
+                    InputStreamRequestBody(
+                        mediaType,
+                        InAppChat.appContext.contentResolver,
+                        attachment.url.toUri()
+                    )
+                )
+            },
+            replyThreadFeatureData = reply(inReplyTo)
+        ).result().message!!.m()
+
+    suspend fun updateGroup(
+        id: String,
+        name: String? = null,
+        groupType: UpdateGroupInput.GroupType? = null,
+        description: String? = null,
+        profilePic: File? = null
+    ) = group.updateGroup(
+        id,
+        updateGroupInput = UpdateGroupInput(
+            name,
+            groupType = groupType,
+            description = description,
+            profilePic = profilePic
+        )
+    ).result().g()
+
+    suspend fun createGroup(
+        name: String,
+        _private: Boolean,
+        description: String? = null,
+        profilePic: File? = null,
+        profilePicType: MediaType = "application/octet-stream".toMediaType(),
+        participants: List<String> = listOf()
+    ) = group.createGroup(
+        name = name,
+        groupType = if (_private) "private" else "public",
+        description = description,
+        profilePic = profilePic?.let {
+            MultipartBody.Part.create(
+                InputStreamRequestBody(
+                    profilePicType,
+                    InAppChat.appContext.contentResolver,
+                    it.toUri()
+                )
+            )
+        },
+        participants = participants
+    ).result().g()
+
+    suspend fun deleteGroup(id: String) = group.deleteGroup(id).result()
+    suspend fun addParticipant(g: String, u: String) = group.addParticipant(g, u).result()
+    suspend fun removeParticipant(g: String, u: String) = group.addParticipant(g, u).result()
+    suspend fun joinGroup(g: String) = group.addParticipant(g, User.current!!.id).result()
+    suspend fun leaveGroup(g: String) = group.removeParticipant(g, User.current!!.id).result()
+    suspend fun getGroup(g: String) = group.getGroup(g).result().g()
+    suspend fun promoteAdmin(g: String, uid: String) = group.groupAddAdmin(g, uid).result()
+    suspend fun dismissAdmin(g: String, uid: String) = group.groupDismissAdmin(g, uid).result()
+
+    suspend fun deleteMessage(id: String) = chat.deleteMessage(id).result()
+
+    suspend fun favorite(message: String, remove: Boolean) =
+        chat.updateMessage(message, UpdateMessageInput(isStarred = !remove)).result()
+
+    suspend fun favorites(skip: Int, limit: Int) =
+        chat.getFavorites(skip, limit).result().map { it.m() }
+
+    suspend fun invites() = group.getInvites().result()
+    suspend fun dismissInvites(g: String) = group.dismissGroupInvite(g).result()
+    suspend fun acceptInvites(g: String) = group.acceptGroupInvite(g).result()
+
+    suspend fun invite(users: List<String>, toGroup: String) =
+        group.inviteUser(toGroup, users).result()
+
+    suspend fun getSharedMedia(uid: String) =
+        _default.getUserMessages(uid, 0, 10, MessageType.image).result().map { it.m() }
+
+    fun onLogin(auth: Auth) {
+        onToken(
+            auth.token.accessToken,
+            auth.token.refreshToken,
+            LocalDateTime.now().plusSeconds(auth.token.expiresIn.toLong())
+        )
+        onUser(auth.user.u())
+    }
+
+    fun onUser(user: User) {
+        Chats.current.user = user
+        Chats.current.currentUserID = user.id
+        Socket.connect()
+    }
+
+    fun onToken(access: String, refresh: String, expires: LocalDateTime) {
+        authToken = access
+        refreshToken = refresh
+        tokenExpiresAt = expires
+    }
+
+    
+    fun getUser(id: String): User = user.getUser(id).result().let(User::get)
 
 }
 
@@ -203,5 +346,23 @@ fun <T> retrofit2.Response<T>.result(): T {
         throw IOException("${this.code()} ${this.message()} ${this.headers()}")
     } else {
         return result
+    }
+}
+
+class InputStreamRequestBody(
+    private val contentType: MediaType,
+    private val contentResolver: ContentResolver,
+    private val uri: Uri
+) : RequestBody() {
+    override fun contentType() = contentType
+
+    override fun contentLength(): Long = -1
+
+    @Throws(IOException::class)
+    override fun writeTo(sink: BufferedSink) {
+        val input = contentResolver.openInputStream(uri)
+
+        input?.use { sink.writeAll(it.source()) }
+            ?: throw IOException("Could not open $uri")
     }
 }
