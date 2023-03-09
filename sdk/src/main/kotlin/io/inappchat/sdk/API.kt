@@ -85,17 +85,17 @@ object API {
     }
 
     var authToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
-        InAppChat.prefs.edit().putString("auth-token", newValue).commit()
+        InAppChat.prefs.edit().putString("auth-token", newValue).apply()
         client = makeClient()
     }
     var refreshToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
-        InAppChat.prefs.edit().putString("refresh-token", newValue).commit()
+        InAppChat.prefs.edit().putString("refresh-token", newValue).apply()
     }
     var tokenExpiresAt: Date? by Delegates.observable(null) { property, oldValue, newValue ->
         if (newValue != null) {
-            InAppChat.prefs.edit().putLong("token-expires", newValue.time).commit()
+            InAppChat.prefs.edit().putLong("token-expires", newValue.time).apply()
         } else {
-            InAppChat.prefs.edit().remove("token-expires").commit()
+            InAppChat.prefs.edit().remove("token-expires").apply()
         }
     }
 
@@ -145,7 +145,7 @@ object API {
             .getString("device-id", null)
         if (deviceId == null) {
             deviceId = UUID.randomUUID().toString()
-            InAppChat.prefs.edit().putString("device-id", deviceId).commit()
+            InAppChat.prefs.edit().putString("device-id", deviceId).apply()
         }
         this.deviceId = deviceId
         this.authToken = InAppChat.prefs.getString("auth-token", null)

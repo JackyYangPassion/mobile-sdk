@@ -34,14 +34,14 @@ class Settings {
 
     fun setNotifications(setting: NotificationSettings.AllowFrom, isSync: Boolean = false) {
         this.notifications = setting
-        prefs.edit().putString("notifications", setting.value).commit()
+        prefs.edit().putString("notifications", setting.value).apply()
         if (isSync) return
         launch { bg { API.updateNotifications(setting) } }
     }
 
     fun setAvailability(setting: AvailabilityStatus, isSync: Boolean = false) {
         this.availabilityStatus = setting
-        prefs.edit().putString("availability", setting.value).commit()
+        prefs.edit().putString("availability", setting.value).apply()
         if (isSync) return
         launch { bg { API.updateAvailability(setting) } }
     }

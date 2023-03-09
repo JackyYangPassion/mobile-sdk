@@ -95,7 +95,7 @@ data class ThreadsPager(val mesage: Message) : Pager<Message>() {
 }
 
 @Stable
-data class UserSharedMedia(val user: User): Pager<Message>() {
+data class UserSharedMedia(val user: User) : Pager<Message>() {
     override suspend fun load(skip: Int, limit: Int): List<Message> {
         return API.getUserSharedMedia(user.id, skip, limit)
     }
@@ -103,7 +103,7 @@ data class UserSharedMedia(val user: User): Pager<Message>() {
 }
 
 @Stable
-data class UsersPager(val id: String = uuid()) : Pager<Thread>() {
+data class UserThreadsPager(val id: String = uuid()) : Pager<Thread>() {
     override suspend fun load(skip: Int, limit: Int): List<Thread> {
         return API.getJoinedUserThreads(skip, limit)
     }
