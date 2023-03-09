@@ -23,10 +23,9 @@ import com.squareup.moshi.Json
 /**
  * 
  *
- * @param deviceId Unique device id. For example, UDID for ios
- * @param deviceType Type of device
  * @param fcmToken FCM regsitration token. Optional.
  * @param fcmVersion FCM Version. Optional. default value is f1
+ * @param apnsToken The APN push token
  * @param availabilityStatus 
  * @param notificationSettings 
  * @param displayName Display name for user
@@ -37,14 +36,6 @@ import com.squareup.moshi.Json
 
 data class UpdateUserInput (
 
-    /* Unique device id. For example, UDID for ios */
-    @Json(name = "deviceId")
-    val deviceId: kotlin.String? = null,
-
-    /* Type of device */
-    @Json(name = "deviceType")
-    val deviceType: UpdateUserInput.DeviceType? = null,
-
     /* FCM regsitration token. Optional. */
     @Json(name = "fcmToken")
     val fcmToken: kotlin.String? = null,
@@ -52,6 +43,10 @@ data class UpdateUserInput (
     /* FCM Version. Optional. default value is f1 */
     @Json(name = "fcmVersion")
     val fcmVersion: kotlin.String? = null,
+
+    /* The APN push token */
+    @Json(name = "apnsToken")
+    val apnsToken: kotlin.String? = null,
 
     @Json(name = "availabilityStatus")
     val availabilityStatus: AvailabilityStatus? = null,
@@ -71,16 +66,5 @@ data class UpdateUserInput (
     @Json(name = "phoneNumber")
     val phoneNumber: kotlin.String? = null
 
-) {
-
-    /**
-     * Type of device
-     *
-     * Values: android,ios
-     */
-    enum class DeviceType(val value: kotlin.String) {
-        @Json(name = "android") android("android"),
-        @Json(name = "ios") ios("ios");
-    }
-}
+)
 

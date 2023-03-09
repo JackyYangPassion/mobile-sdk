@@ -26,13 +26,12 @@ interface DraftApi {
      *  - 200: The draft
      *  - 204: No draft
      *
-     * @param deviceid Source device ID
      * @param threadId Get draft for a particular thread (optional)
      * @param baseMsgUniqueId Get thread for a reply thread, this is base message id (optional)
      * @return [APIMessage]
      */
     @GET("draft")
-    suspend fun getDrafts(@Header("deviceid") deviceid: kotlin.String, @Query("threadId") threadId: kotlin.String? = null, @Query("baseMsgUniqueId") baseMsgUniqueId: kotlin.String? = null): Response<APIMessage>
+    suspend fun getDrafts(@Query("threadId") threadId: kotlin.String? = null, @Query("baseMsgUniqueId") baseMsgUniqueId: kotlin.String? = null): Response<APIMessage>
 
     /**
      * Draft API
@@ -40,7 +39,6 @@ interface DraftApi {
      * Responses:
      *  - 200: The message
      *
-     * @param deviceid Source device ID
      * @param senderTimeStampMs epoch timestamp (in ms) of message creation generated on sender device
      * @param threadId Thread ID which represents a user or a group. eg. 5c56c9a2218aec4b4a8a976f. This is mutually exclusive with recipientAppUserId. (optional)
      * @param recipientAppUserId App user Id of receiver. eg. abc@def.com. This is mutually exclusive with threadId. (optional)
@@ -60,6 +58,6 @@ interface DraftApi {
      */
     @Multipart
     @POST("draft")
-    suspend fun updateDraft(@Header("deviceid") deviceid: kotlin.String, @Part("senderTimeStampMs") senderTimeStampMs: java.math.BigDecimal, @Part("threadId") threadId: kotlin.String? = null, @Part("recipientAppUserId") recipientAppUserId: kotlin.String? = null, @Part("message") message: kotlin.String? = null, @Part("msgType") msgType: MessageType? = null, @Part file: MultipartBody.Part? = null, @Part("replyThreadFeatureData") replyThreadFeatureData: Reply? = null, @Part("location") location: Location? = null, @Part("contact") contact: Contact? = null, @Part("gif") gif: kotlin.String? = null, @Part("mentions") mentions: kotlin.collections.List<Mention>? = null, @Part("forwardChatFeatureData") forwardChatFeatureData: Forward? = null, @Part("media") media: Media? = null, @Part("msgCorrelationId") msgCorrelationId: kotlin.String? = null, @Part("encryptedChatList") encryptedChatList: kotlin.collections.List<EncryptedMessage>? = null): Response<APIMessage>
+    suspend fun updateDraft(@Part("senderTimeStampMs") senderTimeStampMs: java.math.BigDecimal, @Part("threadId") threadId: kotlin.String? = null, @Part("recipientAppUserId") recipientAppUserId: kotlin.String? = null, @Part("message") message: kotlin.String? = null, @Part("msgType") msgType: MessageType? = null, @Part file: MultipartBody.Part? = null, @Part("replyThreadFeatureData") replyThreadFeatureData: Reply? = null, @Part("location") location: Location? = null, @Part("contact") contact: Contact? = null, @Part("gif") gif: kotlin.String? = null, @Part("mentions") mentions: kotlin.collections.List<Mention>? = null, @Part("forwardChatFeatureData") forwardChatFeatureData: Forward? = null, @Part("media") media: Media? = null, @Part("msgCorrelationId") msgCorrelationId: kotlin.String? = null, @Part("encryptedChatList") encryptedChatList: kotlin.collections.List<EncryptedMessage>? = null): Response<APIMessage>
 
 }

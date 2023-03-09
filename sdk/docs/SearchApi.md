@@ -22,13 +22,12 @@ One stop for all search APIs, can be used to search files, messages or groups.
 val apiClient = ApiClient()
 apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(SearchApi::class.java)
-val deviceid : kotlin.String = deviceid_example // kotlin.String | Source device ID
 val searchInput : SearchInput =  // SearchInput | Chat multiple request
 val skip : kotlin.Int = 56 // kotlin.Int | skip value for pagination. i.e. index. default 0
 val limit : kotlin.Int = 56 // kotlin.Int | limit value for pagination. i.e. page-size. default 10
 
 launch(Dispatchers.IO) {
-    val result : SearchResults = webService.search(deviceid, searchInput, skip, limit)
+    val result : SearchResults = webService.search(searchInput, skip, limit)
 }
 ```
 
@@ -36,7 +35,6 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **deviceid** | **kotlin.String**| Source device ID |
  **searchInput** | [**SearchInput**](SearchInput.md)| Chat multiple request |
  **skip** | **kotlin.Int**| skip value for pagination. i.e. index. default 0 | [optional] [default to 0]
  **limit** | **kotlin.Int**| limit value for pagination. i.e. page-size. default 10 | [optional] [default to 20]

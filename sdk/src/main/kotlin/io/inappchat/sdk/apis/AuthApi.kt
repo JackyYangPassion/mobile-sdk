@@ -7,7 +7,7 @@ import okhttp3.RequestBody
 import com.squareup.moshi.Json
 
 import io.inappchat.sdk.models.Auth
-import io.inappchat.sdk.models.LoginInput
+import io.inappchat.sdk.models.Auth0LoginInput
 import io.inappchat.sdk.models.LoginPasswordInput
 import io.inappchat.sdk.models.NFTLoginInput
 import io.inappchat.sdk.models.ResetPasswordInput
@@ -20,11 +20,11 @@ interface AuthApi {
      * Responses:
      *  - 200: The User info
      *
-     * @param loginInput 
+     * @param auth0LoginInput 
      * @return [UserInfo]
      */
     @POST("auth/auth0/login")
-    suspend fun auth0Login(@Body loginInput: LoginInput): Response<UserInfo>
+    suspend fun auth0Login(@Body auth0LoginInput: Auth0LoginInput): Response<UserInfo>
 
     /**
      * Change Password
@@ -44,11 +44,10 @@ interface AuthApi {
      * Responses:
      *  - 204: Logout successful
      *
-     * @param deviceid Source device ID
      * @return [Unit]
      */
     @POST("logout")
-    suspend fun logout(@Header("deviceid") deviceid: kotlin.String): Response<Unit>
+    suspend fun logout(): Response<Unit>
 
     /**
      * Logout

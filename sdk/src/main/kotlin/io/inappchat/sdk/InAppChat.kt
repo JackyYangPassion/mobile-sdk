@@ -6,6 +6,7 @@ package io.inappchat.sdk
 
 import android.content.Context
 import android.content.SharedPreferences
+import io.inappchat.sdk.state.Chats
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,7 @@ object InAppChat {
         this.prefs = appContext.getSharedPreferences("inappchat", Context.MODE_PRIVATE)
         this.namespace = namespace
         this.apiKey = apiKey
+        Chats.current.init()
     }
 
     val scope = CoroutineScope(Dispatchers.Main)

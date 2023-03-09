@@ -10,9 +10,12 @@ servers:
     description: QA
   - url: https://chat-dev.inappchat.io/v3
     description: Dev
+  - url: https://socket-dev.inappchat.io/v3
+    description: Dev-socket
 security:
   - ApiKeyAuth: []
   - BearerAuth: []
+  - DeviceId: []
 paths:
   /auth/nft/login:
     post:
@@ -22,6 +25,7 @@ paths:
       summary: 'signup and login with NFT'
       security:
         - ApiKeyAuth: []
+        - DeviceId: []
       requestBody:
         required: true
         description: 'array of eRTCUserIds of invitees'
@@ -164,15 +168,6 @@ paths:
               title: UpdateUserInput
               type: object
               properties:
-                deviceId:
-                  description: Unique device id. For example, UDID for ios
-                  type: string
-                  example: 2b6f0cc904d137be2e1730235f5664094b831186
-                deviceType:
-                  description: Type of device
-                  type: string
-                  enum: [android, ios]
-                  example: 'android'
                 fcmToken:
                   description: FCM regsitration token. Optional.
                   type: string
@@ -181,6 +176,9 @@ paths:
                   description: FCM Version. Optional. default value is f1
                   type: string
                   example: 'f2'
+                apnsToken:
+                  description: The APN push token
+                  type: string
                 availabilityStatus:
                   $ref: '#/components/schemas/AvailabilityStatus'
                 notificationSettings:
@@ -232,8 +230,6 @@ paths:
       summary: Logout
       description: Logout
       operationId: logout
-      parameters:
-        - $ref: '#/components/parameters/deviceId'
       responses:
         204:
           description: Logout successful
@@ -306,8 +302,6 @@ paths:
         - User
       description: Get pending events for particular device
       operationId: getPendingEvents
-      parameters:
-        - $ref: '#/components/parameters/deviceId'
       responses:
         200:
           description: 'Pending event list'
@@ -334,13 +328,6 @@ paths:
       summary: Draft API
       description: 'Send chat over a thread'
       operationId: updateDraft
-      parameters:
-        - name: deviceid
-          in: header
-          required: true
-          schema:
-            type: string
-          description: 'Source device ID'
       requestBody:
         required: true
         content:
@@ -382,7 +369,6 @@ paths:
       description: 'Send chat over a thread'
       operationId: GetDrafts
       parameters:
-        - $ref: '#/components/parameters/deviceId'
         - name: threadId
           in: query
           description: 'Get draft for a particular thread'
@@ -411,8 +397,6 @@ paths:
       summary: Send a chat message
       description: Send a chat message
       operationId: sendMessage
-      parameters:
-        - $ref: '#/components/parameters/deviceId'
       requestBody:
         required: true
         content:
@@ -690,7 +674,6 @@ paths:
       description: One stop for all search APIs, can be used to search files, messages or groups.
       operationId: search
       parameters:
-        - $ref: '#/components/parameters/deviceId'
         - $ref: '#/components/parameters/skipQuery'
         - $ref: '#/components/parameters/limitQuery'
       requestBody:
@@ -1315,12 +1298,13 @@ paths:
         - Auth
       security:
         - ApiKeyAuth: []
+        - DeviceId: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginInput'
+              $ref: '#/components/schemas/Auth0LoginInput'
       responses:
         '200':
           description: The User info
@@ -1387,6 +1371,7 @@ paths:
       summary: Forgot Password
       security:
         - ApiKeyAuth: []
+        - DeviceId: []
       tags:
         - Auth
       requestBody:
@@ -1418,6 +1403,7 @@ paths:
       summary: Change Password
       security:
         - ApiKeyAuth: []
+        - DeviceId: []
       tags:
         - Auth
       requestBody:
@@ -1539,13 +1525,6 @@ components:
         enum: [future, past]
         default: past
       description: 'future/past'
-    deviceId:
-      name: deviceid
-      in: header
-      required: true
-      schema:
-        type: string
-      description: 'Source device ID'
   requestBodies:
     ChatReport:
       required: true
@@ -2491,18 +2470,25 @@ components:
         - accessToken
         - expiresIn
         - refreshToken
-    LoginInput:
+    Auth0LoginInput:
       type: object
       properties:
-        'loginType':
-          description: 'Type of login  like email/mobile/sso'
+        accessToken:
           type: string
-          enum: [email, mobile, sso]
-          example: 'email'
-        'appUserId':
+          description: The auth0 access token
+        'email':
           description: 'User ID based on loginType'
           type: string
           example: 'abc@ertc.com'
+        picture:
+          description: 'A profile picture URL'
+          type: string
+        name:
+          description: A display name
+          type: string
+        nickname:
+          description: A nickname
+          type: string
         'deviceId':
           description: 'Unique device id. For example, UDID for ios'
           type: string
@@ -2516,9 +2502,12 @@ components:
           description: 'FCM regsitration token. Optional.'
           type: string
           example: 'bk3RNwTe3H0:CI2k_HHwgIpoDKCIZvvDMExUdFQ3P1'
+        apnsToken:
+          description: the device APNS token
+          type: string
       required:
-        - loginType
-        - appUserId
+        - email
+        - accessToken
         - deviceId
     SenderKeyDetails:
       title: SenderKeyDetails
@@ -2690,6 +2679,11 @@ components:
       in: header
       name: X-API-Key
       description: Your API key
+    DeviceId:
+      type: apiKey
+      in: header
+      name: X-Device-ID
+      description: The device's unique identifier
     BearerAuth:
       type: http
       scheme: bearer

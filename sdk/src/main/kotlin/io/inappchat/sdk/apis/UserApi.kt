@@ -54,11 +54,10 @@ interface UserApi {
      * Responses:
      *  - 200: Pending event list
      *
-     * @param deviceid Source device ID
      * @return [kotlin.collections.List<Event>]
      */
     @GET("events")
-    suspend fun getPendingEvents(@Header("deviceid") deviceid: kotlin.String): Response<kotlin.collections.List<Event>>
+    suspend fun getPendingEvents(): Response<kotlin.collections.List<Event>>
 
     /**
      * 

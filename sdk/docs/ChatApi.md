@@ -412,7 +412,6 @@ Send a chat message
 val apiClient = ApiClient()
 apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(ChatApi::class.java)
-val deviceid : kotlin.String = deviceid_example // kotlin.String | Source device ID
 val senderTimeStampMs : java.math.BigDecimal = 8.14 // java.math.BigDecimal | epoch timestamp (in ms) of message creation generated on sender device
 val threadId : kotlin.String = threadId_example // kotlin.String | Thread ID which represents a user or a group. eg. 5c56c9a2218aec4b4a8a976f. This is mutually exclusive with recipientAppUserId.
 val recipientAppUserId : kotlin.String = recipientAppUserId_example // kotlin.String | App user Id of receiver. eg. abc@def.com. This is mutually exclusive with threadId.
@@ -430,7 +429,7 @@ val msgCorrelationId : kotlin.String = msgCorrelationId_example // kotlin.String
 val encryptedChatList : kotlin.collections.List<EncryptedMessage> =  // kotlin.collections.List<EncryptedMessage> | List of user+device wise eencrypted chat objects.
 
 launch(Dispatchers.IO) {
-    val result : MessageResponse = webService.sendMessage(deviceid, senderTimeStampMs, threadId, recipientAppUserId, message, msgType, file, replyThreadFeatureData, location, contact, gif, mentions, forwardChatFeatureData, media, msgCorrelationId, encryptedChatList)
+    val result : MessageResponse = webService.sendMessage(senderTimeStampMs, threadId, recipientAppUserId, message, msgType, file, replyThreadFeatureData, location, contact, gif, mentions, forwardChatFeatureData, media, msgCorrelationId, encryptedChatList)
 }
 ```
 
@@ -438,7 +437,6 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **deviceid** | **kotlin.String**| Source device ID |
  **senderTimeStampMs** | **java.math.BigDecimal**| epoch timestamp (in ms) of message creation generated on sender device |
  **threadId** | **kotlin.String**| Thread ID which represents a user or a group. eg. 5c56c9a2218aec4b4a8a976f. This is mutually exclusive with recipientAppUserId. | [optional]
  **recipientAppUserId** | **kotlin.String**| App user Id of receiver. eg. abc@def.com. This is mutually exclusive with threadId. | [optional]

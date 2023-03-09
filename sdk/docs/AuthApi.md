@@ -26,10 +26,10 @@ verify user information, device information
 
 val apiClient = ApiClient()
 val webService = apiClient.createWebservice(AuthApi::class.java)
-val loginInput : LoginInput =  // LoginInput | 
+val auth0LoginInput : Auth0LoginInput =  // Auth0LoginInput | 
 
 launch(Dispatchers.IO) {
-    val result : UserInfo = webService.auth0Login(loginInput)
+    val result : UserInfo = webService.auth0Login(auth0LoginInput)
 }
 ```
 
@@ -37,7 +37,7 @@ launch(Dispatchers.IO) {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **loginInput** | [**LoginInput**](LoginInput.md)|  |
+ **auth0LoginInput** | [**Auth0LoginInput**](Auth0LoginInput.md)|  |
 
 ### Return type
 
@@ -107,18 +107,14 @@ Logout
 val apiClient = ApiClient()
 apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(AuthApi::class.java)
-val deviceid : kotlin.String = deviceid_example // kotlin.String | Source device ID
 
 launch(Dispatchers.IO) {
-    webService.logout(deviceid)
+    webService.logout()
 }
 ```
 
 ### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **deviceid** | **kotlin.String**| Source device ID |
+This endpoint does not need any parameter.
 
 ### Return type
 

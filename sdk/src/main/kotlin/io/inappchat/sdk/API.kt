@@ -84,6 +84,8 @@ object API {
         client = makeClient()
     }
 
+    var apiKey: String? = null
+
     var authToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
         InAppChat.prefs.edit().putString("auth-token", newValue).apply()
         client = makeClient()
@@ -113,14 +115,13 @@ object API {
     fun makeClient(): ApiClient {
         val client = ApiClient(
             baseUrl = server,
-            okHttpClientBuilder = okHttpBuilder(),
-            authNames = if (authToken != null) arrayOf(
-                "ApiKeyAuth",
-                "BearerAuth"
-            ) else arrayOf("ApiKeyAuth")
+            okHttpClientBuilder = okHttpBuilder()
         )
-        client.addAuthorization("ApiKeyAuth", ApiKeyAuth("header", "X-API-Key", InAppChat.apiKey))
+        apiKey?.let { client.addAuthorization("ApiKeyAuth", ApiKeyAuth("header", "X-API-Key", it)) }
         authToken?.let { client.addAuthorization("BearerAuth", HttpBearerAuth("bearer", it)) }
+        if (this::deviceId.isInitialized) {
+            client.addAuthorization("DeviceId", ApiKeyAuth("header", "X-Device-ID", deviceId))
+        }
         chat = client.createService(ChatApi::class.java)
         auth = client.createService(AuthApi::class.java)
         settings = client.createService(ChatSettingApi::class.java)
@@ -187,6 +188,10 @@ object API {
     suspend fun getMessages(thread: String, pageSize: Int, currentMsgId: String? = null) =
         chat.getMessages(thread, pageSize = pageSize, currentMsgId = currentMsgId).result()
             .map(Message::get)
+
+    suspend fun sendText(thread: String, text: String, inReplyTo: String?): Message {
+        val msg = chat.sendMessage()
+    }
 
     suspend fun getUser(id: String): User = user.getUser(id).result().let(User::get)
 

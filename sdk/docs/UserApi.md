@@ -158,18 +158,14 @@ Get pending events for particular device
 val apiClient = ApiClient()
 apiClient.setBearerToken("TOKEN")
 val webService = apiClient.createWebservice(UserApi::class.java)
-val deviceid : kotlin.String = deviceid_example // kotlin.String | Source device ID
 
 launch(Dispatchers.IO) {
-    val result : kotlin.collections.List<Event> = webService.getPendingEvents(deviceid)
+    val result : kotlin.collections.List<Event> = webService.getPendingEvents()
 }
 ```
 
 ### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **deviceid** | **kotlin.String**| Source device ID |
+This endpoint does not need any parameter.
 
 ### Return type
 

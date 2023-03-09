@@ -4,6 +4,7 @@ docs/APIMessage.md
 docs/APIThread.md
 docs/APIUser.md
 docs/Auth.md
+docs/Auth0LoginInput.md
 docs/AuthApi.md
 docs/AutoDeleteSettings.md
 docs/AvailabilityEvent.md
@@ -42,7 +43,6 @@ docs/GroupUpdateEventData.md
 docs/GroupUpdateEventItem.md
 docs/Invite.md
 docs/Location.md
-docs/LoginInput.md
 docs/LoginPasswordInput.md
 docs/Media.md
 docs/Mention.md
@@ -122,6 +122,7 @@ src/main/kotlin/io/inappchat/sdk/models/APIMessage.kt
 src/main/kotlin/io/inappchat/sdk/models/APIThread.kt
 src/main/kotlin/io/inappchat/sdk/models/APIUser.kt
 src/main/kotlin/io/inappchat/sdk/models/Auth.kt
+src/main/kotlin/io/inappchat/sdk/models/Auth0LoginInput.kt
 src/main/kotlin/io/inappchat/sdk/models/AutoDeleteSettings.kt
 src/main/kotlin/io/inappchat/sdk/models/AvailabilityEvent.kt
 src/main/kotlin/io/inappchat/sdk/models/AvailabilityStatus.kt
@@ -152,7 +153,6 @@ src/main/kotlin/io/inappchat/sdk/models/GroupUpdateEventData.kt
 src/main/kotlin/io/inappchat/sdk/models/GroupUpdateEventItem.kt
 src/main/kotlin/io/inappchat/sdk/models/Invite.kt
 src/main/kotlin/io/inappchat/sdk/models/Location.kt
-src/main/kotlin/io/inappchat/sdk/models/LoginInput.kt
 src/main/kotlin/io/inappchat/sdk/models/LoginPasswordInput.kt
 src/main/kotlin/io/inappchat/sdk/models/Media.kt
 src/main/kotlin/io/inappchat/sdk/models/Mention.kt

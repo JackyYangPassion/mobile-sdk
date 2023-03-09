@@ -117,6 +117,7 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.APIThread](docs/APIThread.md)
  - [io.inappchat.sdk.models.APIUser](docs/APIUser.md)
  - [io.inappchat.sdk.models.Auth](docs/Auth.md)
+ - [io.inappchat.sdk.models.Auth0LoginInput](docs/Auth0LoginInput.md)
  - [io.inappchat.sdk.models.AutoDeleteSettings](docs/AutoDeleteSettings.md)
  - [io.inappchat.sdk.models.AvailabilityEvent](docs/AvailabilityEvent.md)
  - [io.inappchat.sdk.models.AvailabilityStatus](docs/AvailabilityStatus.md)
@@ -147,7 +148,6 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.GroupUpdateEventItem](docs/GroupUpdateEventItem.md)
  - [io.inappchat.sdk.models.Invite](docs/Invite.md)
  - [io.inappchat.sdk.models.Location](docs/Location.md)
- - [io.inappchat.sdk.models.LoginInput](docs/LoginInput.md)
  - [io.inappchat.sdk.models.LoginPasswordInput](docs/LoginPasswordInput.md)
  - [io.inappchat.sdk.models.Media](docs/Media.md)
  - [io.inappchat.sdk.models.Mention](docs/Mention.md)
@@ -205,4 +205,11 @@ Class | Method | HTTP request | Description
 ### BearerAuth
 
 - **Type**: HTTP basic authentication
+
+<a name="DeviceId"></a>
+### DeviceId
+
+- **Type**: API key
+- **API key parameter name**: X-Device-ID
+- **Location**: HTTP header
 
