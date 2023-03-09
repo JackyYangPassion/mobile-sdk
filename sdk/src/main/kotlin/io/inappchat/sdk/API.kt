@@ -9,6 +9,7 @@ import android.net.Uri
 import android.support.v4.os.IResultReceiver.Default
 import android.util.Log
 import androidx.core.net.toUri
+import com.auth0.android.provider.WebAuthProvider
 import com.moczul.ok2curl.CurlInterceptor
 import io.inappchat.sdk.apis.*
 import io.inappchat.sdk.auth.ApiKeyAuth
@@ -31,6 +32,7 @@ import java.math.BigDecimal
 import java.security.MessageDigest
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.*
 import kotlin.coroutines.resume
@@ -329,16 +331,110 @@ object API {
         Socket.connect()
     }
 
-    fun onToken(access: String, refresh: String, expires: LocalDateTime) {
+    fun onToken(access: String, refresh: String?, expires: LocalDateTime) {
         authToken = access
         refreshToken = refresh
         tokenExpiresAt = expires
     }
 
-    
-    fun getUser(id: String): User = user.getUser(id).result().let(User::get)
+    suspend fun auth0Login(credentials: com.auth0.android.result.Credentials): User {
+        onToken(
+            credentials.accessToken,
+            credentials.refreshToken,
+            credentials.expiresAt.toInstant().atZone(
+                ZoneId.systemDefault()
+            ).toLocalDateTime()
+        )
+        val res = auth.auth0Login(
+            Auth0LoginInput(
+                accessToken = credentials.accessToken,
+                email = credentials.user.email!!,
+                deviceId = deviceId,
+                picture = credentials.user.pictureURL,
+                name = credentials.user.name,
+                nickname = credentials.user.nickname,
+                deviceType = Auth0LoginInput.DeviceType.android
+            )
+        ).result()
+        val user = res.user.u()
+        onUser(user)
+        return user
+    }
 
-}
+    suspend fun nftLogin(
+        contract: String,
+        address: String,
+        tokenID: String,
+        signature: String,
+        profilePicture: String,
+        username: String?
+    ): User {
+        val res = auth.nftLogin(
+            NFTLoginInput(
+                address = address, contract = contract, signature = signature, tokenID = tokenID,
+                username = username, profilePicture = profilePicture
+            )
+        ).result()
+        onLogin(res)
+        return res.user.u()
+    }
+
+    suspend fun getUser(id: String): User = user.getUser(id).result().let(User::get)
+
+    suspend fun logout() {
+        auth.logout()
+        refreshToken = null
+        authToken = null
+        tokenExpiresAt = null
+    }
+
+    suspend fun block(id: String, isBlock: Boolean) {
+        if (isBlock) {
+            user.blockUser(id)
+        } else {
+            user.unblockUser(id)
+        }
+    }
+
+    suspend fun updateNotifications(setting: NotificationSettings.AllowFrom) =
+        user.updateMe(
+            UpdateUserInput(notificationSettings = NotificationSettings(setting))
+        )
+
+    suspend fun updateAvailability(setting: AvailabilityStatus) =
+        user.updateMe(
+            UpdateUserInput(availabilityStatus = (setting))
+        )
+
+    suspend fun updateThreadNotifications(id: String, setting: NotificationSettings.AllowFrom) =
+        thread.updateThread(
+            id,
+            UpdateThreadInput(notificationSettings = NotificationSettings(setting))
+        )
+
+    suspend fun getContacts(existing: List<String>): List<User> = user.syncContacts(SyncContactsInput(existing)).result().map { it.u() }
+
+    suspend fun getJoinedUserThreads(skip: Int, limit: Int) = thread.getThreads(skip = skip, limit = limit, threadType = ThreadApi.ThreadType_getThreads.single)
+        .result().map { it.t() }
+    suspend fun getJoinedGroupThreads(skip: Int, limit: Int) = thread.getThreads(skip = skip, limit = limit, threadType = ThreadApi.ThreadType_getThreads.group)
+        .result().map { it.t() }
+
+    suspend fun groups(skip: Int, limit: Int) = group.getGroups(limit = limit, skip = skip, joined = GroupApi.Joined_getGroups.no).result().map { it.g() }
+    suspend fun getReplyThreads(skip: Int, limit: Int) = chat.getReplyThreads(limit = limit, skip = skip, deep = true).result().map { it.m() }
+    suspend fun getThread(id: String) = thread.getThread(id).result().t()
+    suspend fun getMessage(id: String) = chat.getMessage(id).result().m()
+    suspend fun getGroupThread(gid: String) = thread.getGroupThread(gid).result().t()
+    suspend fun getUserThread(uid: String) = thread.createThread(uid).result().t()
+
+    suspend fun getReplies(mid: String, skip: Int, limit: Int) = chat.getReplies(mid, skip, limit).result().map { it.m() }
+
+    suspend fun registerFcmToken(token: String) = user.updateMe(UpdateUserInput(fcmToken = token))
+
+    suspend fun start(id: String): User {
+        val user = getUser(id)
+        User.current = user
+        return user
+    }
 
 fun <T> retrofit2.Response<T>.result(): T {
     val result = this.body()
