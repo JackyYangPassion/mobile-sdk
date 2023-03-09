@@ -20,7 +20,7 @@ import java.util.*
 @Stable
 data class ChannelsPager(val id: String = UUID.randomUUID().toString()) : Pager<Group>() {
     override suspend fun load(skip: Int, limit: Int): List<Group> {
-        return API.getGroups(skip, limit)
+        return API.groups(skip, limit)
     }
 }
 
@@ -49,19 +49,19 @@ data class ContactsPager(val id: String = UUID.randomUUID().toString()) : Pager<
 
     override suspend fun load(skip: Int, limit: Int): List<User> {
         val contacts = fetchContacts()
-        return API.syncContacts(contacts)
+        return API.getContacts(contacts)
     }
 }
 
 @Stable
 data class FavoritesPager(val id: String = uuid()) : Pager<Message>() {
     override suspend fun load(skip: Int, limit: Int): List<Message> {
-        return API.getFavorites(skip, limit)
+        return API.favorites(skip, limit)
     }
 }
 
 @Stable
-data class GroupsPager(val id: String = uuid()) : Pager<Thread> {
+data class GroupsPager(val id: String = uuid()) : Pager<Thread>() {
     override suspend fun load(skip: Int, limit: Int): List<Thread> {
         return API.getJoinedGroupThreads(skip, limit)
     }
@@ -97,7 +97,7 @@ data class ThreadsPager(val mesage: Message) : Pager<Message>() {
 @Stable
 data class UserSharedMedia(val user: User) : Pager<Message>() {
     override suspend fun load(skip: Int, limit: Int): List<Message> {
-        return API.getUserSharedMedia(user.id, skip, limit)
+        return API.getSharedMedia(user.id)
     }
 
 }
