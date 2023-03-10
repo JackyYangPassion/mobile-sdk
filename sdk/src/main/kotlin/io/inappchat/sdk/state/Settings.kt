@@ -19,6 +19,7 @@ class Settings {
     var notifications by mutableStateOf(NotificationSettings.AllowFrom.all)
     var availabilityStatus by mutableStateOf(AvailabilityStatus.online)
     var blocked = mutableStateListOf<String>()
+    val lastUsedReactions = mutableStateListOf<String>()
 
     fun init() {
         notifications = prefs.getString("notifications", null)
@@ -29,6 +30,7 @@ class Settings {
             ?: AvailabilityStatus.online
         blocked = prefs.getStringSet("blocked", mutableSetOf())?.toMutableStateList()
             ?: mutableStateListOf()
+        lastUsedReactions.addAll(prefs.getString("reactions", "😀,🤟,❤️,🔥,🤣")!!.split(","))
     }
 
 
@@ -58,4 +60,14 @@ class Settings {
         }
     }
 
+    fun onReaction(emoji: String) {
+        if (lastUsedReactions.contains(emoji)) {
+            lastUsedReactions.remove(emoji)
+        }
+        lastUsedReactions.add(0, emoji)
+        if (lastUsedReactions.size > 5) {
+            lastUsedReactions.removeRange(5, lastUsedReactions.size - 1)
+        }
+        prefs.edit().putString("reactions", lastUsedReactions.joinToString { "," }).apply()
+    }
 }

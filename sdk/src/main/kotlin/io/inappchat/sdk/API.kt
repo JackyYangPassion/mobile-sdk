@@ -306,7 +306,11 @@ object API {
     suspend fun favorites(skip: Int, limit: Int) =
         chat.getFavorites(skip, limit).result().map { it.m() }
 
+    suspend fun react(mid: String, emoji: String) = chat.react(mid, emoji).result()
+    suspend fun unreact(mid: String, emoji: String) = chat.unreact(mid, emoji).result()
     suspend fun invites() = group.getInvites().result()
+
+    suspend fun editMessageText(id: String, text: String) = chat.updateMessage(id, UpdateMessageInput(message = text)).result()
     suspend fun dismissInvites(g: String) = group.dismissGroupInvite(g).result()
     suspend fun acceptInvites(g: String) = group.acceptGroupInvite(g).result()
 
