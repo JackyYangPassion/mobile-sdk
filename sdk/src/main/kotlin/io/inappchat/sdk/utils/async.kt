@@ -31,3 +31,5 @@ fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) 
 }
 
 suspend fun <T> bg(block: suspend CoroutineScope.() -> T) = withContext(Dispatchers.IO, block)
+
+fun bg(block: suspend CoroutineScope.() -> Unit) = launch(Dispatchers.IO, block = block)
