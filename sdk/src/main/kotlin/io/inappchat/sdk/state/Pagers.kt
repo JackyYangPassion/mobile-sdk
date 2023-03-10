@@ -87,7 +87,7 @@ data class RepliesPager(val message: Message) : Pager<Message>() {
 }
 
 @Stable
-data class ThreadsPager(val mesage: Message) : Pager<Message>() {
+data class ThreadsPager(val id: String = uuid()) : Pager<Message>() {
     override suspend fun load(skip: Int, limit: Int): List<Message> {
         return API.getReplyThreads(skip, limit)
     }

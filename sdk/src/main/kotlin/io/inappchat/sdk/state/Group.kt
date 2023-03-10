@@ -60,6 +60,12 @@ data class Group(override val id: String) : Identifiable {
         update(group)
     }
 
+    init {
+        Chats.current.invites[id]?.let {
+            this.invites.addAll(it)
+        }
+    }
+
     fun update(group: APIGroup) {
         this.name = group.name
         this.description = group.description

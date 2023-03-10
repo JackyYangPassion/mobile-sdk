@@ -17,6 +17,7 @@ import com.hivemq.client.mqtt.mqtt3.message.subscribe.Mqtt3SubscriptionBuilder
 import io.inappchat.sdk.API
 import io.inappchat.sdk.API.authToken
 import io.inappchat.sdk.InAppChat
+import io.inappchat.sdk.actions.setNotifications
 import io.inappchat.sdk.extensions.contains
 import io.inappchat.sdk.infrastructure.Serializer
 import io.inappchat.sdk.m
@@ -82,7 +83,8 @@ object Socket {
     }
 
     fun connect() {
-        bg {
+        async {
+            createClient()
             client.connect().await()
             client.subscribe(
                 Mqtt3Subscribe.builder().addSubscriptions(

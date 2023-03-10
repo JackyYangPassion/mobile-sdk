@@ -17,6 +17,7 @@ import io.inappchat.sdk.auth.HttpBearerAuth
 import io.inappchat.sdk.infrastructure.ApiClient
 import io.inappchat.sdk.models.*
 import io.inappchat.sdk.state.*
+import io.inappchat.sdk.utils.Socket
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletionHandler
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -310,7 +311,9 @@ object API {
     suspend fun unreact(mid: String, emoji: String) = chat.unreact(mid, emoji).result()
     suspend fun invites() = group.getInvites().result()
 
-    suspend fun editMessageText(id: String, text: String) = chat.updateMessage(id, UpdateMessageInput(message = text)).result()
+    suspend fun editMessageText(id: String, text: String) =
+        chat.updateMessage(id, UpdateMessageInput(message = text)).result()
+
     suspend fun dismissInvites(g: String) = group.dismissGroupInvite(g).result()
     suspend fun acceptInvites(g: String) = group.acceptGroupInvite(g).result()
 
@@ -330,7 +333,6 @@ object API {
     }
 
     fun onUser(user: User) {
-        Chats.current.user = user
         Chats.current.currentUserID = user.id
         Socket.connect()
     }
@@ -416,29 +418,43 @@ object API {
             UpdateThreadInput(notificationSettings = NotificationSettings(setting))
         )
 
-    suspend fun getContacts(existing: List<String>): List<User> = user.syncContacts(SyncContactsInput(existing)).result().map { it.u() }
+    suspend fun getContacts(existing: List<String>): List<User> =
+        user.syncContacts(SyncContactsInput(existing)).result().map { it.u() }
 
-    suspend fun getJoinedUserThreads(skip: Int, limit: Int) = thread.getThreads(skip = skip, limit = limit, threadType = ThreadApi.ThreadType_getThreads.single)
-        .result().map { it.t() }
-    suspend fun getJoinedGroupThreads(skip: Int, limit: Int) = thread.getThreads(skip = skip, limit = limit, threadType = ThreadApi.ThreadType_getThreads.group)
+    suspend fun getJoinedUserThreads(skip: Int, limit: Int) = thread.getThreads(
+        skip = skip,
+        limit = limit,
+        threadType = ThreadApi.ThreadType_getThreads.single
+    )
         .result().map { it.t() }
 
-    suspend fun groups(skip: Int, limit: Int) = group.getGroups(limit = limit, skip = skip, joined = GroupApi.Joined_getGroups.no).result().map { it.g() }
-    suspend fun getReplyThreads(skip: Int, limit: Int) = chat.getReplyThreads(limit = limit, skip = skip, deep = true).result().map { it.m() }
+    suspend fun getJoinedGroupThreads(skip: Int, limit: Int) = thread.getThreads(
+        skip = skip,
+        limit = limit,
+        threadType = ThreadApi.ThreadType_getThreads.group
+    )
+        .result().map { it.t() }
+
+    suspend fun groups(skip: Int, limit: Int) =
+        group.getGroups(limit = limit, skip = skip, joined = GroupApi.Joined_getGroups.no).result()
+            .map { it.g() }
+
+    suspend fun getReplyThreads(skip: Int, limit: Int) =
+        chat.getReplyThreads(limit = limit, skip = skip, deep = true).result().map { it.m() }
+
     suspend fun getThread(id: String) = thread.getThread(id).result().t()
     suspend fun getMessage(id: String) = chat.getMessage(id).result().m()
     suspend fun getGroupThread(gid: String) = thread.getGroupThread(gid).result().t()
     suspend fun getUserThread(uid: String) = thread.createThread(uid).result().t()
 
-    suspend fun getReplies(mid: String, skip: Int, limit: Int) = chat.getReplies(mid, skip, limit).result().map { it.m() }
+    suspend fun getReplies(mid: String, skip: Int, limit: Int) =
+        chat.getReplies(mid, skip, limit).result().map { it.m() }
 
     suspend fun registerFcmToken(token: String) = user.updateMe(UpdateUserInput(fcmToken = token))
 
-    suspend fun start(id: String): User {
-        val user = getUser(id)
-        User.current = user
-        return user
-    }
+    suspend fun me(): User = user.me().result().u()
+
+}
 
 fun <T> retrofit2.Response<T>.result(): T {
     val result = this.body()

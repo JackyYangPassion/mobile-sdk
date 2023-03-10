@@ -7,7 +7,7 @@ package io.inappchat.sdk.utils
 
 import android.content.Context
 import com.rollbar.android.Rollbar
-import io.inappchat.inappchat.BuildConfig
+import io.inappchat.sdk.BuildConfig
 
 object Monitoring {
     lateinit var logger: Rollbar

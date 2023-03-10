@@ -7,6 +7,7 @@ package io.inappchat.sdk.actions
 import io.inappchat.sdk.API
 import io.inappchat.sdk.models.Contact
 import io.inappchat.sdk.models.Location
+import io.inappchat.sdk.models.NotificationSettings
 import io.inappchat.sdk.state.*
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
@@ -43,5 +44,20 @@ fun Thread.send(
     }) {
         sending.remove(m)
         failed.add(m)
+    }
+
+
+}
+
+fun Thread.setNotifications(settings: NotificationSettings.AllowFrom, isSync: Boolean) {
+    val og = this.notification
+    this.notification = settings
+    if (isSync) {
+        return
+    }
+    op({
+        API.updateThreadNotifications(id, settings)
+    }) {
+        this.notification = og
     }
 }

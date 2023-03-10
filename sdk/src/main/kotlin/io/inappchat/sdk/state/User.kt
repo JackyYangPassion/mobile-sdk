@@ -89,6 +89,7 @@ data class User(
 
     var blocking by mutableStateOf(false)
 
+    @Stable
     companion object {
         var current by mutableStateOf<User?>(null)
 
