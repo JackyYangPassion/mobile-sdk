@@ -17,6 +17,7 @@ import com.hivemq.client.mqtt.mqtt3.message.subscribe.Mqtt3SubscriptionBuilder
 import io.inappchat.sdk.API
 import io.inappchat.sdk.API.authToken
 import io.inappchat.sdk.InAppChat
+import io.inappchat.sdk.extensions.contains
 import io.inappchat.sdk.infrastructure.Serializer
 import io.inappchat.sdk.m
 import io.inappchat.sdk.models.*
@@ -142,6 +143,7 @@ object Socket {
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+            Event.EventType.chatReportUpdated -> {}
 
         }
     }
@@ -166,55 +168,61 @@ object Socket {
             .build()
     }
 
-     fun on(event: AvailabilityEvent) {
+    fun on(event: AvailabilityEvent) {
         User.get(event.eRTCUserId)?.status = event.availabilityStatus
     }
 
-     fun on(event: NewMessageEvent) {
-         val m = event.message.m()
-         m.thread?.let {
-             if (!it.items.contains(m)) {
-                 it.items.add(0, m)
-             }
-         }
-    }
-
-     fun on(event: ReactionEvent) {
-         Message.get(event.msgUniqueId)?.let { msg ->
-             val i = msg.reactions.indexOfFirst { it.emojiCode == event.emojiCode }
-             if (i > -1) {
-            var users = msg.reactions[i].users.toMutableList()
-            if (event.action == "set") {
-                if (!users.contains(event.eRTCUserId))
-                users.add(event.eRTCUserId)
-            } else {
-                users.remove(event.eRTCUserId)
+    fun on(event: NewMessageEvent) {
+        val m = event.message.m()
+        m.thread?.let {
+            if (!it.items.contains(m)) {
+                it.items.add(0, m)
             }
-            msg.reactions[i] = Reaction(event.emojiCode, event.totalCount.toInt(), users)
-        } else {
-            msg.reactions?.add(Reaction(event.emojiCode,1, listOf(event.eRTCUserId)))
-        }
         }
     }
 
-     fun on(event: GroupUpdateEvent) {
-         Group.get(event.groupId)?.let {  group ->
+    fun on(event: ReactionEvent) {
+        Message.get(event.msgUniqueId)?.let { msg ->
+            val i = msg.reactions.indexOfFirst { it.emojiCode == event.emojiCode }
+            if (i > -1) {
+                var users = msg.reactions[i].users.toMutableList()
+                if (event.action == "set") {
+                    if (!users.contains(event.eRTCUserId))
+                        users.add(event.eRTCUserId)
+                } else {
+                    users.remove(event.eRTCUserId)
+                }
+                msg.reactions[i] = Reaction(event.emojiCode, event.totalCount.toInt(), users)
+            } else {
+                msg.reactions?.add(Reaction(event.emojiCode, 1, listOf(event.eRTCUserId)))
+            }
+        }
+    }
+
+    fun on(event: GroupUpdateEvent) {
+        Group.get(event.groupId)?.let { group ->
             for (ev in event.eventList) {
                 when (ev.eventType) {
                     GroupUpdateEventItem.EventType.adminDismissed,
                     GroupUpdateEventItem.EventType.adminMade -> {
-                        ev . eventData . eventTriggeredOnUserList?.let {
+                        ev.eventData.eventTriggeredOnUserList?.let {
                             for (u in it) {
-                                val newRole = if (ev.eventType == GroupUpdateEventItem.EventType.adminMade) Participant.Role.admin else Participant.Role.user
-                                val i = group . participants.indexOfFirst {  it.eRTCUserId == u.eRTCUserId }
+                                val newRole =
+                                    if (ev.eventType == GroupUpdateEventItem.EventType.adminMade) Participant.Role.admin else Participant.Role.user
+                                val i =
+                                    group.participants.indexOfFirst { it.eRTCUserId == u.eRTCUserId }
                                 if (i > -1) {
                                     val p = group.participants[i].copy(role = newRole)
                                     group.participants.removeAt(i)
                                     group.participants.add(i, p)
                                 } else {
                                     group.participants.add(
-                                        Participant(u.appUserId,
-                                        u. eRTCUserId, newRole, joinedAtDate = OffsetDateTime.now())
+                                        Participant(
+                                            u.appUserId,
+                                            u.eRTCUserId,
+                                            newRole,
+                                            joinedAtDate = OffsetDateTime.now()
+                                        )
                                     )
                                 }
                             }
@@ -224,8 +232,11 @@ object Socket {
                         ev.eventData.eventTriggeredOnUserList?.let {
                             for (u in it) {
                                 group.participants.add(
-                                    Participant(u. appUserId,
-                                    u. eRTCUserId, Participant.Role.user, OffsetDateTime.now()))
+                                    Participant(
+                                        u.appUserId,
+                                        u.eRTCUserId, Participant.Role.user, OffsetDateTime.now()
+                                    )
+                                )
                             }
                         }
                     }
@@ -237,26 +248,26 @@ object Socket {
                         }
                     }
                     GroupUpdateEventItem.EventType.created -> {
-                            ev.eventData.changeData?.let { change ->
-                                val g = Group(change.groupId!!.new)
-                                g.name = change.name!!.new
-                                g.description = change.description?.new
-                                g.avatar = change.profilePic?.new
-                                g._private =
-                                    change.groupType?.new == GroupUpdatEventChangeDataGroupType.New.private
-                            }
+                        ev.eventData.changeData?.let { change ->
+                            val g = Group(change.groupId!!.new)
+                            g.name = change.name!!.new
+                            g.description = change.description?.new
+                            g.avatar = change.profilePic?.new
+                            g._private =
+                                change.groupType?.new == GroupUpdatEventChangeDataGroupType.New.private
                         }
+                    }
                     GroupUpdateEventItem.EventType.descriptionChanged -> {
-                            ev.eventData.changeData?.description?.let {
-                                group.description = it.new
-                            }
+                        ev.eventData.changeData?.description?.let {
+                            group.description = it.new
                         }
+                    }
                     GroupUpdateEventItem.EventType.descriptionChanged -> {
-                            ev.eventData.changeData?.groupType?.let {
-                                group._private =
-                                    it.new == GroupUpdatEventChangeDataGroupType.New.private
-                            }
+                        ev.eventData.changeData?.groupType?.let {
+                            group._private =
+                                it.new == GroupUpdatEventChangeDataGroupType.New.private
                         }
+                    }
                     GroupUpdateEventItem.EventType.nameChange -> {
                         ev.eventData.changeData?.name?.let {
                             group.name = it.new
@@ -268,67 +279,13 @@ object Socket {
                         }
                     }
                     GroupUpdateEventItem.EventType.profilePicRemoved -> {
-                        group.avatar = nil
+                        group.avatar = null
                     }
-                }
-            }
-        }
-    }
 
-     fun on(event: MsgReadEvent) {
-        Message.get(event.msgUniqueId)?.let {
-            it.status = event.msgReadStatus
-        }
-    }
-
-     fun on(event: TypingEvent) {
-        if (event.appUserId == User.current?.email) {
-            Thread.get(event.eRTCUserId)?.let {
-                if event.typingStatusEvent == . on {
-                    it.typingUsers = [event.eRTCUserId]
-                } else {
-                    it.typingUsers = []
-                }
-            }
-        } else {
-            val thread = event.groupId?.let { io.inappchat.sdk.state.Thread.getByGroup(it)?.let {
-                if (event.typingStatusEvent == TypingEvent.TypingStatusEvent.on) {
-                    var typing = it.typingUsers
-
-                    typing.append(event.eRTCUserId)
-                    typing = typing.unique()
-                    thread.typingUsers = typing
-                } else {
-                    User.get(event.eRTCUserId)?.let { u ->
-                        it.typingUsers.remove(u)
-                    }
-                }
-            } }
-        }
-    }
-
-     fun on(event: UserSelfUpdateEvent) {
-        if event.eRTCUserId == User.current?.id {
-            for ev in event.eventList {
-                switch ev.eventType {
-                    case .availabilitystatuschanged:
-                    if let availability = ev.eventData.availabilityStatus {
-                        Chats.current.settings.setAvailability(availability, isSync: true)
-                    }
-                    case .notificationsettingchangedglobal:
-                    if let setting = ev.eventData.notificationSettings {
-                        Chats.current.settings.setNotification(setting.allowFrom, isSync: true)
-                    }
-                    case .notificationsettingschangedthread:
-                    if let setting = ev.eventData.notificationSettings, let thread = ev.eventData.threadId.flatMap({Thread.get($0)}) {
-                    thread.set(notifications: setting.allowFrom, isSync: true)
-                }
-                    case .userblockedstatuschanged:
-                    if let uid = ev.eventData.targetUser?.eRTCUserId {
-                        let blocked = ev.eventData.blockedStatus == .blocked
-                        Chats.current.settings.setBlock(uid, blocked)
-                        if let user = User.get(uid) {
-                            user.blocked = blocked
+                    GroupUpdateEventItem.EventType.groupTypeChanged -> {
+                        ev.eventData.changeData?.groupType?.let {
+                            group._private =
+                                it.new == GroupUpdatEventChangeDataGroupType.New.private
                         }
                     }
                 }
@@ -336,8 +293,87 @@ object Socket {
         }
     }
 
-     fun on(event: UpdateMessageEvent) {
-        Chats.current.onDelete(message: event.msgUniqueId)
+    fun on(event: MsgReadEvent) {
+        Message.get(event.msgUniqueId)?.let {
+            it.status = MessageStatus.valueOf(event.msgReadStatus.value)
+        }
+    }
+
+    fun on(event: TypingEvent) {
+        if (event.appUserId == User.current?.email) {
+            io.inappchat.sdk.state.Thread.get(event.eRTCUserId)?.let {
+                if (event.typingStatusEvent == TypingEvent.TypingStatusEvent.on) {
+                    if (!it.typingUsers.contains { it.id == event.eRTCUserId }) {
+                        it.typingUsers.add(User.fetched(event.eRTCUserId))
+                    } else {
+                        Unit
+                    }
+                } else {
+                    it.typingUsers.removeIf { it.id == event.eRTCUserId }
+                }
+            }
+        } else {
+            event.groupId?.let {
+                io.inappchat.sdk.state.Thread.getByGroup(it)?.let {
+                    if (event.typingStatusEvent == TypingEvent.TypingStatusEvent.on) {
+                        var typing = it.typingUsers
+                        if (!typing.contains { it.id == event.eRTCUserId }) {
+                            typing.add(User.fetched(event.eRTCUserId))
+                        } else {
+                            Unit
+                        }
+                    } else {
+                        User.get(event.eRTCUserId)?.let { u ->
+                            it.typingUsers.remove(u)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun on(event: UserSelfUpdateEvent) {
+        if (event.eRTCUserId == User.current?.id) {
+            for (ev in event.eventList) {
+                when (ev.eventType) {
+                    SelfUpdateItem.EventType.availabilityStatusChanged ->
+                        ev.eventData.availabilityStatus?.let {
+                            Chats.current.settings.setAvailability(it, true)
+                        }
+                    SelfUpdateItem.EventType.notificationSettingChangedGlobal ->
+                        ev.eventData.notificationSettings?.let {
+                            Chats.current.settings.setNotifications(it.allowFrom, true)
+                        }
+                    SelfUpdateItem.EventType.notificationSettingsChangedThread ->
+                        ev.eventData.notificationSettings?.let { setting ->
+                            ev.eventData.threadId?.let { io.inappchat.sdk.state.Thread.get(it) }
+                                ?.let { thread ->
+                                    thread.setNotifications(setting.allowFrom, true)
+                                }
+                        }
+                    SelfUpdateItem.EventType.userBlockedStatusChanged ->
+                        ev.eventData.targetUser?.eRTCUserId?.let {
+                            val blocked =
+                                ev.eventData.blockedStatus == UserSelfUpdateEventData.BlockedStatus.blocked
+                            Chats.current.settings.setBlock(it, blocked)
+                            User.get(it)?.let {
+                                it.blocked = blocked
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    fun on(event: UpdateMessageEvent) {
+        Message.get(event.msgUniqueId)?.let {
+            Chats.current.cache.messages.remove(it.id)
+            it.thread?.items?.remove(it)
+            Chats.current.cache.repliesPagers[event.msgUniqueId]?.let { r ->
+
+                r.items.remove(it)
+            }
+        }
     }
 
 }
