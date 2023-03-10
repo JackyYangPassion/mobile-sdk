@@ -5,9 +5,9 @@
 package io.inappchat.sdk.ui.screens
 
 import androidx.compose.runtime.Composable
-import io.inappchat.sdk.state.Group
+import androidx.constraintlayout.widget.Group
 
 @Composable
-fun ChannelsView(openChat: (Group) -> Unit) {
+fun InviteView(openGroup: (Group) -> Unit, back: () -> Unit) {
 
 }

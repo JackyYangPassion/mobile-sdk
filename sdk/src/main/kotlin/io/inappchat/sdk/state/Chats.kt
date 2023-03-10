@@ -74,7 +74,19 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
     enum class List(val label: String) {
         groups("Channels"),
         users("Chat"),
-        threads("Threads")
+        threads("Threads");
+
+        companion object {
+            fun forRoute(r: String?): List {
+                if (r == null) return groups
+                when (r) {
+                    "channels" -> groups
+                    "chats" -> users
+                    "threads" -> threads
+                }
+                return groups
+            }
+        }
     }
 
     fun count(list: List): Int =

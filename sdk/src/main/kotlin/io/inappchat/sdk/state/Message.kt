@@ -48,6 +48,7 @@ data class Message(
     val replies by lazy { RepliesPager(this) }
     val user = User.fetched(userID)
     val room: Room? get() = Room.get(threadID)
+    val path: String get() = "/message/$id"
 
     constructor(msg: APIMessage) : this(
         msg.msgUniqueId,

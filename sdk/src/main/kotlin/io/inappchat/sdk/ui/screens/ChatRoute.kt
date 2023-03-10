@@ -5,9 +5,8 @@
 package io.inappchat.sdk.ui.screens
 
 import androidx.compose.runtime.Composable
-import io.inappchat.sdk.state.Group
 
 @Composable
-fun ChannelsView(openChat: (Group) -> Unit) {
+fun ChatRoute(gid: String? = null, uid: String? = null, mid: String? = null, back: () -> Unit) {
 
 }
