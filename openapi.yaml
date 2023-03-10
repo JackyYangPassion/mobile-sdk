@@ -440,18 +440,7 @@ paths:
                     title: ChatStatus
                     properties:
                       returnCode:
-                        type: string
-                        title: SenderReturnCode
-                        enum:
-                          - senderKeyValidityExpired,
-                          - receiverKeyValidationError
-                          - senderNewDeviceKeyAvailable
-                          - success
-                        description: >
-                          return code for e2e encrypted chat request. 
-                          It can be senderKeyValidityExpired (new key to be provided in keyList, also new device key if there) 
-                          / receiverKeyValidationError / senderNewDeviceKeyAvailable (new device key to be provided in keyList, 
-                          also same device key if validity expired) / success
+                        $ref: '#/components/schemas/SenderReturnCode'
                       retryRequired:
                         type: boolean
                       keyList:
@@ -463,13 +452,7 @@ paths:
                               title: ReturnCode
                               properties:
                                 returnCode:
-                                  type: string
-                                  title: ReceiverReturnCode
-                                  description: Return code associated with individual key object.
-                                  enum:
-                                    - receiverKeyNotActive
-                                    - receiverKeyInvalid
-                                    - receiverNewDeviceKeyAvailable
+                                  $ref: '#/components/schemas/ReceiverReturnCode'
                     required:
                       - returnCode
                       - retryRequired
@@ -2666,6 +2649,25 @@ components:
       required:
         - user
         - token
+    SenderReturnCode:
+      type: string
+      enum:
+        - senderKeyValidityExpired,
+        - receiverKeyValidationError
+        - senderNewDeviceKeyAvailable
+        - success
+      description: >
+        return code for e2e encrypted chat request. 
+        It can be senderKeyValidityExpired (new key to be provided in keyList, also new device key if there) 
+        / receiverKeyValidationError / senderNewDeviceKeyAvailable (new device key to be provided in keyList, 
+        also same device key if validity expired) / success
+    ReceiverReturnCode:
+      type: string
+      description: Return code associated with individual key object.
+      enum:
+        - receiverKeyNotActive
+        - receiverKeyInvalid
+        - receiverNewDeviceKeyAvailable
   responses:
     auth:
       description: User token and profile

@@ -76,7 +76,7 @@ data class User(
     val chatPath: String get() = "/user/$id/chat"
 
     @Stable
-    val haveChatWith: Boolean get() = Chats.current.users.contains { it.user?.id == id }
+    val haveChatWith: Boolean get() = Chats.current.users.items.contains { it.user?.id == id }
 
     @Stable
     val usernameFb: String get() = if (!username.isBlank()) username else displayName ?: email
