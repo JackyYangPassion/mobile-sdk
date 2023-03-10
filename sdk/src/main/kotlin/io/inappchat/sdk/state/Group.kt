@@ -39,6 +39,8 @@ data class Group(override val id: String) : Identifiable {
     val invitePath: String
         get() = "/group/$id/invite"
 
+    val isMember: Boolean get() = participants.contains { it.eRTCUserId == User.current?.id }
+
     @Stable
     val admins: List<User>
         get() = participants.filter { it.role == Participant.Role.admin }.map { it.user() }
