@@ -13,7 +13,6 @@ import com.hivemq.client.mqtt.mqtt3.message.auth.Mqtt3SimpleAuth
 import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish
 import com.hivemq.client.mqtt.mqtt3.message.subscribe.Mqtt3Subscribe
 import com.hivemq.client.mqtt.mqtt3.message.subscribe.Mqtt3Subscription
-import com.hivemq.client.mqtt.mqtt3.message.subscribe.Mqtt3SubscriptionBuilder
 import io.inappchat.sdk.API
 import io.inappchat.sdk.API.authToken
 import io.inappchat.sdk.InAppChat
@@ -47,7 +46,7 @@ object Socket {
     fun init(server: String, apiKey: String) {
         this.server = server
         this.apiKey = apiKey
-        if (User.current?.id == null || API.authToken == null) return
+        if (User.current?.id == null || authToken == null) return
 
     }
 
@@ -176,7 +175,7 @@ object Socket {
 
     fun on(event: NewMessageEvent) {
         val m = event.message.m()
-        m.thread?.let {
+        m.room?.let {
             if (!it.items.contains(m)) {
                 it.items.add(0, m)
             }
@@ -196,7 +195,7 @@ object Socket {
                 }
                 msg.reactions[i] = Reaction(event.emojiCode, event.totalCount.toInt(), users)
             } else {
-                msg.reactions?.add(Reaction(event.emojiCode, 1, listOf(event.eRTCUserId)))
+                msg.reactions.add(Reaction(event.emojiCode, 1, listOf(event.eRTCUserId)))
             }
         }
     }
@@ -303,12 +302,11 @@ object Socket {
 
     fun on(event: TypingEvent) {
         if (event.appUserId == User.current?.email) {
-            io.inappchat.sdk.state.Thread.get(event.eRTCUserId)?.let {
+            io.inappchat.sdk.state.Room.get(event.eRTCUserId)?.let {
                 if (event.typingStatusEvent == TypingEvent.TypingStatusEvent.on) {
                     if (!it.typingUsers.contains { it.id == event.eRTCUserId }) {
                         it.typingUsers.add(User.fetched(event.eRTCUserId))
                     } else {
-                        Unit
                     }
                 } else {
                     it.typingUsers.removeIf { it.id == event.eRTCUserId }
@@ -316,13 +314,12 @@ object Socket {
             }
         } else {
             event.groupId?.let {
-                io.inappchat.sdk.state.Thread.getByGroup(it)?.let {
+                io.inappchat.sdk.state.Room.getByGroup(it)?.let {
                     if (event.typingStatusEvent == TypingEvent.TypingStatusEvent.on) {
                         var typing = it.typingUsers
                         if (!typing.contains { it.id == event.eRTCUserId }) {
                             typing.add(User.fetched(event.eRTCUserId))
                         } else {
-                            Unit
                         }
                     } else {
                         User.get(event.eRTCUserId)?.let { u ->
@@ -348,7 +345,7 @@ object Socket {
                         }
                     SelfUpdateItem.EventType.notificationSettingsChangedThread ->
                         ev.eventData.notificationSettings?.let { setting ->
-                            ev.eventData.threadId?.let { io.inappchat.sdk.state.Thread.get(it) }
+                            ev.eventData.threadId?.let { io.inappchat.sdk.state.Room.get(it) }
                                 ?.let { thread ->
                                     thread.setNotifications(setting.allowFrom, true)
                                 }
@@ -370,7 +367,7 @@ object Socket {
     fun on(event: UpdateMessageEvent) {
         Message.get(event.msgUniqueId)?.let {
             Chats.current.cache.messages.remove(it.id)
-            it.thread?.items?.remove(it)
+            it.room?.items?.remove(it)
             Chats.current.cache.repliesPagers[event.msgUniqueId]?.let { r ->
 
                 r.items.remove(it)

@@ -13,10 +13,9 @@ data class Caches(
     val users: SnapshotStateMap<String, User> = mutableStateMapOf(),
     val messages: SnapshotStateMap<String, Message> = mutableStateMapOf(),
     val groups: SnapshotStateMap<String, Group> = mutableStateMapOf(),
-    val threads: SnapshotStateMap<String, Thread> = mutableStateMapOf(),
-    val threadsByUID: SnapshotStateMap<String, Thread> = mutableStateMapOf(),
-    val threadsByGroup: SnapshotStateMap<String, Thread> = mutableStateMapOf(),
+    val threads: SnapshotStateMap<String, Room> = mutableStateMapOf(),
+    val threadsByUID: SnapshotStateMap<String, Room> = mutableStateMapOf(),
+    val threadsByGroup: SnapshotStateMap<String, Room> = mutableStateMapOf(),
     val repliesPagers: SnapshotStateMap<String, RepliesPager> = mutableStateMapOf(),
     val threadFetches: MutableSet<String> = mutableSetOf()
-) {
-}
+)

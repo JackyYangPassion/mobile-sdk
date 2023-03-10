@@ -9,12 +9,7 @@ import contacts.core.*
 import contacts.core.util.phones
 import io.inappchat.sdk.API
 import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.utils.launch
 import io.inappchat.sdk.utils.uuid
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.map
 import java.util.*
 
 @Stable
@@ -61,8 +56,8 @@ data class FavoritesPager(val id: String = uuid()) : Pager<Message>() {
 }
 
 @Stable
-data class GroupsPager(val id: String = uuid()) : Pager<Thread>() {
-    override suspend fun load(skip: Int, limit: Int): List<Thread> {
+data class GroupsPager(val id: String = uuid()) : Pager<Room>() {
+    override suspend fun load(skip: Int, limit: Int): List<Room> {
         return API.getJoinedGroupThreads(skip, limit)
     }
 
@@ -103,8 +98,8 @@ data class UserSharedMedia(val user: User) : Pager<Message>() {
 }
 
 @Stable
-data class UserThreadsPager(val id: String = uuid()) : Pager<Thread>() {
-    override suspend fun load(skip: Int, limit: Int): List<Thread> {
+data class UserThreadsPager(val id: String = uuid()) : Pager<Room>() {
+    override suspend fun load(skip: Int, limit: Int): List<Room> {
         return API.getJoinedUserThreads(skip, limit)
     }
 }

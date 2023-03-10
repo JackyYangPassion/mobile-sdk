@@ -11,7 +11,6 @@ import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Group
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.utils.bg
-import io.inappchat.sdk.utils.launch
 import io.inappchat.sdk.utils.op
 import java.io.File
 import java.time.OffsetDateTime
@@ -122,7 +121,7 @@ fun Group.delete() {
         bg { API.deleteGroup(id) }
         Chats.current.cache.groups.remove(id)
         Chats.current.network.items.removeAll { it.id == id }
-        io.inappchat.sdk.state.Thread.getByGroup(id)?.let { t ->
+        io.inappchat.sdk.state.Room.getByGroup(id)?.let { t ->
             Chats.current.cache.threads.remove(t.id)
             Chats.current.groups.items.removeAll { t.id == it.id }
         }

@@ -16,7 +16,7 @@ import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import java.time.LocalDateTime
 
-fun Thread.send(
+fun Room.send(
     inReplyTo: String?,
     text: String? = null,
     attachment: Attachment? = null,
@@ -49,7 +49,7 @@ fun Thread.send(
 
 }
 
-fun Thread.setNotifications(settings: NotificationSettings.AllowFrom, isSync: Boolean) {
+fun Room.setNotifications(settings: NotificationSettings.AllowFrom, isSync: Boolean) {
     val og = this.notification
     this.notification = settings
     if (isSync) {

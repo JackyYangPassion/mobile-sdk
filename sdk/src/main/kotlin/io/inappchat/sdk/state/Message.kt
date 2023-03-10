@@ -9,14 +9,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.inappchat.sdk.API
 import io.inappchat.sdk.models.*
 import io.inappchat.sdk.utils.*
-import okhttp3.internal.immutableListOf
 import java.net.URLEncoder
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
 @Stable
@@ -53,7 +47,7 @@ data class Message(
 
     val replies by lazy { RepliesPager(this) }
     val user = User.fetched(userID)
-    val thread: Thread? get() = Thread.get(threadID)
+    val room: Room? get() = Room.get(threadID)
 
     constructor(msg: APIMessage) : this(
         msg.msgUniqueId,
@@ -72,12 +66,12 @@ data class Message(
     init {
         Chats.current.cache.messages[id] = this
         parentID?.let { parentId ->
-            Message.get(parentId)?.let { parent = it } ?: op({
+            get(parentId)?.let { parent = it } ?: op({
                 parent = bg { API.getMessage(parentId) }
             })
         }
-        if (thread == null) {
-            Thread.fetch(threadID)
+        if (room == null) {
+            Room.fetch(threadID)
         }
 
     }
@@ -117,7 +111,7 @@ data class Message(
 
     val summary: String
         get() =
-            "${user.username ?: ""}: $msg"
+            "${user.username}: $msg"
 
 
     var reacting by mutableStateOf(false)

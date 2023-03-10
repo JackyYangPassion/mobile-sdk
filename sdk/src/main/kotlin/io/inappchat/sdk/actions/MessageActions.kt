@@ -29,7 +29,7 @@ fun Message.decr(emoji: String) {
 
 fun Message.updateStatus(status: MessageStatus = MessageStatus.seen) {
     if (user.isCurrent) return
-    if (thread?.group != null) return
+    if (room?.group != null) return
     if (status != MessageStatus.seen) {
         val og = status
         this.status = MessageStatus.seen
@@ -113,7 +113,7 @@ fun Message.editText(newText: String) {
 
 fun Message.delete() {
     parent?.replies?.items?.remove(this)
-    thread?.items?.remove(this)
+    room?.items?.remove(this)
     Chats.current.cache.messages.remove(id)
     op({
         bg { API.deleteMessage(id) }

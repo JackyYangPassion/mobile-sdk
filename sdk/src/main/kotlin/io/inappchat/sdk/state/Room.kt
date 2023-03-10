@@ -11,7 +11,7 @@ import io.inappchat.sdk.models.NotificationSettings
 import io.inappchat.sdk.utils.op
 
 @Stable
-data class Thread(override val id: String, val user: User? = null, val group: Group? = null) :
+data class Room(override val id: String, val user: User? = null, val group: Group? = null) :
     Pager<Message>(), Identifiable {
 
     var unreadCount by mutableStateOf(0)
@@ -86,7 +86,7 @@ data class Thread(override val id: String, val user: User? = null, val group: Gr
         fun get(id: String) = Chats.current.cache.threads[id]
         fun getByGroup(id: String) = Chats.current.cache.threadsByGroup[id]
         fun getByUser(id: String) = Chats.current.cache.threadsByUID[id]
-        fun get(thread: APIThread): Thread {
+        fun get(thread: APIThread): Room {
             val t = get(thread.threadId)
             if (t != null) {
                 t.update(thread)
@@ -94,7 +94,7 @@ data class Thread(override val id: String, val user: User? = null, val group: Gr
                 thread.user?.let { User.get(it) }
                 return t
             }
-            return Thread(thread)
+            return Room(thread)
         }
 
         fun fetch(id: String) {

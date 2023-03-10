@@ -6,10 +6,8 @@ package io.inappchat.sdk
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.support.v4.os.IResultReceiver.Default
 import android.util.Log
 import androidx.core.net.toUri
-import com.auth0.android.provider.WebAuthProvider
 import com.moczul.ok2curl.CurlInterceptor
 import io.inappchat.sdk.apis.*
 import io.inappchat.sdk.auth.ApiKeyAuth
@@ -31,7 +29,6 @@ import org.json.JSONObject
 import java.io.File
 import java.math.BigDecimal
 import java.security.MessageDigest
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -94,7 +91,7 @@ class ContinuationCallback(
 
 fun APIMessage.m() = Message.get(this)
 fun APIGroup.g() = Group.get(this)
-fun APIThread.t() = io.inappchat.sdk.state.Thread.get(this)
+fun APIThread.t() = Room.get(this)
 fun APIUser.u() = User.get(this)
 
 object API {
