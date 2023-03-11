@@ -12,18 +12,17 @@ val preview = true
 val darkMode = false
 
 @Stable
-data class Theme(
-    val fonts: Fonts = Fonts(),
-    val light: Colors = Colors(true),
-    val dark: Colors = Colors(false),
-    val imagePreviewSize: Size = Size(width = 178f, height = 153f),
-    val videoPreviewSize: Size = Size(width = 248f, height = 153f),
-    val messageAlignment: Alignment.Horizontal = Alignment.Start,
-    val senderAlignment: Alignment.Horizontal = Alignment.End,
-    val bubbleRadius: Float = 7.5f,
-    val bubblePadding: PaddingValues = PaddingValues(6.dp),
-    val assets: Assets = Assets()
-) {
+class Theme {
+    var fonts by mutableStateOf(Fonts())
+    var light: Colors by mutableStateOf(Colors(true))
+    var dark: Colors by mutableStateOf(Colors(false))
+    var imagePreviewSize by mutableStateOf(Size(width = 178f, height = 153f))
+    var videoPreviewSize by mutableStateOf(Size(width = 248f, height = 153f))
+    var messageAlignment by mutableStateOf(Alignment.Start)
+    var senderAlignment by mutableStateOf(Alignment.End)
+    var bubbleRadius by mutableStateOf(7.5f)
+    var bubblePadding by mutableStateOf(PaddingValues(6.dp))
+    var assets by mutableStateOf(Assets())
     var isDark by mutableStateOf(false)
 
     @Stable
@@ -40,9 +39,15 @@ data class Theme(
         return this
     }
 
-    @Stable
-    companion object {
-        val standard = Theme()
-        var current by mutableStateOf(standard)
+    fun fromOtherTheme(it: Theme) {
+        this.light = it.light
+        this.dark = it.dark
+        this.imagePreviewSize = it.imagePreviewSize
+        this.videoPreviewSize = it.videoPreviewSize
+        this.messageAlignment = it.messageAlignment
+        this.senderAlignment = it.senderAlignment
+        this.bubbleRadius = it.bubbleRadius
+        this.bubblePadding = it.bubblePadding
+        this.assets = it.assets
     }
 }

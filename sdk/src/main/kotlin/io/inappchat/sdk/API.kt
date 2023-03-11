@@ -340,22 +340,30 @@ object API {
         tokenExpiresAt = expires
     }
 
-    suspend fun auth0Login(credentials: com.auth0.android.result.Credentials): User {
+    suspend fun auth0Login(
+        accessToken: String,
+        refreshToken: String?,
+        expiresAt: Date,
+        email: String,
+        name: String?,
+        nickname: String?,
+        picture: String?
+    ): User {
         onToken(
-            credentials.accessToken,
-            credentials.refreshToken,
-            credentials.expiresAt.toInstant().atZone(
+            accessToken,
+            refreshToken,
+            expiresAt.toInstant().atZone(
                 ZoneId.systemDefault()
             ).toLocalDateTime()
         )
         val res = auth.auth0Login(
             Auth0LoginInput(
-                accessToken = credentials.accessToken,
-                email = credentials.user.email!!,
+                accessToken = accessToken,
+                email = email,
                 deviceId = deviceId,
-                picture = credentials.user.pictureURL,
-                name = credentials.user.name,
-                nickname = credentials.user.nickname,
+                picture = picture,
+                name = name,
+                nickname = nickname,
                 deviceType = Auth0LoginInput.DeviceType.android
             )
         ).result()

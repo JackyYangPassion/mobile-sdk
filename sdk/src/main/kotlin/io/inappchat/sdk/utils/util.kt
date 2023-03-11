@@ -9,3 +9,5 @@ import java.util.UUID
 
 fun bundleUrl() = InAppChat.appContext.packageName
 fun uuid() = UUID.randomUUID().toString()
+
+typealias Fn = () -> Unit

@@ -1,48 +1,64 @@
-///*
-// * Copyright (c) 2023.
-// */
-//
+/*
+ * Copyright (c) 2023.
+ */
+
 package io.inappchat.sdk.ui.theme
-//
-//import android.app.Activity
-//import android.os.Build
-//import androidx.compose.foundation.isSystemInDarkTheme
-//import androidx.compose.material3.MaterialTheme
-//import androidx.compose.material3.dynamicDarkColorScheme
-//import androidx.compose.material3.dynamicLightColorScheme
-//import androidx.compose.runtime.Composable
-//import androidx.compose.runtime.SideEffect
-//import androidx.compose.ui.graphics.toArgb
-//import androidx.compose.ui.platform.LocalContext
-//import androidx.compose.ui.platform.LocalView
-//import androidx.core.view.ViewCompat
-//
-//@Composable
-//fun InAppChatTheme(
-//    darkTheme: Boolean = isSystemInDarkTheme(),
-//    // Dynamic color is available on Android 12+
-//    dynamicColor: Boolean = true,
-//    content: @Composable () -> Unit
-//) {
-//    val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
-//        darkTheme -> DarkColorScheme
-//        else -> LightColorScheme
-//    }
-//    val view = LocalView.current
-//    if (!view.isInEditMode) {
-//        SideEffect {
-//            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-//            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
-//        }
-//    }
-//
-//    MaterialTheme(
-//        colorScheme = colorScheme,
-//        typography = Typography,
-//        content = content
-//    )
-//}
+
+import Colors
+import Fonts
+import Theme
+import android.app.Activity
+import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.content.res.ResourcesCompat.ThemeCompat
+import androidx.core.view.ViewCompat
+
+val IACTheme = staticCompositionLocalOf { Theme() }
+val IACColors = staticCompositionLocalOf { Colors(true) }
+
+@Composable
+fun InAppChatTheme(
+    theme: Theme = IACTheme.current,
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val rememberedTheme = remember { theme }.apply { theme.fromOtherTheme(theme) }
+    val colorScheme = when {
+        darkTheme -> theme.dark
+        else -> theme.light
+    }
+    CompositionLocalProvider(IACTheme provides rememberedTheme, IACColors provides colorScheme) {
+        content()
+    }
+}
+
+object IAC {
+    /**
+     * Retrieves the current [ColorScheme] at the call site's position in the hierarchy.
+     */
+    val theme: Theme
+        @Composable
+        @ReadOnlyComposable
+        get() = IACTheme.current
+
+    /**
+     * Retrieves the current [Typography] at the call site's position in the hierarchy.
+     */
+    val colors: Colors
+        @Composable
+        @ReadOnlyComposable
+        get() = theme.colors
+
+    /**
+     * Retrieves the current [Shapes] at the call site's position in the hierarchy.
+     */
+    val fonts: Fonts
+        @Composable
+        @ReadOnlyComposable
+        get() = theme.fonts
+}

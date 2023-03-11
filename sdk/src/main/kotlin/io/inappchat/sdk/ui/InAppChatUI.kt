@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.inappchat.sdk.state.*
 import io.inappchat.sdk.ui.screens.*
+import io.inappchat.sdk.ui.theme.InAppChatTheme
 
 @Composable
 fun InAppChatUI() {
@@ -45,92 +46,94 @@ fun InAppChatUI() {
         navController.popBackStack()
         Unit
     }
-    NavHost(navController = navController, startDestination = "profile") {
-        composable("chats") {
-            tabs
-        }
-        composable("channels") { tabs }
-        composable("threads") { tabs }
-        composable(
-            "user/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) {
-            UserView(it.arguments?.getString("id")!!, openChat = openUserChat, back = back)
-        }
-        composable(
-            "user/{id}/chat",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) {
-            ChatRoute(
-                uid = it.arguments?.getString("id")!!,
-                openProfile = openProfile,
-                openInvite = openInvite,
-                openEditGroup = openEditGroup,
-                back = back
-            )
-        }
-        composable(
-            "group/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) {
-            ChatRoute(
-                gid = it.arguments?.getString("id")!!,
-                openProfile = openProfile,
-                openInvite = openInvite,
-                openEditGroup = openEditGroup,
-                back = back
-            )
-        }
-        composable(
-            "group/{id}/edit",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) {
-            CreateGroup(
-                group = Group.get(it.arguments?.getString("id")!!),
-                openChat = openGroupChat,
-                _back = back
-            )
-        }
-        composable(
-            "group/{id}/invite",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) {
-            InviteView(
-                group = Group.get(it.arguments?.getString("id")!!),
-                openGroup = {
-                    navController.navigate(it.path) {
-                        navController.popBackStack()
-                        navController.popBackStack()
-                    }
-                },
-                back = back
-            )
-        }
-        composable(
-            "message/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) {
-            ChatRoute(
-                mid = it.arguments?.getString("id")!!,
-                openProfile = openProfile,
-                openInvite = openInvite,
-                openEditGroup = openEditGroup,
-                back = back
-            )
-        }
-        composable("groups/new") {
-            CreateGroup(group = null, openChat = openGroupChat, _back = back)
-        }
-        composable("favorites") {
-            FavoritesView(
-                back = back
-            )
-        }
-        composable("settings/notifications") {
-            NotificationSettingsView(back)
-        }
-        composable("search") {
-            SearchView(back)
+    InAppChatTheme {
+        NavHost(navController = navController, startDestination = "profile") {
+            composable("chats") {
+                tabs
+            }
+            composable("channels") { tabs }
+            composable("threads") { tabs }
+            composable(
+                "user/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                UserView(it.arguments?.getString("id")!!, openChat = openUserChat, back = back)
+            }
+            composable(
+                "user/{id}/chat",
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                ChatRoute(
+                    uid = it.arguments?.getString("id")!!,
+                    openProfile = openProfile,
+                    openInvite = openInvite,
+                    openEditGroup = openEditGroup,
+                    back = back
+                )
+            }
+            composable(
+                "group/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                ChatRoute(
+                    gid = it.arguments?.getString("id")!!,
+                    openProfile = openProfile,
+                    openInvite = openInvite,
+                    openEditGroup = openEditGroup,
+                    back = back
+                )
+            }
+            composable(
+                "group/{id}/edit",
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                CreateGroup(
+                    group = Group.get(it.arguments?.getString("id")!!),
+                    openChat = openGroupChat,
+                    _back = back
+                )
+            }
+            composable(
+                "group/{id}/invite",
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                InviteView(
+                    group = Group.get(it.arguments?.getString("id")!!),
+                    openGroup = {
+                        navController.navigate(it.path) {
+                            navController.popBackStack()
+                            navController.popBackStack()
+                        }
+                    },
+                    back = back
+                )
+            }
+            composable(
+                "message/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType })
+            ) {
+                ChatRoute(
+                    mid = it.arguments?.getString("id")!!,
+                    openProfile = openProfile,
+                    openInvite = openInvite,
+                    openEditGroup = openEditGroup,
+                    back = back
+                )
+            }
+            composable("groups/new") {
+                CreateGroup(group = null, openChat = openGroupChat, _back = back)
+            }
+            composable("favorites") {
+                FavoritesView(
+                    back = back
+                )
+            }
+            composable("settings/notifications") {
+                NotificationSettingsView(back)
+            }
+            composable("search") {
+                SearchView(back)
+            }
         }
     }
 }
