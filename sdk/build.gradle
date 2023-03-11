@@ -93,6 +93,7 @@ dependencies {
 
     implementation 'com.rollbar:rollbar-java:1.9.0'
     implementation 'com.rollbar:rollbar-android:1.9.0@aar'
+    implementation 'androidx.core:core-ktx:+'
 
 
     def composeBom = platform('androidx.compose:compose-bom:2023.01.00')
@@ -120,10 +121,13 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4'
     implementation 'me.jorgecastillo:androidcolorx:0.2.0'
 
+    implementation 'io.github.serpro69:kotlin-faker:1.13.0'
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
 }
 
 openApiGenerate {
