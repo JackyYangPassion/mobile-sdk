@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +29,7 @@ import io.inappchat.sdk.ui.theme.IAC
 import io.inappchat.sdk.ui.theme.IACColors
 import io.inappchat.sdk.ui.theme.InAppChatTheme
 import io.inappchat.sdk.utils.Fn
+import io.inappchat.sdk.utils.annotated
 
 val HeaderHeight = 44.dp
 
@@ -51,7 +51,7 @@ fun Header(
             .height(44.dp)
             .padding(4.dp, 2.dp)
     ) {
-        if (back != null) {
+        if (back != null)
             HeaderButton(
                 back,
                 true
@@ -62,9 +62,8 @@ fun Header(
                     modifier = Modifier.fillMaxSize(1.0f)
                 )
             }
-        }
         icon?.invoke()
-        Text(text = title, iac = IAC.fonts.title.copy(weight = FontWeight.Bold))
+        Text(text = title.annotated(), iac = IAC.fonts.title.copy(weight = FontWeight.Bold))
         Spacer(modifier = Modifier.weight(1.0f))
         if (search != null) {
             HeaderButton(onClick = search) {
