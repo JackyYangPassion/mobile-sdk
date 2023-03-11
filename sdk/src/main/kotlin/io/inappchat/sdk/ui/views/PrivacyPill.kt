@@ -18,11 +18,16 @@ import io.inappchat.sdk.utils.ift
 
 @Composable
 fun PrivacyPill(_private: Boolean = false) {
-    Text((if (_private) "Private" else  "Public").uppercase().annotated(),
+    Text(
+        (if (_private) "Private" else "Public").uppercase().annotated(),
         IAC.fonts.mini,
-        Modifier.padding(5.dp, 1.dp)
-            .background(ift(_private, IAC.theme.colors._private, IAC.theme.colors._public), RoundedCornerShape(8.dp))
+        Modifier
+            .padding(5.dp, 1.dp)
+            .background(
+                ift(_private, IAC.theme.colors._private, IAC.theme.colors._public),
+                RoundedCornerShape(8.dp)
+            )
             .radius(Int.MAX_VALUE),
         color = Color.White,
-    }
+    )
 }
