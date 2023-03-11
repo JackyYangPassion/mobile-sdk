@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.TextUnit
 
 @Composable
 fun Text(
-    text: String,
+    annotatedString: AnnotatedString,
     iac: FontStyle,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -37,7 +37,7 @@ fun Text(
     style: TextStyle = LocalTextStyle.current
 ) {
     androidx.compose.material3.Text(
-        text = text,
+        annotatedString,
         modifier = modifier,
         color = color,
         fontSize = iac.size,
