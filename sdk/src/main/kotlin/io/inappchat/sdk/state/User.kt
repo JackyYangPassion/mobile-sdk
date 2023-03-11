@@ -119,3 +119,14 @@ data class User(
 
     }
 }
+
+fun Array<User>.usernames(): String {
+    val uns = this.slice(0..2).map { it.usernameFb }
+    if (uns.size < 3) {
+        return uns.joinToString(" and ")
+    } else if (uns.size == 3) {
+        return "${uns[0]}, ${uns[1]} and ${uns[2]}"
+    } else {
+        return "${uns[0]}, ${uns[1]} and ${size - 3} others"
+    }
+}
