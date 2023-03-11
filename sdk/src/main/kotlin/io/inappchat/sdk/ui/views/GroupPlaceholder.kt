@@ -4,28 +4,20 @@
 
 package io.inappchat.sdk.ui.views
 
-import android.graphics.ColorSpace
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColor
-import dev.jorgecastillo.androidcolorx.library.HSLColor
-import dev.jorgecastillo.androidcolorx.library.asColorInt
+import androidx.compose.ui.tooling.preview.Preview
 import dev.jorgecastillo.androidcolorx.library.asHsl
 import io.inappchat.sdk.R
 import io.inappchat.sdk.ui.theme.IAC
@@ -46,7 +38,7 @@ fun Color.adjustedHsl(by: Int): Color {
 @Composable
 fun GroupPlaceholder(modifier: Modifier? = null) {
     Box(
-        contentAlignment = Alignment.Center, modifier = Modifier
+        contentAlignment = Alignment.Center, modifier = (modifier ?: Modifier)
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
@@ -55,13 +47,21 @@ fun GroupPlaceholder(modifier: Modifier? = null) {
                     ),
                     start = Offset.Zero,
                     end = Offset.Infinite
-                )
+                ),
+                CircleShape
             )
+            .size(50)
     ) {
         Icon(
             painter = painterResource(id = IAC.theme.assets.group ?: R.drawable.users_three_fill),
             contentDescription = "Group icon",
-            modifier = Modifier.size(50.dp)
+            modifier = Modifier.fillMaxSize(0.5f)
         )
     }
+}
+
+@Preview
+@Composable
+fun GroupPlaceholderPreview() {
+    GroupPlaceholder()
 }

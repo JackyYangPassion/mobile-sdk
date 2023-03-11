@@ -7,6 +7,7 @@ package io.inappchat.sdk.ui.views
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,10 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -54,4 +54,18 @@ fun Avatar(url: String?, size: Double = 35.0, group: Boolean = false) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun AvatarPreview() {
+    Column {
+        Avatar(url = null)
+        
+        Avatar(
+            url = null, size = 55.0
+        )
+        Avatar(url = null, group = true)
+    }
+
 }
