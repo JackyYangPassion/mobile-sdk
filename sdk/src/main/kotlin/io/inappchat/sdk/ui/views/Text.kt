@@ -5,7 +5,6 @@
 package io.inappchat.sdk.ui.views
 
 import FontStyle
-import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,8 +12,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,7 +19,7 @@ import androidx.compose.ui.unit.TextUnit
 
 @Composable
 fun Text(
-    annotatedString: AnnotatedString,
+    text: AnnotatedString,
     iac: FontStyle,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
@@ -37,7 +34,7 @@ fun Text(
     style: TextStyle = LocalTextStyle.current
 ) {
     androidx.compose.material3.Text(
-        annotatedString,
+        text,
         modifier = modifier,
         color = color,
         fontSize = iac.size,

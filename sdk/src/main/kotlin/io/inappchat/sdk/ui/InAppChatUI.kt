@@ -4,7 +4,6 @@
 
 package io.inappchat.sdk.ui
 
-import Theme
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
