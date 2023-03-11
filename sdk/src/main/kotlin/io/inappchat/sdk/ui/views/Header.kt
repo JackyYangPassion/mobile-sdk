@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
@@ -63,7 +64,7 @@ fun Header(
             }
         }
         icon?.invoke()
-        Text(text = title, iac = IAC.fonts.title)
+        Text(text = title, iac = IAC.fonts.title.copy(weight = FontWeight.Bold))
         Spacer(modifier = Modifier.weight(1.0f))
         if (search != null) {
             HeaderButton(onClick = search) {
