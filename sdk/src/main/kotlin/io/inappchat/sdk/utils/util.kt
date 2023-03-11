@@ -14,6 +14,7 @@ fun uuid() = UUID.randomUUID().toString()
 
 typealias Fn = () -> Unit
 
+fun <A> ift(cond: Boolean, a: A, b: A) = if (cond) a else b
 
 @Composable
 fun String.annotated() = AnnotatedString(this)
