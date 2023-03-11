@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.ui.theme.IAC
 import io.inappchat.sdk.utils.annotated
@@ -30,4 +31,11 @@ fun PrivacyPill(_private: Boolean = false) {
             .radius(Int.MAX_VALUE),
         color = Color.White,
     )
+}
+
+@Preview
+@Composable
+fun PrivacyPillPreview() {
+    PrivacyPill(true)
+    PrivacyPill(false)
 }
