@@ -120,7 +120,7 @@ data class User(
     }
 }
 
-fun Array<User>.usernames(): String {
+fun Collection<User>.usernames(): String {
     val uns = this.slice(0..2).map { it.usernameFb }
     if (uns.size < 3) {
         return uns.joinToString(" and ")
