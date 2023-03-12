@@ -163,3 +163,8 @@ class SampleGroup : PreviewParameterProvider<Group> {
 class SampleMessage : PreviewParameterProvider<Message> {
     override val values: Sequence<Message> = (0..40).map { genM() }.asSequence()
 }
+
+class SampleFn : PreviewParameterProvider<Fn> {
+    override val values: Sequence<Fn> = sequenceOf({})
+
+}
