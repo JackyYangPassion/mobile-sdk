@@ -34,6 +34,6 @@ fun GroupCount(@PreviewParameter(CountProvider::class) count: Int) {
             tint = theme.colors.caption
         )
         Space()
-        Text(text = count.toString().annotated(), iac = theme.fonts.caption)
+        Text(text = count.toString().annotated(), iac = theme.fonts.caption, color = theme.colors.caption)
     }
 }

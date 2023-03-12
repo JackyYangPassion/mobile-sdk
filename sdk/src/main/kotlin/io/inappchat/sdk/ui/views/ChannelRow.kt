@@ -5,9 +5,12 @@
 package io.inappchat.sdk.ui.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -16,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -25,11 +27,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.inappchat.sdk.actions.dismissInvites
+import io.inappchat.sdk.actions.join
+import io.inappchat.sdk.actions.leave
 import io.inappchat.sdk.state.Group
 import io.inappchat.sdk.state.usernames
 import io.inappchat.sdk.ui.theme.IAC
 import io.inappchat.sdk.ui.theme.IAC.colors
 import io.inappchat.sdk.ui.theme.IAC.theme
+import io.inappchat.sdk.ui.theme.IACColors
 import io.inappchat.sdk.utils.SampleGroup
 import io.inappchat.sdk.utils.annotated
 
@@ -116,18 +121,50 @@ fun ChannelRow(@PreviewParameter(SampleGroup::class) group: Group) {
                     } ?: GroupPlaceholder(modifier = Modifier.fillMaxSize())
                 }
                 Space(8f)
-                Column(modifier = Modifier.background(Color.Green)) {
+                Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(group.name.annotated(), theme.fonts.title3, maxLines = 1)
+                        Space()
                         PrivacyPill(group._private)
                     }
                     Text(
                         text = (group.description ?: "").annotated(),
                         iac = theme.fonts.body,
-                        color = colors.caption
+                        color = colors.caption,
+                        maxLines = 2
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    GroupCount(count = group.participants.size)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        GroupCount(count = group.participants.size)
+                        Spacer(modifier = Modifier.weight(1f))
+                        if (!group._private || (group.isMember || group.invites.isNotEmpty())) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .padding(0.dp)
+                                    .size(32.dp)
+                                    .background(
+                                        if (group.isMember) IACColors.current.softBackground else colors.primary,
+                                        CircleShape
+                                    )
+                                    .clickable(onClick = {
+                                        if (group.isMember) {
+                                            group.leave()
+                                        } else {
+                                            group.join()
+                                        }
+                                    })
+                                    .border(0.dp, Color.Transparent, CircleShape)
+                            ) {
+                                Icon(
+                                    Icons.Filled.Add,
+                                    contentDescription = "Join group",
+                                    modifier = Modifier.fillMaxSize(0.67f),
+                                    tint = colors.background
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

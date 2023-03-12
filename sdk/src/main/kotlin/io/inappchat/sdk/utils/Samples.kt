@@ -48,7 +48,7 @@ fun randomUser() = Chats.current.cache.users.values.random()
 fun genG(): Group {
     val g = Group(uuid())
     g.name = faker.company().name()
-    g.description = ift(faker.random().nextBoolean(), faker.lorem().word(), null)
+    g.description = ift(chance(4, 5), faker.lorem().paragraph(), null)
     g.avatar = ift(faker.random().nextBoolean(), randomImage(), null)
     g._private = faker.random().nextBoolean()
     val members = randomUsers()
