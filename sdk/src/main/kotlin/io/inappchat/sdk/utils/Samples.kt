@@ -51,7 +51,7 @@ fun genG(): Group {
     g.description = ift(chance(4, 5), faker.lorem().paragraph(), null)
     g.avatar = ift(faker.random().nextBoolean(), randomImage(), null)
     g._private = faker.random().nextBoolean()
-    val members = randomUsers()
+    val members = randomUsers().let { ift(it.isEmpty(), random(40, ::genU), it) }
     g.participants.addAll(members.map {
         Participant(
             it.email,

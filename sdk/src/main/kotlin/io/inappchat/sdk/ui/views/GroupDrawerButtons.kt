@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
@@ -44,11 +45,11 @@ fun GroupDrawerButtons(
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
         modifier = Modifier
-            .padding(8.dp, 0.dp)
             .height(60.dp)
-            .background(colors.softBackground)
-            .radius(16.dp)
+            .background(colors.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
+            .padding(8.dp, 0.dp)
     ) {
         if (group.isAdmin) {
             Column(
@@ -81,7 +82,7 @@ fun GroupDrawerButtons(
                 colorFilter = ColorFilter.tint(colors.border),
                 modifier = Modifier.size(24.dp)
             )
-            Text(text = "Edit", iac = theme.fonts.mini, color = colors.border)
+            Text(text = "Invite", iac = theme.fonts.mini, color = colors.border)
         }
         Space()
         Column(

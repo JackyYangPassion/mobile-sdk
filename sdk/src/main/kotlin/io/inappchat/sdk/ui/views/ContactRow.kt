@@ -5,6 +5,7 @@
 package io.inappchat.sdk.ui.views
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,10 +29,13 @@ import io.inappchat.sdk.utils.ift
 
 @Preview
 @Composable
-fun ContactRow(@PreviewParameter(SampleUser::class) user: User) {
+fun ContactRow(
+    @PreviewParameter(SampleUser::class) user: User,
+    modifier: Modifier = Modifier.clickable { }
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .padding(
                 start = 16.dp, top = 12.dp, bottom = 12.dp
             )
