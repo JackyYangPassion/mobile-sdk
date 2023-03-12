@@ -6,7 +6,6 @@ package io.inappchat.sdk.state
 
 import androidx.compose.runtime.*
 import io.inappchat.sdk.API
-import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.InAppChat.prefs
 import io.inappchat.sdk.models.AvailabilityStatus
 import io.inappchat.sdk.models.NotificationSettings
@@ -19,7 +18,7 @@ class Settings {
     var notifications by mutableStateOf(NotificationSettings.AllowFrom.all)
     var availabilityStatus by mutableStateOf(AvailabilityStatus.online)
     var blocked = mutableStateListOf<String>()
-    val lastUsedReactions = mutableStateListOf<String>()
+    val lastUsedReactions = "😀,🤟,❤️,🔥,🤣".split(",").toMutableStateList()
 
     fun init() {
         notifications = prefs.getString("notifications", null)

@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023.
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,5 +13,8 @@
 
     <application>
 
+        <activity
+            android:name="io.inappchat.sdk.InAppChatActivity"
+            android:configChanges="screenLayout|orientation|screenSize" />
     </application>
 </manifest>
