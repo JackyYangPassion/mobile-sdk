@@ -45,7 +45,7 @@ fun reqT() {
 fun randomUsers() = randomAmount(Chats.current.cache.users.values)
 fun randomUser() = Chats.current.cache.users.values.random()
 
-private fun genG(): Group {
+fun genG(): Group {
     val g = Group(uuid())
     g.name = faker.company.name()
     g.description = ift(faker.random.nextBoolean(), faker.lorem.words(), null)
@@ -155,7 +155,7 @@ class SampleUser : PreviewParameterProvider<User> {
 }
 
 class SampleGroup : PreviewParameterProvider<Group> {
-    override val values: Sequence<Group> = (0..20).map {
+    override val values: Sequence<Group> = (0..3).map {
         genG()
     }.asSequence()
 }

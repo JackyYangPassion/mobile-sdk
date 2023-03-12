@@ -5,7 +5,6 @@
 package io.inappchat.sdk.state
 
 import androidx.compose.runtime.*
-import io.inappchat.sdk.API
 import io.inappchat.sdk.extensions.contains
 import io.inappchat.sdk.models.APIGroup
 import io.inappchat.sdk.models.AvailabilityStatus
@@ -15,7 +14,7 @@ import io.inappchat.sdk.models.Participant
 fun Participant.user(): User = User.get(this)
 
 @Stable
-data class Group(override val id: String) : Identifiable {
+class Group(override val id: String) : Identifiable {
 
     init {
         Chats.current.cache.groups[id] = this

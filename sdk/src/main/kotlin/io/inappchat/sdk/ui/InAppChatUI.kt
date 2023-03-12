@@ -46,7 +46,7 @@ fun InAppChatUI() {
         Unit
     }
     InAppChatTheme {
-        NavHost(navController = navController, startDestination = "profile") {
+        NavHost(navController = navController, startDestination = "chats") {
             composable("chats") {
                 tabs
             }
