@@ -1,4 +1,7 @@
-import androidx.compose.material3.Text
+/*
+ * Copyright (c) 2023.
+ */
+
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight

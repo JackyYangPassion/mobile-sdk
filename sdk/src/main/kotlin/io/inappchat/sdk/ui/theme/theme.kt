@@ -1,10 +1,20 @@
-import android.os.Build
+/*
+ * Copyright (c) 2023.
+ */
+
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import io.inappchat.sdk.InAppChat
+import com.halilibo.richtext.ui.RichTextStyle
+import com.halilibo.richtext.ui.string.RichTextStringStyle
 import io.inappchat.sdk.ui.theme.Assets
 
 
@@ -51,3 +61,35 @@ class Theme {
         this.assets = it.assets
     }
 }
+
+fun Theme.richText(): RichTextStyle = RichTextStyle(
+    stringStyle = RichTextStringStyle(
+        boldStyle = SpanStyle(
+            colors.text,
+            fonts.body.size,
+            FontWeight.Bold,
+            fontFamily = fonts.body.family,
+        ),
+        underlineStyle = SpanStyle(
+            colors.text,
+            fonts.body.size,
+            fonts.body.weight,
+            fontFamily = fonts.body.family,
+            textDecoration = TextDecoration.Underline,
+        ),
+        strikethroughStyle = SpanStyle(
+            colors.text,
+            fonts.body.size,
+            fonts.body.weight,
+            fontFamily = fonts.body.family,
+            textDecoration = TextDecoration.LineThrough,
+        ),
+        linkStyle = SpanStyle(
+            colors.primary,
+            fonts.body.size,
+            FontWeight.Bold,
+            fontFamily = fonts.body.family,
+            textDecoration = TextDecoration.Underline,
+        ),
+    )
+)

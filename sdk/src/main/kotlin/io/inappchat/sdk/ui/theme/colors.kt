@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2023.
+ */
+
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
@@ -5,10 +9,11 @@ import androidx.compose.ui.graphics.Color
 data class Colors(
     val light: Boolean = false,
     val bubble: Color = if (light) Color(0xFFF0F0F0) else Color(0xFF2B2B2B),
+    val bubbleText: Color = if (light) Color(0xFF1C1C1C) else Color(0xFFE3E3E3),
+    val senderBubble: Color = Color(0xFFE5ECFF),
     val senderText: Color = Color(0xFF202127), // Color(hex: 0xE3E3E3)
     val senderUsername: Color = if (light) Color(0xFF000000) else Color(0xFFFFFFFF),
     val text: Color = if (light) Color(0xFF1C1C1C) else Color(0xFFE3E3E3),
-    val bubbleText: Color = if (light) Color(0xFF1C1C1C) else Color(0xFFE3E3E3),
     val username: Color = if (light) Color(0xFF2D3237) else Color(0xFFE3E3E3),
     val timestamp: Color = if (light) Color(0xFF71869C) else Color(0x4DE3E3E3),
     val primary: Color = Color(0xff0091ff),

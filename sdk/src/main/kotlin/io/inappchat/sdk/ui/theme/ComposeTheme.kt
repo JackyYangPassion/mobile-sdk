@@ -7,19 +7,17 @@ package io.inappchat.sdk.ui.theme
 import Colors
 import Fonts
 import Theme
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.content.res.ResourcesCompat.ThemeCompat
-import androidx.core.view.ViewCompat
+import com.halilibo.richtext.ui.RichTextStyle
+import richText
 
 val IACTheme = staticCompositionLocalOf { Theme() }
 val IACColors = staticCompositionLocalOf { Colors(true) }
+val IACRichText = staticCompositionLocalOf { Theme().richText() }
 
 @Composable
 fun InAppChatTheme(
@@ -61,4 +59,9 @@ object IAC {
         @Composable
         @ReadOnlyComposable
         get() = theme.fonts
+
+    val richTextStyle: RichTextStyle
+        @Composable
+        @ReadOnlyComposable
+        get() = IACRichText.current
 }
