@@ -5,9 +5,9 @@
 package io.inappchat.sdk.utils
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import io.github.serpro69.kfaker.Faker
 import io.inappchat.sdk.models.*
 import io.inappchat.sdk.state.*
+import net.datafaker.Faker
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -16,17 +16,17 @@ val faker = Faker()
 
 private fun genU(): User {
     val u = User(uuid())
-    u.email = faker.internet.email()
-    u.username = faker.random.randomString()
-    u.avatar = ift(faker.random.nextBoolean(), randomImage(), null)
+    u.email = faker.internet().emailAddress()
+    u.username = faker.name().username()
+    u.avatar = ift(faker.random().nextBoolean(), randomImage(), null)
     u.status = AvailabilityStatus.values().random()
-    u.statusMessage = ift(faker.random.nextBoolean(), faker.lorem.words(), null)
+    u.statusMessage = ift(faker.random().nextBoolean(), faker.lorem().sentence(), null)
     u.lastSeen = ift(
-        faker.random.nextBoolean(),
-        LocalDateTime.now().minusSeconds(faker.random.nextLong(10000000)),
+        faker.random().nextBoolean(),
+        LocalDateTime.now().minusSeconds(faker.random().nextLong(10000000)),
         null
     )
-    u.displayName = faker.funnyName.name()
+    u.displayName = faker.funnyName().name()
     return u
 }
 
@@ -47,21 +47,21 @@ fun randomUser() = Chats.current.cache.users.values.random()
 
 fun genG(): Group {
     val g = Group(uuid())
-    g.name = faker.company.name()
-    g.description = ift(faker.random.nextBoolean(), faker.lorem.words(), null)
-    g.avatar = ift(faker.random.nextBoolean(), randomImage(), null)
-    g._private = faker.random.nextBoolean()
+    g.name = faker.company().name()
+    g.description = ift(faker.random().nextBoolean(), faker.lorem().word(), null)
+    g.avatar = ift(faker.random().nextBoolean(), randomImage(), null)
+    g._private = faker.random().nextBoolean()
     val members = randomUsers()
     g.participants.addAll(members.map {
         Participant(
             it.email,
             it.id,
-            ift(faker.random.nextBoolean(), Participant.Role.admin, Participant.Role.user),
-            LocalDateTime.now().minusSeconds(faker.random.nextLong(1000000))
+            ift(faker.random().nextBoolean(), Participant.Role.admin, Participant.Role.user),
+            LocalDateTime.now().minusSeconds(faker.random().nextLong(1000000))
                 .atOffset(ZoneOffset.UTC)
         )
     })
-    if (faker.random.nextBoolean())
+    if (faker.random().nextBoolean())
         g.invites.addAll(randomAmount(members))
     return g
 }
@@ -78,33 +78,33 @@ fun genA(): Attachment {
     return Attachment(url, kind)
 }
 
-fun bool() = faker.random.nextBoolean()
+fun bool() = faker.random().nextBoolean()
 
 fun genL() = ift(
     bool(),
-    Location(address = faker.address.fullAddress()),
+    Location(address = faker.address().fullAddress()),
     Location(
-        latitude = faker.random.nextInt(-90, 90).toBigDecimal() * faker.random.nextFloat()
+        latitude = faker.random().nextInt(-90, 90).toBigDecimal() * faker.random().nextFloat()
             .toBigDecimal(),
-        longitude = faker.random.nextInt(-180, 180).toBigDecimal() * faker.random.nextFloat()
+        longitude = faker.random().nextInt(-180, 180).toBigDecimal() * faker.random().nextFloat()
             .toBigDecimal()
     )
 )
 
 fun genC() = Contact(
-    name = faker.funnyName.name(),
+    name = faker.funnyName().name(),
     numbers = ift(
         bool(),
         random(
-            faker.random.nextInt(5),
-            { PhoneNumber(faker.phoneNumber.phoneNumber(), listOf("work", "home").random()) }),
+            faker.random().nextInt(5),
+            { PhoneNumber(faker.phoneNumber().phoneNumber(), listOf("work", "home").random()) }),
         null
     ),
     emails = ift(
         bool(),
         random(
-            faker.random.nextInt(5),
-            { Email(faker.internet.email(), listOf("work", "home").random()) }),
+            faker.random().nextInt(5),
+            { Email(faker.internet().emailAddress(), listOf("work", "home").random()) }),
         null
     )
 )
@@ -113,23 +113,23 @@ fun genM(thread: String = genT().id): Message {
     reqU()
     reqT()
     val m = Message(
-        uuid(), LocalDateTime.now().minusSeconds(faker.random.nextLong(100000L)),
+        uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
         randomUser().id,
-        ift(faker.random.nextBoolean(), genM(thread).id, null),
+        ift(faker.random().nextBoolean(), genM(thread).id, null),
         thread,
         ift(bool(), genA(), null),
         location = ift(bool(), genL(), null),
         contact = ift(bool(), genC(), null)
     )
-    m.text = faker.lorem.words()
+    m.text = faker.lorem().word()
     if (chance(1, 5)) {
-        m.replies.items.addAll((0 until faker.random.nextInt(10)).map { genM(m.id) })
+        m.replies.items.addAll((0 until faker.random().nextInt(10)).map { genM(m.id) })
     }
     if (chance(1, 4))
         m.reactions.addAll(
             random(
                 10,
-                { Reaction(faker.slackEmoji.emoji(), faker.random.nextInt(1, 10), listOf()) })
+                { Reaction(faker.slackEmoji().emoji(), faker.random().nextInt(1, 10), listOf()) })
         )
     m.replyCount = m.replies.items.size
     m.favorite = chance(1, 5)

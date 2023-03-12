@@ -19,12 +19,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import io.inappchat.sdk.R
 import io.inappchat.sdk.ui.theme.IAC
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun Avatar(url: String?, size: Double = 35.0, group: Boolean = false) {
     Box(
@@ -33,7 +31,7 @@ fun Avatar(url: String?, size: Double = 35.0, group: Boolean = false) {
             .background(IAC.colors.softBackground, CircleShape), contentAlignment = Alignment.Center
     ) {
         if (url != null) {
-            GlideImage(
+            AsyncImage(
                 model = url,
                 contentDescription = "user profile picture",
                 contentScale = ContentScale.FillBounds,
@@ -61,7 +59,7 @@ fun Avatar(url: String?, size: Double = 35.0, group: Boolean = false) {
 fun AvatarPreview() {
     Column {
         Avatar(url = null)
-        
+
         Avatar(
             url = null, size = 55.0
         )
