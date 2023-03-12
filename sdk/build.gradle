@@ -56,10 +56,6 @@ android {
     }
 }
 
-ext {
-    appyxVersion = "1.0.5"
-}
-
 dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
@@ -97,35 +93,28 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
 
 
-    def composeBom = platform('androidx.compose:compose-bom:2023.01.00')
-    implementation composeBom
-    androidTestImplementation composeBom
-    implementation 'androidx.compose.material3:material3'
-    // Android Studio Preview support
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation "androidx.compose.ui:ui-tooling"
+    implementation 'androidx.compose.material3:material3:1.0.1'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.3.3'
+    implementation "androidx.compose.ui:ui-tooling:1.3.3"
+
     implementation 'androidx.activity:activity-compose:1.6.1'
     debugImplementation "androidx.customview:customview:1.2.0-alpha02"
     debugImplementation "androidx.customview:customview-poolingcontainer:1.0.0"
 
-    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-tooling:1.3.3'
 
     implementation 'com.google.accompanist:accompanist-permissions:0.29.2-rc'
     implementation "com.halilibo.compose-richtext:richtext-ui:0.16.0"
     implementation "com.halilibo.compose-richtext:richtext-commonmark:0.16.0"
     implementation "androidx.navigation:navigation-compose:2.5.3"
 
-    implementation("com.github.bumptech.glide:glide:4.14.2@aar") {
-        transitive = true
-    }
-    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
-    implementation "com.github.bumptech.glide:okhttp3-integration:4.11.0"
-
+    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("io.coil-kt:coil-gif:2.2.2")
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4'
     implementation 'me.jorgecastillo:androidcolorx:0.2.0'
 
-    implementation 'io.github.serpro69:kotlin-faker:1.13.0'
+    implementation 'net.datafaker:datafaker:1.8.0'
 
 
     testImplementation 'junit:junit:4.13.2'

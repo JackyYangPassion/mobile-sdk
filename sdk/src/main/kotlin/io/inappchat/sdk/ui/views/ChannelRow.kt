@@ -15,26 +15,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import io.inappchat.sdk.actions.dismissInvites
 import io.inappchat.sdk.state.Group
 import io.inappchat.sdk.state.usernames
 import io.inappchat.sdk.ui.theme.IAC
+import io.inappchat.sdk.ui.theme.IAC.colors
+import io.inappchat.sdk.ui.theme.IAC.theme
+import io.inappchat.sdk.utils.SampleGroup
 import io.inappchat.sdk.utils.annotated
-import io.inappchat.sdk.utils.genG
 
 @Composable
 fun groupInvitesText(group: Group) =
     buildAnnotatedString {
         pushStyle(
             SpanStyle(
-                color = IAC.colors.text,
+                color = colors.text,
                 fontSize = IAC.fonts.body.size,
                 fontWeight = FontWeight.Bold,
                 fontFamily = IAC.fonts.body.family
@@ -79,47 +83,62 @@ fun InvitesHeader(group: Group) {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ChannelRow(group: Group) {
+fun ChannelRow(@PreviewParameter(SampleGroup::class) group: Group) {
     Column(modifier = Modifier.padding(16.dp, 0.dp)) {
         Column(
             modifier = Modifier
                 .radius(15)
-                .background(IAC.theme.colors.bubble)
+                .background(theme.colors.bubble)
+                .fillMaxWidth()
         ) {
             InvitesHeader(group = group)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                group.avatar?.let {
-                    GlideImage(
-                        model = it,
-                        contentDescription = "${group.name} image",
-                        modifier = Modifier
-                            .size(87)
-                            .radius(15)
-                    )
-                } ?: GroupPlaceholder(
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(103.dp)
+                    .padding(8.dp)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(87)
                         .radius(15)
-                )
-                Column {
+                ) {
+                    group.avatar?.let {
+                        AsyncImage(
+                            model = it,
+                            contentDescription = "${group.name} image",
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    } ?: GroupPlaceholder(modifier = Modifier.fillMaxSize())
+                }
+                Space(8f)
+                Column(modifier = Modifier.background(Color.Green)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(group.name.annotated(), IAC.theme.fonts.title3, maxLines = 1)
+                        Text(group.name.annotated(), theme.fonts.title3, maxLines = 1)
                         PrivacyPill(group._private)
                     }
-
+                    Text(
+                        text = (group.description ?: "").annotated(),
+                        iac = theme.fonts.body,
+                        color = colors.caption
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    GroupCount(count = group.participants.size)
                 }
             }
         }
     }
 }
 
-@Preview(
-    showSystemUi = true,
-    showBackground = true
-) // Apparently, adding these two lines seems to do the magic here
-@Composable
-fun ChannelRowPreview() {
-    ChannelRow(group = genG())
-}
+//@Preview(
+//    showSystemUi = true,
+//    showBackground = true
+//) // Apparently, adding these two lines seems to do the magic here
+//@Composable
+//fun ChannelRowPreview() {
+//    ChannelRow(group = genG())
+//}
