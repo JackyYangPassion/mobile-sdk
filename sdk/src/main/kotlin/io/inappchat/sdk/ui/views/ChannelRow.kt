@@ -9,9 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import io.inappchat.sdk.R
 import io.inappchat.sdk.actions.dismissInvites
 import io.inappchat.sdk.actions.join
 import io.inappchat.sdk.actions.leave
@@ -37,6 +36,7 @@ import io.inappchat.sdk.ui.theme.IAC.theme
 import io.inappchat.sdk.ui.theme.IACColors
 import io.inappchat.sdk.utils.SampleGroup
 import io.inappchat.sdk.utils.annotated
+import io.inappchat.sdk.utils.ift
 
 @Composable
 fun groupInvitesText(group: Group) =
@@ -77,7 +77,7 @@ fun InvitesHeader(group: Group) {
                     .clickable { group.dismissInvites() }
                     .size(30)) {
                     Icon(
-                        Icons.Filled.Close,
+                        painter = painterResource(id = R.drawable.x),
                         contentDescription = "Dismiss Invites",
                         modifier = Modifier.size(16),
                         tint = Color.White
@@ -157,10 +157,14 @@ fun ChannelRow(@PreviewParameter(SampleGroup::class) group: Group) {
                                     .border(0.dp, Color.Transparent, CircleShape)
                             ) {
                                 Icon(
-                                    Icons.Filled.Add,
+                                    painter = painterResource(id = R.drawable.plus),
                                     contentDescription = "Join group",
                                     modifier = Modifier.fillMaxSize(0.67f),
-                                    tint = colors.background
+                                    tint = ift(
+                                        group.isMember,
+                                        colors.softBackground,
+                                        colors.primary
+                                    )
                                 )
                             }
                         }

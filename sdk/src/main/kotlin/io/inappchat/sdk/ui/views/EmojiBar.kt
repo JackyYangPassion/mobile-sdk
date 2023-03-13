@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -20,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.inappchat.sdk.R
 import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.ui.theme.IAC.colors
 import io.inappchat.sdk.utils.ift
@@ -82,7 +83,7 @@ fun EmojiBar(
                 .clickable { keyboard = true }
         ) {
             Icon(
-                Icons.Filled.Add,
+                painter = painterResource(id = R.drawable.plus),
                 contentDescription = "more reactions",
                 tint = colors.text,
                 modifier = Modifier.size(

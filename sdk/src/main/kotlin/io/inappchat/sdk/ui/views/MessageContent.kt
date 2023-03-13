@@ -67,7 +67,7 @@ fun MessageContent(@PreviewParameter(SampleMessage::class) message: Message) {
                         .height(theme.videoPreviewSize.height.dp)
                 )
                 AttachmentKind.audio -> AudioPlayer(
-                    uri = it.url.toUri()
+                    url = it.url
                 )
                 AttachmentKind.file -> Image(
                     painter = painterResource(id = R.drawable.file_arrow_down_fill),

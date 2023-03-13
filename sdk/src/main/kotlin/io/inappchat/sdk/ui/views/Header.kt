@@ -10,10 +10,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -57,7 +53,7 @@ fun Header(
                 true
             ) {
                 Icon(
-                    Icons.Filled.KeyboardArrowLeft,
+                    painterResource(id = R.drawable.caret_left),
                     contentDescription = "back",
                     modifier = Modifier.fillMaxSize(1.0f)
                 )
@@ -68,9 +64,10 @@ fun Header(
         if (search != null) {
             HeaderButton(onClick = search) {
                 Icon(
-                    Icons.Outlined.Search,
+                    painter = painterResource(id = R.drawable.magnifying_glass),
                     contentDescription = "Menu",
-                    tint = IAC.colors.text
+                    tint = IAC.colors.text,
+                    modifier = Modifier.size(20.dp)
                 )
             }
             Spacer(modifier = Modifier.size(4.dp))
@@ -79,16 +76,21 @@ fun Header(
             HeaderButton(
                 add,
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
+                Icon(
+                    painter = painterResource(id = R.drawable.plus),
+                    contentDescription = "Add",
+                    modifier = Modifier.size(20.dp)
+                )
             }
             Spacer(modifier = Modifier.size(4.dp))
         }
         if (menu != null) {
             HeaderButton(onClick = menu) {
                 Icon(
-                    Icons.Filled.MoreVert,
+                    painter = painterResource(id = R.drawable.dots_three_vertical_fill),
                     contentDescription = "Menu",
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(20.dp)
                 )
             }
             Spacer(modifier = Modifier.size(4.dp))
