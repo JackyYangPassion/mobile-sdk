@@ -21,16 +21,16 @@ import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.models.AvailabilityStatus
 import io.inappchat.sdk.state.User
-import io.inappchat.sdk.ui.theme.IAC.colors
-import io.inappchat.sdk.ui.theme.IAC.fonts
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.utils.SampleUser
 import io.inappchat.sdk.utils.annotated
 import io.inappchat.sdk.utils.ift
 
-@Preview
+@IPreview
 @Composable
 fun ContactRow(
-    @PreviewParameter(SampleUser::class) user: User,
+    @IPreviewParameter(SampleUser::class) user: User,
     modifier: Modifier = Modifier.clickable { }
 ) {
     Row(

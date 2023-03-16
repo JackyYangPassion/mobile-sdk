@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.inappchat.sdk.ui.theme.IAC
+import io.inappchat.sdk.ui.IAC
 
 
 @Composable
@@ -34,7 +34,7 @@ fun Badge(count: Int) {
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun BadgePreview() {
     Badge(count = 1)

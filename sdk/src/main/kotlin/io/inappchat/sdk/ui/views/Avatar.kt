@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.inappchat.sdk.R
-import io.inappchat.sdk.ui.theme.IAC
+import io.inappchat.sdk.ui.IAC
 
 @Composable
 fun Avatar(url: String?, size: Double = 35.0, group: Boolean = false) {
@@ -54,7 +54,7 @@ fun Avatar(url: String?, size: Double = 35.0, group: Boolean = false) {
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun AvatarPreview() {
     Column {

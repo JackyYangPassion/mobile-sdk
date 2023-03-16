@@ -28,9 +28,9 @@ import io.inappchat.sdk.R
 import io.inappchat.sdk.state.AttachmentKind
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.markdown
-import io.inappchat.sdk.ui.theme.IAC.colors
-import io.inappchat.sdk.ui.theme.IAC.richTextStyle
-import io.inappchat.sdk.ui.theme.IAC.theme
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.richTextStyle
+import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.utils.*
 
 @Composable
@@ -101,7 +101,7 @@ fun MessageContent(message: Message) {
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun MessageContentPreview() {
     Column {

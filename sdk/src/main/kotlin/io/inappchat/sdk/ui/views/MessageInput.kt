@@ -20,8 +20,8 @@ import io.inappchat.sdk.R
 import io.inappchat.sdk.actions.send
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Room
-import io.inappchat.sdk.ui.theme.IAC.colors
-import io.inappchat.sdk.ui.theme.IAC.fonts
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.utils.Fn
 import io.inappchat.sdk.utils.genT
 
@@ -89,7 +89,7 @@ fun MessageInput(
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun MessageInputPreview() {
     MessageInput(room = genT(), null, {})

@@ -30,10 +30,10 @@ import io.inappchat.sdk.actions.join
 import io.inappchat.sdk.actions.leave
 import io.inappchat.sdk.state.Group
 import io.inappchat.sdk.state.usernames
-import io.inappchat.sdk.ui.theme.IAC
-import io.inappchat.sdk.ui.theme.IAC.colors
-import io.inappchat.sdk.ui.theme.IAC.theme
-import io.inappchat.sdk.ui.theme.IACColors
+import io.inappchat.sdk.ui.IAC
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.ui.IACColors
 import io.inappchat.sdk.utils.SampleGroup
 import io.inappchat.sdk.utils.annotated
 import io.inappchat.sdk.utils.ift
@@ -88,9 +88,9 @@ fun InvitesHeader(group: Group) {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@IPreview(showBackground = true, showSystemUi = true)
 @Composable
-fun ChannelRow(@PreviewParameter(SampleGroup::class) group: Group) {
+fun ChannelRow(@IPreviewParameter(SampleGroup::class) group: Group) {
     Column(modifier = Modifier.padding(16.dp, 0.dp)) {
         Column(
             modifier = Modifier
@@ -175,7 +175,7 @@ fun ChannelRow(@PreviewParameter(SampleGroup::class) group: Group) {
     }
 }
 
-//@Preview(
+//@IPreview(
 //    showSystemUi = true,
 //    showBackground = true
 //) // Apparently, adding these two lines seems to do the magic here

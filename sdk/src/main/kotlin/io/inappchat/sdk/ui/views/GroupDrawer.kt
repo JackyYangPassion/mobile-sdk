@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.state.Group
 import io.inappchat.sdk.state.User
-import io.inappchat.sdk.ui.theme.IAC.colors
-import io.inappchat.sdk.ui.theme.IAC.fonts
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.utils.genG
 
 
@@ -108,7 +108,7 @@ fun GroupDrawer(
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun GroupDrawerPreview() {
     GroupDrawer(group = genG(), {}, {}, {}, {}, {})

@@ -24,11 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.state.Chats
-import io.inappchat.sdk.ui.theme.IAC.colors
+import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.utils.ift
 import nl.coffeeit.aroma.emojipicker.presentation.ui.emoji.EmojiBottomSheet
 
-@Preview
+@IPreview
 @Composable
 fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
     val emojiBottomSheetDialogFragment = EmojiBottomSheet.newInstance({ emoji ->
@@ -39,7 +39,7 @@ fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun EmojiBar(
     current: String? = null,

@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.inappchat.sdk.ui.theme.IAC
-import io.inappchat.sdk.ui.theme.IAC.fonts
+import io.inappchat.sdk.ui.IAC
+import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.utils.annotated
 import io.inappchat.sdk.utils.ift
 
@@ -39,7 +39,7 @@ fun PrivacyPill(_private: Boolean = false) {
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun PrivacyPillPreview() {
     Column {

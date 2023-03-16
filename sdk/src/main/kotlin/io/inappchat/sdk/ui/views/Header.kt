@@ -21,9 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
-import io.inappchat.sdk.ui.theme.IAC
-import io.inappchat.sdk.ui.theme.IACColors
-import io.inappchat.sdk.ui.theme.InAppChatTheme
+import io.inappchat.sdk.ui.IAC
+import io.inappchat.sdk.ui.IACColors
+import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.Fn
 import io.inappchat.sdk.utils.annotated
 
@@ -129,10 +129,10 @@ fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn
 }
 
 
-@Preview
+@IPreview
 @Composable
 fun HeaderPreview() {
-    InAppChatTheme {
+    InAppChatContext {
         MaterialTheme {
             Header("Title", back = {}, add = {}, menu = {}, search = {}, compose = {})
         }

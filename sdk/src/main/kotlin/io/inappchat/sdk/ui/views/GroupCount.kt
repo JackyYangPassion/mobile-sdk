@@ -16,16 +16,16 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
-import io.inappchat.sdk.ui.theme.IAC.theme
+import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.utils.annotated
 
 class CountProvider : PreviewParameterProvider<Int> {
     override val values: Sequence<Int> = sequenceOf(1, 4, 10, 301, 2931)
 }
 
-@Preview
+@IPreview
 @Composable
-fun GroupCount(@PreviewParameter(CountProvider::class) count: Int) {
+fun GroupCount(@IPreviewParameter(CountProvider::class) count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(id = R.drawable.users_fill),

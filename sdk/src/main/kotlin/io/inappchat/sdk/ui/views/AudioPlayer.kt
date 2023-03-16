@@ -31,20 +31,20 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import io.inappchat.sdk.R
-import io.inappchat.sdk.ui.theme.IAC.colors
-import io.inappchat.sdk.ui.theme.IAC.fonts
-import io.inappchat.sdk.ui.theme.IAC.theme
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.fonts
+import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.utils.ift
 import kotlinx.coroutines.delay
 
 class AudioUrlProvider(override val values: Sequence<String> = sequenceOf("https://file-examples.com/storage/fe0358100863d05afed02d2/2017/11/file_example_MP3_5MG.mp3")) :
     PreviewParameterProvider<String>
 
-@Preview
+@IPreview
 @Composable
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 fun AudioPlayer(
-    @PreviewParameter(AudioUrlProvider::class) url: String
+    @IPreviewParameter(AudioUrlProvider::class) url: String
 ) {
     val context = LocalContext.current
     var playing by remember {

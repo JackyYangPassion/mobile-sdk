@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import dev.jorgecastillo.androidcolorx.library.asHsl
 import io.inappchat.sdk.R
-import io.inappchat.sdk.ui.theme.IAC
+import io.inappchat.sdk.ui.IAC
 import java.lang.Float.max
 import java.lang.Float.min
 
@@ -60,7 +60,7 @@ fun GroupPlaceholder(modifier: Modifier? = null) {
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun GroupPlaceholderPreview() {
     GroupPlaceholder()

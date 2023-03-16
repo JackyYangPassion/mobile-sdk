@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.actions.delete
 import io.inappchat.sdk.actions.leave
 import io.inappchat.sdk.state.Group
-import io.inappchat.sdk.ui.theme.IAC.colors
-import io.inappchat.sdk.ui.theme.IAC.fonts
-import io.inappchat.sdk.ui.theme.IAC.theme
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.fonts
+import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.genG
 import io.inappchat.sdk.utils.ift
@@ -164,7 +164,7 @@ fun GroupDrawerButtons(
     }
 }
 
-@Preview
+@IPreview
 @Composable
 fun GroupDrawerButtonsPreview() {
     GroupDrawerButtons(group = genG(), {}, {}, {}, {})
