@@ -6,7 +6,6 @@ package io.inappchat.sdk.ui.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,20 +23,22 @@ fun Modifier.radius(size: Float) = clip(RoundedCornerShape(size.dp))
 fun Modifier.radius(size: Int) = clip(RoundedCornerShape(size.dp))
 fun Modifier.radius(size: Dp) = clip(RoundedCornerShape(size))
 fun Modifier.circle(size: Dp, color: Color = Color.Transparent) =
-    background(color, CircleShape).size(size)
+    size(size)
+        .radius(size / 2)
+        .background(color)
 
 
 @Composable
 fun Center(modifier: Modifier = Modifier.clipToBounds(), content: @Composable BoxScope.() -> Unit) {
-    Box(contentAlignment = Alignment.Center, modifier = modifier, content = content)
+  Box(contentAlignment = Alignment.Center, modifier = modifier, content = content)
 }
 
 @Composable
 fun Space(size: Float = 4f) {
-    Spacer(modifier = Modifier.size(size.dp))
+  Spacer(modifier = Modifier.size(size.dp))
 }
 
 @Composable
 fun Fill() {
-    Spacer(modifier = Modifier.fillMaxSize())
+  Spacer(modifier = Modifier.fillMaxSize())
 }

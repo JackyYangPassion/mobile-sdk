@@ -14,50 +14,50 @@ import io.inappchat.sdk.utils.op
 import io.inappchat.sdk.utils.uuid
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
-import java.time.LocalDateTime
+import java.time.Instant
 
 fun Room.send(
-    inReplyTo: String?,
-    text: String? = null,
-    attachment: Attachment? = null,
-    gif: String? = null,
-    location: Location? = null,
-    contact: Contact? = null,
-    mediaType: MediaType = "application/octet-stream".toMediaType()
+  inReplyTo: String?,
+  text: String? = null,
+  attachment: Attachment? = null,
+  gif: String? = null,
+  location: Location? = null,
+  contact: Contact? = null,
+  mediaType: MediaType = "application/octet-stream".toMediaType()
 ) {
-    val m = Message(
-        id = uuid(),
-        createdAt = LocalDateTime.now(),
-        userID = User.current!!.id,
-        parentID = inReplyTo,
-        threadID = id,
-        attachment = attachment ?: gif?.let { Attachment(gif, AttachmentKind.image) },
-        location = location,
-        contact = contact
-    )
-    m.text = text ?: ""
-    sending.add(0, m)
-    op({
-        val sm = bg { API.send(id, inReplyTo, text, attachment, gif, location, contact, mediaType) }
-        items.add(0, sm)
-        sending.remove(m)
-    }) {
-        sending.remove(m)
-        failed.add(m)
-    }
+  val m = Message(
+    id = uuid(),
+    createdAt = Instant.now(),
+    userID = User.current!!.id,
+    parentID = inReplyTo,
+    threadID = id,
+    attachment = attachment ?: gif?.let { Attachment(gif, AttachmentKind.image) },
+    location = location,
+    contact = contact
+  )
+  m.text = text ?: ""
+  m.sending = true
+  sending.add(0, m)
+  op({
+    val sm = bg { API.send(id, inReplyTo, text, attachment, gif, location, contact, mediaType) }
+    items.add(0, sm)
+    sending.remove(m)
+  }) {
+    m.failed = true
+  }
 
 
 }
 
 fun Room.setNotifications(settings: NotificationSettings.AllowFrom, isSync: Boolean) {
-    val og = this.notification
-    this.notification = settings
-    if (isSync) {
-        return
-    }
-    op({
-        API.updateThreadNotifications(id, settings)
-    }) {
-        this.notification = og
-    }
+  val og = this.notification
+  this.notification = settings
+  if (isSync) {
+    return
+  }
+  op({
+    API.updateThreadNotifications(id, settings)
+  }) {
+    this.notification = og
+  }
 }
