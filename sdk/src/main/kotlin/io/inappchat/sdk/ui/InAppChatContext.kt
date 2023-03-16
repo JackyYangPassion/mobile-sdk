@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-package io.inappchat.sdk.ui.theme
+package io.inappchat.sdk.ui
 
 import Colors
 import Fonts
@@ -20,7 +20,7 @@ val IACColors = staticCompositionLocalOf { Colors(true) }
 val IACRichText = staticCompositionLocalOf { Theme().richText() }
 
 @Composable
-fun InAppChatTheme(
+fun InAppChatContext(
     theme: Theme = IACTheme.current,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit

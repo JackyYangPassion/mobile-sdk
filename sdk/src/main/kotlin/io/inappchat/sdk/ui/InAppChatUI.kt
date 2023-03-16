@@ -4,6 +4,7 @@
 
 package io.inappchat.sdk.ui
 
+import Theme
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,10 +13,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.inappchat.sdk.state.*
 import io.inappchat.sdk.ui.screens.*
-import io.inappchat.sdk.ui.theme.InAppChatTheme
 
 @Composable
-fun InAppChatUI() {
+fun InAppChatUI(theme: Theme = Theme()) {
     val navController = rememberNavController()
     val openChat = { it: Room -> navController.navigate(it.path) }
     val openReplies = { it: Message ->
@@ -45,7 +45,7 @@ fun InAppChatUI() {
         navController.popBackStack()
         Unit
     }
-    InAppChatTheme {
+    InAppChatContext(theme = theme) {
         NavHost(navController = navController, startDestination = "chats") {
             composable("chats") {
                 tabs
