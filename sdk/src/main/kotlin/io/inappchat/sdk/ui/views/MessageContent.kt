@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -23,7 +24,6 @@ import io.inappchat.sdk.state.AttachmentKind
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.markdown
 import io.inappchat.sdk.ui.IAC.colors
-import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.utils.*
 
@@ -77,8 +77,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
       }
     } else {
       val ct = message.location?.markdown() ?: message.contact?.markdown()
-      ?: message.markdown ?: "hello"
-      Text(text = ct, iac = fonts.body)
+      ?: message.markdown
       MarkdownViewComposable(
         modifier = Modifier
           .fillMaxWidth()
@@ -87,11 +86,42 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
         config = MarkdownConfig(
           isLinksClickable = true,
           isImagesClickable = true,
-          isScrollEnabled = false
+          isScrollEnabled = false,
+          colors = HashMap<String, Color>().apply {
+            this[MarkdownConfig.CHECKBOX_COLOR] = Color.Black
+            this[MarkdownConfig.LINKS_COLOR] = colors.primary
+            this[MarkdownConfig.TEXT_COLOR] = colors.text
+            this[MarkdownConfig.HASH_TEXT_COLOR] = colors.text
+            this[MarkdownConfig.CODE_BACKGROUND_COLOR] = Color.Gray
+            this[MarkdownConfig.CODE_BLOCK_TEXT_COLOR] = Color.White
+          }
         )
       ) { link, type ->
-        // Callback on Click on Images, Links To Redirect to Image Viewer or WebView Screen
+        when (type) {
+          MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked
+          MarkdownConfig.LINK_TYPE -> {} // Link Clicked
+        }
       }
+//      MarkdownText(
+//        markdown = ct,
+//        color = ift(message.user.isCurrent, colors.senderText, colors.bubbleText),
+//        annotationStyle = MarkdownTextDefaults.style.copy(
+//          linkStyle = MarkdownTextDefaults.linkStyle.copy(
+//            color = colors.primary
+//          )
+//        ),
+//        flavour = MarkdownFlavour.Github
+//      )
+//      Markdown(
+//        content = ct,
+//        colors = MarkdownDefaults.markdownColors(textColor = colors.bubbleText, colorByType = {
+//          when (it) {
+//            MarkdownElementTypes.AUTOLINK, MarkdownElementTypes.LINK_TEXT, MarkdownElementTypes.LINK_LABEL, MarkdownElementTypes.LINK_TEXT, MarkdownElementTypes.INLINE_LINK -> clrs.primary
+//            else -> if(message.user.isCurrent) clrs.senderText else  clrs.bubbleText
+//          }
+//        }),
+//        typography = MarkdownDefaults.markdownTypography(body1 = TextStyle(fontSize =  fnts.body.size, fontWeight = fnts.body.weight, fontFamily = fnts.body.family), body2 = TextStyle(fontFamily = fnts.body.family, fontWeight = fnts.body.weight, fontSize = fnts.body.size))
+//      )
     }
   }
 }

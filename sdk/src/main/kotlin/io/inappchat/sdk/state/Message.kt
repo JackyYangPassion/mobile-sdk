@@ -79,10 +79,15 @@ data class Message(
 
   }
 
+  fun updateText(text: String) {
+
+    this.text = text
+    this.markdown = linkLinks(linkPhones(linkMentions(this.text)))
+  }
+
   fun update(msg: APIMessage) {
     if (this.text != (msg.message ?: "")) {
-      this.text = msg.message ?: ""
-      this.markdown = linkLinks(linkPhones(linkMentions(this.text)))
+      updateText(msg.message ?: "")
     }
     this.replyCount = msg.replyMsgCount ?: 0
     this.status = msg.status
@@ -155,11 +160,13 @@ fun APIMessage.attachment(): Attachment? {
   return null
 }
 
+fun String.noParens() = replace("(", "").replace(")", "")
+
 fun Contact.markdown(): String = "$name\n" +
     (numbers?.map {
       "[${
         if (it.type.orEmpty().isEmpty()) "" else "${it.type}: "
-      }${it.number}](tel:${it.number})\n"
+      }${it.number.noParens()}](tel:${it.number.noParens()})\n"
     }?.joinToString("") ?: "") + (emails?.map {
   "[${
     if (it.type.orEmpty().isEmpty()) "" else "${it.type}: "

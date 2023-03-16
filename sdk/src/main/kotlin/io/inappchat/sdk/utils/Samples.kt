@@ -164,7 +164,7 @@ fun genTextMessage(user: User = randomUser()) = Message(
   user.id,
   null,
   uuid(),
-).apply { text = faker.lorem().paragraph() }
+).apply { updateText(faker.lorem().paragraph()) }
 
 fun genLocationMessage() = Message(
   uuid(), Instant.now().minusSeconds(Random.nextLong(100000L)),
