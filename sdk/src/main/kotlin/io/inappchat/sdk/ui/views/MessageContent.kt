@@ -15,27 +15,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.halilibo.richtext.markdown.Markdown
+import com.halilibo.richtext.markdown.MarkdownParseOptions
 import com.halilibo.richtext.ui.RichText
 import io.inappchat.sdk.R
+import io.inappchat.sdk.state.Attachment
 import io.inappchat.sdk.state.AttachmentKind
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.markdown
 import io.inappchat.sdk.ui.theme.IAC.colors
 import io.inappchat.sdk.ui.theme.IAC.richTextStyle
 import io.inappchat.sdk.ui.theme.IAC.theme
-import io.inappchat.sdk.utils.SampleMessage
-import io.inappchat.sdk.utils.ift
+import io.inappchat.sdk.utils.*
+import java.time.LocalDateTime
 
-@Preview
 @Composable
-fun MessageContent(@PreviewParameter(SampleMessage::class) message: Message) {
+fun MessageContent(message: Message) {
     Column(
         modifier = Modifier.background(
             ift(
@@ -46,10 +47,10 @@ fun MessageContent(@PreviewParameter(SampleMessage::class) message: Message) {
             RoundedCornerShape(theme.bubbleRadius.dp)
         )
     ) {
-        message.attachment?.let {
-            when (it.kind) {
+        if (message.attachment != null) {
+            when (message.attachment.kind) {
                 AttachmentKind.image -> AsyncImage(
-                    model = it.url,
+                    model = message.attachment.url,
                     contentDescription = "shareed image",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -61,13 +62,13 @@ fun MessageContent(@PreviewParameter(SampleMessage::class) message: Message) {
                         )
                 )
                 AttachmentKind.video -> VideoPlayer(
-                    uri = it.url.toUri(),
+                    uri = message.attachment.url.toUri(),
                     modifier = Modifier
                         .width(theme.videoPreviewSize.width.dp)
                         .height(theme.videoPreviewSize.height.dp)
                 )
                 AttachmentKind.audio -> AudioPlayer(
-                    url = it.url
+                    url = message.attachment.url
                 )
                 AttachmentKind.file -> Image(
                     painter = painterResource(id = R.drawable.file_arrow_down_fill),
@@ -82,14 +83,57 @@ fun MessageContent(@PreviewParameter(SampleMessage::class) message: Message) {
                     modifier = Modifier.size(64)
                 )
             }
-        } ?: RichText(
-            modifier = Modifier.padding(theme.bubblePadding),
-            style = richTextStyle
-        ) {
-            Markdown(
-                content = message.location?.markdown() ?: message.contact?.markdown()
+        } else {
+            RichText(
+                modifier = Modifier.padding(theme.bubblePadding),
+                style = richTextStyle
+            ) {
+                val ct = message.location?.markdown() ?: message.contact?.markdown()
                 ?: message.markdown
-            )
+                val uriHandler = LocalUriHandler.current
+                Markdown(
+                    content = ct,
+                    markdownParseOptions = MarkdownParseOptions.Default,
+                    onLinkClicked = {
+                        uriHandler.openUri(it)
+                    }
+                )
+            }
         }
+    }
+}
+
+@Preview
+@Composable
+fun MessageContentPreview() {
+    Column {
+        val img = genM(attachment = Attachment(randomImage(), AttachmentKind.image))
+        MessageContent(message = img)
+        val file = genM(attachment = Attachment(randomImage(), AttachmentKind.file))
+        MessageContent(message = file)
+        val contact = Message(
+            uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
+            randomUser().id,
+            null,
+            uuid(),
+            contact = genC()
+        )
+        MessageContent(message = contact)
+        val location = Message(
+            uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
+            randomUser().id,
+            null,
+            uuid(),
+            location = genL()
+        )
+        MessageContent(message = location)
+        val text = Message(
+            uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
+            randomUser().id,
+            null,
+            uuid(),
+        )
+        text.text = "hello"
+        MessageContent(message = text)
     }
 }

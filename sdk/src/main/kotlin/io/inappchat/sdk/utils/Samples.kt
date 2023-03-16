@@ -103,32 +103,36 @@ fun genC() = Contact(
     numbers = ift(
         bool(),
         random(
-            faker.random().nextInt(5),
+            faker.random().nextInt(1, 5),
             { PhoneNumber(faker.phoneNumber().phoneNumber(), listOf("work", "home").random()) }),
         null
     ),
     emails = ift(
         bool(),
         random(
-            faker.random().nextInt(5),
+            faker.random().nextInt(1, 5),
             { Email(faker.internet().emailAddress(), listOf("work", "home").random()) }),
         null
     )
 )
 
-fun genM(thread: String = genT().id): Message {
+fun genM(
+    thread: String = genT().id,
+    parent: String? = null,
+    attachment: Attachment? = null
+): Message {
     val m = Message(
         uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
         randomUser().id,
-        ift(chance(1, 10), genM(thread).id, null),
+        parent,
         thread,
-        ift(bool(), genA(), null),
+        attachment ?: ift(bool(), genA(), null),
         location = ift(bool(), genL(), null),
         contact = ift(bool(), genC(), null)
     )
     m.text = faker.lorem().word()
-    if (chance(1, 5)) {
-        m.replies.items.addAll((0 until faker.random().nextInt(10)).map { genM(m.id) })
+    if (parent == null && chance(1, 5)) {
+        m.replies.items.addAll((0 until faker.random().nextInt(10)).map { genM(m.threadID, m.id) })
     }
     if (chance(1, 4))
         m.reactions.addAll(
@@ -168,7 +172,7 @@ class SampleGroup : PreviewParameterProvider<Group> {
 }
 
 class SampleMessage : PreviewParameterProvider<Message> {
-    override val values: Sequence<Message> = (0..40).map { genM() }.asSequence()
+    override val values: Sequence<Message> = sequenceOf(genM())
 }
 
 class SampleFn : PreviewParameterProvider<Fn> {

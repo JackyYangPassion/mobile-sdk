@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.halilibo.richtext.ui.RichTextStyle
+import com.halilibo.richtext.ui.resolveDefaults
 import com.halilibo.richtext.ui.string.RichTextStringStyle
 import io.inappchat.sdk.ui.theme.Assets
 
@@ -26,8 +27,8 @@ class Theme {
     var fonts by mutableStateOf(Fonts())
     var light: Colors by mutableStateOf(Colors(true))
     var dark: Colors by mutableStateOf(Colors(false))
-    var imagePreviewSize by mutableStateOf(Size(width = 178f, height = 153f))
-    var videoPreviewSize by mutableStateOf(Size(width = 248f, height = 153f))
+    var imagePreviewSize by mutableStateOf(Size(width = 89f, height = 76f))
+    var videoPreviewSize by mutableStateOf(Size(width = 124f, height = 76f))
     var messageAlignment by mutableStateOf(Alignment.Start)
     var senderAlignment by mutableStateOf(Alignment.End)
     var bubbleRadius by mutableStateOf(7.5f)
@@ -92,4 +93,4 @@ fun Theme.richText(): RichTextStyle = RichTextStyle(
             textDecoration = TextDecoration.Underline,
         ),
     )
-)
+).resolveDefaults()
