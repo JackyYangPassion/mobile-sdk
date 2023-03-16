@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.inappchat.sdk.ui.IAC
+import io.inappchat.sdk.utils.IPreviews
 
 
 @Composable
@@ -34,7 +35,7 @@ fun Badge(count: Int) {
     }
 }
 
-@IPreview
+@IPreviews
 @Composable
 fun BadgePreview() {
     Badge(count = 1)

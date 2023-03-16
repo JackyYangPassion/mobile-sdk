@@ -16,7 +16,6 @@ import com.halilibo.richtext.ui.RichTextStyle
 import richText
 
 val IACTheme = staticCompositionLocalOf { Theme() }
-val IACColors = staticCompositionLocalOf { Colors(true) }
 val IACRichText = staticCompositionLocalOf { Theme().richText() }
 
 @Composable
@@ -26,11 +25,14 @@ fun InAppChatContext(
     content: @Composable () -> Unit
 ) {
     val rememberedTheme = remember { theme }.apply { theme.fromOtherTheme(theme) }
-    val colorScheme = when {
-        darkTheme -> theme.dark
-        else -> theme.light
-    }
-    CompositionLocalProvider(IACTheme provides rememberedTheme, IACColors provides colorScheme) {
+
+    LaunchedEffect(key1 = darkTheme, block = {
+        theme.isDark = darkTheme
+    })
+    CompositionLocalProvider(
+        IACTheme provides rememberedTheme,
+        IACRichText provides rememberedTheme.richText()
+    ) {
         content()
     }
 }

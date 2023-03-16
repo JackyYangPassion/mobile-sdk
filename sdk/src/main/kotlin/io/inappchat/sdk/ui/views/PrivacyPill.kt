@@ -13,37 +13,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.IAC.fonts
+import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.annotated
 import io.inappchat.sdk.utils.ift
 
 @Composable
 fun PrivacyPill(_private: Boolean = false) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .background(
-                ift(_private, IAC.theme.colors._private, IAC.theme.colors._public),
-                RoundedCornerShape(8.dp)
-            )
-            .padding(6.dp, 1.dp)
-    ) {
-        Text(
-            (if (_private) "Private" else "Public").uppercase().annotated(),
-            fonts.mini,
-            color = Color.White,
+  Box(
+    contentAlignment = Alignment.Center,
+    modifier = Modifier
+        .background(
+            ift(_private, IAC.theme.colors._private, IAC.theme.colors._public),
+            RoundedCornerShape(8.dp)
         )
-    }
+        .padding(6.dp, 1.dp)
+  ) {
+    Text(
+      (if (_private) "Private" else "Public").uppercase().annotated(),
+      fonts.mini,
+      color = Color.White,
+    )
+  }
 }
 
-@IPreview
+@IPreviews
 @Composable
 fun PrivacyPillPreview() {
-    Column {
-        PrivacyPill(true)
-        PrivacyPill(false)
-    }
+  Column {
+    PrivacyPill(true)
+    PrivacyPill(false)
+  }
 }

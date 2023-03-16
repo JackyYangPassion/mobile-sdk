@@ -101,7 +101,7 @@ fun MessageContent(message: Message) {
     }
 }
 
-@IPreview
+@IPreviews
 @Composable
 fun MessageContentPreview() {
     Column {

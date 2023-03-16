@@ -9,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -18,123 +17,123 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.ui.IAC
-import io.inappchat.sdk.ui.IACColors
+import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.Fn
+import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.annotated
 
 val HeaderHeight = 44.dp
 
 @Composable
 fun Header(
-    title: String,
-    icon: @Composable Fn? = null,
-    search: Fn? = null,
-    compose: Fn? = null,
-    back: Fn? = null,
-    menu: Fn? = null,
-    right: @Composable Fn? = null,
-    add: Fn? = null
+  title: String,
+  icon: @Composable Fn? = null,
+  search: Fn? = null,
+  compose: Fn? = null,
+  back: Fn? = null,
+  menu: Fn? = null,
+  right: @Composable Fn? = null,
+  add: Fn? = null
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(44.dp)
-            .padding(4.dp, 2.dp)
-    ) {
-        if (back != null)
-            HeaderButton(
-                back,
-                true
-            ) {
-                Icon(
-                    painterResource(id = R.drawable.caret_left),
-                    contentDescription = "back",
-                    modifier = Modifier.fillMaxSize(1.0f)
-                )
-            }
-        icon?.invoke()
-        Text(text = title.annotated(), iac = IAC.fonts.title.copy(weight = FontWeight.Bold))
-        Spacer(modifier = Modifier.weight(1.0f))
-        if (search != null) {
-            HeaderButton(onClick = search) {
-                Icon(
-                    painter = painterResource(id = R.drawable.magnifying_glass),
-                    contentDescription = "Menu",
-                    tint = IAC.colors.text,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Spacer(modifier = Modifier.size(4.dp))
-        }
-        if (add != null) {
-            HeaderButton(
-                add,
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.plus),
-                    contentDescription = "Add",
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Spacer(modifier = Modifier.size(4.dp))
-        }
-        if (menu != null) {
-            HeaderButton(onClick = menu) {
-                Icon(
-                    painter = painterResource(id = R.drawable.dots_three_vertical_fill),
-                    contentDescription = "Menu",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Spacer(modifier = Modifier.size(4.dp))
-        }
-        if (compose != null) {
-            HeaderButton(onClick = compose) {
-                Icon(
-                    painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
-                    contentDescription = "Menu",
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Spacer(modifier = Modifier.size(4.dp))
-        }
-        right?.invoke()
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(44.dp)
+        .padding(4.dp, 2.dp)
+  ) {
+    if (back != null)
+      HeaderButton(
+        back,
+        true
+      ) {
+        Icon(
+          painterResource(id = R.drawable.caret_left),
+          contentDescription = "back",
+          modifier = Modifier.fillMaxSize(1.0f)
+        )
+      }
+    icon?.invoke()
+    Text(text = title.annotated(), iac = IAC.fonts.title.copy(weight = FontWeight.Bold))
+    Spacer(modifier = Modifier.weight(1.0f))
+    if (search != null) {
+      HeaderButton(onClick = search) {
+        Icon(
+          painter = painterResource(id = R.drawable.magnifying_glass),
+          contentDescription = "Menu",
+          tint = IAC.colors.text,
+          modifier = Modifier.size(20.dp)
+        )
+      }
+      Spacer(modifier = Modifier.size(4.dp))
     }
+    if (add != null) {
+      HeaderButton(
+        add,
+      ) {
+        Icon(
+          painter = painterResource(id = R.drawable.plus),
+          contentDescription = "Add",
+          modifier = Modifier.size(20.dp)
+        )
+      }
+      Spacer(modifier = Modifier.size(4.dp))
+    }
+    if (menu != null) {
+      HeaderButton(onClick = menu) {
+        Icon(
+          painter = painterResource(id = R.drawable.dots_three_vertical_fill),
+          contentDescription = "Menu",
+          tint = MaterialTheme.colorScheme.onSurface,
+          modifier = Modifier.size(20.dp)
+        )
+      }
+      Spacer(modifier = Modifier.size(4.dp))
+    }
+    if (compose != null) {
+      HeaderButton(onClick = compose) {
+        Icon(
+          painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
+          contentDescription = "Menu",
+          tint = MaterialTheme.colorScheme.onSurface,
+          modifier = Modifier.size(20.dp)
+        )
+      }
+      Spacer(modifier = Modifier.size(4.dp))
+    }
+    right?.invoke()
+  }
 }
 
 @Composable
 fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .padding(0.dp)
-            .size(30.dp)
-            .background(
-                if (transparent) Color.Transparent else IACColors.current.softBackground,
-                CircleShape
-            )
-            .clickable(onClick = onClick)
-            .border(0.dp, Color.Transparent, CircleShape)
-    ) {
-        icon()
-    }
+  Box(
+    contentAlignment = Alignment.Center,
+    modifier = Modifier
+        .padding(0.dp)
+        .size(30.dp)
+        .background(
+            if (transparent) Color.Transparent else colors.softBackground,
+            CircleShape
+        )
+        .clickable(onClick = onClick)
+        .border(0.dp, Color.Transparent, CircleShape)
+  ) {
+    icon()
+  }
 }
 
 
-@IPreview
+@IPreviews
 @Composable
 fun HeaderPreview() {
-    InAppChatContext {
-        MaterialTheme {
-            Header("Title", back = {}, add = {}, menu = {}, search = {}, compose = {})
-        }
+  InAppChatContext {
+    MaterialTheme {
+      Header("Title", back = {}, add = {}, menu = {}, search = {}, compose = {})
     }
+  }
 }

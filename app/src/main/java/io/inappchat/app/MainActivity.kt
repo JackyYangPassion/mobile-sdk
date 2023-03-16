@@ -10,29 +10,29 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import io.inappchat.sdk.ui.InAppChatUI
+import io.inappchat.sdk.utils.IPreviews
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                InAppChatUI()
-            }
-        }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContent {
+      MaterialTheme {
+        InAppChatUI()
+      }
     }
+  }
 }
 
 @Composable
 fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+  Text(text = "Hello $name!")
 }
 
-@IPreview(showBackground = true)
+@IPreviews
 @Composable
 fun DefaultPreview() {
-    MaterialTheme {
-        InAppChatUI()
-    }
+  MaterialTheme {
+    InAppChatUI()
+  }
 }

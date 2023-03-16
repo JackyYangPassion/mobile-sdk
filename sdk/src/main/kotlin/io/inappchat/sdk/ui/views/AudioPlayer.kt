@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -34,17 +33,18 @@ import io.inappchat.sdk.R
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.ift
 import kotlinx.coroutines.delay
 
 class AudioUrlProvider(override val values: Sequence<String> = sequenceOf("https://file-examples.com/storage/fe0358100863d05afed02d2/2017/11/file_example_MP3_5MG.mp3")) :
     PreviewParameterProvider<String>
 
-@IPreview
+@IPreviews
 @Composable
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 fun AudioPlayer(
-    @IPreviewParameter(AudioUrlProvider::class) url: String
+    @PreviewParameter(AudioUrlProvider::class) url: String
 ) {
     val context = LocalContext.current
     var playing by remember {

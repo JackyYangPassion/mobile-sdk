@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
@@ -23,14 +22,15 @@ import io.inappchat.sdk.models.AvailabilityStatus
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
+import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.SampleUser
 import io.inappchat.sdk.utils.annotated
 import io.inappchat.sdk.utils.ift
 
-@IPreview
+@IPreviews
 @Composable
 fun ContactRow(
-    @IPreviewParameter(SampleUser::class) user: User,
+    @PreviewParameter(SampleUser::class) user: User,
     modifier: Modifier = Modifier.clickable { }
 ) {
     Row(

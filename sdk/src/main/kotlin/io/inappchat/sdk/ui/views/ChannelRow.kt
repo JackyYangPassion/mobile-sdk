@@ -20,7 +20,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -33,7 +32,7 @@ import io.inappchat.sdk.state.usernames
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.theme
-import io.inappchat.sdk.ui.IACColors
+import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.SampleGroup
 import io.inappchat.sdk.utils.annotated
 import io.inappchat.sdk.utils.ift
@@ -88,9 +87,9 @@ fun InvitesHeader(group: Group) {
     }
 }
 
-@IPreview(showBackground = true, showSystemUi = true)
+@IPreviews
 @Composable
-fun ChannelRow(@IPreviewParameter(SampleGroup::class) group: Group) {
+fun ChannelRow(@PreviewParameter(SampleGroup::class) group: Group) {
     Column(modifier = Modifier.padding(16.dp, 0.dp)) {
         Column(
             modifier = Modifier
@@ -144,7 +143,7 @@ fun ChannelRow(@IPreviewParameter(SampleGroup::class) group: Group) {
                                     .padding(0.dp)
                                     .size(32.dp)
                                     .background(
-                                        if (group.isMember) IACColors.current.softBackground else colors.primary,
+                                        if (group.isMember) colors.softBackground else colors.primary,
                                         CircleShape
                                     )
                                     .clickable(onClick = {
@@ -175,7 +174,7 @@ fun ChannelRow(@IPreviewParameter(SampleGroup::class) group: Group) {
     }
 }
 
-//@IPreview(
+//@IPreviews(
 //    showSystemUi = true,
 //    showBackground = true
 //) // Apparently, adding these two lines seems to do the magic here

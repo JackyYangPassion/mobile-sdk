@@ -11,21 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.annotated
 
 class CountProvider : PreviewParameterProvider<Int> {
     override val values: Sequence<Int> = sequenceOf(1, 4, 10, 301, 2931)
 }
 
-@IPreview
+@IPreviews
 @Composable
-fun GroupCount(@IPreviewParameter(CountProvider::class) count: Int) {
+fun GroupCount(@PreviewParameter(CountProvider::class) count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(id = R.drawable.users_fill),
@@ -34,6 +34,10 @@ fun GroupCount(@IPreviewParameter(CountProvider::class) count: Int) {
             tint = theme.colors.caption
         )
         Space()
-        Text(text = count.toString().annotated(), iac = theme.fonts.caption, color = theme.colors.caption)
+        Text(
+            text = count.toString().annotated(),
+            iac = theme.fonts.caption,
+            color = theme.colors.caption
+        )
     }
 }
