@@ -10,7 +10,11 @@ import io.inappchat.sdk.InAppChat.appContext
 import io.inappchat.sdk.InAppChat.prefs
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.op
-import java.util.UUID
+import java.util.*
+import kotlin.collections.MutableList
+import kotlin.collections.fold
+import kotlin.collections.mutableListOf
+import kotlin.collections.set
 import kotlin.properties.Delegates
 
 @Stable

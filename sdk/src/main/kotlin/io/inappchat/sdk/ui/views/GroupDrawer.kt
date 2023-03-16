@@ -33,19 +33,22 @@ import io.inappchat.sdk.utils.genG
 @Composable
 fun GroupDrawerHeader(group: Group) {
     Column {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(64.dp, 24.dp, 64.dp, 24.dp)
-    ) {
-        Space(24f)
-        Avatar(url = group.avatar, 70.0, true)
-        Space(12f)
-        Text(group.name, fonts.title2, color = colors.text)
-        Text(group.description ?: "", fonts.body, color = colors.caption)
-        Space(26f)
-        Divider(color = colors.text.copy(alpha = 0.1f))
-    }
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 16.dp)) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(64.dp, 24.dp, 64.dp, 24.dp)
+        ) {
+            Space(24f)
+            Avatar(url = group.avatar, 70.0, true)
+            Space(12f)
+            Text(group.name, fonts.title2, color = colors.text)
+            Text(group.description ?: "", fonts.body, color = colors.caption)
+            Space(26f)
+            Divider(color = colors.text.copy(alpha = 0.1f))
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 16.dp)
+        ) {
             Text(text = "All Members", iac = fonts.headline, color = colors.text)
             Space(14f)
             Image(

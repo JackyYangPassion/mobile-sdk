@@ -5,7 +5,9 @@
 package io.inappchat.sdk.state
 
 import androidx.compose.runtime.*
-import contacts.core.*
+import contacts.core.Contacts
+import contacts.core.isNotNullOrEmpty
+import contacts.core.or
 import contacts.core.util.phones
 import io.inappchat.sdk.API
 import io.inappchat.sdk.InAppChat
