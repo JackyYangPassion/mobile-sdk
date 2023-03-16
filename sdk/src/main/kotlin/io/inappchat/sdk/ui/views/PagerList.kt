@@ -17,16 +17,12 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.state.Identifiable
 import io.inappchat.sdk.state.Pager
 import io.inappchat.sdk.utils.Fn
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -89,16 +85,9 @@ fun <T : Identifiable> PagerList(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
 
-            LaunchedEffect(key1 = listState, block = {
-                snapshotFlow {
-                    listState.firstVisibleItemIndex
-                }.map { index -> index + pager.pageSize + 1 >= pager.items.size }
-                    .distinctUntilChanged()
-                    .filter { it }
-                    .collect {
-                        pager.loadMore()
-                    }
-            })
+            InfiniteListHandler(listState = listState) {
+                pager.loadMore()
+            }
 
             LaunchedEffect(key1 = pager.items.firstOrNull()?.id, block = {
                 coroutineScope.launch { listState.animateScrollToItem(0) }
