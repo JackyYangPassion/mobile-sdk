@@ -42,8 +42,15 @@ fun reqT() {
     }
 }
 
-fun randomUsers() = randomAmount(Chats.current.cache.users.values)
-fun randomUser() = Chats.current.cache.users.values.random()
+fun randomUsers() = randomAmount(Chats.current.cache.users.values).let {
+    ift(
+        it.isEmpty(),
+        (0..30).map { genU() },
+        it
+    )
+}
+
+fun randomUser() = Chats.current.cache.users.values.randomOrNull() ?: genU()
 
 fun genG(): Group {
     val g = Group(uuid())
@@ -110,12 +117,10 @@ fun genC() = Contact(
 )
 
 fun genM(thread: String = genT().id): Message {
-    reqU()
-    reqT()
     val m = Message(
         uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
         randomUser().id,
-        ift(faker.random().nextBoolean(), genM(thread).id, null),
+        ift(chance(1, 10), genM(thread).id, null),
         thread,
         ift(bool(), genA(), null),
         location = ift(bool(), genL(), null),
@@ -133,6 +138,9 @@ fun genM(thread: String = genT().id): Message {
         )
     m.replyCount = m.replies.items.size
     m.favorite = chance(1, 5)
+    m.room?.addMessage(m)
+    m.room?.items?.sortByDescending { it.createdAt }
+    m.room?.latest = m.room?.items?.first()
     return m
 }
 
@@ -144,7 +152,6 @@ fun genT(): Room {
         u,
         g
     )
-    r.latest = ift(bool(), genM(r.id), null)
     return r
 }
 
@@ -167,4 +174,8 @@ class SampleMessage : PreviewParameterProvider<Message> {
 class SampleFn : PreviewParameterProvider<Fn> {
     override val values: Sequence<Fn> = sequenceOf({})
 
+}
+
+class SampleRoom : PreviewParameterProvider<Room> {
+    override val values: Sequence<Room> = (0..40).map { genT() }.asSequence()
 }

@@ -35,10 +35,11 @@ fun <T> randomAmount(from: Collection<T>): List<T> {
     if (count > 0) {
         var ret = mutableListOf<T>()
         while (count > 0) {
-            val i = faker.random().nextInt(0, els.size)
+            val i = faker.random().nextInt(0, els.size - 1)
             count = count.minus(1)
-            ret.add(els[i])
-            els.removeAt(i)
+            ret.add(
+                els.removeAt(i)
+            )
         }
         return ret
     } else {

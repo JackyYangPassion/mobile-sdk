@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
@@ -25,7 +24,7 @@ fun Modifier.radius(size: Float) = clip(RoundedCornerShape(size.dp))
 fun Modifier.radius(size: Int) = clip(RoundedCornerShape(size.dp))
 fun Modifier.radius(size: Dp) = clip(RoundedCornerShape(size))
 fun Modifier.circle(size: Dp, color: Color = Color.Transparent) =
-    size(size).background(color, CircleShape)
+    background(color, CircleShape).size(size)
 
 
 @Composable

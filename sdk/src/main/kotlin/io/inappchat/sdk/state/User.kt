@@ -52,6 +52,7 @@ data class User(
     }
 
     init {
+        Chats.current.cache.users[id] = this
         fetch()
     }
 
