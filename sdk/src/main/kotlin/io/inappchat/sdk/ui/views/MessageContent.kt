@@ -25,7 +25,6 @@ import com.halilibo.richtext.markdown.Markdown
 import com.halilibo.richtext.markdown.MarkdownParseOptions
 import com.halilibo.richtext.ui.RichText
 import io.inappchat.sdk.R
-import io.inappchat.sdk.state.Attachment
 import io.inappchat.sdk.state.AttachmentKind
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.markdown
@@ -33,7 +32,6 @@ import io.inappchat.sdk.ui.theme.IAC.colors
 import io.inappchat.sdk.ui.theme.IAC.richTextStyle
 import io.inappchat.sdk.ui.theme.IAC.theme
 import io.inappchat.sdk.utils.*
-import java.time.LocalDateTime
 
 @Composable
 fun MessageContent(message: Message) {
@@ -107,33 +105,10 @@ fun MessageContent(message: Message) {
 @Composable
 fun MessageContentPreview() {
     Column {
-        val img = genM(attachment = Attachment(randomImage(), AttachmentKind.image))
-        MessageContent(message = img)
-        val file = genM(attachment = Attachment(randomImage(), AttachmentKind.file))
-        MessageContent(message = file)
-        val contact = Message(
-            uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
-            randomUser().id,
-            null,
-            uuid(),
-            contact = genC()
-        )
-        MessageContent(message = contact)
-        val location = Message(
-            uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
-            randomUser().id,
-            null,
-            uuid(),
-            location = genL()
-        )
-        MessageContent(message = location)
-        val text = Message(
-            uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
-            randomUser().id,
-            null,
-            uuid(),
-        )
-        text.text = "hello"
-        MessageContent(message = text)
+        MessageContent(message = genImageMessage())
+        MessageContent(message = genFileMessage())
+        MessageContent(message = genContactMessage())
+        MessageContent(message = genLocationMessage())
+        MessageContent(message = genTextMessage())
     }
 }

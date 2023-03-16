@@ -148,6 +148,31 @@ fun genM(
     return m
 }
 
+fun genImageMessage() = genM(attachment = Attachment(randomImage(), AttachmentKind.image))
+fun genFileMessage() = genM(attachment = Attachment(randomImage(), AttachmentKind.file))
+fun genContactMessage() = Message(
+    uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
+    randomUser().id,
+    null,
+    uuid(),
+    contact = genC()
+)
+
+fun genTextMessage() = Message(
+    uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
+    randomUser().id,
+    null,
+    uuid(),
+).apply { text = faker.lorem().paragraph() }
+
+fun genLocationMessage() = Message(
+    uuid(), LocalDateTime.now().minusSeconds(faker.random().nextLong(100000L)),
+    randomUser().id,
+    null,
+    uuid(),
+    location = genL()
+)
+
 fun genT(): Room {
     val u = ift(bool(), genU(), null)
     val g = u?.let { null } ?: genG()
