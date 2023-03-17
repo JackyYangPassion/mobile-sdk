@@ -138,7 +138,7 @@ fun genM(
     m.reactions.addAll(
       random(
         10,
-        { Reaction(faker.slackEmoji().emoji(), Random.nextInt(1, 10), listOf()) })
+        { Reaction(faker.emoji().smiley(), Random.nextInt(1, 10), listOf()) })
     )
   m.replyCount = m.replies.items.size
   m.favorite = chance(1, 5)
@@ -164,7 +164,16 @@ fun genTextMessage(user: User = randomUser()) = Message(
   user.id,
   null,
   uuid(),
-).apply { updateText(faker.lorem().paragraph()) }
+).apply {
+  updateText(faker.lorem().paragraph())
+  reactions.addAll(
+    random(
+      10,
+      { Reaction(faker.emoji().smiley(), Random.nextInt(1, 10), listOf()) })
+  )
+  currentReaction = reactions.firstOrNull()?.emojiCode
+  replyCount = if (Random.nextBoolean()) Random.nextInt(20) else 0
+}
 
 fun genLocationMessage() = Message(
   uuid(), Instant.now().minusSeconds(Random.nextLong(100000L)),

@@ -6,13 +6,17 @@ package io.inappchat.sdk.ui.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
@@ -25,6 +29,7 @@ import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.markdown
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.*
 
 @Composable
@@ -78,20 +83,21 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
     } else {
       val ct = message.location?.markdown() ?: message.contact?.markdown()
       ?: message.markdown
+      val openUrl = LocalUriHandler.current
+      val textColor = if (message.user.isCurrent) colors.senderText else colors.bubbleText
       MarkdownViewComposable(
         modifier = Modifier
-          .fillMaxWidth()
-          .padding(10.dp),
+          .padding(theme.bubblePadding),
         content = ct,
         config = MarkdownConfig(
           isLinksClickable = true,
-          isImagesClickable = true,
+          isImagesClickable = false,
           isScrollEnabled = false,
           colors = HashMap<String, Color>().apply {
             this[MarkdownConfig.CHECKBOX_COLOR] = Color.Black
             this[MarkdownConfig.LINKS_COLOR] = colors.primary
-            this[MarkdownConfig.TEXT_COLOR] = colors.text
-            this[MarkdownConfig.HASH_TEXT_COLOR] = colors.text
+            this[MarkdownConfig.TEXT_COLOR] = textColor
+            this[MarkdownConfig.HASH_TEXT_COLOR] = colors.primary
             this[MarkdownConfig.CODE_BACKGROUND_COLOR] = Color.Gray
             this[MarkdownConfig.CODE_BLOCK_TEXT_COLOR] = Color.White
           }
@@ -99,7 +105,9 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
       ) { link, type ->
         when (type) {
           MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked
-          MarkdownConfig.LINK_TYPE -> {} // Link Clicked
+          MarkdownConfig.LINK_TYPE -> {
+            openUrl.openUri(link)
+          } // Link Clicked
         }
       }
 //      MarkdownText(
@@ -129,11 +137,13 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
 @IPreviews
 @Composable
 fun MessageContentPreview() {
-  Column {
-    MessageContent(message = genImageMessage())
-    MessageContent(message = genFileMessage())
-    MessageContent(message = genContactMessage())
-    MessageContent(message = genLocationMessage())
-    MessageContent(message = genTextMessage())
+  InAppChatContext {
+    Column {
+      MessageContent(message = genImageMessage())
+      MessageContent(message = genFileMessage())
+      MessageContent(message = genContactMessage())
+      MessageContent(message = genLocationMessage())
+      MessageContent(message = genTextMessage())
+    }
   }
 }

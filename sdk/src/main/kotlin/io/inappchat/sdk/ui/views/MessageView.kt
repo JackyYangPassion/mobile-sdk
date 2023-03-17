@@ -22,6 +22,7 @@ import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.*
 
 @Composable
@@ -60,11 +61,11 @@ fun MessageView(message: Message, onPressUser: (User) -> Unit) {
 @IPreviews
 @Composable
 fun MessageViewPreview() {
-  Column {
-    MessageView(message = genTextMessage(genU()), onPressUser = {})
-
-    MessageView(message = genTextMessage(genCurrentUser()), onPressUser = {})
-
+  InAppChatContext {
+    Column {
+      MessageView(message = genTextMessage(genU()), onPressUser = {})
+      MessageView(message = genTextMessage(genCurrentUser()), onPressUser = {})
+    }
   }
 }
 
@@ -110,24 +111,25 @@ fun Avvy(url: String?, onClick: Fn) {
 
 @Composable
 fun Reactions(msg: Message, modifier: Modifier = Modifier) {
-//  if (msg.reactions.isEmpty()) return
-  Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
-    for (reaction in msg.reactions) {
-      ClickableText(
-        text = "${reaction.emojiCode} ${reaction.count}",
-        onClick = { msg.react(reaction.emojiCode) },
-        iac = fonts.body,
-        color = colors.text,
-        modifier = Modifier
-          .padding(theme.bubblePadding)
-          .background(colors.bubble)
-          .radius(36.dp)
-          .border(
-            2.dp,
-            if (msg.currentReaction == reaction.emojiCode) colors.primary else Color.Transparent,
-            RoundedCornerShape(36.dp)
-          )
-      )
+  for (reactions in msg.reactions.chunked(5)) {
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
+      for (reaction in reactions) {
+        ClickableText(
+          text = "${reaction.emojiCode} ${reaction.count}",
+          onClick = { msg.react(reaction.emojiCode) },
+          iac = fonts.body,
+          color = colors.text,
+          modifier = Modifier
+            .radius(36.dp)
+            .background(colors.bubble)
+            .border(
+              2.dp,
+              if (msg.currentReaction == reaction.emojiCode) colors.primary else Color.Transparent,
+              RoundedCornerShape(36.dp)
+            )
+            .padding(theme.bubblePadding)
+        )
+      }
     }
   }
 }
@@ -156,7 +158,8 @@ fun MessageTop(msg: Message) {
       text = msg.user.username,
       iac = fonts.username,
       color = ift(msg.user.isCurrent, colors.senderUsername, colors.username),
-      modifier = Modifier.requiredSizeIn(maxWidth = 120.dp)
+      modifier = Modifier.requiredSizeIn(maxWidth = 120.dp),
+      maxLines = 1
     )
     Text(text = msg.createdAt.timeAgo(), iac = fonts.timestamp, color = colors.timestamp)
   }

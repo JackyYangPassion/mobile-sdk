@@ -21,13 +21,10 @@ fun InAppChatContext(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
-  val rememberedTheme = remember { theme }.apply { theme.fromOtherTheme(theme) }
+  val rememberedTheme = remember { theme.with(darkTheme) }.apply { fromOtherTheme(theme) }
 
-  LaunchedEffect(key1 = darkTheme, block = {
-    theme.isDark = darkTheme
-  })
   CompositionLocalProvider(
-    IACTheme provides rememberedTheme,
+    IACTheme provides rememberedTheme.with(darkTheme),
   ) {
     content()
   }
