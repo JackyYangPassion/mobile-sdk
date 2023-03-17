@@ -159,16 +159,16 @@ fun genContactMessage() = Message(
   contact = genC()
 )
 
-fun genTextMessage(user: User = randomUser()) = Message(
+fun genTextMessage(user: User = randomUser(), room: String = genT().id) = Message(
   uuid(), Instant.now().minusSeconds(Random.nextLong(100000L)),
   user.id,
   null,
-  uuid(),
+  room,
 ).apply {
   updateText(faker.lorem().paragraph())
   reactions.addAll(
     random(
-      10,
+      4,
       { Reaction(faker.emoji().smiley(), Random.nextInt(1, 10), listOf()) })
   )
   currentReaction = reactions.firstOrNull()?.emojiCode
@@ -183,6 +183,11 @@ fun genLocationMessage() = Message(
   location = genL()
 )
 
+fun genRepliesMessage() = genTextMessage(room = genGroupRoom().id).apply {
+  replies.items.addAll(random(4, { genTextMessage(room = this.threadID) }))
+  replyCount = replies.items.size
+}
+
 fun genT(): Room {
   val u = ift(bool(), genU(), null)
   val g = u?.let { null } ?: genG()
@@ -193,6 +198,8 @@ fun genT(): Room {
   )
   return r
 }
+
+fun genGroupRoom() = Room(uuid(), null, genG())
 
 class SampleUser : PreviewParameterProvider<User> {
   override val values: Sequence<User> = (0..40).map {
