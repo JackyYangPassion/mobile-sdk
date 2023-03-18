@@ -7,6 +7,7 @@ package io.inappchat.sdk.ui.theme
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
 import io.inappchat.sdk.R
+import io.inappchat.sdk.state.Chats
 
 @Stable
 data class EmptyScreenConfig(@DrawableRes val image: Int? = null, val caption: String? = null)
@@ -31,4 +32,9 @@ data class Assets(
     "No channels around here yet. Make one"
   )
 ) {
+  fun list(list: Chats.List) = when (list) {
+    Chats.List.users -> emptyChat
+    Chats.List.groups -> emptyChannels
+    Chats.List.threads -> emptyThreads
+  }
 }
