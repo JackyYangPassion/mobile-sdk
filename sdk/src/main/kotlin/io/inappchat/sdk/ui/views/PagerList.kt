@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.state.Identifiable
 import io.inappchat.sdk.state.Pager
@@ -28,70 +29,79 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Identifiable> PagerList(
-    pager: Pager<T>,
-    prefix: List<T> = listOf(),
-    invert: Boolean = false,
-    header: @Composable Fn? = null,
-    content: @Composable LazyItemScope.(T) -> Unit,
-    footer: @Composable Fn? = null,
-    empty: @Composable () -> Unit = {},
-    divider: Boolean = false,
-    topInset: Float = 0f,
-    bottomInset: Float = 0f
+  pager: Pager<T>,
+  prefix: List<T> = listOf(),
+  invert: Boolean = false,
+  header: @Composable Fn? = null,
+  footer: @Composable Fn? = null,
+  empty: @Composable () -> Unit = {},
+  divider: Boolean = false,
+  topInset: Dp = 0.dp,
+  bottomInset: Dp = 0.dp,
+  content: @Composable LazyItemScope.(T) -> Unit
 ) {
-    val array = prefix + pager.items
-    val pullRefreshState = rememberPullRefreshState(pager.refreshing, { pager.refresh() })
+  val array = prefix + pager.items
+  val pullRefreshState = rememberPullRefreshState(pager.refreshing, { pager.refresh() })
+  LaunchedEffect(key1 = true, block =  {
+    pager.loadMoreIfEmpty()
+  })
 
 
-    if (array.isEmpty() && !pager.hasMore) {
-        Column(modifier = Modifier.pullRefresh(pullRefreshState)) {
-            Space(topInset)
-            PullRefreshIndicator(
-                pager.refreshing,
-                pullRefreshState,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            header?.invoke()
-            Spacer(modifier = Modifier.weight(1f))
-            Column(
-                modifier = Modifier.padding(16.dp, 0.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                empty()
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            footer?.invoke()
-            Space(bottomInset + 12.0f)
-        }
-    } else {
-        Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
-            val listState = rememberLazyListState()
-            val coroutineScope = rememberCoroutineScope()
-            LazyColumn(
-                Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(top = topInset.dp, bottom = bottomInset.dp),
-                state = listState,
-                reverseLayout = invert
-            ) {
-                header?.let { item { it() } }
-                items(array, key = { item -> item.id }) { item ->
-                    content(item)
-                    if (divider) Divider()
-                }
-            }
-            PullRefreshIndicator(
-                pager.refreshing,
-                pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-
-            InfiniteListHandler(listState = listState) {
-                pager.loadMore()
-            }
-
-            LaunchedEffect(key1 = pager.items.firstOrNull()?.id, block = {
-                coroutineScope.launch { listState.animateScrollToItem(0) }
-            })
-        }
+  if (array.isEmpty() && !pager.hasMore) {
+    Column(modifier = Modifier
+      .pullRefresh(pullRefreshState)
+      .padding(top = topInset, bottom = bottomInset)) {
+      Spacer(modifier = Modifier.height(topInset))
+      PullRefreshIndicator(
+        pager.refreshing,
+        pullRefreshState,
+        modifier = Modifier.align(Alignment.CenterHorizontally)
+      )
+      header?.invoke()
+      Spacer(modifier = Modifier.weight(1f))
+      Column(
+        modifier = Modifier.padding(16.dp, 0.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        empty()
+      }
+      Spacer(modifier = Modifier.weight(1f))
+      footer?.invoke()
+      Spacer(Modifier.height(bottomInset + 12.0.dp))
     }
+  } else {
+    Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+      val listState = rememberLazyListState()
+      val coroutineScope = rememberCoroutineScope()
+      LazyColumn(
+        Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(top = topInset, bottom = bottomInset),
+        state = listState,
+        reverseLayout = invert
+      ) {
+        header?.let { item { it() } }
+        items(array, key = { item -> item.id }) { item ->
+          Column {
+            Space()
+            content(item)
+            Space()
+            if (divider) Divider()
+          }
+        }
+      }
+      PullRefreshIndicator(
+        pager.refreshing,
+        pullRefreshState,
+        modifier = Modifier.align(Alignment.TopCenter)
+      )
+
+      InfiniteListHandler(listState = listState) {
+        pager.loadMore()
+      }
+
+      LaunchedEffect(key1 = pager.items.firstOrNull()?.id, block = {
+        coroutineScope.launch { listState.animateScrollToItem(0) }
+      })
+    }
+  }
 }

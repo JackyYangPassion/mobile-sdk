@@ -29,7 +29,7 @@ fun Modifier.circle(size: Dp, color: Color = Color.Transparent) =
 
 
 @Composable
-fun Center(modifier: Modifier = Modifier.clipToBounds(), content: @Composable BoxScope.() -> Unit) {
+fun Center(modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit) {
   Box(contentAlignment = Alignment.Center, modifier = modifier, content = content)
 }
 

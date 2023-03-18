@@ -5,9 +5,7 @@
 package io.inappchat.sdk.ui.views
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +28,7 @@ fun PrivacyPill(_private: Boolean = false) {
             RoundedCornerShape(8.dp)
         )
         .padding(6.dp, 1.dp)
+      .requiredWidth(IntrinsicSize.Max)
   ) {
     Text(
       (if (_private) "Private" else "Public").uppercase().annotated(),

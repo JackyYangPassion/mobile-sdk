@@ -4,18 +4,31 @@
 
 package io.inappchat.sdk.ui.theme
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
-import kotlin.reflect.jvm.internal.impl.resolve.scopes.MemberScope.Empty
+import io.inappchat.sdk.R
 
 @Stable
-data class EmptyScreenConfig(val image: Int? = null, val caption: String? = null)
+data class EmptyScreenConfig(@DrawableRes val image: Int? = null, val caption: String? = null)
 
 @Stable
 data class Assets(
-    val group: Int? = null,
-    val emptyChat: EmptyScreenConfig = EmptyScreenConfig(),
-    val emptyChannels: EmptyScreenConfig = EmptyScreenConfig(),
-    val emptyThreads: EmptyScreenConfig = EmptyScreenConfig(),
-    val emptyAllChannels: EmptyScreenConfig = EmptyScreenConfig()
+  @DrawableRes val group: Int? = null,
+  val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
+    R.drawable.empty_chats,
+    "Your friends are waiting for you"
+  ),
+  val emptyChannels: EmptyScreenConfig = EmptyScreenConfig(
+    R.drawable.empty_channels,
+    "No channels yet. Go join one"
+  ),
+  val emptyThreads: EmptyScreenConfig = EmptyScreenConfig(
+    R.drawable.empty_threads,
+    "You haven't added any threads yet"
+  ),
+  val emptyAllChannels: EmptyScreenConfig = EmptyScreenConfig(
+    R.drawable.empty_all_channels,
+    "No channels around here yet. Make one"
+  )
 ) {
 }

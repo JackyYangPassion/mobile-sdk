@@ -42,9 +42,9 @@ fun Header(
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
-        .fillMaxWidth()
-        .height(44.dp)
-        .padding(4.dp, 2.dp)
+      .fillMaxWidth()
+      .padding(start = 16.dp, end = 8.dp)
+      .height(HeaderHeight)
   ) {
     if (back != null)
       HeaderButton(
@@ -58,7 +58,11 @@ fun Header(
         )
       }
     icon?.invoke()
-    Text(text = title.annotated(), iac = IAC.fonts.title.copy(weight = FontWeight.Bold))
+    Text(
+      text = title.annotated(),
+      iac = IAC.fonts.title.copy(weight = FontWeight.Bold),
+      color = colors.text
+    )
     Spacer(modifier = Modifier.weight(1.0f))
     if (search != null) {
       HeaderButton(onClick = search) {
@@ -78,6 +82,7 @@ fun Header(
         Icon(
           painter = painterResource(id = R.drawable.plus),
           contentDescription = "Add",
+          tint = IAC.colors.text,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -88,7 +93,7 @@ fun Header(
         Icon(
           painter = painterResource(id = R.drawable.dots_three_vertical_fill),
           contentDescription = "Menu",
-          tint = MaterialTheme.colorScheme.onSurface,
+          tint = IAC.colors.text,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -99,7 +104,7 @@ fun Header(
         Icon(
           painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
           contentDescription = "Menu",
-          tint = MaterialTheme.colorScheme.onSurface,
+          tint = colors.text,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -114,14 +119,14 @@ fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn
   Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
-        .padding(0.dp)
-        .size(30.dp)
-        .background(
-            if (transparent) Color.Transparent else colors.softBackground,
-            CircleShape
-        )
-        .clickable(onClick = onClick)
-        .border(0.dp, Color.Transparent, CircleShape)
+      .padding(0.dp)
+      .size(30.dp)
+      .background(
+        if (transparent) Color.Transparent else colors.softBackground,
+        CircleShape
+      )
+      .clickable(onClick = onClick)
+      .border(0.dp, Color.Transparent, CircleShape)
   ) {
     icon()
   }
