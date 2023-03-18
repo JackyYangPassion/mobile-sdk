@@ -9,15 +9,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
+import kotlin.random.Random
 
 @Composable
 private fun Tab(
@@ -35,11 +36,14 @@ private fun Tab(
       verticalArrangement = Arrangement.spacedBy(2.dp),
       modifier = Modifier.width(IntrinsicSize.Max)
     ) {
-      Text(
-        tab.label,
-        fonts.title2.copy(weight = FontWeight.Bold),
-        color = if (selected) colors.primary else colors.caption,
-      )
+      Box(contentAlignment = Alignment.TopEnd) {
+        Text(
+          tab.label,
+          fonts.title2.copy(weight = FontWeight.Bold),
+          color = if (selected) colors.primary else colors.caption,
+        )
+        Badge(count = unreadCount, modifier = Modifier.offset(10.dp, -5.dp))
+      }
       if (selected) {
         Spacer(
           modifier = Modifier
@@ -47,15 +51,6 @@ private fun Tab(
             .height(4.dp)
             .fillMaxWidth()
         )
-      }
-      if (unreadCount > 0) {
-        Box(
-          modifier = Modifier
-            .width(0.dp)
-            .height(20.dp)
-        ) {
-          Badge(count = unreadCount)
-        }
       }
     }
     if (tab == Chats.List.threads) {
@@ -71,7 +66,7 @@ fun ChatTabs(list: Chats.List, onSelect: (Chats.List) -> Unit) {
       Tab(
         tab = tab,
         selected = list == tab,
-        unreadCount = Chats.current.count(tab),
+        unreadCount = Random.nextInt(25),
         modifier = Modifier.weight(1f),
         onPress = onSelect
       )

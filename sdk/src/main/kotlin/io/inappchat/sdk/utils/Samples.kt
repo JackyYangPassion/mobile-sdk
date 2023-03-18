@@ -199,7 +199,27 @@ fun genT(): Room {
   return r
 }
 
-fun genGroupRoom() = Room(uuid(), null, genG())
+fun genGroupRoom() =
+  Room(uuid(), null, genG()).apply {
+    items.addAll(random(10, { genTextMessage(room = id) }))
+    items.sortByDescending { it.createdAt }
+    latest = items.firstOrNull()
+    if (!items.isEmpty())
+      unreadCount = Random.nextInt(0, items.size)
+  }
+
+fun genUserRoom() =
+  Room(uuid(), genU(), null).apply {
+    items.addAll(
+      random(
+        10,
+        { genTextMessage(room = id, user = user!!) })
+    )
+    items.sortByDescending { it.createdAt }
+    latest = items.firstOrNull()
+    if (!items.isEmpty())
+      unreadCount = Random.nextInt(0, items.size)
+  }
 
 class SampleUser : PreviewParameterProvider<User> {
   override val values: Sequence<User> = (0..40).map {

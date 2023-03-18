@@ -34,7 +34,6 @@ fun ThreadRow(thread: Room, onClick: (Room) -> Unit) {
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
       .padding(16.dp, 12.dp)
-      .fillMaxWidth()
       .height(84.dp)
   ) {
     Box(
@@ -68,12 +67,17 @@ fun ThreadRow(thread: Room, onClick: (Room) -> Unit) {
         Text(
           text = thread.latest?.summary ?: "No messages yet",
           iac = fonts.body,
-          maxLines = 1,
-          color = if (thread.isUnread) colors.text else colors.caption
+          maxLines = 2,
+          color = if (thread.isUnread) colors.text else colors.caption,
+          modifier = Modifier.fillMaxWidth(0.7f)
         )
       }
     }
-    Space(18f)
+    Spacer(
+      modifier = Modifier
+        .weight(1f)
+        .defaultMinSize(minWidth = 18.dp)
+    )
     Column(horizontalAlignment = Alignment.End) {
       thread.latest?.let {
         Text(

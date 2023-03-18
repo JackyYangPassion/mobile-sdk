@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.state.Identifiable
 import io.inappchat.sdk.state.Pager
+import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.utils.Fn
 import kotlinx.coroutines.launch
 
@@ -50,8 +51,7 @@ fun <T : Identifiable> PagerList(
   if (array.isEmpty() && !pager.hasMore) {
     Column(modifier = Modifier
       .pullRefresh(pullRefreshState)
-      .padding(top = topInset, bottom = bottomInset)) {
-      Spacer(modifier = Modifier.height(topInset))
+      .padding(top = topInset, bottom = bottomInset + 12.dp)) {
       PullRefreshIndicator(
         pager.refreshing,
         pullRefreshState,
@@ -67,7 +67,6 @@ fun <T : Identifiable> PagerList(
       }
       Spacer(modifier = Modifier.weight(1f))
       footer?.invoke()
-      Spacer(Modifier.height(bottomInset + 12.0.dp))
     }
   } else {
     Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
@@ -81,11 +80,9 @@ fun <T : Identifiable> PagerList(
       ) {
         header?.let { item { it() } }
         items(array, key = { item -> item.id }) { item ->
-          Column {
-            Space()
+          Column(Modifier.padding(0.dp)) {
             content(item)
-            Space()
-            if (divider) Divider()
+            if (divider) Divider(color = colors.caption)
           }
         }
       }

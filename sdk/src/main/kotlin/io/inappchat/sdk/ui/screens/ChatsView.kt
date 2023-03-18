@@ -4,16 +4,97 @@
 
 package io.inappchat.sdk.ui.screens
 
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.*
+import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Room
+import io.inappchat.sdk.state.User
+import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.ui.InAppChatContext
+import io.inappchat.sdk.ui.views.*
+import io.inappchat.sdk.utils.*
 
 @Composable
 fun ChatsView(
-    openChat: (Room) -> Unit,
-    openReplies: (Message) -> Unit,
-    openChannels: () -> Unit,
-    openContacts: () -> Unit
+  scrollToTop: Int = 0,
+  openChat: (Room) -> Unit,
+  openReplies: (Message) -> Unit,
+  openChannels: () -> Unit,
+  openContacts: () -> Unit,
+  openSearch: () -> Unit,
+  openCompose: () -> Unit,
+  openProfile: (User) -> Unit
 ) {
-    TODO("Not yet implemented")
+  var list by remember {
+    mutableStateOf(Chats.List.users)
+  }
+
+  val cta = when (list) {
+    Chats.List.users -> CTA(icon = null, text = "Explore Channels", to = openChannels)
+    else -> CTA(io.inappchat.sdk.R.drawable.paper_plane_tilt_fill, "Send a Message", openContacts)
+  }
+  val header = @Composable {
+    Column {
+      Header(title = "Messages", compose = openCompose, search = openSearch)
+      ChatTabs(list = list, onSelect = { list = it })
+    }
+  }
+  val empty = @Composable {
+    EmptyListView(config = theme.assets.list(list), cta = cta)
+  }
+  val listState = rememberLazyListState()
+  LaunchedEffect(key1 = scrollToTop, block = {
+    listState.animateScrollToItem(0)
+  })
+  if (list == Chats.List.threads) {
+    PagerList(pager = Chats.current.messages, header = header, empty = empty, divider = true) {
+      RepliesView(message = it, onPress = openReplies, onPressUser = openProfile)
+    }
+  } else {
+    val pager = if (list == Chats.List.users) Chats.current.users else Chats.current.groups
+    PagerList(pager = pager, header = header, empty = empty, divider = true) {
+      ThreadRow(thread = it, onClick = openChat)
+    }
+  }
 }
+
+@IPreviews
+@Composable
+fun EmptyUserChatsViewPreview() {
+  Chats.current.users.hasMore = false
+  Chats.current.groups.hasMore = false
+  Chats.current.messages.hasMore = false
+  InAppChatContext {
+    ChatsView(
+      openChat = {},
+      openReplies = {},
+      openChannels = { /*TODO*/ },
+      openContacts = { /*TODO*/ },
+      openSearch = { /*TODO*/ },
+      openCompose = { /*TODO*/ },
+      openProfile = {}
+    )
+  }
+}
+
+@IPreviews
+@Composable
+fun ChatsViewPreview() {
+  Chats.current.users.items.addAll(random(10, {genUserRoom()}))
+  Chats.current.groups.items.addAll(random(10, { genGroupRoom() }))
+  Chats.current.messages.items.addAll(random(10, { genRepliesMessage() }))
+  InAppChatContext {
+    ChatsView(
+      openChat = {},
+      openReplies = {},
+      openChannels = { /*TODO*/ },
+      openContacts = { /*TODO*/ },
+      openSearch = { /*TODO*/ },
+      openCompose = { /*TODO*/ },
+      openProfile = {}
+    )
+  }
+}
+
