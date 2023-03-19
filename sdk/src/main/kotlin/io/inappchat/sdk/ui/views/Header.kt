@@ -43,6 +43,7 @@ fun Header(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
       .fillMaxWidth()
+      .background(colors.softBackground)
       .padding(start = 16.dp, end = 8.dp)
       .height(HeaderHeight)
   ) {
@@ -54,7 +55,8 @@ fun Header(
         Icon(
           painterResource(id = R.drawable.caret_left),
           contentDescription = "back",
-          modifier = Modifier.fillMaxSize(1.0f)
+          modifier = Modifier.fillMaxSize(1.0f),
+          tint = colors.text,
         )
       }
     icon?.invoke()

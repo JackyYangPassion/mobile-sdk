@@ -4,40 +4,271 @@
 
 package io.inappchat.sdk.ui.screens
 
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import io.inappchat.sdk.API
+import io.inappchat.sdk.R
+import io.inappchat.sdk.actions.update
 import io.inappchat.sdk.state.Group
+import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.IAC.fonts
+import io.inappchat.sdk.ui.InAppChatContext
+import io.inappchat.sdk.ui.views.*
+import io.inappchat.sdk.utils.IPreviews
+import io.inappchat.sdk.utils.op
 import java.io.File
 
 @Stable
-data class CreateGroupState(val id: String = "") {
-    var file by mutableStateOf<File?>(null)
-    var image: String? = null
-    var name by mutableStateOf<String>("")
-    var description by mutableStateOf<String?>(null)
-    var _private by mutableStateOf(false)
+data class CreateGroupState(val group: Group? = null) {
+  var file by mutableStateOf<File?>(null)
+  var image: String? = group?.avatar
+  var name by mutableStateOf<String>(group?.name ?: "")
+  var description by mutableStateOf<String?>(group?.description ?: "")
+  var _private by mutableStateOf(group?._private ?: false)
 
-    constructor(group: Group) : this(group.id) {
-        this.name = group.name
-        this.description = group.description
-        this._private = group._private
-        this.image = group.avatar
-    }
+  init {
+    current = this
+  }
 
-    companion object {
-        var current: CreateGroupState? = null
+  val executing: Boolean get() = executing || group?.updating ?: false
+  var creating by mutableStateOf(false)
+  fun exec(openInvite: (Group) -> Unit, back: () -> Unit) {
+    if (executing) return
+    if (group != null) {
+      group.update(name, description, file, _private) {
+        back()
+      }
+    } else {
+      op({
+        creating = true
+        val group =
+          API.createGroup(name, description = description, _private = _private, profilePic = file)
+        creating = false
+        openInvite(group)
+      }) {
+        creating = false
+      }
+
     }
+  }
+
+  companion object {
+    var current by mutableStateOf<CreateGroupState?>(null)
+  }
 }
 
 @Composable
-fun CreateGroup(group: Group?, openChat: (Group) -> Unit, _back: () -> Unit) {
-    val back = {
-        CreateGroupState.current = null
-        _back()
+fun CreateGroup(group: Group?, openInvite: (Group) -> Unit, _back: () -> Unit) {
+  val back = {
+    CreateGroupState.current = null
+    _back()
+  }
+  val state = CreateGroupState.current ?: CreateGroupState(group)
+  val nameFocus = remember { FocusRequester() }
+  val descriptionFocus = remember { FocusRequester() }
+  val scrollState = rememberScrollState()
+  var canSubmit =
+    state.name.length >= 3 && state.name.length <= 25 && (state.description?.length ?: 0) <= 100
+  Column(modifier = Modifier.fillMaxHeight()) {
+    Header(title = "Create Channel", back = back)
+    Column(
+      modifier = Modifier
+        .padding(16.dp, 0.dp)
+        .verticalScroll(scrollState)
+    ) {
+      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+          modifier = Modifier
+            .clickable { }
+            .padding(vertical = 12.dp),
+          contentAlignment = Alignment.Center
+        ) {
+          state.image?.let {
+            AsyncImage(
+              model = it,
+              contentDescription = "group avatar",
+              modifier = Modifier.circle(116.dp, colors.softBackground)
+            )
+          } ?: Image(
+            painter = painterResource(id = io.inappchat.sdk.R.drawable.plus_circle_fill),
+            contentDescription = "Add group image",
+            colorFilter = ColorFilter.tint(colors.softBackground),
+            modifier = Modifier.size(95.dp)
+          )
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+          Column {
+            Row(
+              horizontalArrangement = Arrangement.SpaceBetween,
+              modifier = Modifier
+                .padding(8.dp, 0.dp)
+            ) {
+              Text(text = "Channel Name", iac = fonts.headline, color = colors.text)
+              Text(
+                text = "${state.name.length}/25", iac = fonts.headline, color = colors.caption
+              )
+            }
+            Space()
+            TextInput(
+              text = state.name,
+              placeholder = "Showcase what your channel is all about",
+              onChange = { state.name = it.slice(0..25) },
+              modifier = Modifier
+                .border(1.dp, colors.border, CircleShape)
+                .clickable { nameFocus.requestFocus() },
+              focusRequester = nameFocus
+            )
+          }
+          Column {
+            Row(
+              horizontalArrangement = Arrangement.SpaceBetween,
+              modifier = Modifier
+                .padding(8.dp, 0.dp)
+            ) {
+              Text(
+                text = "Channel Description (Optional)",
+                iac = fonts.headline,
+                color = colors.text
+              )
+              Text(
+                text = "${state.description?.length ?: "0"}/100",
+                iac = fonts.headline,
+                color = colors.caption
+              )
+            }
+            Space()
+            TextInput(
+              text = state.description ?: "",
+              placeholder = "Showcase what your channel is all about",
+              onChange = { state.description = it.slice(0..100) },
+              modifier = Modifier
+                .border(1.dp, colors.border, RoundedCornerShape(22.dp))
+                .clickable { descriptionFocus.requestFocus() },
+              focusRequester = descriptionFocus,
+              minLines = 4
+            )
+          }
+          Column {
+            Text(
+              text = "Privacy Settings",
+              iac = fonts.headline,
+              color = colors.text,
+              modifier = Modifier.padding(start = 8.dp)
+            )
+            Space()
+            Row(
+              modifier = Modifier
+                .height(50.dp)
+                .fillMaxWidth()
+                .background(colors.softBackground, RoundedCornerShape(25.dp))
+                .border(1.dp, colors.border, RoundedCornerShape(25.dp))
+            ) {
+              Box(
+                modifier = Modifier
+                  .height(50.dp)
+                  .weight(1f)
+                  .background(
+                    if (state._private) Color.Transparent else colors.primary,
+                    RoundedCornerShape(25.dp)
+                  ),
+                contentAlignment = Alignment.Center
+              ) {
+                Text(
+                  text = "Public",
+                  iac = fonts.title3,
+                  color = if (!state._private) colors.text else colors.background
+                )
+              }
+              Box(
+                modifier = Modifier
+                  .height(50.dp)
+                  .weight(1f)
+                  .background(
+                    if (!state._private) Color.Transparent else colors.primary,
+                    RoundedCornerShape(25.dp)
+                  ),
+                contentAlignment = Alignment.Center
+              ) {
+                Text(
+                  text = "Private",
+                  iac = fonts.title3,
+                  color = if (state._private) colors.text else colors.background
+                )
+              }
+            }
+            Space(12f)
+            Text(
+              text = if (state._private) "Private channels will not be seen by anyone unless they are\n" +
+                  "invited to join the channel." else "Public channels will be viewed by all and available for everyone to join.",
+              iac = fonts.caption,
+              color = colors.text
+            )
+          }
+          Spacer(modifier = Modifier.weight(1f, true))
+          if (state.group != null) {
+            Box(
+              modifier = Modifier
+                .clickable { }
+                .height(50.dp)
+                .background(
+                  if (canSubmit) colors.primary else colors.softBackground,
+                  RoundedCornerShape(25.dp)
+                ),
+              contentAlignment = Alignment.Center
+            ) {
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                if (state.group?.updating == true) {
+                  Spinner()
+                }
+                Text(text = "Save", iac = fonts.headline, color = colors.text)
+              }
+            }
+          } else {
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalArrangement = Arrangement.End
+            ) {
+              IconButton(
+                onClick = {
+                  state.exec(openInvite, back)
+                },
+                modifier = Modifier.circle(
+                  50.dp,
+                  if (canSubmit) colors.primary else colors.softBackground
+                )
+              ) {
+                Icon(
+                  painter = painterResource(id = R.drawable.caret_left),
+                  contentDescription = "Create group",
+                  tint = colors.text,
+                  modifier = Modifier.size(20.dp)
+                )
+              }
+            }
+          }
+        }
+      }
     }
-    val state = remember {
-        val s = group?.let { CreateGroupState(it) } ?: CreateGroupState()
-        CreateGroupState.current = null
-        s
-    }
+  }
+}
 
+@IPreviews
+@Composable
+fun CreateGroupPreview() {
+  InAppChatContext {
+    CreateGroup(group = null, openInvite = {}, _back = {})
+  }
 }
