@@ -4,16 +4,27 @@
 
 package io.inappchat.sdk.ui.views
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
+import io.inappchat.sdk.InAppChatActivity
 import io.inappchat.sdk.R
+import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Room
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.genGroupRoom
+import io.inappchat.sdk.utils.uuid
 import kotlinx.coroutines.launch
+
 
 enum class Media {
   pickPhoto,
@@ -92,6 +103,60 @@ fun MediaActionSheetPreview() {
       Button(onClick = { open = true }) {
         Text(text = "Open Sheet", iac = IAC.fonts.headline)
       }
+    }
+  }
+}
+
+@Composable
+fun AssetPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
+  val launcher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.PickVisualMedia(),
+    onResult = {
+      Log.v("IAC", "Got image Uri $it")
+      it?.let(onUri) ?: onCancel()
+    })
+  LaunchedEffect(key1 = true, block = {
+    launcher.launch(PickVisualMediaRequest(if (video) ActivityResultContracts.PickVisualMedia.VideoOnly else ActivityResultContracts.PickVisualMedia.ImageOnly))
+  })
+}
+
+@Composable
+fun CameraPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
+  val uri = LocalContext.current.cacheDir.resolve(uuid()).toUri()
+  val launcher = rememberLauncherForActivityResult(
+    contract = if (video) ActivityResultContracts.CaptureVideo() else ActivityResultContracts.TakePicture(),
+    onResult = {
+      if (it) {
+        onUri(uri)
+      } else {
+        onCancel()
+      }
+    })
+  LaunchedEffect(key1 = true, block = {
+    launcher.launch(uri)
+  })
+}
+
+@Composable
+fun ContactPicker(onUri: (Uri) -> Unit, onCancel: () -> Unit) {
+  val launcher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.PickContact(),
+    onResult = {
+      it?.let(onUri) ?: onCancel
+    }
+  )
+  LaunchedEffect(key1 = true, block = { launcher.launch(null) })
+}
+
+@Composable
+fun GifPicker(onUri: (Uri) -> Unit, onCancel: () -> Unit) {
+  DisposableEffect(true) {
+    Chats.current.nextGif = {
+      onUri(it.toUri())
+    }
+    InAppChatActivity.activity.get()?.giphy()
+    onDispose {
+      Chats.current.nextGif = null
     }
   }
 }

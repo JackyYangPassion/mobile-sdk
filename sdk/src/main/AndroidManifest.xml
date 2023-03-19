@@ -20,6 +20,7 @@
 
         <activity
             android:name="io.inappchat.sdk.InAppChatActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:configChanges="screenLayout|orientation|screenSize" />
     </application>
 </manifest>

@@ -117,7 +117,8 @@ dependencies {
 
     implementation 'com.giphy.sdk:ui:2.3.1'
 
-    implementation 'com.zhihu.android:matisse:$latest_version'
+//    implementation 'com.zhihu.android:matisse:$latest_version'
+    implementation 'com.kbeanie:multipicker:1.6.2@aar'
 
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation("io.coil-kt:coil-gif:2.2.2")

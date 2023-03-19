@@ -100,6 +100,9 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
         0
     }
 
+  var nextGif: ((String) -> Unit)? = null
+
+
   @Stable
   companion object {
     var current = Chats()

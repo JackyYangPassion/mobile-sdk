@@ -4,35 +4,19 @@
 
 package io.inappchat.app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import io.inappchat.sdk.ui.InAppChatUI
-import io.inappchat.sdk.utils.IPreviews
+import io.inappchat.sdk.InAppChatActivity
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContent {
-      MaterialTheme {
-        InAppChatUI()
-      }
-    }
-  }
-}
-
-@Composable
-fun Greeting(name: String) {
-  Text(text = "Hello $name!")
-}
-
-@IPreviews
-@Composable
-fun DefaultPreview() {
-  MaterialTheme {
-    InAppChatUI()
+    startActivity(Intent(this, InAppChatActivity::class.java))
+//    setContent {
+//      MaterialTheme {
+//        InAppChatUI()
+//      }
+//    }
   }
 }
