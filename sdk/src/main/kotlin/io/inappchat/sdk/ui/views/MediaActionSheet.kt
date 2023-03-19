@@ -4,6 +4,9 @@
 
 package io.inappchat.sdk.ui.views
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.location.Location
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,8 +16,13 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
+import com.google.accompanist.permissions.*
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import io.inappchat.sdk.InAppChatActivity
 import io.inappchat.sdk.R
+import io.inappchat.sdk.extensions.contains
 import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Room
@@ -24,6 +32,7 @@ import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.genGroupRoom
 import io.inappchat.sdk.utils.uuid
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 enum class Media {
@@ -159,4 +168,36 @@ fun GifPicker(onUri: (Uri) -> Unit, onCancel: () -> Unit) {
       Chats.current.nextGif = null
     }
   }
+}
+
+@SuppressLint("MissingPermission")
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun LocationPicker(onLocation: (Location) -> Unit, onCancel: () -> Unit) {
+  // Camera permission state
+  val state = rememberMultiplePermissionsState(
+    listOf(
+      android.Manifest.permission.ACCESS_FINE_LOCATION,
+      android.Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+  )
+  val have = state.allPermissionsGranted || state.permissions.contains { it.status.isGranted }
+  val activity = LocalContext.current as Activity
+  LaunchedEffect(key1 = have, block = {
+    if (have) {
+      val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+      val cancellationToken = CancellationTokenSource()
+      val loc = fusedLocationClient.getCurrentLocation(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        cancellationToken.token
+      ).await()
+      if (loc != null) {
+        onLocation(loc)
+      } else {
+        onCancel()
+      }
+    } else {
+      state.launchMultiplePermissionRequest()
+    }
+  })
 }
