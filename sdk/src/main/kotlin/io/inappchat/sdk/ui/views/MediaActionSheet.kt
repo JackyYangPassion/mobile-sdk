@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.LocationServices
@@ -22,15 +23,13 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import io.inappchat.sdk.InAppChatActivity
 import io.inappchat.sdk.R
+import io.inappchat.sdk.actions.send
 import io.inappchat.sdk.extensions.contains
-import io.inappchat.sdk.state.Chats
-import io.inappchat.sdk.state.Message
-import io.inappchat.sdk.state.Room
+import io.inappchat.sdk.models.Contact
+import io.inappchat.sdk.state.*
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.InAppChatContext
-import io.inappchat.sdk.utils.IPreviews
-import io.inappchat.sdk.utils.genGroupRoom
-import io.inappchat.sdk.utils.uuid
+import io.inappchat.sdk.utils.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -66,7 +65,52 @@ fun MediaActionSheet(
       state.hide()
     }
   })
-  val hide = { scope.launch { state.hide() } }
+  val hide = {
+    media = null
+    scope.launch { state.hide() }
+  }
+
+  when (media) {
+    Media.pickPhoto, Media.pickVideo -> AssetPicker(video = media == Media.pickVideo, onUri = {
+      room.send(
+        inReplyTo?.id,
+        attachment = Attachment(
+          it.toFile().absolutePath,
+          if (media == Media.pickVideo) AttachmentKind.video else AttachmentKind.image
+        )
+      )
+      hide()
+    }) { hide() }
+    Media.recordPhoto, Media.recordVideo -> CameraPicker(
+      video = media == Media.recordVideo,
+      onUri = {
+        room.send(
+          inReplyTo?.id,
+          attachment = Attachment(
+            it.toFile().absolutePath,
+            if (media == Media.recordVideo) AttachmentKind.video else AttachmentKind.image
+          )
+        )
+        hide()
+      }) { hide() }
+    Media.gif -> GifPicker(onUri = {
+      room.send(inReplyTo?.id, gif = it.toString())
+      hide()
+    }) { hide() }
+    Media.contact -> ContactPicker(onContact = {
+      room.send(inReplyTo?.id, contact = it)
+      hide()
+    }) {
+      hide()
+    }
+    Media.location -> LocationPicker(onLocation = {
+      room.send(inReplyTo?.id, location = it.toLocation())
+      hide()
+    }) {
+      hide()
+    }
+    else -> Log.d("IAC", "empty media")
+  }
 
   ModalBottomSheetLayout(
     sheetState = state,
@@ -147,11 +191,11 @@ fun CameraPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
 }
 
 @Composable
-fun ContactPicker(onUri: (Uri) -> Unit, onCancel: () -> Unit) {
+fun ContactPicker(onContact: (Contact) -> Unit, onCancel: () -> Unit) {
   val launcher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.PickContact(),
     onResult = {
-      it?.let(onUri) ?: onCancel
+      it?.let({ contactUriToContact(it) })?.let(onContact) ?: onCancel()
     }
   )
   LaunchedEffect(key1 = true, block = { launcher.launch(null) })
