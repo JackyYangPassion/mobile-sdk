@@ -127,7 +127,10 @@ fun InAppChatUI(theme: Theme = Theme()) {
       }
       composable("favorites") {
         FavoritesView(
-          back = back
+          back = back,
+          openReplies = openReplies,
+          openProfile = openProfile,
+          scrollToTop = 0
         )
       }
       composable("settings/notifications") {

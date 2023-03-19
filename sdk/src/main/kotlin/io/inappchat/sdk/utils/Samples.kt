@@ -130,7 +130,7 @@ fun genM(
     location = ift(bool(), genL(), null),
     contact = ift(bool(), genC(), null)
   )
-  m.text = faker.lorem().word()
+  m.updateText(faker.lorem().paragraph())
   if (parent == null && chance(1, 5)) {
     m.replies.items.addAll((0 until Random.nextInt(10)).map { genM(m.threadID, m.id) })
   }
