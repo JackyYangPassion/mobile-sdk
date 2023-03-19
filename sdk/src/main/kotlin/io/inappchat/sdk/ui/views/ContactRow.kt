@@ -5,7 +5,6 @@
 package io.inappchat.sdk.ui.views
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,47 +29,47 @@ import io.inappchat.sdk.utils.ift
 @IPreviews
 @Composable
 fun ContactRow(
-    @PreviewParameter(SampleUser::class) user: User,
-    modifier: Modifier = Modifier.clickable { }
+  @PreviewParameter(SampleUser::class) user: User,
+  modifier: Modifier = Modifier
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(
-                start = 16.dp, top = 12.dp, bottom = 12.dp
-            )
-            .height(84.dp)
-            .fillMaxWidth()
-    ) {
-        Avatar(url = user.avatar, size = 60.0)
-        Space(8f)
-        Column {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = user.usernameFb.annotated(),
-                    iac = fonts.title3,
-                    maxLines = 1,
-                    color = colors.text
-                )
-                if (user.haveContact) {
-                    Image(
-                        painter = painterResource(id = R.drawable.address_book_fill),
-                        contentDescription = "contact",
-                        modifier = Modifier.size(18),
-                        colorFilter = ColorFilter.tint(Color(0x488AC7))
-                    )
-                }
-            }
-            Text(
-                text = user.status.value.capitalize(Locale.current).annotated(),
-                iac = fonts.body,
-                color = ift(
-                    user.status == AvailabilityStatus.online,
-                    colors.primary,
-                    colors.caption
-                )
-            )
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = modifier
+        .padding(
+            start = 16.dp, top = 12.dp, bottom = 12.dp
+        )
+        .height(84.dp)
+        .fillMaxWidth()
+  ) {
+    Avatar(url = user.avatar, size = 60.0)
+    Space(8f)
+    Column {
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+          text = user.usernameFb.annotated(),
+          iac = fonts.title3,
+          maxLines = 1,
+          color = colors.text
+        )
+        if (user.haveContact) {
+          Image(
+            painter = painterResource(id = R.drawable.address_book_fill),
+            contentDescription = "contact",
+            modifier = Modifier.size(18),
+            colorFilter = ColorFilter.tint(Color(0x488AC7))
+          )
         }
-        Spacer(modifier = Modifier.weight(1f))
+      }
+      Text(
+        text = user.status.value.capitalize(Locale.current).annotated(),
+        iac = fonts.body,
+        color = ift(
+          user.status == AvailabilityStatus.online,
+          colors.primary,
+          colors.caption
+        )
+      )
     }
+    Spacer(modifier = Modifier.weight(1f))
+  }
 }

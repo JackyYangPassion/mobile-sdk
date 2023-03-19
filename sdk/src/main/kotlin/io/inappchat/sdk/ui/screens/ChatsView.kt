@@ -5,7 +5,6 @@
 package io.inappchat.sdk.ui.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Message
@@ -44,17 +43,25 @@ fun ChatsView(
   val empty = @Composable {
     EmptyListView(config = theme.assets.list(list), cta = cta)
   }
-  val listState = rememberLazyListState()
-  LaunchedEffect(key1 = scrollToTop, block = {
-    listState.animateScrollToItem(0)
-  })
   if (list == Chats.List.threads) {
-    PagerList(pager = Chats.current.messages, header = header, empty = empty, divider = true) {
+    PagerList(
+      pager = Chats.current.messages,
+      header = header,
+      scrollToTop = scrollToTop.toString(),
+      empty = empty,
+      divider = true
+    ) {
       RepliesView(message = it, onPress = openReplies, onPressUser = openProfile)
     }
   } else {
     val pager = if (list == Chats.List.users) Chats.current.users else Chats.current.groups
-    PagerList(pager = pager, header = header, empty = empty, divider = true) {
+    PagerList(
+      pager = pager,
+      header = header,
+      empty = empty,
+      scrollToTop = scrollToTop.toString(),
+      divider = true
+    ) {
       ThreadRow(thread = it, onClick = openChat)
     }
   }
@@ -82,7 +89,7 @@ fun EmptyUserChatsViewPreview() {
 @IPreviews
 @Composable
 fun ChatsViewPreview() {
-  Chats.current.users.items.addAll(random(10, {genUserRoom()}))
+  Chats.current.users.items.addAll(random(10, { genUserRoom() }))
   Chats.current.groups.items.addAll(random(10, { genGroupRoom() }))
   Chats.current.messages.items.addAll(random(10, { genRepliesMessage() }))
   InAppChatContext {

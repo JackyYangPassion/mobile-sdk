@@ -39,19 +39,22 @@ fun <T : Identifiable> PagerList(
   divider: Boolean = false,
   topInset: Dp = 0.dp,
   bottomInset: Dp = 0.dp,
+  scrollToTop: String?,
   content: @Composable LazyItemScope.(T) -> Unit
 ) {
   val array = prefix + pager.items
   val pullRefreshState = rememberPullRefreshState(pager.refreshing, { pager.refresh() })
-  LaunchedEffect(key1 = true, block =  {
+  LaunchedEffect(key1 = true, block = {
     pager.loadMoreIfEmpty()
   })
 
 
   if (array.isEmpty() && !pager.hasMore) {
-    Column(modifier = Modifier
-      .pullRefresh(pullRefreshState)
-      .padding(top = topInset, bottom = bottomInset + 12.dp)) {
+    Column(
+      modifier = Modifier
+        .pullRefresh(pullRefreshState)
+        .padding(top = topInset, bottom = bottomInset + 12.dp)
+    ) {
       PullRefreshIndicator(
         pager.refreshing,
         pullRefreshState,
@@ -96,7 +99,7 @@ fun <T : Identifiable> PagerList(
         pager.loadMore()
       }
 
-      LaunchedEffect(key1 = pager.items.firstOrNull()?.id, block = {
+      LaunchedEffect(key1 = scrollToTop, block = {
         coroutineScope.launch { listState.animateScrollToItem(0) }
       })
     }
