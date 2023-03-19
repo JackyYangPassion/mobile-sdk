@@ -45,9 +45,8 @@ fun Room.send(
   }) {
     m.failed = true
   }
-
-
 }
+  
 
 fun Room.setNotifications(settings: NotificationSettings.AllowFrom, isSync: Boolean) {
   val og = this.notification

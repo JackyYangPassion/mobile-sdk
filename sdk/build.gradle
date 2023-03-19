@@ -117,7 +117,7 @@ dependencies {
 
     implementation 'com.giphy.sdk:ui:2.3.1'
 
-    implementation("com.himanshoe:pluck:1.0.0-RC2")
+    implementation 'com.zhihu.android:matisse:$latest_version'
 
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation("io.coil-kt:coil-gif:2.2.2")

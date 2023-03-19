@@ -13,16 +13,6 @@ import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Room
 import io.inappchat.sdk.state.User
 
-enum class Media {
-  pickPhoto,
-  pickVideo,
-  recordPhoto,
-  recordVideo,
-  gif,
-  file,
-  contact
-}
-
 @Composable
 fun ChatRoom(
   room: Room,
@@ -32,7 +22,6 @@ fun ChatRoom(
   back: () -> Unit
 ) {
   var focusRequester = remember { FocusRequester() }
-  var selectMedia = remember { mutableStateOf<Media?>(null) }
   var media = remember { mutableStateOf(false) }
   var menu = remember { mutableStateOf(false) }
   var messageForAction = remember {
