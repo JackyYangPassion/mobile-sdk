@@ -110,26 +110,6 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
           } // Link Clicked
         }
       }
-//      MarkdownText(
-//        markdown = ct,
-//        color = ift(message.user.isCurrent, colors.senderText, colors.bubbleText),
-//        annotationStyle = MarkdownTextDefaults.style.copy(
-//          linkStyle = MarkdownTextDefaults.linkStyle.copy(
-//            color = colors.primary
-//          )
-//        ),
-//        flavour = MarkdownFlavour.Github
-//      )
-//      Markdown(
-//        content = ct,
-//        colors = MarkdownDefaults.markdownColors(textColor = colors.bubbleText, colorByType = {
-//          when (it) {
-//            MarkdownElementTypes.AUTOLINK, MarkdownElementTypes.LINK_TEXT, MarkdownElementTypes.LINK_LABEL, MarkdownElementTypes.LINK_TEXT, MarkdownElementTypes.INLINE_LINK -> clrs.primary
-//            else -> if(message.user.isCurrent) clrs.senderText else  clrs.bubbleText
-//          }
-//        }),
-//        typography = MarkdownDefaults.markdownTypography(body1 = TextStyle(fontSize =  fnts.body.size, fontWeight = fnts.body.weight, fontFamily = fnts.body.family), body2 = TextStyle(fontFamily = fnts.body.family, fontWeight = fnts.body.weight, fontSize = fnts.body.size))
-//      )
     }
   }
 }

@@ -4,14 +4,10 @@
 
 package io.inappchat.sdk.ui.views
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.actions.react
 import io.inappchat.sdk.actions.toggleFavorite
 import io.inappchat.sdk.state.Message
@@ -21,19 +17,18 @@ import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.annotated
 import io.inappchat.sdk.utils.genTextMessage
-import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun MessageActionSheet(
   message: Message?,
   onReply: (Message) -> Unit,
+  hide: () -> Unit,
   content: @Composable () -> Unit
 ) {
   val state = rememberModalBottomSheetState(
     ModalBottomSheetValue.Hidden, skipHalfExpanded = true
   )
-  val scope = rememberCoroutineScope()
   LaunchedEffect(key1 = message, block = {
     if (message != null) {
       state.show()
@@ -41,7 +36,6 @@ fun MessageActionSheet(
       state.hide()
     }
   })
-  val hide = { scope.launch { state.hide() } }
   val annotatedString = (message?.text ?: "").annotated()
   val clipboardManager = LocalClipboardManager.current
   val copy = {
@@ -97,7 +91,7 @@ fun MessageActionSheetPreview() {
     var message by remember {
       mutableStateOf<Message?>(genTextMessage())
     }
-    MessageActionSheet(message = message, onReply = {}) {
+    MessageActionSheet(message = message, hide = {}, onReply = {}) {
       Button(onClick = { message = genTextMessage() }) {
         Text(text = "Open Sheet", iac = fonts.headline)
       }

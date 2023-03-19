@@ -30,7 +30,6 @@ import io.inappchat.sdk.state.*
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.*
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
@@ -51,13 +50,13 @@ fun MediaActionSheet(
   open: Boolean,
   room: Room,
   inReplyTo: Message?,
+  dismiss: () -> Unit,
   content: @Composable () -> Unit
 ) {
   val state = rememberModalBottomSheetState(
     ModalBottomSheetValue.Hidden, skipHalfExpanded = true
   )
   var media by remember { mutableStateOf<Media?>(null) }
-  val scope = rememberCoroutineScope()
   LaunchedEffect(key1 = open, block = {
     if (open) {
       state.show()
@@ -67,7 +66,7 @@ fun MediaActionSheet(
   })
   val hide = {
     media = null
-    scope.launch { state.hide() }
+    dismiss()
   }
 
   when (media) {
@@ -152,7 +151,7 @@ fun MediaActionSheetPreview() {
     var open by remember {
       mutableStateOf(false)
     }
-    MediaActionSheet(true, genGroupRoom(), inReplyTo = null) {
+    MediaActionSheet(true, genGroupRoom(), dismiss = { open = false }, inReplyTo = null) {
       Button(onClick = { open = true }) {
         Text(text = "Open Sheet", iac = IAC.fonts.headline)
       }

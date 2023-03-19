@@ -12,6 +12,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -30,6 +32,7 @@ import io.inappchat.sdk.utils.genT
 fun MessageInput(
   room: Room,
   replyingTo: Message? = null,
+  focusRequester: FocusRequester,
   onMedia: Fn
 ) {
   var text by remember {
@@ -40,10 +43,10 @@ fun MessageInput(
     Row {
       Row(
         modifier = Modifier
-            .weight(1f)
-            .defaultMinSize(minHeight = 44.dp)
-            .background(colors.softBackground, RoundedCornerShape(22.dp))
-            .padding(12.dp)
+          .weight(1f)
+          .defaultMinSize(minHeight = 44.dp)
+          .background(colors.softBackground, RoundedCornerShape(22.dp))
+          .padding(12.dp)
       ) {
         Box(modifier = Modifier.weight(1f)) {
           BasicTextField(
@@ -55,7 +58,8 @@ fun MessageInput(
               fontSize = fonts.body.size,
               fontWeight = fonts.body.weight
             ),
-            maxLines = 4
+            maxLines = 4,
+            modifier = Modifier.focusRequester(focusRequester)
           )
           if (text.isBlank()) {
             Text(text = "Send a chat", iac = fonts.body, color = colors.caption)

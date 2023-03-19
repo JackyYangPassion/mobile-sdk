@@ -13,8 +13,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Divider
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -24,8 +28,10 @@ import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.state.Group
 import io.inappchat.sdk.state.User
+import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
+import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.genG
 
@@ -63,53 +69,83 @@ fun GroupDrawerHeader(group: Group) {
   }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun GroupDrawer(
-  group: Group, dismiss: () -> Unit, openEdit: (Group) -> Unit,
+  group: Group?, open: Boolean, hide: () -> Unit, openEdit: (Group) -> Unit,
   openInvite: (Group) -> Unit,
   openProfile: (User) -> Unit,
-  back: () -> Unit
+  back: () -> Unit,
+  content: @Composable () -> Unit
 ) {
-  Box(contentAlignment = Alignment.BottomCenter) {
-    Column {
-      GroupDrawerHeader(group = group)
-      val headers = mapOf(
-        "Admins" to group.admins,
-        "Online" to group.onlineNotAdminUsers,
-        "Offline" to group.offlineNotAdminUsers
-      )
-      LazyColumn {
-        headers.forEach { (name, users) ->
-          stickyHeader {
-            Text(
-              text = name.uppercase(),
-              iac = fonts.caption.copy(weight = FontWeight.Bold),
-              color = colors.caption,
-              modifier = Modifier.padding(top = 24.dp)
-            )
-          }
-          items(users, { it.id }) {
-            ContactRow(user = it, modifier = Modifier.clickable {
-              dismiss()
-              openProfile(it)
-            })
+  if (group == null) return content()
+  val state = rememberModalBottomSheetState(
+    ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+  )
+  LaunchedEffect(key1 = open, block = {
+    if (open) {
+      state.show()
+    } else {
+      state.hide()
+    }
+  })
+  ModalBottomSheetLayout(
+    sheetState = state,
+    sheetBackgroundColor = IAC.colors.background,
+    sheetContentColor = IAC.colors.text,
+    scrimColor = IAC.colors.caption,
+    sheetContent = {
+      Box(contentAlignment = Alignment.BottomCenter) {
+        Column {
+          GroupDrawerHeader(group = group)
+          val headers = mapOf(
+            "Admins" to group.admins,
+            "Online" to group.onlineNotAdminUsers,
+            "Offline" to group.offlineNotAdminUsers
+          )
+          LazyColumn {
+            headers.forEach { (name, users) ->
+              stickyHeader {
+                Text(
+                  text = name.uppercase(),
+                  iac = fonts.caption.copy(weight = FontWeight.Bold),
+                  color = colors.caption,
+                  modifier = Modifier.padding(top = 24.dp)
+                )
+              }
+              items(users, { it.id }) {
+                ContactRow(user = it, modifier = Modifier.clickable {
+                  hide()
+                  openProfile(it)
+                })
+              }
+            }
           }
         }
+        GroupDrawerButtons(
+          group = group,
+          openEdit = openEdit,
+          openInvite = openInvite,
+          dismiss = hide,
+          back = back
+        )
       }
-    }
-    GroupDrawerButtons(
-      group = group,
-      openEdit = openEdit,
-      openInvite = openInvite,
-      dismiss = dismiss,
-      back = back
-    )
-  }
+    },
+    content = content
+  )
 }
 
 @IPreviews
 @Composable
 fun GroupDrawerPreview() {
-  GroupDrawer(group = genG(), {}, {}, {}, {}, {})
+  InAppChatContext {
+    var open by remember { mutableStateOf(false) }
+    GroupDrawer(group = genG(), open, {}, {}, {}, {}, {}) {
+      ClickableText(
+        text = "hello",
+        iac = fonts.body,
+        color = colors.text,
+        onClick = { open = true })
+    }
+  }
 }
