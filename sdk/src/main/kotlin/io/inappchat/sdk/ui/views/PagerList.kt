@@ -39,7 +39,7 @@ fun <T : Identifiable> PagerList(
   divider: Boolean = false,
   topInset: Dp = 0.dp,
   bottomInset: Dp = 0.dp,
-  scrollToTop: String?,
+  scrollToTop: String? = null,
   content: @Composable LazyItemScope.(T) -> Unit
 ) {
   val array = prefix + pager.items
