@@ -119,7 +119,8 @@ fun genC() = Contact(
 fun genM(
   thread: String = genT().id,
   parent: String? = null,
-  attachment: Attachment? = null
+  attachment: Attachment? = null,
+  user: User = randomUser()
 ): Message {
   val m = Message(
     uuid(), Instant.now().minusSeconds(Random.nextLong(100000L)),
@@ -149,7 +150,9 @@ fun genM(
   return m
 }
 
-fun genImageMessage() = genM(attachment = Attachment(randomImage(), AttachmentKind.image))
+fun genImageMessage(user: User = genU()) =
+  genM(attachment = Attachment(randomImage(), AttachmentKind.image), user = user)
+
 fun genFileMessage() = genM(attachment = Attachment(randomImage(), AttachmentKind.file))
 fun genContactMessage() = Message(
   uuid(), Instant.now().minusSeconds(Random.nextLong(100000L)),

@@ -24,9 +24,7 @@ import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.ui.views.*
-import io.inappchat.sdk.utils.IPreviews
-import io.inappchat.sdk.utils.genU
-import io.inappchat.sdk.utils.timeAgo
+import io.inappchat.sdk.utils.*
 
 @Composable
 fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
@@ -37,6 +35,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
       .fillMaxSize(1f)
   ) {
     Header(title = user.usernameFb, icon = { Avatar(url = user.avatar) }, back = back)
+    Space(16f)
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
       Avatar(url = user.avatar, 150.0)
       Space()
@@ -56,7 +55,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
         )
       }
 
-      if (user.isCurrent) {
+      if (!user.isCurrent) {
         Divider(color = colors.softBackground)
         SimpleRow(
           icon = R.drawable.paper_plane_tilt_fill,
@@ -66,11 +65,19 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
           openChat(user)
         }
       }
-      Row(Modifier.padding(top = 8.dp, start = 8.dp)) {
+      Row(
+        Modifier
+          .padding(top = 8.dp, start = 8.dp)
+          .fillMaxWidth()
+      ) {
         Text("Shared Media", iac = fonts.body, color = colors.text)
       }
       val listState = rememberLazyListState()
-      LazyRow(state = listState, modifier = Modifier.padding(start = 16.dp)) {
+      LazyRow(
+        state = listState, modifier = Modifier
+          .padding(start = 16.dp)
+          .fillMaxWidth()
+      ) {
         itemsIndexed(user.sharedMedia.items, key = { index, item -> item.id }) { index, item ->
           MessageContent(message = item)
         }
@@ -95,7 +102,9 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
 @IPreviews
 @Composable
 fun ProfileViewPreview() {
+  val u = genU()
+  random(10, { genImageMessage(user = u) })
   InAppChatContext {
-    ProfileView(user = genU(), back = { /*TODO*/ }, openChat = {})
+    ProfileView(user = u, back = { /*TODO*/ }, openChat = {})
   }
 }
