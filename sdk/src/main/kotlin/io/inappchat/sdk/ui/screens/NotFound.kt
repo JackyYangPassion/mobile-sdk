@@ -12,8 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
+import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.ui.views.Header
 import io.inappchat.sdk.ui.views.Text
+import io.inappchat.sdk.utils.IPreviews
 
 @Composable
 fun NotFound(what: String = "Page", back: () -> Unit) {
@@ -25,6 +27,16 @@ fun NotFound(what: String = "Page", back: () -> Unit) {
         iac = fonts.title2,
         color = colors.text
       )
+    }
+  }
+}
+
+@IPreviews
+@Composable
+fun NotFoundPreview() {
+  InAppChatContext {
+    NotFound {
+      
     }
   }
 }

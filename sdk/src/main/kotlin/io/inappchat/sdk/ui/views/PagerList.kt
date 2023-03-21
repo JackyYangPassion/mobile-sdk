@@ -40,6 +40,7 @@ fun <T : Identifiable> PagerList(
   topInset: Dp = 0.dp,
   bottomInset: Dp = 0.dp,
   scrollToTop: String? = null,
+  modifier: Modifier = Modifier,
   content: @Composable LazyItemScope.(T) -> Unit
 ) {
   val array = prefix + pager.items
@@ -51,7 +52,7 @@ fun <T : Identifiable> PagerList(
 
   if (array.isEmpty() && !pager.hasMore) {
     Column(
-      modifier = Modifier
+      modifier = modifier
         .pullRefresh(pullRefreshState)
         .padding(top = topInset, bottom = bottomInset + 12.dp)
     ) {
@@ -72,11 +73,10 @@ fun <T : Identifiable> PagerList(
       footer?.invoke()
     }
   } else {
-    Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+    Box(modifier = modifier.pullRefresh(pullRefreshState)) {
       val listState = rememberLazyListState()
       val coroutineScope = rememberCoroutineScope()
       LazyColumn(
-        Modifier.fillMaxSize(),
         contentPadding = PaddingValues(top = topInset, bottom = bottomInset),
         state = listState,
         reverseLayout = invert

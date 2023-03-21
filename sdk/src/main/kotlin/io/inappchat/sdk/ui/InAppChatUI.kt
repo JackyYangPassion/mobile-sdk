@@ -99,13 +99,7 @@ fun InAppChatUI(theme: Theme = Theme()) {
         arguments = listOf(navArgument("id") { type = NavType.StringType })
       ) {
         InviteView(
-          group = Group.get(it.arguments?.getString("id")!!),
-          openGroup = {
-            navController.navigate(it.path) {
-              navController.popBackStack()
-              navController.popBackStack()
-            }
-          },
+          group = Group.get(it.arguments?.getString("id")!!)!!,
           back = back
         )
       }

@@ -63,7 +63,8 @@ fun Header(
     Text(
       text = title.annotated(),
       iac = IAC.fonts.title.copy(weight = FontWeight.Bold),
-      color = colors.text
+      color = colors.text,
+      maxLines = 1
     )
     Spacer(modifier = Modifier.weight(1.0f))
     if (search != null) {
