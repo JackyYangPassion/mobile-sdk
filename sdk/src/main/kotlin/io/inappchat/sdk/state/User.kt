@@ -90,6 +90,8 @@ data class User(
 
   var blocking by mutableStateOf(false)
 
+  val sharedMedia by lazy { UserSharedMedia(this) }
+
   @Stable
   companion object {
     var current by mutableStateOf<User?>(null)
