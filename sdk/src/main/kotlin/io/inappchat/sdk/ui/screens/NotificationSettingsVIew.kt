@@ -83,7 +83,6 @@ fun NotificationSettingsView(back: () -> Unit) {
           .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
-
       ) {
         Text(text = "Update".uppercase(), iac = fonts.headline, color = colors.background)
       }

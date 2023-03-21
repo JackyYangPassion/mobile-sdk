@@ -124,7 +124,7 @@ fun genM(
 ): Message {
   val m = Message(
     uuid(), Instant.now().minusSeconds(Random.nextLong(100000L)),
-    randomUser().id,
+    user.id,
     parent,
     thread,
     attachment ?: ift(bool(), genA(), null),

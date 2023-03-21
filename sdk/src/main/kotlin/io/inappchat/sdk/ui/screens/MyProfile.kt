@@ -28,8 +28,7 @@ import io.inappchat.sdk.utils.genCurrentUser
 fun MyProfile(
   openProfile: () -> Unit,
   openFavorites: () -> Unit,
-  openNotificationSettings: () -> Unit,
-  back: () -> Unit
+  openNotificationSettings: () -> Unit
 ) {
   val scrollState = rememberScrollState()
   var logoutDialogue by remember { mutableStateOf(false) }
@@ -38,7 +37,7 @@ fun MyProfile(
       .fillMaxSize(1f)
       .verticalScroll(scrollState),
   ) {
-    Header(title = "My Profile", back = back)
+    Header(title = "My Profile")
     Space(16f)
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
       Avatar(url = User.current?.avatar, 150.0)
@@ -105,8 +104,6 @@ fun MyProfilePreview() {
     MyProfile(
       openProfile = { /*TODO*/ },
       openFavorites = { /*TODO*/ },
-      openNotificationSettings = { /*TODO*/ }) {
-
-    }
+      openNotificationSettings = { /*TODO*/ })
   }
 }

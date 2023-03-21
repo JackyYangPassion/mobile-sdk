@@ -20,7 +20,7 @@ fun ChatsView(
   scrollToTop: Int = 0,
   openChat: (Room) -> Unit,
   openReplies: (Message) -> Unit,
-  openChannels: () -> Unit,
+  openAllChannels: () -> Unit,
   openContacts: () -> Unit,
   openSearch: () -> Unit,
   openCompose: () -> Unit,
@@ -31,7 +31,7 @@ fun ChatsView(
   }
 
   val cta = when (list) {
-    Chats.List.users -> CTA(icon = null, text = "Explore Channels", to = openChannels)
+    Chats.List.users -> CTA(icon = null, text = "Explore Channels", to = openAllChannels)
     else -> CTA(io.inappchat.sdk.R.drawable.paper_plane_tilt_fill, "Send a Message", openContacts)
   }
   val header = @Composable {
@@ -77,7 +77,7 @@ fun EmptyUserChatsViewPreview() {
     ChatsView(
       openChat = {},
       openReplies = {},
-      openChannels = { /*TODO*/ },
+      openAllChannels = { /*TODO*/ },
       openContacts = { /*TODO*/ },
       openSearch = { /*TODO*/ },
       openCompose = { /*TODO*/ },
@@ -96,7 +96,7 @@ fun ChatsViewPreview() {
     ChatsView(
       openChat = {},
       openReplies = {},
-      openChannels = { /*TODO*/ },
+      openAllChannels = { /*TODO*/ },
       openContacts = { /*TODO*/ },
       openSearch = { /*TODO*/ },
       openCompose = { /*TODO*/ },

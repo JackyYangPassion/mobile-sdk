@@ -75,8 +75,9 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
       val listState = rememberLazyListState()
       LazyRow(
         state = listState, modifier = Modifier
-          .padding(start = 16.dp)
-          .fillMaxWidth()
+          .padding(start = 16.dp, top = 8.dp)
+          .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
       ) {
         itemsIndexed(user.sharedMedia.items, key = { index, item -> item.id }) { index, item ->
           MessageContent(message = item)
@@ -103,7 +104,8 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
 @Composable
 fun ProfileViewPreview() {
   val u = genU()
-  random(10, { genImageMessage(user = u) })
+  val ms = random(10, { genImageMessage(user = u) })
+  u.sharedMedia.items.addAll(ms)
   InAppChatContext {
     ProfileView(user = u, back = { /*TODO*/ }, openChat = {})
   }

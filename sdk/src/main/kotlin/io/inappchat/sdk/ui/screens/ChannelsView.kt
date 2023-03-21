@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.state.Chats
-import io.inappchat.sdk.state.Group
+import io.inappchat.sdk.state.Room
 import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.ui.views.*
@@ -22,10 +22,9 @@ import io.inappchat.sdk.utils.random
 
 @Composable
 fun ChannelsView(
-  scrollToTop: Long,
+  scrollToTop: Int,
   search: Fn,
-  createGroup: Fn,
-  openChat: (Group) -> Unit,
+  openChat: (Room) -> Unit,
   openCreateGroup: () -> Unit
 ) {
   Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -41,10 +40,12 @@ fun ChannelsView(
         )
       }) { group ->
       ChannelRow(group = group, onClick = {
-        if (it.isMember) openChat(it)
+        if (it.isMember) {
+          Room.getByGroup(it.id)?.let { openChat(it) }
+        }
       })
     }
-    Header(title = "All Channels", search = search, add = createGroup)
+    Header(title = "All Channels", search = search, add = openCreateGroup)
   }
 }
 
@@ -56,10 +57,8 @@ fun EmptyChannelsViewPreview() {
     ChannelsView(
       scrollToTop = 0,
       search = { /*TODO*/ },
-      createGroup = { /*TODO*/ },
-      openChat = {}) {
-
-    }
+      openCreateGroup = { /*TODO*/ },
+      openChat = {})
   }
 }
 
@@ -72,9 +71,7 @@ fun ChannelsViewPreview() {
     ChannelsView(
       scrollToTop = 0,
       search = { /*TODO*/ },
-      createGroup = { /*TODO*/ },
-      openChat = {}) {
-
-    }
+      openCreateGroup = { /*TODO*/ },
+      openChat = {})
   }
 }

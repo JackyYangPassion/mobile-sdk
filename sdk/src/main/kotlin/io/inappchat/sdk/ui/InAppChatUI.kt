@@ -5,41 +5,53 @@
 package io.inappchat.sdk.ui
 
 import Theme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import io.inappchat.sdk.state.*
+import io.inappchat.sdk.state.Group
+import io.inappchat.sdk.state.Message
+import io.inappchat.sdk.state.Room
+import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.screens.*
 
 @Composable
 fun InAppChatUI(theme: Theme = Theme()) {
   val navController = rememberNavController()
+  var tab by remember { mutableStateOf(Tab.home) }
   val openChat = { it: Room -> navController.navigate(it.path) }
   val openReplies = { it: Message ->
     navController.navigate(it.path)
   }
-  val openChannels = { navController.navigate("channels") }
-  val openContacts = { navController.navigate("contacts") }
-  val openSettings = { navController.navigate("settings") }
+  val openHome = {
+    tab = Tab.home
+    navController.navigate("chats")
+  }
+  val openChannels = {
+    tab = Tab.channels
+    navController.navigate("channels")
+  }
+  val openContacts = { tab = Tab.contacts
+    navController.navigate("contacts") }
+  val openSettings = { tab = Tab.settings
+    navController.navigate("settings") }
   val openProfile = { it: User -> navController.navigate(it.path) }
-  val openUserChat = { it: User -> navController.navigate(it.chatPath) }
   val openInvite = { it: Group -> navController.navigate(it.invitePath) }
   val openEditGroup = { it: Group -> navController.navigate(it.editPath) }
-  val openGroupChat = { it: Group -> navController.navigate(it.path) }
   val tabs = Tabs(
+    tab = tab,
     openChat = openChat,
     openReplies = openReplies,
-    openChannels = openChannels,
+    openAllChannels = openChannels,
     openContacts = openContacts,
-    openSettings = openSettings,
-    openProfile = { openProfile(User.current!!) },
-    openChats = { navController.navigate("chats") },
-    openCurrentChannels = { navController.navigate("channels") },
-    openThreads = { navController.navigate("threads") },
-    list = Chats.List.forRoute(navController.currentDestination?.route)
+    openProfile = { openProfile(it) },
+    openCompose = {},
+    openCreateGroup = { navController.navigate("group/new") },
+    openSearch = { navController.navigate("search") },
+    openFavorites = { navController.navigate("favorites") },
+    openNotificationSettings = { navController.navigate("settings/notificications") }
   )
   val back = {
     navController.popBackStack()
@@ -56,7 +68,9 @@ fun InAppChatUI(theme: Theme = Theme()) {
         "user/{id}",
         arguments = listOf(navArgument("id") { type = NavType.StringType })
       ) {
-        UserView(it.arguments?.getString("id")!!, openChat = openUserChat, back = back)
+        it.arguments?.getString("id")?.let { User.get(it) }?.let {
+          ProfileView(user = it, back = back, openChat = { navController.navigate(it.chatPath) })
+        }
       }
       composable(
         "user/{id}/chat",
