@@ -26,7 +26,7 @@ import io.inappchat.sdk.utils.Fn
 import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.annotated
 
-val HeaderHeight = 44.dp
+val HeaderHeight = 50.dp
 
 @Composable
 fun Header(

@@ -20,7 +20,13 @@ import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 
 @Composable
-fun SimpleRow(@DrawableRes icon: Int, text: String, iconPrimary: Boolean, destructive: Boolean) {
+fun SimpleRow(
+  @DrawableRes icon: Int,
+  text: String,
+  iconPrimary: Boolean = false,
+  destructive: Boolean = false,
+  onClick: () -> Unit
+) {
   Column {
     Row(
       modifier = Modifier
@@ -31,7 +37,7 @@ fun SimpleRow(@DrawableRes icon: Int, text: String, iconPrimary: Boolean, destru
       Image(
         painter = painterResource(id = icon),
         contentDescription = "icon",
-        modifier = Modifier.size(35),
+        modifier = Modifier.size(40),
         colorFilter = ColorFilter.tint(if (destructive) colors.destructive else if (iconPrimary) colors.primary else colors.caption)
       )
       Text(
