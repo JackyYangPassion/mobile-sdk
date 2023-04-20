@@ -32,7 +32,6 @@ android {
             buildConfigField 'String', 'BASE_URL', '"https://prov.inappchat.io"'
         }
         debug {
-            debuggable true
             buildConfigField 'String', "ENV", '"dev"'
             buildConfigField 'String', 'BASE_URL', '"https://prov-dev.inappchat.io"'
         }
