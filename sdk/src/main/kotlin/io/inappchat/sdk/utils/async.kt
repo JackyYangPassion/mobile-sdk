@@ -13,12 +13,12 @@ fun launch(
     start: CoroutineStart = CoroutineStart.DEFAULT,
     block: suspend CoroutineScope.() -> Unit
 ) {
-    InAppChat.scope.launch(context, start, block)
+    InAppChat.shared.scope.launch(context, start, block)
 }
 
 private val EmptyFn: () -> Unit = {}
 
-fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) = launch {
+fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn, context: CoroutineContext = Dispatchers.Main) = launch(context) {
     try {
         block()
     } catch (err: Exception) {
@@ -31,6 +31,8 @@ fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) 
 }
 
 suspend fun <T> bg(block: suspend CoroutineScope.() -> T) = withContext(Dispatchers.IO, block)
+fun opbg(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) = op(block, onError, Dispatchers.IO)
+
 fun <T : Unit> async(block: suspend CoroutineScope.() -> T) =
     launch(Dispatchers.IO, block = block)
 

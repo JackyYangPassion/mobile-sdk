@@ -46,19 +46,17 @@ fun String.sha256(): String {
 
 val provisioningServerProd = "https://prov.ripbullertc.com/v1/tenants/get-tenant-details/"
 val provisioningServerDev = "https://prov-dev.inappchat.io/v1/tenants/get-tenant-details/"
-val provisioningServerQA = "https://prov-qa.ripbullertc.com/v1/tenants/get-tenant-details/"
 
-val env = "qa"
+val env = "prod"
 
 fun provisioningServer(): String =
     when (env) {
-        "qa" -> provisioningServerQA
         "dev" -> provisioningServerDev
         else -> provisioningServerProd
     }
 
 
-internal suspend inline fun Call.await(): Response {
+suspend inline fun Call.await(): Response {
     return suspendCancellableCoroutine { continuation ->
         val callback = ContinuationCallback(this, continuation)
         enqueue(callback)
@@ -104,18 +102,18 @@ object API {
     var apiKey: String? = null
 
     var authToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
-        InAppChat.prefs.edit().putString("auth-token", newValue).apply()
+        InAppChat.shared.prefs.edit().putString("auth-token", newValue).apply()
         client = makeClient()
     }
     var refreshToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
-        InAppChat.prefs.edit().putString("refresh-token", newValue).apply()
+        InAppChat.shared.prefs.edit().putString("refresh-token", newValue).apply()
     }
     var tokenExpiresAt: LocalDateTime? by Delegates.observable(null) { property, oldValue, newValue ->
         if (newValue != null) {
-            InAppChat.prefs.edit().putLong("token-expires", newValue.toEpochSecond(ZoneOffset.UTC))
+            InAppChat.shared.prefs.edit().putLong("token-expires", newValue.toEpochSecond(ZoneOffset.UTC))
                 .apply()
         } else {
-            InAppChat.prefs.edit().remove("token-expires").apply()
+            InAppChat.shared.prefs.edit().remove("token-expires").apply()
         }
     }
 
@@ -162,21 +160,21 @@ object API {
     lateinit var _default: DefaultApi
 
     fun init() {
-        var deviceId = InAppChat.prefs
+        var deviceId = InAppChat.shared.prefs
             .getString("device-id", null)
         if (deviceId == null) {
             deviceId = UUID.randomUUID().toString()
-            InAppChat.prefs.edit().putString("device-id", deviceId).apply()
+            InAppChat.shared.prefs.edit().putString("device-id", deviceId).apply()
         }
         this.deviceId = deviceId
-        this.authToken = InAppChat.prefs.getString("auth-token", null)
+        this.authToken = InAppChat.shared.prefs.getString("auth-token", null)
     }
 
     fun headers(): Headers {
         val ts = (Date().time / 1000.0).toInt().toString()
-        val signature = "${InAppChat.apiKey}~${InAppChat.appContext.packageName}~$ts".sha256()
+        val signature = "${InAppChat.shared.apiKey}~${InAppChat.shared.appContext.packageName}~$ts".sha256()
         return Headers.Builder().add(
-            "X-API-Key", InAppChat.apiKey
+            "X-API-Key", InAppChat.shared.apiKey
         )
             .add(
                 "X-Request-Signature", signature
@@ -193,7 +191,7 @@ object API {
     suspend fun getTenant(): JSONObject {
         val client = okHttpBuilder().build()
         val request = Request.Builder()
-            .url(provisioningServer() + InAppChat.namespace)
+            .url(provisioningServer() + InAppChat.shared.namespace)
             .headers(headers()).build()
         val response = client.newCall(request).await()
         val body = response.body?.string()
@@ -240,7 +238,7 @@ object API {
                 MultipartBody.Part.create(
                     InputStreamRequestBody(
                         mediaType,
-                        InAppChat.appContext.contentResolver,
+                        InAppChat.shared.appContext.contentResolver,
                         attachment.url.toUri()
                     )
                 )
@@ -279,7 +277,7 @@ object API {
             MultipartBody.Part.create(
                 InputStreamRequestBody(
                     profilePicType,
-                    InAppChat.appContext.contentResolver,
+                    InAppChat.shared.appContext.contentResolver,
                     it.toUri()
                 )
             )

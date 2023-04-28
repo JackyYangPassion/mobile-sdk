@@ -6,8 +6,7 @@ package io.inappchat.sdk.state
 
 import androidx.compose.runtime.*
 import io.inappchat.sdk.API
-import io.inappchat.sdk.InAppChat.appContext
-import io.inappchat.sdk.InAppChat.prefs
+import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.op
 import java.util.*
@@ -16,6 +15,7 @@ import kotlin.properties.Delegates
 
 @Stable
 data class Chats(val id: String = UUID.randomUUID().toString()) {
+
   val groups = GroupsPager()
   val users = UserThreadsPager()
   val messages = ThreadsPager()
@@ -29,13 +29,16 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
   var fcmToken: String? = null
 
   var loading by mutableStateOf(false)
+  var loggedIn by mutableStateOf(false)
 
   var currentUserID: String? by Delegates.observable(null) { _, _, newValue ->
-    prefs.edit().putString("user-id", newValue).apply()
+    InAppChat.shared.prefs.edit().putString("user-id", newValue).apply()
   }
 
+  var user by mutableStateOf<User?>(null)
+
   fun init() {
-    Monitoring.setup(appContext)
+    Monitoring.setup(InAppChat.shared.appContext)
     API.init()
     settings.init()
   }
@@ -49,8 +52,7 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
   }
 
   suspend fun loadAsync() {
-    val id = currentUserID
-    if (id == null) return
+    currentUserID ?: return
     val user = API.me()
     User.current = user
     val fcmToken = this.fcmToken
@@ -60,7 +62,7 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
     loadInvites()
   }
 
-  suspend fun loadInvites() {
+  private suspend fun loadInvites() {
     val invites = API.invites()
     for (invite in invites) {
       val users = this.invites[invite.groupId] ?: mutableListOf()

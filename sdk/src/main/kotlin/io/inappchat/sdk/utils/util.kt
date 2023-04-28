@@ -14,14 +14,13 @@ import contacts.core.util.emails
 import contacts.core.util.nameList
 import contacts.core.util.phones
 import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.InAppChat.appContext
 import io.inappchat.sdk.models.Contact
 import io.inappchat.sdk.models.Email
 import io.inappchat.sdk.models.Location
 import io.inappchat.sdk.models.PhoneNumber
 import java.util.*
 
-fun bundleUrl() = InAppChat.appContext.packageName
+fun bundleUrl() = InAppChat.shared.appContext.packageName
 fun uuid() = UUID.randomUUID().toString()
 
 typealias Fn = () -> Unit
@@ -33,7 +32,7 @@ fun String.annotated() = AnnotatedString(this)
 
 fun contactUriToContact(uri: Uri): Contact {
   Log.v("IAC", "Contact URI ${uri.toString()}")
-  val result = Contacts(appContext).query().where {
+  val result = Contacts(InAppChat.shared.appContext).query().where {
     Contact.Id.equalToIgnoreCase(uri.lastPathSegment!!)
   }.include {
     listOf(

@@ -60,7 +60,7 @@ object Socket {
         val server = this.server
         if (server == null) return
 
-        val username = InAppChat.namespace
+        val username = InAppChat.shared.namespace
         val ts = (System.currentTimeMillis()).toInt()
         val signature = "$apiKey~${bundleUrl()}~$ts".sha256()
         val password = "$signature:$ts:${authToken!!}"
@@ -92,6 +92,10 @@ object Socket {
             ).await()
             client.publishes(MqttGlobalPublishFilter.ALL, Socket::event)
         }
+    }
+
+    suspend fun disconnect() {
+        client?.disconnect()?.await()
     }
 
 
