@@ -60,32 +60,76 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
 
     fun randomNonce(): String = Random.nextBytes(16).bytesToHex()
 
-    suspend fun login() = suspendCoroutine<Unit> { continuation ->
-        val requestParams = Auth.Params.Request(
-            topic = "g2minus-android", // a pairing topic is used to send a authentication request, pass it from [Pairing API](../../kotlin/core/pairing.md)
-                    chainId = "1", // is the EIP-155 Chain ID to which the session is bound, and the network where Contract Accounts MUST be resolved.
-            domain = "g2minus.inappchat.io", // is the RFC 3986 authority that is requesting the signing.
-            nonce = randomNonce(), // is a randomized token typically chosen by the relying party and used to prevent replay attacks, at least 8 alphanumeric characters.
-            aud = "https://g2minus.inappchat.io/login", //  is an RFC 3986 URI referring to the resource that is the subject of the signing (as in the subject of a claim).
-            type = null, // (Not yet implemented) Type of signing. Currently ignored and always set to `eip4361`.
-            nbf = null, // (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message will become valid.
-            exp = null, // (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message is no longer valid.
-            statement = "Sign in to g2minus with your wallet.", // (optional) is a human-readable ASCII assertion that the user will sign, and it must not contain '\n' (the byte 0x0a).
-            requestId = null, // (optional) is an system-specific identifier that may be used to uniquely refer to the sign-in request.
-            resources = null, // (optional) is a list of information or references to information the user wishes to have resolved as part of authentication by the relying party. They are expressed
-            // as RFC 3986 URIs.
-        )
+    suspend fun login(): String {
+        suspendCoroutine<Unit> { continuation ->
+            val requestParams = Auth.Params.Request(
+                topic = "g2minus-android", // a pairing topic is used to send a authentication request, pass it from [Pairing API](../../kotlin/core/pairing.md)
+                chainId = "1", // is the EIP-155 Chain ID to which the session is bound, and the network where Contract Accounts MUST be resolved.
+                domain = "g2minus.inappchat.io", // is the RFC 3986 authority that is requesting the signing.
+                nonce = randomNonce(), // is a randomized token typically chosen by the relying party and used to prevent replay attacks, at least 8 alphanumeric characters.
+                aud = "https://g2minus.inappchat.io/login", //  is an RFC 3986 URI referring to the resource that is the subject of the signing (as in the subject of a claim).
+                type = null, // (Not yet implemented) Type of signing. Currently ignored and always set to `eip4361`.
+                nbf = null, // (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message will become valid.
+                exp = null, // (optional) is the ISO 8601 datetime string that, if present, indicates when the signed authentication message is no longer valid.
+                statement = "Sign in to g2minus with your wallet.", // (optional) is a human-readable ASCII assertion that the user will sign, and it must not contain '\n' (the byte 0x0a).
+                requestId = null, // (optional) is an system-specific identifier that may be used to uniquely refer to the sign-in request.
+                resources = null, // (optional) is a list of information or references to information the user wishes to have resolved as part of authentication by the relying party. They are expressed
+                // as RFC 3986 URIs.
+            )
 
-        AuthClient.request(requestParams,
-            onSuccess = {
-                // Callback triggered when the authentication request has been sent successfully. Expose Pairing URL using [Pairing API](../../kotlin/core/pairing.md), to a wallet to establish a secure connection
-                continuation.resume(Unit)
-            },
-            onError = { error ->
-                Log.e("Requester request", error.throwable.stackTraceToString())
-                continuation.resumeWithException(error.throwable)
+
+
+            AuthClient.request(requestParams,
+                onSuccess = {
+                    // Callback triggered when the authentication request has been sent successfully. Expose Pairing URL using [Pairing API](../../kotlin/core/pairing.md), to a wallet to establish a secure connection
+                    continuation.resume(Unit)
+                },
+                onError = { error ->
+                    Log.e("Requester request", error.throwable.stackTraceToString())
+                    continuation.resumeWithException(error.throwable)
+                }
+            )
+
+        }
+        return suspendCoroutine<String> { continuation ->
+            var didCreate = false
+            val pairing: Core.Model.Pairing = CoreClient.Pairing.getPairings().firstOrNull() ?: run {
+                didCreate = true
+                CoreClient.Pairing.create(onError = {
+                    throw it.throwable
+                })!!
             }
-        )
+            if (didCreate) {
+                SignClient.connect(Sign.Params.Connect(pairing = pairing), onSuccess = {
+                    continuation.resume(pairing.uri)
+                }, onError = {
+                    throw it.throwable
+                })
+            } else {
+                continuation.resume(pairing.uri)
+            }
+        }
+    }
+
+    suspend fun connect(): String {
+        return suspendCoroutine { continuation ->
+            var didCreate = false
+            val pairing: Core.Model.Pairing = CoreClient.Pairing.getPairings().firstOrNull() ?: run {
+                didCreate = true
+                CoreClient.Pairing.create(onError = {
+                    throw it.throwable
+                })!!
+            }
+            if (didCreate) {
+                SignClient.connect(Sign.Params.Connect(pairing = pairing), onSuccess = {
+                    continuation.resume(pairing.uri)
+                }, onError = {
+                    throw it.throwable
+                })
+            } else {
+                continuation.resume(pairing.uri)
+            }
+        }
     }
 
     override fun onConnectionStateChange(state: Sign.Model.ConnectionState) {
