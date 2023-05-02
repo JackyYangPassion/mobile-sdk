@@ -20,3 +20,4 @@ dependencyResolutionManagement {
 rootProject.name = "inappchat"
 include ':sdk'
 include ':app'
+include ':g2minus'

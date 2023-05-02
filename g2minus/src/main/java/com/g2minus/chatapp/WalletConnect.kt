@@ -1,7 +1,9 @@
-package io.inappchat.app
+package com.g2minus.chatapp
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.Stable
+import androidx.core.net.toUri
 import com.walletconnect.android.Core
 import com.walletconnect.android.CoreClient
 import com.walletconnect.android.relay.ConnectionType
@@ -11,6 +13,7 @@ import com.walletconnect.auth.client.AuthInterface
 import com.walletconnect.sign.client.Sign
 import com.walletconnect.sign.client.SignClient
 import com.walletconnect.util.bytesToHex
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -19,6 +22,7 @@ import kotlin.random.Random
 @Stable
 class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, SignClient.DappDelegate {
     private val tag = "WalletConnect"
+    var topic: String? = null
 
     init {
         val projectId = "" // Get Project ID at https://cloud.walletconnect.com/
@@ -40,6 +44,7 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
 
         val init = Sign.Params.Init(core = CoreClient)
 
+        SignClient.setDappDelegate(this)
         SignClient.initialize(init) { error ->
             // Error will be thrown if there's an issue during initialization
             Log.e(tag, error.throwable.stackTraceToString())
@@ -132,6 +137,26 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
         }
     }
 
+    var signContinuation: Continuation<String>? = null
+    suspend fun sign(message: String, account: String, sendDeeplink: (Uri) -> Unit): String {
+        return suspendCoroutine {  continuation ->
+            signContinuation = continuation
+            val params = Sign.Params.Request(
+                method = "personal_sign",
+                params = "[ \"$message\", \"$account\" ]",
+                chainId = "eip155:1",
+                sessionTopic = topic ?: ""
+            )
+            SignClient.request(params
+                ,{
+            },{
+                continuation.resumeWithException(it.throwable)
+            })
+            SignClient.getActiveSessionByTopic(params.sessionTopic)?.redirect?.toUri()
+                ?.let { deepLinkUri -> sendDeeplink(deepLinkUri) }
+        }
+    }
+
     override fun onConnectionStateChange(state: Sign.Model.ConnectionState) {
         Log.v(tag, "Sign Client Connection State $state")
     }
@@ -142,6 +167,8 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
 
     override fun onSessionApproved(approvedSession: Sign.Model.ApprovedSession) {
         Log.v(tag, "Sign Client session approved $approvedSession")
+        topic = approvedSession.topic
+        appState.didConnect(approvedSession.accounts)
     }
 
     override fun onSessionDelete(deletedSession: Sign.Model.DeletedSession) {
@@ -161,7 +188,17 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
     }
 
     override fun onSessionRequestResponse(response: Sign.Model.SessionRequestResponse) {
-        Log.v( tag, "session request response ${response.result}")
+        Log.v( tag, "session request response ${response.result} ${response.result.jsonrpc}")
+        when (response.result) {
+            is Sign.Model.JsonRpcResponse.JsonRpcResult -> {
+                signContinuation?.resume((response.result as Sign.Model.JsonRpcResponse.JsonRpcResult).result)
+            }
+            is Sign.Model.JsonRpcResponse.JsonRpcError -> {
+                val error = (response.result as Sign.Model.JsonRpcResponse.JsonRpcError)
+                signContinuation?.resumeWithException(Error("${error.message} - Error Code: ${error.code}"))
+            }
+        }
+        signContinuation = null
     }
 
     override fun onSessionUpdate(updatedSession: Sign.Model.UpdatedSession) {

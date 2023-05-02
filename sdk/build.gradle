@@ -105,6 +105,7 @@ dependencies {
 
     implementation 'androidx.activity:activity-compose:1.7.1'
     implementation 'androidx.core:core-ktx:+'
+    implementation 'androidx.core:core-ktx:+'
     debugImplementation "androidx.customview:customview:1.2.0-alpha02"
     debugImplementation "androidx.customview:customview-poolingcontainer:1.0.0"
 

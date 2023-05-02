@@ -1,4 +1,4 @@
-package io.inappchat.app
+package com.g2minus.chatapp
 
 import android.content.Context
 import android.graphics.Path

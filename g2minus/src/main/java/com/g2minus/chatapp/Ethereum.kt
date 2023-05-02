@@ -1,16 +1,14 @@
-package io.inappchat.app
+package com.g2minus.chatapp
 
 import io.inappchat.sdk.API
-import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.await
-import io.inappchat.sdk.provisioningServer
 import okhttp3.Request
 import org.json.JSONObject
 
 val etherscanApiKey = "71CPX2FPG7BF5VZYH73PWQ4PZKW79BPFH2"
 val poisonPogContract = "0x41112a2e8626330752a8f9353462edd4771a48a2"
 
-data class Token(val id: String, val account: String, val image: String?)
+data class Token(val id: String, val account: String, val image: String)
 
 object Etherscan {
     val client = API.okHttpBuilder().build()
