@@ -15,6 +15,7 @@ import io.inappchat.sdk.auth.HttpBearerAuth
 import io.inappchat.sdk.infrastructure.ApiClient
 import io.inappchat.sdk.models.*
 import io.inappchat.sdk.state.*
+import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.Socket
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletionHandler
@@ -110,7 +111,8 @@ object API {
     }
     var tokenExpiresAt: LocalDateTime? by Delegates.observable(null) { property, oldValue, newValue ->
         if (newValue != null) {
-            InAppChat.shared.prefs.edit().putLong("token-expires", newValue.toEpochSecond(ZoneOffset.UTC))
+            InAppChat.shared.prefs.edit()
+                .putLong("token-expires", newValue.toEpochSecond(ZoneOffset.UTC))
                 .apply()
         } else {
             InAppChat.shared.prefs.edit().remove("token-expires").apply()
@@ -172,7 +174,8 @@ object API {
 
     fun headers(): Headers {
         val ts = (Date().time / 1000.0).toInt().toString()
-        val signature = "${InAppChat.shared.apiKey}~${InAppChat.shared.appContext.packageName}~$ts".sha256()
+        val signature =
+            "${InAppChat.shared.apiKey}~${InAppChat.shared.appContext.packageName}~$ts".sha256()
         return Headers.Builder().add(
             "X-API-Key", InAppChat.shared.apiKey
         )
@@ -318,7 +321,7 @@ object API {
     suspend fun getSharedMedia(uid: String) =
         _default.getUserMessages(uid, 0, 10, MessageType.image).result().map { it.m() }
 
-    fun onLogin(auth: Auth) {
+    suspend fun onLogin(auth: Auth) {
         onToken(
             auth.token.accessToken,
             auth.token.refreshToken,
@@ -327,9 +330,15 @@ object API {
         onUser(auth.user.u())
     }
 
-    fun onUser(user: User) {
+    suspend fun onUser(user: User) {
+        Chats.current.user = user
         Chats.current.currentUserID = user.id
-        Socket.connect()
+        User.current = user
+        try {
+            Chats.current.loadAsync()
+        } catch (err: Error) {
+            Monitoring.error(err)
+        }
     }
 
     fun onToken(access: String, refresh: String?, expires: LocalDateTime) {
@@ -338,35 +347,28 @@ object API {
         tokenExpiresAt = expires
     }
 
-    suspend fun auth0Login(
+    suspend fun login(
         accessToken: String,
-        refreshToken: String?,
-        expiresAt: Date,
+        userId: String,
         email: String,
         name: String?,
         nickname: String?,
         picture: String?
     ): User {
-        onToken(
-            accessToken,
-            refreshToken,
-            expiresAt.toInstant().atZone(
-                ZoneId.systemDefault()
-            ).toLocalDateTime()
-        )
-        val res = auth.auth0Login(
-            Auth0LoginInput(
+        val res = auth.login(
+            LoginInput(
+                userId = userId,
                 accessToken = accessToken,
                 email = email,
                 deviceId = deviceId,
                 picture = picture,
                 name = name,
                 nickname = nickname,
-                deviceType = Auth0LoginInput.DeviceType.android
+                deviceType = LoginInput.DeviceType.android
             )
         ).result()
         val user = res.user.u()
-        onUser(user)
+        onLogin(res)
         return user
     }
 

@@ -21,27 +21,48 @@ import com.squareup.moshi.Json
 /**
  * 
  *
- * @param loginType Type of login  like email/mobile/sso
- * @param appUserId User ID based on loginType
+ * @param userId A unique identifier for your user
+ * @param accessToken The auth0 access token
+ * @param email User ID based on loginType
  * @param deviceId Unique device id. For example, UDID for ios
+ * @param picture A profile picture URL
+ * @param name A display name
+ * @param nickname A nickname
  * @param deviceType Type of device i.e. android or ios. Allowed valies android/ios
  * @param fcmToken FCM regsitration token. Optional.
+ * @param apnsToken the device APNS token
  */
 
 
 data class LoginInput (
 
-    /* Type of login  like email/mobile/sso */
-    @Json(name = "loginType")
-    val loginType: LoginInput.LoginType,
+    /* A unique identifier for your user */
+    @Json(name = "userId")
+    val userId: kotlin.String,
+
+    /* The auth0 access token */
+    @Json(name = "accessToken")
+    val accessToken: kotlin.String,
 
     /* User ID based on loginType */
-    @Json(name = "appUserId")
-    val appUserId: kotlin.String,
+    @Json(name = "email")
+    val email: kotlin.String,
 
     /* Unique device id. For example, UDID for ios */
     @Json(name = "deviceId")
     val deviceId: kotlin.String,
+
+    /* A profile picture URL */
+    @Json(name = "picture")
+    val picture: kotlin.String? = null,
+
+    /* A display name */
+    @Json(name = "name")
+    val name: kotlin.String? = null,
+
+    /* A nickname */
+    @Json(name = "nickname")
+    val nickname: kotlin.String? = null,
 
     /* Type of device i.e. android or ios. Allowed valies android/ios */
     @Json(name = "deviceType")
@@ -49,20 +70,14 @@ data class LoginInput (
 
     /* FCM regsitration token. Optional. */
     @Json(name = "fcmToken")
-    val fcmToken: kotlin.String? = null
+    val fcmToken: kotlin.String? = null,
+
+    /* the device APNS token */
+    @Json(name = "apnsToken")
+    val apnsToken: kotlin.String? = null
 
 ) {
 
-    /**
-     * Type of login  like email/mobile/sso
-     *
-     * Values: email,mobile,sso
-     */
-    enum class LoginType(val value: kotlin.String) {
-        @Json(name = "email") email("email"),
-        @Json(name = "mobile") mobile("mobile"),
-        @Json(name = "sso") sso("sso");
-    }
     /**
      * Type of device i.e. android or ios. Allowed valies android/ios
      *

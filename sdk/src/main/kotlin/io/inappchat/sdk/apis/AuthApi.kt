@@ -7,25 +7,12 @@ import okhttp3.RequestBody
 import com.squareup.moshi.Json
 
 import io.inappchat.sdk.models.Auth
-import io.inappchat.sdk.models.Auth0LoginInput
+import io.inappchat.sdk.models.LoginInput
 import io.inappchat.sdk.models.LoginPasswordInput
 import io.inappchat.sdk.models.NFTLoginInput
 import io.inappchat.sdk.models.ResetPasswordInput
-import io.inappchat.sdk.models.UserInfo
 
 interface AuthApi {
-    /**
-     * Verify User information
-     * verify user information, device information
-     * Responses:
-     *  - 200: The User info
-     *
-     * @param auth0LoginInput 
-     * @return [UserInfo]
-     */
-    @POST("auth/auth0/login")
-    suspend fun auth0Login(@Body auth0LoginInput: Auth0LoginInput): Response<UserInfo>
-
     /**
      * Change Password
      * API to change user password
@@ -37,6 +24,18 @@ interface AuthApi {
      */
     @POST("auth/change-password")
     suspend fun changePassword(@Body loginPasswordInput: LoginPasswordInput): Response<Unit>
+
+    /**
+     * Login to InAppChat as a user on your Application.
+     * Login to InAppChat as a user on your Application. This will updated the User&#39;s profile info in InAppChat. InAppChat will verify the authenticity of the credentials provided by calling the configured backend function of your server.
+     * Responses:
+     *  - 200: User token and profile
+     *
+     * @param loginInput 
+     * @return [Auth]
+     */
+    @POST("auth/login")
+    suspend fun login(@Body loginInput: LoginInput): Response<Auth>
 
     /**
      * Logout

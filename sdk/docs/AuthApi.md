@@ -4,53 +4,13 @@ All URIs are relative to *https://chat.inappchat.io/v3*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**auth0Login**](AuthApi.md#auth0Login) | **POST** auth/auth0/login | Verify User information
 [**changePassword**](AuthApi.md#changePassword) | **POST** auth/change-password | Change Password
+[**login**](AuthApi.md#login) | **POST** auth/login | Login to InAppChat as a user on your Application.
 [**logout**](AuthApi.md#logout) | **POST** logout | Logout
 [**logoutOtherDevices**](AuthApi.md#logoutOtherDevices) | **POST** logoutOtherDevices | Logout
 [**nftLogin**](AuthApi.md#nftLogin) | **POST** auth/nft/login | signup and login with NFT
 [**resetPassword**](AuthApi.md#resetPassword) | **POST** auth/reset-password | Forgot Password
 
-
-
-Verify User information
-
-verify user information, device information
-
-### Example
-```kotlin
-// Import classes:
-//import io.inappchat.sdk.*
-//import io.inappchat.sdk.infrastructure.*
-//import io.inappchat.sdk.models.*
-
-val apiClient = ApiClient()
-val webService = apiClient.createWebservice(AuthApi::class.java)
-val auth0LoginInput : Auth0LoginInput =  // Auth0LoginInput | 
-
-launch(Dispatchers.IO) {
-    val result : UserInfo = webService.auth0Login(auth0LoginInput)
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **auth0LoginInput** | [**Auth0LoginInput**](Auth0LoginInput.md)|  |
-
-### Return type
-
-[**UserInfo**](UserInfo.md)
-
-### Authorization
-
-
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
 
 
 Change Password
@@ -91,6 +51,46 @@ null (empty response body)
 
  - **Content-Type**: application/json
  - **Accept**: Not defined
+
+
+Login to InAppChat as a user on your Application.
+
+Login to InAppChat as a user on your Application. This will updated the User&#39;s profile info in InAppChat. InAppChat will verify the authenticity of the credentials provided by calling the configured backend function of your server.
+
+### Example
+```kotlin
+// Import classes:
+//import io.inappchat.sdk.*
+//import io.inappchat.sdk.infrastructure.*
+//import io.inappchat.sdk.models.*
+
+val apiClient = ApiClient()
+val webService = apiClient.createWebservice(AuthApi::class.java)
+val loginInput : LoginInput =  // LoginInput | 
+
+launch(Dispatchers.IO) {
+    val result : Auth = webService.login(loginInput)
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **loginInput** | [**LoginInput**](LoginInput.md)|  |
+
+### Return type
+
+[**Auth**](Auth.md)
+
+### Authorization
+
+
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 
 Logout

@@ -17,6 +17,25 @@ security:
   - BearerAuth: []
   - DeviceId: []
 paths:
+  /auth/login:
+    post:
+      operationId: login
+      description: Login to InAppChat as a user on your Application. This will updated the User's profile info in InAppChat. InAppChat will verify the authenticity of the credentials provided by calling the configured backend function of your server.
+      summary: Login to InAppChat as a user on your Application.
+      tags:
+        - Auth
+      security:
+        - ApiKeyAuth: []
+        - DeviceId: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/auth'
   /auth/nft/login:
     post:
       operationId: nftLogin
@@ -1272,36 +1291,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/APIUser'
-  /auth/auth0/login:
-    post:
-      operationId: auth0Login
-      description: 'verify user information, device information'
-      summary: Verify User information
-      tags:
-        - Auth
-      security:
-        - ApiKeyAuth: []
-        - DeviceId: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Auth0LoginInput'
-      responses:
-        '200':
-          description: The User info
-          content:
-            application/json:
-              schema:
-                title: UserInfo
-                properties:
-                  user:
-                    $ref: '#/components/schemas/APIUser'
-                  notificationSettings:
-                    $ref: '#/components/schemas/NotificationSettings'
-                required:
-                  - user
   /users/{uid}/avatar:
     parameters:
       - $ref: '#/components/parameters/uidPath'
@@ -2453,13 +2442,16 @@ components:
         - accessToken
         - expiresIn
         - refreshToken
-    Auth0LoginInput:
+    LoginInput:
       type: object
       properties:
+        userId:
+          type: string
+          description: A unique identifier for your user
         accessToken:
           type: string
           description: The auth0 access token
-        'email':
+        email:
           description: 'User ID based on loginType'
           type: string
           example: 'abc@ertc.com'
@@ -2492,6 +2484,7 @@ components:
         - email
         - accessToken
         - deviceId
+        - userId
     SenderKeyDetails:
       title: SenderKeyDetails
       description: 'Sender key details used for this chat.'

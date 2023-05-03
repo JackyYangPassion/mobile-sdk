@@ -44,8 +44,8 @@ All URIs are relative to *https://chat.inappchat.io/v3*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AuthApi* | [**auth0Login**](docs/AuthApi.md#auth0login) | **POST** auth/auth0/login | Verify User information
 *AuthApi* | [**changePassword**](docs/AuthApi.md#changepassword) | **POST** auth/change-password | Change Password
+*AuthApi* | [**login**](docs/AuthApi.md#login) | **POST** auth/login | Login to InAppChat as a user on your Application.
 *AuthApi* | [**logout**](docs/AuthApi.md#logout) | **POST** logout | Logout
 *AuthApi* | [**logoutOtherDevices**](docs/AuthApi.md#logoutotherdevices) | **POST** logoutOtherDevices | Logout
 *AuthApi* | [**nftLogin**](docs/AuthApi.md#nftlogin) | **POST** auth/nft/login | signup and login with NFT
@@ -117,7 +117,6 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.APIThread](docs/APIThread.md)
  - [io.inappchat.sdk.models.APIUser](docs/APIUser.md)
  - [io.inappchat.sdk.models.Auth](docs/Auth.md)
- - [io.inappchat.sdk.models.Auth0LoginInput](docs/Auth0LoginInput.md)
  - [io.inappchat.sdk.models.AutoDeleteSettings](docs/AutoDeleteSettings.md)
  - [io.inappchat.sdk.models.AvailabilityEvent](docs/AvailabilityEvent.md)
  - [io.inappchat.sdk.models.AvailabilityStatus](docs/AvailabilityStatus.md)
@@ -148,6 +147,7 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.GroupUpdateEventItem](docs/GroupUpdateEventItem.md)
  - [io.inappchat.sdk.models.Invite](docs/Invite.md)
  - [io.inappchat.sdk.models.Location](docs/Location.md)
+ - [io.inappchat.sdk.models.LoginInput](docs/LoginInput.md)
  - [io.inappchat.sdk.models.LoginPasswordInput](docs/LoginPasswordInput.md)
  - [io.inappchat.sdk.models.Media](docs/Media.md)
  - [io.inappchat.sdk.models.Mention](docs/Mention.md)
@@ -188,7 +188,6 @@ Class | Method | HTTP request | Description
  - [io.inappchat.sdk.models.UpdateMessageInput](docs/UpdateMessageInput.md)
  - [io.inappchat.sdk.models.UpdateThreadInput](docs/UpdateThreadInput.md)
  - [io.inappchat.sdk.models.UpdateUserInput](docs/UpdateUserInput.md)
- - [io.inappchat.sdk.models.UserInfo](docs/UserInfo.md)
  - [io.inappchat.sdk.models.UserSelfUpdateEvent](docs/UserSelfUpdateEvent.md)
  - [io.inappchat.sdk.models.UserSelfUpdateEventData](docs/UserSelfUpdateEventData.md)
 

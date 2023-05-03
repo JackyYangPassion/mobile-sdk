@@ -4,7 +4,6 @@ docs/APIMessage.md
 docs/APIThread.md
 docs/APIUser.md
 docs/Auth.md
-docs/Auth0LoginInput.md
 docs/AuthApi.md
 docs/AutoDeleteSettings.md
 docs/AvailabilityEvent.md
@@ -43,6 +42,7 @@ docs/GroupUpdateEventData.md
 docs/GroupUpdateEventItem.md
 docs/Invite.md
 docs/Location.md
+docs/LoginInput.md
 docs/LoginPasswordInput.md
 docs/Media.md
 docs/Mention.md
@@ -86,7 +86,6 @@ docs/UpdateMessageInput.md
 docs/UpdateThreadInput.md
 docs/UpdateUserInput.md
 docs/UserApi.md
-docs/UserInfo.md
 docs/UserSelfUpdateEvent.md
 docs/UserSelfUpdateEventData.md
 gradle/wrapper/gradle-wrapper.jar
@@ -124,7 +123,6 @@ src/main/kotlin/io/inappchat/sdk/models/APIMessage.kt
 src/main/kotlin/io/inappchat/sdk/models/APIThread.kt
 src/main/kotlin/io/inappchat/sdk/models/APIUser.kt
 src/main/kotlin/io/inappchat/sdk/models/Auth.kt
-src/main/kotlin/io/inappchat/sdk/models/Auth0LoginInput.kt
 src/main/kotlin/io/inappchat/sdk/models/AutoDeleteSettings.kt
 src/main/kotlin/io/inappchat/sdk/models/AvailabilityEvent.kt
 src/main/kotlin/io/inappchat/sdk/models/AvailabilityStatus.kt
@@ -155,6 +153,7 @@ src/main/kotlin/io/inappchat/sdk/models/GroupUpdateEventData.kt
 src/main/kotlin/io/inappchat/sdk/models/GroupUpdateEventItem.kt
 src/main/kotlin/io/inappchat/sdk/models/Invite.kt
 src/main/kotlin/io/inappchat/sdk/models/Location.kt
+src/main/kotlin/io/inappchat/sdk/models/LoginInput.kt
 src/main/kotlin/io/inappchat/sdk/models/LoginPasswordInput.kt
 src/main/kotlin/io/inappchat/sdk/models/Media.kt
 src/main/kotlin/io/inappchat/sdk/models/Mention.kt
@@ -195,6 +194,5 @@ src/main/kotlin/io/inappchat/sdk/models/UpdateMessageEvent.kt
 src/main/kotlin/io/inappchat/sdk/models/UpdateMessageInput.kt
 src/main/kotlin/io/inappchat/sdk/models/UpdateThreadInput.kt
 src/main/kotlin/io/inappchat/sdk/models/UpdateUserInput.kt
-src/main/kotlin/io/inappchat/sdk/models/UserInfo.kt
 src/main/kotlin/io/inappchat/sdk/models/UserSelfUpdateEvent.kt
 src/main/kotlin/io/inappchat/sdk/models/UserSelfUpdateEventData.kt

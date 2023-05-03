@@ -2,6 +2,7 @@ package io.inappchat.sdk.infrastructure
 
 import io.inappchat.sdk.auth.ApiKeyAuth
 import io.inappchat.sdk.auth.HttpBearerAuth
+import io.inappchat.sdk.auth.ApiKeyAuth
 
 import okhttp3.Call
 import okhttp3.Interceptor
@@ -18,7 +19,7 @@ class ApiClient(
     private var baseUrl: String = defaultBasePath,
     private val okHttpClientBuilder: OkHttpClient.Builder? = null,
     private val serializerBuilder: Moshi.Builder = Serializer.moshiBuilder,
-    private val callFactory: Call.Factory? = null,
+    private val callFactory : Call.Factory? = null,
     private val converterFactory: Converter.Factory? = null,
 ) {
     private val apiAuthorizations = mutableMapOf<String, Interceptor>()
@@ -60,9 +61,7 @@ class ApiClient(
     ) : this(baseUrl, okHttpClientBuilder, serializerBuilder) {
         authNames.forEach { authName ->
             val auth = when (authName) {
-                "ApiKeyAuth" -> ApiKeyAuth("header", "X-API-Key")
-                "BearerAuth" -> HttpBearerAuth("bearer")
-                "DeviceId" -> ApiKeyAuth("header", "X-Device-ID")
+                "ApiKeyAuth" -> ApiKeyAuth("header", "X-API-Key")"BearerAuth" -> HttpBearerAuth("bearer")"DeviceId" -> ApiKeyAuth("header", "X-Device-ID")
                 else -> throw RuntimeException("auth name $authName not found in available auth names")
             }
             addAuthorization(authName, auth)
@@ -119,7 +118,7 @@ class ApiClient(
 
     private inline fun <T, reified U> Iterable<T>.runOnFirst(callback: U.() -> Unit) {
         for (element in this) {
-            if (element is U) {
+            if (element is U)  {
                 callback.invoke(element)
                 break
             }

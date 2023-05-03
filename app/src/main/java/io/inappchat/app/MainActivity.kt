@@ -9,11 +9,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.SideEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.inappchat.sdk.InAppChatActivity
-import io.inappchat.sdk.ui.InAppChatUI
+import io.inappchat.sdk.ui.InAppChatContext
+import io.inappchat.sdk.ui.InAppChatRoutes
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,12 +24,27 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             MaterialTheme {
-                NavHost(navController = navController, startDestination = "splash") {
-                    composable("splash") {
-
+                InAppChatContext {
+                    NavHost(navController = navController, startDestination = "splash") {
+                        composable("splash") {
+                            Splash(openChat = {
+                                navController.navigate("chats") {
+                                    popUpTo("splash") {
+                                        inclusive = true
+                                    }
+                                }
+                            }, openLogin = {
+                                navController.navigate("login") {
+                                    popUpTo("splash") {
+                                        inclusive = true
+                                    }
+                                }
+                            })
+                        }
+                        InAppChatRoutes(navController = navController, navGraphBuilder = this)
                     }
+
                 }
-                InAppChatUI(navController = navController)
             }
         }
     }

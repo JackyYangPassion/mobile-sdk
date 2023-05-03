@@ -36,10 +36,8 @@ class App : Application() {
 
     suspend fun login() {
         val credentials = auth0()
-        val uid = credentials.user.getId()
-        if (uid == null) {
-            throw Error("Expected a user ID")
-        }
+        val uid = credentials.user.getId() ?: throw Error("Expected a user ID")
+
     }
 
     companion object {

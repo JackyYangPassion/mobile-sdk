@@ -9,6 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -29,16 +33,23 @@ enum class Tab(val route: String, @DrawableRes val icon: Int) {
 fun Tabs(
   openChat: (Room) -> Unit,
   openReplies: (Message) -> Unit,
-  openTab: (Tab) -> Unit,
   openProfile: (User) -> Unit,
   openCreateGroup: () -> Unit,
   openCompose: () -> Unit,
   openSearch: () -> Unit,
   openFavorites: () -> Unit,
   openNotificationSettings: () -> Unit,
-  scrollToTop: Int = 0,
-  selectedTab: Tab
 ) {
+  var selectedTab by remember { mutableStateOf(Tab.home) }
+  var scrollToTop by remember {
+    mutableStateOf(0)
+  }
+  val openTab = {tab: Tab ->
+    if (selectedTab == tab)
+      scrollToTop += 1
+    else
+      selectedTab = tab
+  }
   Column(modifier = Modifier.fillMaxSize()) {
     when (selectedTab) {
       Tab.home -> ChatsView(
