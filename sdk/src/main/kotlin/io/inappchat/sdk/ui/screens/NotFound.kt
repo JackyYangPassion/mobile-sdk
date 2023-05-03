@@ -4,6 +4,7 @@
 
 package io.inappchat.sdk.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,24 +20,26 @@ import io.inappchat.sdk.utils.IPreviews
 
 @Composable
 fun NotFound(what: String = "Page", back: () -> Unit) {
-  Column(modifier = Modifier.fillMaxSize()) {
-    Header(title = "$what", back = back)
-    Column(modifier = Modifier.padding(32.dp)) {
-      Text(
-        text = "The page you were looking for could not be found",
-        iac = fonts.title2,
-        color = colors.text
-      )
+    Column(modifier = Modifier.fillMaxSize()) {
+        Header(title = "$what", back = back)
+        Column(
+            modifier = Modifier.padding(32.dp)
+        ) {
+            Text(
+                text = "The page you were looking for could not be found",
+                iac = fonts.title2,
+                color = colors.text
+            )
+        }
     }
-  }
 }
 
 @IPreviews
 @Composable
 fun NotFoundPreview() {
-  InAppChatContext {
-    NotFound {
-      
+    InAppChatContext {
+        NotFound {
+
+        }
     }
-  }
 }

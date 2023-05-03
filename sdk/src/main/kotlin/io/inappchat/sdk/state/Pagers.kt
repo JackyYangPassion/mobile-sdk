@@ -30,7 +30,7 @@ data class ContactsPager(val id: String = UUID.randomUUID().toString()) : Pager<
 
     fun fetchContacts(): List<String> {
         val contacts =
-            Contacts(InAppChat.appContext).query()
+            Contacts(InAppChat.shared.appContext).query()
                 .where { Phone.Number.isNotNullOrEmpty() or Phone.NormalizedNumber.isNotNullOrEmpty() }
                 .include {
                     setOf(

@@ -9,6 +9,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import io.inappchat.sdk.InAppChatActivity
 import io.inappchat.sdk.ui.InAppChatUI
 
@@ -17,8 +20,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         startActivity(Intent(this, InAppChatActivity::class.java))
         setContent {
+            val navController = rememberNavController()
             MaterialTheme {
-                InAppChatUI()
+                NavHost(navController = navController, startDestination = "splash") {
+                    composable("splash") {
+
+                    }
+                }
+                InAppChatUI(navController = navController)
             }
         }
     }

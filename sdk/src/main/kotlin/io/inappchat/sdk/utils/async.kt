@@ -18,7 +18,11 @@ fun launch(
 
 private val EmptyFn: () -> Unit = {}
 
-fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn, context: CoroutineContext = Dispatchers.Main) = launch(context) {
+fun op(
+    block: suspend CoroutineScope.() -> Unit,
+    onError: () -> Unit = EmptyFn,
+    context: CoroutineContext = Dispatchers.Main
+) = launch(context) {
     try {
         block()
     } catch (err: Exception) {
@@ -30,8 +34,13 @@ fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn, 
     }
 }
 
+fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) =
+    op(block, onError, Dispatchers.Main)
+
+
 suspend fun <T> bg(block: suspend CoroutineScope.() -> T) = withContext(Dispatchers.IO, block)
-fun opbg(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) = op(block, onError, Dispatchers.IO)
+fun opbg(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) =
+    op(block, onError, Dispatchers.IO)
 
 fun <T : Unit> async(block: suspend CoroutineScope.() -> T) =
     launch(Dispatchers.IO, block = block)

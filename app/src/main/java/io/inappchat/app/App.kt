@@ -24,7 +24,7 @@ class App : Application() {
         app = this
         account = Auth0(
             getString(R.string.auth0_client_id),
-            getString(R.string.auth0_domain)
+            getString(R.string.com_auth0_domain)
         )
         Giphy.configure(this, getString(R.string.giphy))
         InAppChat.shared.setup(
