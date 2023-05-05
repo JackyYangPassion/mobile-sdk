@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-package io.inappchat.app
+package io.inappchat.sample
 
 import android.app.Application
 import com.auth0.android.Auth0
@@ -12,6 +12,7 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.giphy.sdk.ui.Giphy
 import io.inappchat.sdk.InAppChat
+import io.inappchat.sdk.utils.bg
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -37,7 +38,16 @@ class App : Application() {
     suspend fun login() {
         val credentials = auth0()
         val uid = credentials.user.getId() ?: throw Error("Expected a user ID")
-        
+        bg {
+            InAppChat.shared.login(
+                credentials.accessToken,
+                uid,
+                credentials.user.email!!,
+                credentials.user.pictureURL,
+                credentials.user.name,
+                credentials.user.nickname
+            )
+        }
     }
 
     companion object {

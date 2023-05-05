@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.annotated
 
@@ -26,18 +27,20 @@ class CountProvider : PreviewParameterProvider<Int> {
 @IPreviews
 @Composable
 fun GroupCount(@PreviewParameter(CountProvider::class) count: Int) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            painter = painterResource(id = R.drawable.users_fill),
-            contentDescription = "members",
-            modifier = Modifier.size(16.dp),
-            tint = theme.colors.caption
-        )
-        Space()
-        Text(
-            text = count.toString().annotated(),
-            iac = theme.fonts.caption,
-            color = theme.colors.caption
-        )
+    InAppChatContext {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(id = R.drawable.users_fill),
+                contentDescription = "members",
+                modifier = Modifier.size(16.dp),
+                tint = theme.colors.caption
+            )
+            Space()
+            Text(
+                text = count.toString().annotated(),
+                iac = theme.fonts.caption,
+                color = theme.colors.caption
+            )
+        }
     }
 }

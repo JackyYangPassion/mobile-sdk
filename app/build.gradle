@@ -19,7 +19,6 @@ android {
             useSupportLibrary true
         }
 
-        manifestPlaceholders = [auth0Domain: "@string/com_auth0_domain", auth0Scheme: "io.inappchat.sample"]
 
     }
 

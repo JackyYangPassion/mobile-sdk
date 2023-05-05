@@ -1,4 +1,4 @@
-package io.inappchat.app
+package io.inappchat.sample
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
