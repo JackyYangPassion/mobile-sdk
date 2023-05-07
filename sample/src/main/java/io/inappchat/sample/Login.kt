@@ -22,7 +22,6 @@ import io.inappchat.sdk.utils.launch
 @Composable
 fun Login() {
     Column {
-
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
