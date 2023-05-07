@@ -55,6 +55,7 @@ fun <T : Identifiable> PagerList(
       modifier = modifier
         .pullRefresh(pullRefreshState)
         .padding(top = topInset, bottom = bottomInset + 12.dp)
+        .fillMaxSize()
     ) {
       PullRefreshIndicator(
         pager.refreshing,
@@ -73,7 +74,7 @@ fun <T : Identifiable> PagerList(
       footer?.invoke()
     }
   } else {
-    Box(modifier = modifier.pullRefresh(pullRefreshState)) {
+    Box(modifier = modifier.pullRefresh(pullRefreshState).fillMaxSize()) {
       val listState = rememberLazyListState()
       val coroutineScope = rememberCoroutineScope()
       LazyColumn(

@@ -25,20 +25,24 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 InAppChatContext {
                     NavHost(navController = navController, startDestination = "splash") {
+                        val openChat = {
+                            navController.navigate("chats") {
+//                                popUpTo("splash") {
+//                                    inclusive = true
+//                                }
+                            }
+                        }
                         composable("splash") {
-                            Splash(openChat = {
-                                navController.navigate("chats") {
-                                    popUpTo("splash") {
-                                        inclusive = true
-                                    }
-                                }
-                            }, openLogin = {
+                            Splash(openChat = openChat, openLogin = {
                                 navController.navigate("login") {
-                                    popUpTo("splash") {
-                                        inclusive = true
-                                    }
+//                                    popUpTo("splash") {
+//                                        inclusive = true
+//                                    }
                                 }
                             })
+                        }
+                        composable("login") {
+                            Login(openChat)
                         }
                         InAppChatRoutes(navController = navController, navGraphBuilder = this)
                     }

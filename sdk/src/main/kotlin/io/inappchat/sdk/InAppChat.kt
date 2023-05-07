@@ -7,6 +7,7 @@ package io.inappchat.sdk
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build.VERSION.SDK_INT
+import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,11 +27,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
 import kotlin.math.sign
 import kotlin.properties.Delegates
 
 @Stable
 class InAppChat private constructor() {
+
+    val TAG = "InAppChat"
 
     lateinit var appContext: Context
     lateinit var prefs: SharedPreferences
@@ -52,9 +56,15 @@ class InAppChat private constructor() {
                 }
             }
             .build()
+        Log.v(TAG, "InAppChat Setup")
         if (!delayLoad) {
+            Log.v("InAppChat", "Launch load")
             scope.launch {
-                bg { load() }
+                Log.v(TAG, "Launching load in bg")
+                bg {
+                    Log.v(TAG, "Loading app")
+                    load()
+                }
             }
         }
     }
@@ -68,6 +78,7 @@ class InAppChat private constructor() {
 
     private var didStartLoading = false
     suspend fun load(): JSONObject {
+        Log.v("InAppChat", "Start load")
         if (!this::apiKey.isInitialized) {
             throw Error("You must initialize InAppChat with InAppChat.init before calling load")
         }
@@ -85,6 +96,7 @@ class InAppChat private constructor() {
         val mqttServer = cfg.getJSONObject("serverDetails").getJSONObject("mqttServer")
         Socket.apiKey = mqttServer.getString("apiKey")
         Socket.server = mqttServer.getString("url")
+        Log.v("InAppChat", "Stop loading")
         return cfg
     }
 

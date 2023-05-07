@@ -52,7 +52,7 @@ object Socket {
 
     val clientId: String
         get() =
-            "${User.current!!.id}:${
+            "${User.current?.id ?: ""}:${
                 API.deviceId
             }:android"
 
@@ -108,46 +108,55 @@ object Socket {
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.chat -> {
                 val r = Serializer.moshi.adapter(NewMessageEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.chatReaction -> {
                 val r = Serializer.moshi.adapter(ReactionEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.groupUpdated -> {
                 val r = Serializer.moshi.adapter(GroupUpdateEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.msgReadStatus -> {
                 val r = Serializer.moshi.adapter(MsgReadEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.typingStatus -> {
                 val r = Serializer.moshi.adapter(TypingEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.updateMessage -> {
                 val r = Serializer.moshi.adapter(UpdateMessageEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.userSelfUpdate -> {
                 val r = Serializer.moshi.adapter(UserSelfUpdateEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.availabilityStatus -> {
                 val r = Serializer.moshi.adapter(AvailabilityEvent::class.java)
                     .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
+
             Event.EventType.chatReportUpdated -> {}
 
         }
@@ -233,6 +242,7 @@ object Socket {
                             }
                         }
                     }
+
                     GroupUpdateEventItem.EventType.participantsAdded -> {
                         ev.eventData.eventTriggeredOnUserList?.let {
                             for (u in it) {
@@ -245,6 +255,7 @@ object Socket {
                             }
                         }
                     }
+
                     GroupUpdateEventItem.EventType.participantsRemoved -> {
                         ev.eventData.eventTriggeredOnUserList?.let {
                             for (u in it) {
@@ -252,6 +263,7 @@ object Socket {
                             }
                         }
                     }
+
                     GroupUpdateEventItem.EventType.created -> {
                         ev.eventData.changeData?.let { change ->
                             val g = Group(change.groupId!!.new)
@@ -262,27 +274,32 @@ object Socket {
                                 change.groupType?.new == GroupUpdatEventChangeDataGroupType.New.private
                         }
                     }
+
                     GroupUpdateEventItem.EventType.descriptionChanged -> {
                         ev.eventData.changeData?.description?.let {
                             group.description = it.new
                         }
                     }
+
                     GroupUpdateEventItem.EventType.descriptionChanged -> {
                         ev.eventData.changeData?.groupType?.let {
                             group._private =
                                 it.new == GroupUpdatEventChangeDataGroupType.New.private
                         }
                     }
+
                     GroupUpdateEventItem.EventType.nameChange -> {
                         ev.eventData.changeData?.name?.let {
                             group.name = it.new
                         }
                     }
+
                     GroupUpdateEventItem.EventType.profilePicChanged -> {
                         ev.eventData.changeData?.profilePic?.let {
                             group.avatar = it.new
                         }
                     }
+
                     GroupUpdateEventItem.EventType.profilePicRemoved -> {
                         group.avatar = null
                     }
@@ -343,10 +360,12 @@ object Socket {
                         ev.eventData.availabilityStatus?.let {
                             Chats.current.settings.setAvailability(it, true)
                         }
+
                     SelfUpdateItem.EventType.notificationSettingChangedGlobal ->
                         ev.eventData.notificationSettings?.let {
                             Chats.current.settings.setNotifications(it.allowFrom, true)
                         }
+
                     SelfUpdateItem.EventType.notificationSettingsChangedThread ->
                         ev.eventData.notificationSettings?.let { setting ->
                             ev.eventData.threadId?.let { io.inappchat.sdk.state.Room.get(it) }
@@ -354,6 +373,7 @@ object Socket {
                                     thread.setNotifications(setting.allowFrom, true)
                                 }
                         }
+
                     SelfUpdateItem.EventType.userBlockedStatusChanged ->
                         ev.eventData.targetUser?.eRTCUserId?.let {
                             val blocked =

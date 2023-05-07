@@ -4,7 +4,9 @@
 
 package io.inappchat.sample
 
+import android.app.Activity
 import android.app.Application
+import android.util.Log
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.callback.Callback
@@ -35,8 +37,9 @@ class App : Application() {
         )
     }
 
-    suspend fun login() {
-        val credentials = auth0()
+    suspend fun login(activity: Activity) {
+        Log.v("InAppChat Sample", "logging in")
+        val credentials = auth0(activity)
         val uid = credentials.user.getId() ?: throw Error("Expected a user ID")
         bg {
             InAppChat.shared.login(
@@ -54,7 +57,7 @@ class App : Application() {
         lateinit var app: App
     }
 
-    private suspend fun auth0() = suspendCoroutine<Credentials> { continuation ->
+    private suspend fun auth0(activity: Activity) = suspendCoroutine<Credentials> { continuation ->
         // Setup the WebAuthProvider, using the custom scheme and scope.
         WebAuthProvider.login(account)
             .withScheme("demo")

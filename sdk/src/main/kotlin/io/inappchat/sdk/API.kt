@@ -336,6 +336,7 @@ object API {
         User.current = user
         try {
             Chats.current.loadAsync()
+            Socket.connect()
         } catch (err: Error) {
             Monitoring.error(err)
         }

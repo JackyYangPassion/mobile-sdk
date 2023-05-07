@@ -20,7 +20,7 @@ import io.inappchat.sdk.state.Room
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.screens.*
 
-fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphBuilder?) {
+fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
     val openChat = { it: Room -> navController.navigate(it.path) }
     val openReplies = { it: Message ->
         navController.navigate(it.path)
@@ -138,6 +138,6 @@ fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphB
         composable("search") {
             SearchView(back)
         }
-
     }
+    routes.invoke(navGraphBuilder)
 }
