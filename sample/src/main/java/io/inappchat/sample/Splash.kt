@@ -64,7 +64,8 @@ fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (()
                 modifier = Modifier.width(225.dp)
             )
             Text("Simple and elegant chat services", fontSize = 20.sp, color = Color.White)
-            Spinner()
+            if (!InAppChat.shared.loaded || InAppChat.shared.loggingIn)
+                Spinner()
         }
         content?.invoke()
     }

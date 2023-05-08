@@ -20,8 +20,7 @@ android {
             useSupportLibrary true
         }
         resValue "string", rootProject.ext["giphyg2m"], "@string/giphy"
-        manifestPlaceholders = [auth0Domain: "@string/com_auth0_domain", auth0Scheme: "io.inappchat.sample"]
-
+        manifestPlaceholders = [auth0Domain: "@string/com_auth0_domain", auth0Scheme: "com.g2minus.chatapp"]
     }
 
     buildTypes {

@@ -60,10 +60,10 @@ class App : Application() {
     private suspend fun auth0(activity: Activity) = suspendCoroutine<Credentials> { continuation ->
         // Setup the WebAuthProvider, using the custom scheme and scope.
         WebAuthProvider.login(account)
-            .withScheme("demo")
+            .withScheme(this.packageName)
             .withScope("openid profile email")
             // Launch the authentication passing the callback where the results will be received
-            .start(this, object : Callback<Credentials, AuthenticationException> {
+            .start(activity, object : Callback<Credentials, AuthenticationException> {
                 // Called when there is an authentication failure
                 override fun onFailure(exception: AuthenticationException) {
                     // Something went wrong!
