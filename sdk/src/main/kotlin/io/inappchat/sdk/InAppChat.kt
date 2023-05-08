@@ -92,10 +92,11 @@ class InAppChat private constructor() {
         API.cfg = cfg
         val chatServer = cfg.getJSONObject("serverDetails").getJSONObject("chatServer")
         API.apiKey = chatServer.getString("apiKey")
-        API.server = chatServer.getString("url")
+        API.server = chatServer.getString("url") + "v3"
         val mqttServer = cfg.getJSONObject("serverDetails").getJSONObject("mqttServer")
         Socket.apiKey = mqttServer.getString("apiKey")
         Socket.server = mqttServer.getString("url")
+        API.updateClient()
         Log.v("InAppChat", "Stop loading")
         return cfg
     }

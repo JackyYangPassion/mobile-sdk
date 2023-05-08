@@ -27,6 +27,7 @@ import okio.BufferedSink
 import okio.IOException
 import okio.source
 import org.json.JSONObject
+import timber.log.Timber
 import java.io.File
 import java.math.BigDecimal
 import java.security.MessageDigest
@@ -121,25 +122,34 @@ object API {
 
     fun okHttpBuilder() = OkHttpClient()
         .newBuilder()
-        .addInterceptor(CurlInterceptor(object : com.moczul.ok2curl.logger.Logger {
+
+
+    fun makeClient(): ApiClient {
+        Log.v("InAppChat", "make client")
+        val builder = okHttpBuilder()
+        val client = ApiClient(
+            baseUrl = server,
+            okHttpClientBuilder = builder
+        )
+        apiKey?.let {
+            Log.v("InAppChat", "Add Client Authorization API Key")
+            client.addAuthorization("ApiKeyAuth", ApiKeyAuth("header", "X-API-Key", it))
+        }
+        authToken?.let {
+            Log.v("InAppChat", "Add Client Authorization Auth Token")
+            client.addAuthorization("BearerAuth", HttpBearerAuth("bearer", it))
+        }
+        if (this::deviceId.isInitialized) {
+            client.addAuthorization("DeviceId", ApiKeyAuth("header", "X-Device-ID", deviceId))
+        }
+        builder.addInterceptor(CurlInterceptor(object : com.moczul.ok2curl.logger.Logger {
             override fun log(message: String) {
                 Log.d("API", message)
             }
         }))
-        .addInterceptor(HttpLoggingInterceptor { message -> Log.d("API", message) }
-            .apply { level = HttpLoggingInterceptor.Level.BODY }
-        )
-
-    fun makeClient(): ApiClient {
-        val client = ApiClient(
-            baseUrl = server,
-            okHttpClientBuilder = okHttpBuilder()
-        )
-        apiKey?.let { client.addAuthorization("ApiKeyAuth", ApiKeyAuth("header", "X-API-Key", it)) }
-        authToken?.let { client.addAuthorization("BearerAuth", HttpBearerAuth("bearer", it)) }
-        if (this::deviceId.isInitialized) {
-            client.addAuthorization("DeviceId", ApiKeyAuth("header", "X-Device-ID", deviceId))
-        }
+            .addInterceptor(HttpLoggingInterceptor { message -> Log.d("API", message) }
+                .apply { level = HttpLoggingInterceptor.Level.BODY }
+            )
         chat = client.createService(ChatApi::class.java)
         auth = client.createService(AuthApi::class.java)
         settings = client.createService(ChatSettingApi::class.java)
@@ -160,6 +170,10 @@ object API {
     lateinit var thread: ThreadApi
     lateinit var user: UserApi
     lateinit var _default: DefaultApi
+
+    fun updateClient() {
+        this.client = makeClient()
+    }
 
     fun init() {
         var deviceId = InAppChat.shared.prefs
