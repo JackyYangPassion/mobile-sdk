@@ -1,6 +1,7 @@
 package com.g2minus.chatapp
 
 import android.app.Activity
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,10 +31,8 @@ fun SignIn(openChat: () -> Unit) {
     LaunchedEffect(key1 = true, block = {
         appState.getSignature(context as Activity)
     })
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
-        if (it) {
+    val onPermission = { havePermission: Boolean ->
+        if (havePermission) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 it.result?.let {
                     InAppChat.registerFCMToken(it)
@@ -44,13 +43,22 @@ fun SignIn(openChat: () -> Unit) {
         }
         openChat()
     }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        onPermission(it)
+    }
     LaunchedEffect(key1 = appState.signature, block = {
         if (appState.signature != null) {
             appState.login {
                 if (InAppChat.shared.isUserLoggedIn) {
-                    permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                    } else {
+                        onPermission(true)
+                    }
                 } else {
-                    Toast.makeText(context, "Unable to login", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, "Unable to login", Toast.LENGTH_SHORT).show()
                 }
             }
         }

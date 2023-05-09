@@ -2,6 +2,7 @@ package com.g2minus.chatapp
 
 import android.Manifest
 import android.app.Activity
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -51,10 +52,8 @@ import timber.log.Timber
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
-        if (it) {
+    val onPermission = { havePermission: Boolean ->
+        if (havePermission) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 it.result?.let {
                     InAppChat.registerFCMToken(it)
@@ -64,6 +63,11 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
             }
         }
         openChat()
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        onPermission(it)
     }
     val activity = LocalContext.current
     val isEthLogin =
@@ -161,7 +165,11 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
                             launch {
                                 App.app.login(activity as Activity)
                                 if (InAppChat.shared.isUserLoggedIn) {
-                                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    } else {
+                                        onPermission(true)
+                                    }
                                 }
                             }
                         }
