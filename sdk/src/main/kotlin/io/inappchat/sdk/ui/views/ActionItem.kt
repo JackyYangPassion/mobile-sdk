@@ -12,11 +12,16 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.ListItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import io.inappchat.sdk.R
 import io.inappchat.sdk.ui.IAC
+import io.inappchat.sdk.ui.InAppChatContext
+import io.inappchat.sdk.utils.IPreviews
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -44,5 +49,17 @@ fun ActionItem(text: String, @DrawableRes icon: Int, divider: Boolean = false, a
       }
     )
     if (divider) Divider(color = IAC.colors.caption)
+  }
+}
+
+@IPreviews
+@Composable
+fun ActionItemPreview() {
+  InAppChatContext {
+    Column {
+      ActionItem(text = "Item", icon = R.drawable.address_book_fill) {
+        
+      }
+    }
   }
 }

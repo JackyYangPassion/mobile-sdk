@@ -2,6 +2,7 @@ package com.g2minus.chatapp
 
 import android.Manifest
 import android.app.Activity
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -27,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,13 +43,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.messaging.FirebaseMessaging
 import io.inappchat.sdk.InAppChat
+import io.inappchat.sdk.ui.views.Spinner
 import io.inappchat.sdk.utils.launch
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-fun Login(openChat: () -> Unit, openQRCode: () -> Unit) {
+fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) {
@@ -65,8 +68,30 @@ fun Login(openChat: () -> Unit, openQRCode: () -> Unit) {
     val activity = LocalContext.current
     val isEthLogin =
         !InAppChat.shared.config?.optString("loginType", "email").equals("email")
-    val state = rememberModalBottomSheetState(ModalBottomSheetValue.Expanded)
+    val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
+    val haveAccounts = appState.ethAccounts.isNotEmpty()
+    LaunchedEffect(key1 = haveAccounts, block = {
+        if (haveAccounts) {
+            state.hide()
+        }
+    })
+    val tokensLoading = !appState.didLoadTokens
+    val haveTokens = appState.tokens.isNotEmpty()
+    LaunchedEffect(key1 = haveTokens, block = {
+        if (haveTokens) {
+            openCreateProfile()
+        }
+    })
+    LaunchedEffect(key1 = tokensLoading, block = {
+        if (!tokensLoading && !haveTokens && haveAccounts) {
+            Toast.makeText(
+                activity,
+                "No tokens found with connected wallets. Please connect an eth wallet containing Poison Pogs.",
+                Toast.LENGTH_LONG
+            )
+        }
+    })
     ModalBottomSheetLayout(
         sheetState = state,
         sheetContent = {
@@ -92,13 +117,17 @@ fun Login(openChat: () -> Unit, openQRCode: () -> Unit) {
                             logoColor = Color.White
                         )
                     }
-                    items(walletProviders, {it.name}) {
+                    items(walletProviders, { it.name }) {
                         ElevatedButton(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = {
 
-                        }) {
-                            Image(painter = painterResource(id = it.image), contentDescription = it.name, modifier = Modifier.height(24.dp))
+                            }) {
+                            Image(
+                                painter = painterResource(id = it.image),
+                                contentDescription = it.name,
+                                modifier = Modifier.height(24.dp)
+                            )
                         }
                     }
                 }
@@ -116,30 +145,36 @@ fun Login(openChat: () -> Unit, openQRCode: () -> Unit) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(24.dp),
-                verticalArrangement = Arrangement.Bottom
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ElevatedButton(onClick = {
-                    if (isEthLogin) {
-                        scope.launch {
-                            state.show()
-                        }
-                    } else {
-                        launch {
-                            App.app.login(activity as Activity)
-                            if (InAppChat.shared.isUserLoggedIn) {
-                                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                if (haveAccounts && tokensLoading) {
+                    Spinner()
+                    Text("Fetching Tokens", color = Color.White)
+                } else {
+                    ElevatedButton(onClick = {
+                        if (isEthLogin) {
+                            scope.launch {
+                                state.show()
+                            }
+                        } else {
+                            launch {
+                                App.app.login(activity as Activity)
+                                if (InAppChat.shared.isUserLoggedIn) {
+                                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                }
                             }
                         }
-                    }
-                }, enabled = !InAppChat.shared.loggingIn, modifier = Modifier.fillMaxWidth()) {
-                    if (isEthLogin) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.eth),
-                            contentDescription = "Ethereum Login"
-                        )
-                        Text(text = "Login with Ethereum")
-                    } else {
-                        Text(text = "Login")
+                    }, enabled = !InAppChat.shared.loggingIn, modifier = Modifier.fillMaxWidth()) {
+                        if (isEthLogin) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.eth),
+                                contentDescription = "Ethereum Login"
+                            )
+                            Text(text = "Login with Ethereum")
+                        } else {
+                            Text(text = "Login")
+                        }
                     }
                 }
             }
@@ -152,6 +187,6 @@ fun Login(openChat: () -> Unit, openQRCode: () -> Unit) {
 @Composable
 fun LoginPreview() {
     MaterialTheme {
-        Login(openChat = {}, openQRCode = {})
+        Login(openChat = {}, openCreateProfile = {})
     }
 }

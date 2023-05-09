@@ -4,6 +4,7 @@
 
 package io.inappchat.sdk.ui.views
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -24,23 +25,34 @@ class CountProvider : PreviewParameterProvider<Int> {
     override val values: Sequence<Int> = sequenceOf(1, 4, 10, 301, 2931)
 }
 
+@Composable
+fun GroupCount(count: Int) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            painter = painterResource(id = R.drawable.users_fill),
+            contentDescription = "members",
+            modifier = Modifier.size(16.dp),
+            tint = theme.colors.caption
+        )
+        Space()
+        Text(
+            text = count.toString().annotated(),
+            iac = theme.fonts.caption,
+            color = theme.colors.caption
+        )
+    }
+}
+
 @IPreviews
 @Composable
-fun GroupCount(@PreviewParameter(CountProvider::class) count: Int) {
+fun GrouppCountPreview() {
     InAppChatContext {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(id = R.drawable.users_fill),
-                contentDescription = "members",
-                modifier = Modifier.size(16.dp),
-                tint = theme.colors.caption
-            )
-            Space()
-            Text(
-                text = count.toString().annotated(),
-                iac = theme.fonts.caption,
-                color = theme.colors.caption
-            )
+        Column {
+            GroupCount(count = 1)
+            GroupCount(count = 4)
+            GroupCount(count = 10)
+            GroupCount(count = 301)
+            GroupCount(count = 2931)
         }
     }
 }

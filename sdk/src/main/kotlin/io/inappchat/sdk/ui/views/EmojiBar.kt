@@ -61,7 +61,8 @@ fun EmojiBar(
     return
   }
 
-  Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
+  Row(horizontalArrangement = Arrangement.SpaceEvenly,
+    modifier = Modifier.fillMaxWidth()) {
     emojis.map { emoji ->
       Box(
         contentAlignment = Alignment.Center,
