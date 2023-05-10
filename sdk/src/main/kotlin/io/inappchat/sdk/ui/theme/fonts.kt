@@ -1,3 +1,5 @@
+package io.inappchat.sdk.ui.theme
+
 /*
  * Copyright (c) 2023.
  */
