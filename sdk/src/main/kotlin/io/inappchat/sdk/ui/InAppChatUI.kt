@@ -4,21 +4,24 @@
 
 package io.inappchat.sdk.ui
 
-import Theme
-import androidx.compose.runtime.*
-import androidx.navigation.NavController
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.inappchat.sdk.state.Group
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Room
 import io.inappchat.sdk.state.User
-import io.inappchat.sdk.ui.screens.*
+import io.inappchat.sdk.ui.screens.ChatRoute
+import io.inappchat.sdk.ui.screens.CreateGroup
+import io.inappchat.sdk.ui.screens.FavoritesView
+import io.inappchat.sdk.ui.screens.InviteView
+import io.inappchat.sdk.ui.screens.NotificationSettingsView
+import io.inappchat.sdk.ui.screens.ProfileView
+import io.inappchat.sdk.ui.screens.SearchView
+import io.inappchat.sdk.ui.screens.Tabs
 
 fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
     val openChat = { it: Room -> navController.navigate(it.path) }
