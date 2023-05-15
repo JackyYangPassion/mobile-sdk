@@ -28,8 +28,8 @@ import io.inappchat.sdk.ui.views.Spinner
 @Composable
 fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (() -> Unit)? = null) {
     if (content == null) {
-        LaunchedEffect(key1 = InAppChat.shared.loaded, block = {
-            if (InAppChat.shared.loaded) {
+        LaunchedEffect(key1 = appState.loading, block = {
+            if (!appState.loading) {
                 if (InAppChat.shared.isUserLoggedIn) {
                     openChat()
                 } else {

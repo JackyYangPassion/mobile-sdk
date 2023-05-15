@@ -30,7 +30,8 @@ class App : Application() {
             getString(R.string.auth0_client_id),
             getString(R.string.com_auth0_domain)
         )
-        InAppChat.shared.setup(this, "g2minus.ertc.com", "tsxghv2g", true)
+        InAppChat.shared.setup(this, "g2minus.ertc.com", "tsxghv2g", delayLoad = true)
+        appState.load(this)
     }
 
     suspend fun login(activity: Activity) {

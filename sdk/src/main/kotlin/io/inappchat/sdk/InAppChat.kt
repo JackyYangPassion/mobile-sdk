@@ -85,6 +85,7 @@ class InAppChat private constructor() {
         if (didStartLoading) throw Error("SDK Already initialized")
         didStartLoading = true
         val tenant = API.getTenant()
+        println("Tenant ${tenant.toString(2)}")
         Chats.current.loadAsync()
         loaded = true
         val cfg = tenant.getJSONObject("config")

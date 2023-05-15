@@ -34,15 +34,22 @@ class AppState {
 
     fun load(app: App) =
         op({
+            println("Load InAppChat")
             bg {
                 InAppChat.load()
             }
+            println("InAppChat loaded")
             if (!InAppChat.shared.isUserLoggedIn) {
-                wc = WalletConnect(app)
-                uriString = wc!!.connect()
+                println("Connecting to wallet connect")
+                wc = bg { WalletConnect(app) }
+                println("Created wallet")
+                uriString = bg {
+                    wc!!.connect()
+                }
             }
             loggedIn = InAppChat.shared.isUserLoggedIn
             loading = false
+            println("Finish loading")
         })
 
     fun login(cb: () -> Unit) {
@@ -59,18 +66,6 @@ class AppState {
                 )
             }
             cb()
-        })
-    }
-
-    fun getSignature(openDeeplink: (Uri) -> Unit) {
-        val token = this.token ?: return
-        op({
-            val sig = bg {
-                wc?.sign("InAppChat NFT Login", token.account, openDeeplink)
-            }
-            if (sig != null) {
-                signature = sig
-            }
         })
     }
 
