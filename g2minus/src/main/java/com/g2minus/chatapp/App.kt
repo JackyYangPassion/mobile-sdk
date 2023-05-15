@@ -25,6 +25,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        app = this
         Giphy.configure(this, getString(R.string.giphy))
         account = Auth0(
             getString(R.string.auth0_client_id),
