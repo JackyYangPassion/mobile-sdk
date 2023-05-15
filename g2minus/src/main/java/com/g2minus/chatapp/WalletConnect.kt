@@ -152,6 +152,7 @@ class WalletConnect(private val app: App) : AuthInterface.RequesterDelegate,
     }
 
     suspend fun connect(): String {
+        connectCore()
         return suspendCoroutine { continuation ->
             var didCreate = false
             val pairing: Core.Model.Pairing =
@@ -194,10 +195,8 @@ class WalletConnect(private val app: App) : AuthInterface.RequesterDelegate,
         Log.v(tag, "Sign Client Connection State $state")
         if (state.isAvailable) {
             connectContinuation?.resume(Unit)
-        } else {
-            connectContinuation?.resumeWithException(Error("Failed to connect"))
+            connectContinuation = null
         }
-        connectContinuation = null
     }
 
     override fun onError(error: Sign.Model.Error) {
