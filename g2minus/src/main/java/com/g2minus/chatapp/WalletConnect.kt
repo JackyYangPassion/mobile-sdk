@@ -20,35 +20,51 @@ import kotlin.coroutines.suspendCoroutine
 import kotlin.random.Random
 
 @Stable
-class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, SignClient.DappDelegate {
+class WalletConnect(private val app: App) : AuthInterface.RequesterDelegate,
+    SignClient.DappDelegate, CoreClient.CoreDelegate {
     private val tag = "WalletConnect"
     var topic: String? = null
 
     init {
-        val projectId = "" // Get Project ID at https://cloud.walletconnect.com/
+        val projectId =
+            "7b07a6194ca7b5de075380ee0dabe42c" // Get Project ID at https://cloud.walletconnect.com/
         val relayUrl = "relay.walletconnect.com"
         val serverUrl = "wss://$relayUrl?projectId=${projectId}"
-        val appMetaData = Core.Model.AppMetaData(name = "g2minus",
+        val appMetaData = Core.Model.AppMetaData(
+            name = "g2minus",
             description = "Poison Pog InAppChat dApp",
             url = "poisonpog.com",
             icons = listOf("https://www.poisonpog.com/static/logo-cd370e1283f460c588292e57c1d0ac44.gif"),
             redirect = "g2minus:/request",
         )
 
-        CoreClient.initialize(relayServerUrl = serverUrl, connectionType = ConnectionType.AUTOMATIC, application = app, metaData = appMetaData, onError = {error -> Log.e(tag, error.throwable.stackTraceToString())})
+        println("initializing core client")
+
+        CoreClient.initialize(
+            relayServerUrl = serverUrl,
+            connectionType = ConnectionType.MANUAL,
+            application = app,
+            metaData = appMetaData,
+            onError = { error -> Log.e(tag, error.throwable.stackTraceToString()) })
+        CoreClient.setDelegate(this)
+
+        println("Initializing auth client")
 
         AuthClient.initialize(params = Auth.Params.Init(core = CoreClient), onSuccess = {
             Log.v(tag, "AuthClient on Success")
         }) { error -> Log.e(tag, error.throwable.stackTraceToString()) }
         AuthClient.setRequesterDelegate(this)
 
+        println("Initializing sign client")
         val init = Sign.Params.Init(core = CoreClient)
-
-        SignClient.setDappDelegate(this)
-        SignClient.initialize(init) { error ->
+        SignClient.initialize(init, {
+            Log.v(tag, "Sign client initialized")
+        }) { error ->
             // Error will be thrown if there's an issue during initialization
             Log.e(tag, error.throwable.stackTraceToString())
         }
+        SignClient.setDappDelegate(this)
+        println("WalletConnect initialized")
     }
 
     override fun onAuthResponse(authResponse: Auth.Event.AuthResponse) {
@@ -64,6 +80,24 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
     }
 
     fun randomNonce(): String = Random.nextBytes(16).bytesToHex()
+
+
+    var connectContinuation: Continuation<Unit>? = null
+
+    suspend fun connectCore() {
+        suspendCoroutine<Unit> { continuation ->
+            if (!CoreClient.Relay.isConnectionAvailable.value) {
+                connectContinuation = continuation
+                CoreClient.Relay.connect { error: Core.Model.Error ->
+                    continuation.resumeWithException(error.throwable)
+                    connectContinuation = null
+                }
+            } else {
+                continuation.resume(Unit)
+            }
+
+        }
+    }
 
     suspend fun login(): String {
         suspendCoroutine<Unit> { continuation ->
@@ -98,12 +132,13 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
         }
         return suspendCoroutine<String> { continuation ->
             var didCreate = false
-            val pairing: Core.Model.Pairing = CoreClient.Pairing.getPairings().firstOrNull() ?: run {
-                didCreate = true
-                CoreClient.Pairing.create(onError = {
-                    throw it.throwable
-                })!!
-            }
+            val pairing: Core.Model.Pairing =
+                CoreClient.Pairing.getPairings().firstOrNull() ?: run {
+                    didCreate = true
+                    CoreClient.Pairing.create(onError = {
+                        throw it.throwable
+                    })!!
+                }
             if (didCreate) {
                 SignClient.connect(Sign.Params.Connect(pairing = pairing), onSuccess = {
                     continuation.resume(pairing.uri)
@@ -119,27 +154,26 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
     suspend fun connect(): String {
         return suspendCoroutine { continuation ->
             var didCreate = false
-            val pairing: Core.Model.Pairing = CoreClient.Pairing.getPairings().firstOrNull() ?: run {
-                didCreate = true
-                CoreClient.Pairing.create(onError = {
-                    throw it.throwable
-                })!!
-            }
+            val pairing: Core.Model.Pairing =
+                CoreClient.Pairing.getPairings().firstOrNull() ?: run {
+                    didCreate = true
+                    CoreClient.Pairing.create(onError = {
+                        throw it.throwable
+                    })!!
+                }
             if (didCreate) {
                 SignClient.connect(Sign.Params.Connect(pairing = pairing), onSuccess = {
-                    continuation.resume(pairing.uri)
                 }, onError = {
-                    throw it.throwable
+                    Log.e("InAppChat", it.throwable.stackTraceToString())
                 })
-            } else {
-                continuation.resume(pairing.uri)
             }
+            continuation.resume(pairing.uri)
         }
     }
 
     var signContinuation: Continuation<String>? = null
     suspend fun sign(message: String, account: String, sendDeeplink: (Uri) -> Unit): String {
-        return suspendCoroutine {  continuation ->
+        return suspendCoroutine { continuation ->
             signContinuation = continuation
             val params = Sign.Params.Request(
                 method = "personal_sign",
@@ -147,9 +181,8 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
                 chainId = "eip155:1",
                 sessionTopic = topic ?: ""
             )
-            SignClient.request(params
-                ,{
-            },{
+            SignClient.request(params, {
+            }, {
                 continuation.resumeWithException(it.throwable)
             })
             SignClient.getActiveSessionByTopic(params.sessionTopic)?.redirect?.toUri()
@@ -159,6 +192,12 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
 
     override fun onConnectionStateChange(state: Sign.Model.ConnectionState) {
         Log.v(tag, "Sign Client Connection State $state")
+        if (state.isAvailable) {
+            connectContinuation?.resume(Unit)
+        } else {
+            connectContinuation?.resumeWithException(Error("Failed to connect"))
+        }
+        connectContinuation = null
     }
 
     override fun onError(error: Sign.Model.Error) {
@@ -180,7 +219,7 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
     }
 
     override fun onSessionExtend(session: Sign.Model.Session) {
-        Log.v(tag, "Session extend $session "  + session.topic + session.pairingTopic)
+        Log.v(tag, "Session extend $session " + session.topic + session.pairingTopic)
     }
 
     override fun onSessionRejected(rejectedSession: Sign.Model.RejectedSession) {
@@ -188,11 +227,12 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
     }
 
     override fun onSessionRequestResponse(response: Sign.Model.SessionRequestResponse) {
-        Log.v( tag, "session request response ${response.result} ${response.result.jsonrpc}")
+        Log.v(tag, "session request response ${response.result} ${response.result.jsonrpc}")
         when (response.result) {
             is Sign.Model.JsonRpcResponse.JsonRpcResult -> {
                 signContinuation?.resume((response.result as Sign.Model.JsonRpcResponse.JsonRpcResult).result)
             }
+
             is Sign.Model.JsonRpcResponse.JsonRpcError -> {
                 val error = (response.result as Sign.Model.JsonRpcResponse.JsonRpcError)
                 signContinuation?.resumeWithException(Error("${error.message} - Error Code: ${error.code}"))
@@ -203,5 +243,9 @@ class WalletConnect(private val app: App): AuthInterface.RequesterDelegate, Sign
 
     override fun onSessionUpdate(updatedSession: Sign.Model.UpdatedSession) {
         Log.v(tag, "session updated")
+    }
+
+    override fun onPairingDelete(deletedPairing: Core.Model.DeletedPairing) {
+        print("Pair deleted")
     }
 }
