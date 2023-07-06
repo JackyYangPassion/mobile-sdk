@@ -25,43 +25,43 @@ import java.lang.Float.max
 import java.lang.Float.min
 
 fun Color.adjustedHsl(by: Int): Color {
-  val hsl = this.toArgb().asHsl()
-  var h2 = hsl.hue + by
-  if (h2 > hsl.hue) {
-    h2 = min(360f, h2)
-  } else {
-    h2 = max(0f, h2)
-  }
-  return Color.hsl(h2, hsl.saturation, hsl.lightness)
+    val hsl = this.toArgb().asHsl()
+    var h2 = hsl.hue + by
+    if (h2 > hsl.hue) {
+        h2 = min(360f, h2)
+    } else {
+        h2 = max(0f, h2)
+    }
+    return Color.hsl(h2, hsl.saturation, hsl.lightness)
 }
 
 @Composable
-fun GroupPlaceholder(modifier: Modifier? = null) {
-  Box(
-    contentAlignment = Alignment.Center, modifier = (modifier ?: Modifier)
-          .background(
-              brush = Brush.linearGradient(
-                  colors = listOf(
-                      IAC.colors.primary.adjustedHsl(-25),
-                      IAC.colors.primary.adjustedHsl(25)
-                  ),
-                  start = Offset.Zero,
-                  end = Offset.Infinite,
-              ),
-              shape = RectangleShape
-          )
-          .size(50)
-  ) {
-    Icon(
-      painter = painterResource(id = IAC.theme.assets.group ?: R.drawable.users_three_fill),
-      contentDescription = "Group icon",
-      modifier = Modifier.fillMaxSize(0.5f)
-    )
-  }
+fun ChatPlaceholder(modifier: Modifier? = null) {
+    Box(
+        contentAlignment = Alignment.Center, modifier = (modifier ?: Modifier)
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        IAC.colors.primary.adjustedHsl(-25),
+                        IAC.colors.primary.adjustedHsl(25)
+                    ),
+                    start = Offset.Zero,
+                    end = Offset.Infinite,
+                ),
+                shape = RectangleShape
+            )
+            .size(50)
+    ) {
+        Icon(
+            painter = painterResource(id = IAC.theme.assets.chat ?: R.drawable.users_three_fill),
+            contentDescription = "Chat icon",
+            modifier = Modifier.fillMaxSize(0.5f)
+        )
+    }
 }
 
 @IPreviews
 @Composable
-fun GroupPlaceholderPreview() {
-  GroupPlaceholder()
+fun ChatPlaceholderPreview() {
+    ChatPlaceholder()
 }

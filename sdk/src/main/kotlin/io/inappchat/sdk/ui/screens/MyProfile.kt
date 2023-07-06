@@ -26,84 +26,87 @@ import io.inappchat.sdk.utils.genCurrentUser
 
 @Composable
 fun MyProfile(
-  openProfile: () -> Unit,
-  openFavorites: () -> Unit,
-  openNotificationSettings: () -> Unit
+    openProfile: () -> Unit,
+    openFavorites: () -> Unit,
+    openNotificationSettings: () -> Unit
 ) {
-  val scrollState = rememberScrollState()
-  var logoutDialogue by remember { mutableStateOf(false) }
-  Column(
-    modifier = Modifier
-      .fillMaxSize(1f)
-      .verticalScroll(scrollState),
-  ) {
-    Header(title = "My Profile")
-    Space(16f)
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-      Avatar(url = User.current?.avatar, 150.0)
-      Space()
-      Text(
-        text = User.current?.usernameFb ?: "",
-        iac = fonts.body,
-        color = colors.text,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.widthIn(max = 150.dp)
-      )
-    }
-    SimpleRow(icon = R.drawable.user_fill, text = "Profile") {
-      openProfile()
-    }
-    SimpleRow(icon = R.drawable.star_fill, text = "Favorites") {
-      openFavorites()
-    }
-    SimpleRow(icon = R.drawable.bell_simple_fill, text = "Manage Notifications") {
-      openNotificationSettings()
-    }
-    SimpleRow(icon = R.drawable.door_fill, text = "Logout") {
-      logoutDialogue = true
-    }
-    GrowSpacer()
-  }
-  if (logoutDialogue) {
-    AlertDialog(
-      onDismissRequest = { logoutDialogue = false },
-      buttons = {
-        Row(modifier = Modifier.height(44.dp)) {
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.clickable { logoutDialogue = false }) {
-            Text(text = "No", iac = fonts.headline, color = colors.text)
-          }
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.clickable { InAppChat.logout() }
-          ) {
-            Text(text = "Log out", iac = fonts.headline, color = colors.primary)
-          }
+    val scrollState = rememberScrollState()
+    var logoutDialogue by remember { mutableStateOf(false) }
+    Column(
+        modifier = Modifier
+          .fillMaxSize(1f)
+          .verticalScroll(scrollState),
+    ) {
+        Header(title = "My Profile")
+        Space(16f)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Avatar(url = User.current?.avatar, 150.0)
+            Space()
+            Text(
+                text = User.current?.username ?: "",
+                iac = fonts.body,
+                color = colors.text,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.widthIn(max = 150.dp)
+            )
         }
-      },
-      title = {
-        Text(
-          text = "Are you sure you want to logout?",
-          iac = fonts.headline,
-          color = colors.text
+        SimpleRow(icon = R.drawable.user_fill, text = "Profile") {
+            openProfile()
+        }
+        SimpleRow(icon = R.drawable.star_fill, text = "Favorites") {
+            openFavorites()
+        }
+        SimpleRow(icon = R.drawable.bell_simple_fill, text = "Manage Notifications") {
+            openNotificationSettings()
+        }
+        SimpleRow(icon = R.drawable.door_fill, text = "Logout") {
+            logoutDialogue = true
+        }
+        GrowSpacer()
+    }
+    if (logoutDialogue) {
+        AlertDialog(
+            onDismissRequest = { logoutDialogue = false },
+            buttons = {
+                Row(modifier = Modifier.height(44.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.clickable { logoutDialogue = false }) {
+                        Text(text = "No", iac = fonts.headline, color = colors.text)
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.clickable { InAppChat.logout() }
+                    ) {
+                        Text(text = "Log out", iac = fonts.headline, color = colors.primary)
+                    }
+                }
+            },
+            title = {
+                Text(
+                    text = "Are you sure you want to logout?",
+                    iac = fonts.headline,
+                    color = colors.text
+                )
+            },
+            backgroundColor = colors.background
         )
-      },
-      backgroundColor = colors.background
-    )
-  }
+    }
 }
 
 @IPreviews
 @Composable
 fun MyProfilePreview() {
-  genCurrentUser()
-  InAppChatContext {
-    MyProfile(
-      openProfile = { /*TODO*/ },
-      openFavorites = { /*TODO*/ },
-      openNotificationSettings = { /*TODO*/ })
-  }
+    genCurrentUser()
+    InAppChatContext {
+        MyProfile(
+            openProfile = { /*TODO*/ },
+            openFavorites = { /*TODO*/ },
+            openNotificationSettings = { /*TODO*/ })
+    }
 }

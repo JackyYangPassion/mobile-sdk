@@ -32,7 +32,7 @@ class WalletConnect(private val app: App) : AuthInterface.RequesterDelegate,
         val serverUrl = "wss://$relayUrl?projectId=${projectId}"
         val appMetaData = Core.Model.AppMetaData(
             name = "g2minus",
-            description = "Poison Pog InAppChat dApp",
+            description = "InAppChat Poison Pog APp",
             url = "poisonpog.com",
             icons = listOf("https://www.poisonpog.com/static/logo-cd370e1283f460c588292e57c1d0ac44.gif"),
             redirect = "g2minus:/request",

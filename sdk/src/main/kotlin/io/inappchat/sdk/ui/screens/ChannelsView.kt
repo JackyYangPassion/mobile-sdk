@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.state.Chats
-import io.inappchat.sdk.state.Room
+import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.ui.views.*
@@ -22,56 +22,56 @@ import io.inappchat.sdk.utils.random
 
 @Composable
 fun ChannelsView(
-  scrollToTop: Int,
-  search: Fn,
-  openChat: (Room) -> Unit,
-  openCreateGroup: () -> Unit
+    scrollToTop: Int,
+    search: Fn,
+    openChat: (Chat) -> Unit,
+    openCreateChat: () -> Unit
 ) {
-  Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-    PagerList(
-      pager = Chats.current.network,
-      topInset = HeaderHeight,
-      bottomInset = 0.dp,
-      scrollToTop = scrollToTop.toString(),
-      empty = {
-        EmptyListView(
-          config = theme.assets.emptyAllChannels,
-          cta = CTA(icon = null, text = "Create A Channel", to = openCreateGroup)
-        )
-      }) { group ->
-      ChannelRow(group = group, onClick = {
-        if (it.isMember) {
-          Room.getByGroup(it.id)?.let { openChat(it) }
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+        PagerList(
+            pager = Chats.current.network,
+            topInset = HeaderHeight,
+            bottomInset = 0.dp,
+            scrollToTop = scrollToTop.toString(),
+            empty = {
+                EmptyListView(
+                    config = theme.assets.emptyAllChannels,
+                    cta = CTA(icon = null, text = "Create A Channel", to = openCreateChat)
+                )
+            }) { chat ->
+            ChannelRow(chat = chat, onClick = {
+                if (it.isMember) {
+                    Chat.getByChat(it.id)?.let { openChat(it) }
+                }
+            })
         }
-      })
+        Header(title = "All Channels", search = search, add = openCreateChat)
     }
-    Header(title = "All Channels", search = search, add = openCreateGroup)
-  }
 }
 
 @IPreviews
 @Composable
 fun EmptyChannelsViewPreview() {
-  Chats.current.network.hasMore = false
-  InAppChatContext {
-    ChannelsView(
-      scrollToTop = 0,
-      search = { /*TODO*/ },
-      openCreateGroup = { /*TODO*/ },
-      openChat = {})
-  }
+    Chats.current.network.hasMore = false
+    InAppChatContext {
+        ChannelsView(
+            scrollToTop = 0,
+            search = { /*TODO*/ },
+            openCreateChat = { /*TODO*/ },
+            openChat = {})
+    }
 }
 
 @IPreviews
 @Composable
 fun ChannelsViewPreview() {
-  Chats.current.network.hasMore = false
-  Chats.current.network.items.addAll(random(20, { genG() }))
-  InAppChatContext {
-    ChannelsView(
-      scrollToTop = 0,
-      search = { /*TODO*/ },
-      openCreateGroup = { /*TODO*/ },
-      openChat = {})
-  }
+    Chats.current.network.hasMore = false
+    Chats.current.network.items.addAll(random(20, { genG() }))
+    InAppChatContext {
+        ChannelsView(
+            scrollToTop = 0,
+            search = { /*TODO*/ },
+            openCreateChat = { /*TODO*/ },
+            openChat = {})
+    }
 }

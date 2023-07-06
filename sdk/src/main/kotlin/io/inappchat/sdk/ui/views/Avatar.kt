@@ -23,45 +23,45 @@ import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.utils.IPreviews
 
 @Composable
-fun Avatar(url: String?, size: Double = 35.0, group: Boolean = false) {
-  Box(
-    modifier = Modifier
-      .circle(size.dp, colors.softBackground), contentAlignment = Alignment.Center
-  ) {
-    if (url != null) {
-      AsyncImage(
-        model = url,
-        contentDescription = "user profile picture",
-        contentScale = ContentScale.FillBounds,
+fun Avatar(url: String?, size: Double = 35.0, chat: Boolean = false) {
+    Box(
         modifier = Modifier
-            .fillMaxSize()
-            .clip(CircleShape)
-      )
-    } else {
-      if (group) {
-        GroupPlaceholder(modifier = Modifier.fillMaxSize())
-      } else {
-        Image(
-          painter = painterResource(id = R.drawable.user_fill),
-          contentDescription = "user profile picture",
-          contentScale = ContentScale.Inside,
-          modifier = Modifier.size((18.0 * size / 35.0).dp),
-        )
-      }
+            .circle(size.dp, colors.softBackground), contentAlignment = Alignment.Center
+    ) {
+        if (url != null) {
+            AsyncImage(
+                model = url,
+                contentDescription = "user profile picture",
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(CircleShape)
+            )
+        } else {
+            if (chat) {
+                ChatPlaceholder(modifier = Modifier.fillMaxSize())
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.user_fill),
+                    contentDescription = "user profile picture",
+                    contentScale = ContentScale.Inside,
+                    modifier = Modifier.size((18.0 * size / 35.0).dp),
+                )
+            }
+        }
     }
-  }
 }
 
 @IPreviews
 @Composable
 fun AvatarPreview() {
-  Column {
-    Avatar(url = null)
+    Column {
+        Avatar(url = null)
 
-    Avatar(
-      url = null, size = 55.0
-    )
-    Avatar(url = null, group = true)
-  }
+        Avatar(
+            url = null, size = 55.0
+        )
+        Avatar(url = null, chat = true)
+    }
 
 }

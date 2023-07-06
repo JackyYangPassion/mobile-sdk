@@ -1,0 +1,33 @@
+query GetApp {
+  app {
+    wek
+  }
+}
+
+mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    token
+    user {
+      ...FUser
+      blocks
+      blocked_by
+      role
+    }
+  }
+}
+
+mutation EthLogin($input: EthLoginInput!) {
+  ethLogin(input: $input) {
+    token
+    user {
+      ...FUser
+      blocks
+      blocked_by
+      role
+    }
+  }
+}
+
+mutation Logout {
+  logout
+}

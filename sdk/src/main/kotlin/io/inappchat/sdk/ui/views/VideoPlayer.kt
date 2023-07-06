@@ -5,7 +5,7 @@
 package io.inappchat.sdk.ui.views
 
 import android.net.Uri
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewChat.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

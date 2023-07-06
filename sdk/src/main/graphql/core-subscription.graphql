@@ -1,0 +1,27 @@
+subscription CoreSubscription {
+  core {
+    ... on DeleteEvent {
+      __typename
+      id
+      kind
+    }
+    ... on EntityEvent {
+      __typename
+      type
+      entity {
+        ... on User {
+          ...FUser
+        }
+        ... on Message {
+          ...FMessage
+        }
+        ... on Member {
+          ...FMember
+        }
+        ... on Chat {
+          ...FChat
+        }
+      }
+    }
+  }
+}

@@ -6,9 +6,9 @@ package io.inappchat.sdk.ui.views
 
 import androidx.compose.runtime.Composable
 import io.inappchat.sdk.state.Message
-import io.inappchat.sdk.state.Room
+import io.inappchat.sdk.state.Chat
 
 
 @Composable
-fun MessageList(room: Room, onLongPress: (Message) -> Unit) {
+fun MessageList(room: Chat, onLongPress: (Message) -> Unit) {
 }

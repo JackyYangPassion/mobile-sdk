@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.actions.delete
 import io.inappchat.sdk.actions.leave
-import io.inappchat.sdk.state.Group
+import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.IAC.theme
@@ -30,10 +30,10 @@ import io.inappchat.sdk.utils.*
 
 
 @Composable
-fun GroupDrawerButtons(
-    group: Group,
-    openEdit: (Group) -> Unit,
-    openInvite: (Group) -> Unit,
+fun ChatDrawerButtons(
+    chat: Chat,
+    openEdit: (Chat) -> Unit,
+    openInvite: (Chat) -> Unit,
     dismiss: () -> Unit,
     back: () -> Unit
 ) {
@@ -44,17 +44,17 @@ fun GroupDrawerButtons(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(3.dp),
         modifier = Modifier
-          .height(60.dp)
-          .background(colors.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
-          .padding(8.dp, 0.dp)
+            .height(60.dp)
+            .background(colors.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
+            .padding(8.dp, 0.dp)
     ) {
-        if (group.isAdmin) {
+        if (chat.isAdmin) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.clickable {
                     dismiss()
-                    openEdit(group)
+                    openEdit(chat)
                 }) {
                 Image(
                     painter = painterResource(id = io.inappchat.sdk.R.drawable.gear_fill),
@@ -71,7 +71,7 @@ fun GroupDrawerButtons(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.clickable {
                 dismiss()
-                openInvite(group)
+                openInvite(chat)
             }) {
             Image(
                 painter = painterResource(id = io.inappchat.sdk.R.drawable.archive_box_fill),
@@ -109,7 +109,7 @@ fun GroupDrawerButtons(
             },
             title = {
                 Text(
-                    text = ift(group.isAdmin, "Delete ${group.name}", "Leave ${group.name}"),
+                    text = ift(chat.isAdmin, "Delete ${chat.name}", "Leave ${chat.name}"),
                     iac = fonts.title2
                 )
             },
@@ -117,7 +117,7 @@ fun GroupDrawerButtons(
                 Text(
                     "Are you sure you want to ${
                         ift(
-                            group.isAdmin,
+                            chat.isAdmin,
                             "delete",
                             "leave"
                         )
@@ -127,22 +127,22 @@ fun GroupDrawerButtons(
             confirmButton = {
                 Button(
                     onClick = {
-                        if (group.isAdmin) {
+                        if (chat.isAdmin) {
                             op(
                                 {
                                     bg {
-                                        group.delete()
+                                        chat.delete()
                                     }
                                     back()
                                 })
                         } else {
-                            group.leave()
+                            chat.leave()
                         }
                         dialog.value = false
                         dismiss()
                     }) {
                     Text(
-                        ift(group.isAdmin, "Delete", "Leave"),
+                        ift(chat.isAdmin, "Delete", "Leave"),
                         fonts.headline,
                         color = colors.destructive
                     )
@@ -163,8 +163,8 @@ fun GroupDrawerButtons(
 
 @IPreviews
 @Composable
-fun GroupDrawerButtonsPreview() {
+fun ChatDrawerButtonsPreview() {
     InAppChatContext {
-        GroupDrawerButtons(group = genG(), {}, {}, {}, {})
+        ChatDrawerButtons(chat = genG(), {}, {}, {}, {})
     }
 }

@@ -213,8 +213,8 @@
 -keep interface * {
   <methods>;
 }
--keep public class com.ripbull.coresdk.group.mapper.GroupRecord
--keepclassmembers public class com.ripbull.coresdk.group.mapper.GroupRecord{
+-keep public class com.ripbull.coresdk.chat.mapper.ChatRecord
+-keepclassmembers public class com.ripbull.coresdk.chat.mapper.ChatRecord{
     *;
 }
 -keep public class com.ripbull.coresdk.typing.mapper.TypingIndicatorRecord

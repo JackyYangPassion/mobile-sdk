@@ -1,0 +1,49 @@
+query ListMessages($chat: ID!, $count: Int, $offset: Int, $search: String) {
+  messages(chat: $chat, count: $count, offset: $offset, searchTerm: $search) {
+    ...FMessage
+  }
+}
+
+mutation SendMessage($input: SendMessageInput!) {
+  sendMessage(input: $input) {
+    ...FMessage
+  }
+}
+
+query ListFavorites($count: Int, $offset: Int) {
+  favorites(count: $count, offset: $offset) {
+    ...FMessage
+  }
+}
+
+mutation Favorite($message: ID!) {
+  favorite(id: $message)
+}
+
+mutation Unfavorite($message: ID!) {
+  unfavorite(id: $message)
+}
+
+mutation React($id: ID!, $reaction: String) {
+  react(id: $id, reaction: $reaction)
+}
+
+mutation UpdateMessage($input: UpdateMessageInput!) {
+  updateMessage(input: $input)
+}
+
+mutation DeleteMessage($id: ID!) {
+  removeMessage(id: $id)
+}
+
+query GetMessage($id: ID!) {
+  message(id: $id) {
+    ...FMessage
+  }
+}
+
+query ListReplies($message: ID!, $skip: Int, $limit: Int) {
+  replies(message: $message, offset: $skip, count: $limit) {
+    ...FMessage
+  }
+}

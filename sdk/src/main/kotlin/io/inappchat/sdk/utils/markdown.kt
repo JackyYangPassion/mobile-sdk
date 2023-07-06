@@ -12,7 +12,7 @@ fun String.replace(pattern: Pattern, block: (String) -> String): String {
     val matcher = phoneRegex.matcher(this)
     var match = matcher.find()
     while (match) {
-        val num = matcher.group()
+        val num = matcher.chat()
         _text = _text.replace(num, block(num))
         match = matcher.find()
     }

@@ -65,9 +65,9 @@ fun makeTheme(context: Context): Theme {
                 drawable.empty_chat,
                 "Your friends are ***dying*** to see you"
             ),
-            emptyThreads = EmptyScreenConfig(
-                drawable.empty_threads,
-                "You haven't added to any threads yet"
+            emptyChats = EmptyScreenConfig(
+                drawable.empty_chats,
+                "You haven't added to any chats yet"
             ),
             emptyAllChannels = EmptyScreenConfig(
                 drawable.empty_all_channels,

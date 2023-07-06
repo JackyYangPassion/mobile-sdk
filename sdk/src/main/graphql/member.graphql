@@ -1,0 +1,32 @@
+mutation JoinChat($id: ID!) {
+  join(chat: $id) {
+    role
+    created_at
+    updated_at
+    last_read_at
+  }
+}
+
+mutation LeaveChat($id: ID!) {
+  leave(chat: $id)
+}
+
+mutation DismissInvites($chat: ID!) {
+  dismissInvites(chat: $chat)
+}
+
+mutation ModMemberRole($input: ModMemberInput!) {
+  modMember(input: $input)
+}
+
+mutation InviteUser($chat: ID!, $user: ID!) {
+  invite(chat: $chat, user: $user) {
+    ...FMember
+  }
+}
+
+mutation InviteUsers($chat: ID!, $users: [ID!]!) {
+  inviteMany(chat: $chat, users: $users) {
+    ...FMember
+  }
+}

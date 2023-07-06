@@ -1,0 +1,1073 @@
+type App {
+  wek: String!
+}
+
+"""A mutlimedia or data attachment to a message"""
+type Attachment {
+  """The address of the location"""
+  address: String
+
+  """The raw data of the Attachment if it is a VCard"""
+  data: String
+
+  """The duration of the audio or video in seconds"""
+  duration: Int
+
+  """The height of the image or video in integer pixels"""
+  height: Int
+
+  """The ID of the Attachment"""
+  id: ID!
+
+  """The latitude of the location"""
+  latitude: Latitude
+
+  """The longitude of the location"""
+  longitude: Longitude
+
+  """
+  The mime type of the attachment if it is a file, image, video or audio object
+  """
+  mime: String
+
+  """The type of the Attachment"""
+  type: AttachmentType!
+
+  """The url of the file or 'data' if an arbitrary object"""
+  url: String!
+
+  """The width of the image or video in integer pixels"""
+  width: Int
+}
+
+"""An input variant of Attachment for sending messages"""
+input AttachmentInput {
+  """The address of the location"""
+  address: String
+
+  """The raw data of the Attachment if it is a VCard"""
+  data: String
+
+  """The duration of the audio or video in seconds"""
+  duration: Int
+
+  """The height of the image or video in integer pixels"""
+  height: Int
+
+  """The ID of the attachment"""
+  id: ID!
+
+  """The latitude of the location"""
+  latitude: Latitude
+
+  """The longitude of the location"""
+  longitude: Longitude
+
+  """
+  The mime type of the attachment if it is a file, image, video or audio object
+  """
+  mime: String
+
+  """The type of the Attachment"""
+  type: AttachmentType!
+
+  """The url of the file or 'data' if an arbitrary object"""
+  url: String!
+
+  """The width of the image or video in integer pixels"""
+  width: Int
+}
+
+"""
+The type of a Message attachment. Can be a File or some arbitrary data like Location or Vcard
+"""
+enum AttachmentType {
+  """An audio file"""
+  audio
+
+  """An arbitrary file"""
+  file
+
+  """An image"""
+  image
+
+  """
+  A Location consisting of a combination of Latitude, Longitude and/or Address
+  """
+  location
+
+  """
+  A VCard. According to Wikipedia: vCard, also known as VCF (Virtual Contact File), is a file format standard for electronic business cards.
+  vCards can be attached to e-mail messages, sent via Multimedia Messaging Service (MMS), on the World Wide Web,
+  instant messaging, NFC or through QR code. They can contain name and address information, phone numbers, e-mail addresses,
+  URLs, logos, photographs, and audio clips.
+  """
+  vcard
+
+  """A video"""
+  video
+}
+
+"""An auth response object"""
+type Auth {
+  """The auth token for the user"""
+  token: String!
+
+  """The User account"""
+  user: User!
+}
+
+union BroadcastEvent = DeleteEvent | EntityEvent
+
+"""
+A group of messages between users. Can be persistent or ephemeral. Can also be branded.
+"""
+type Chat {
+  """Whether the chat can be joined by outside Users"""
+  _private: Boolean!
+
+  """The creation date of this Chat"""
+  created_at: DateTime!
+
+  """The description of the group caht"""
+  description: String
+
+  """Whether or not the chat is encrypted"""
+  encrypted: Boolean!
+
+  """The ID of this Chat"""
+  id: ID!
+
+  """THe image associated with the group chat"""
+  image: String
+
+  """
+  The type of chat. Available types are DirectMessage, Group, Conversation and Thread.
+  """
+  kind: ChatType!
+
+  """The most recent message sent to this chat if unencrypted"""
+  last_message: Message
+
+  """The members in this group Chat"""
+  members(count: Int, offset: Int): [Member!]!
+
+  """The name of the group chat"""
+  name: String
+
+  """The current user's notification settings for this chat"""
+  notification_setting: NotificationSetting
+
+  """The number of unread messages for the current User in this Chat"""
+  unread_count: Int!
+
+  """The update date of this Chat"""
+  updated_at: DateTime!
+}
+
+"""The type of a Chat entity."""
+enum ChatType {
+  """
+  Represents an ephemeral Chat. A set of messages spawned around an Support Request or something of the like
+  """
+  Conversation
+
+  """A persistent Chat between two users."""
+  DirectMessage
+
+  """
+  A persistent Chat created for a group of people. Can be branded with a name, description and image, as well as members with MemberRoles
+  """
+  Group
+
+  """
+  Represents a conversation in reply to a particular message. Does not include nested threads.
+  """
+  Thread
+}
+
+"""The input with params necessary to create a Device"""
+input CreateDeviceInput {
+  """The type of the device"""
+  device_type: DeviceType!
+
+  """The fcm token of the device if available"""
+  fcm_token: String
+
+  """The Persistent Identity Key of the Device"""
+  ik: String!
+
+  """The Device's One Time PreKey Set"""
+  opk: [String!]!
+
+  """The Device's PreKey Signature Sig(IK, Encode(SPK))"""
+  pks: String!
+
+  """The Device's Signed PreKey"""
+  spk: String!
+}
+
+"""The fields necessary to create a Flag"""
+input CreateFlagInput {
+  """The Chat ID for the Chat subject of the Flag"""
+  chat: ID
+
+  """The Message ID for the Message subject of the Flag"""
+  message: ID
+
+  """The reason for the flag"""
+  reason: String!
+
+  """The User ID for the User subject of the Flag"""
+  user: ID
+}
+
+input CreateGroupInput {
+  """The privacy status of the group to create"""
+  _private: Boolean
+
+  """The description of the group to create"""
+  description: String
+
+  """The image of the group to create"""
+  image: String
+
+  """A list of User IDs to invited ot the group"""
+  invites: [ID]
+
+  """The name of the group to create"""
+  name: String!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, is compliant with the date-time format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+
+This scalar is a description of an exact instant on the timeline such as the instant that a user account was created.
+
+This scalar ignores leap seconds (thereby assuming that a minute constitutes 59 seconds). In this respect, it diverges from the RFC 3339 profile.
+
+Where an RFC 3339 compliant date-time string has a time-zone other than UTC, it is shifted to UTC. For example, the date-time string 2016-01-01T14:10:20+01:00 is shifted to 2016-01-01T13:10:20Z.
+"""
+scalar DateTime
+
+enum DeleteEntity {
+  Chat
+  Device
+  Message
+  User
+}
+
+type DeleteEvent {
+  id: ID!
+  kind: DeleteEntity!
+}
+
+"""
+A User's logged in device containing the encryption keys
+for E2E messages on that device and os info.
+"""
+type Device {
+  """The date this Device was created"""
+  created_at: DateTime!
+
+  """The Device's ID as provided by the Device"""
+  id: ID!
+
+  """The Device's Identity Key"""
+  ik: String!
+
+  """The Device's One Time PreKey Set"""
+  opk: [String!]!
+
+  """The Device's PreKey Signature Sig(IK, Encode(SPK))"""
+  pks: String!
+
+  """The Device's Signed PreKey"""
+  spk: String!
+
+  """The date this Device was updated"""
+  updated_at: DateTime!
+}
+
+"""The type of a device, iOS, Android, or Web"""
+enum DeviceType {
+  """An Android Device Type"""
+  ANDROID
+
+  """An iOS Device Type"""
+  IOS
+
+  """A Web Device Type"""
+  WEB
+}
+
+"""
+An X3DH Double Ratchet Encrypted Message
+Initial or Forward
+
+Encryption strictly follows the Signal Protocol (https://www.signal.org/docs/)
+"""
+union EncryptedMessage = ForwardEncryptedMessage | InitialEncryptedMessage
+
+union Entities = Chat | Member | Message | User
+
+type EntityEvent {
+  entity: Entities!
+  type: EntityEventType!
+}
+
+enum EntityEventType {
+  Create
+  Update
+}
+
+"""NFt login input fields"""
+input EthLoginInput {
+  """The Device that is logging in"""
+  device: CreateDeviceInput
+
+  """The image to associate with this user"""
+  image: String
+
+  """
+  A signed message stating that the user intends to sign with the selected NFT owned by this wallet
+  """
+  signed_message: String!
+
+  """The ID of the token the user is logging in with"""
+  token_id: String!
+
+  """The username to assign to this user"""
+  username: String!
+
+  """The wallet address"""
+  wallet: String!
+}
+
+"""A Message favorited by a User"""
+type Favorite {
+  """The Message favorited by the User"""
+  message: Message!
+}
+
+"""A report of potentially illiciet content by a User"""
+type Flag {
+  """The Chat subject of the fLag"""
+  chat: Chat
+
+  """The creation date of the flag"""
+  created_at: DateTime!
+
+  """The user that created that Flag"""
+  flagged_by: User!
+
+  """The ID of the Flag"""
+  id: ID!
+
+  """The Message subject of the Flag"""
+  message: Message
+
+  """The reason for the Flag"""
+  reason: String!
+
+  """The Users that have reviewed the Flag"""
+  reviewers: [User!]
+
+  """The reviews of reviewers"""
+  reviews: [FlagReview]
+
+  """The updated date of the flag"""
+  updated_at: DateTime!
+
+  """The User subject of the Flag"""
+  user: User
+}
+
+"""A review of a Flag by a moderator"""
+type FlagReview {
+  """The rationale for the review if any"""
+  rationale: String
+
+  """The status of the review, Approved or Rejected"""
+  status: FlagReviewStatus!
+}
+
+"""A moderators approval status of a Flag"""
+enum FlagReviewStatus {
+  Approved
+  Rejected
+}
+
+"""A forward double ratchet encrypted message"""
+type ForwardEncryptedMessage {
+  """
+  The encrypted message contents. Unencrypted it is a JSON object of the form of Message
+  """
+  content: String!
+
+  """The header of the encrypted message"""
+  header: String!
+}
+
+"""Input for a forward double ratchet encrypted message"""
+input ForwardEncryptedMessageInput {
+  """
+  The encrypted message contents. Unencrypted it is a JSON object of the form {text: String, attachments: [Attachment!]!}
+  """
+  content: String!
+
+  """The Signed Pre Key this encrypted message is intended for"""
+  spk: String!
+}
+
+"""
+The initial encrypted message used to establish a Shared Key between two devices
+"""
+type InitialEncryptedMessage {
+  """
+  The encrypted message contents. Unencrypted it is a JSON object of the form {text: String, attachments: [Attachment!]!}
+  """
+  content: String!
+
+  """The Ephemeral Key used to sign the message"""
+  ek: String!
+
+  """The Sender Identity Key used to sign the message"""
+  ik: String!
+
+  """The One Time PreKey used by this encryption, if any"""
+  opk: String
+
+  """The PreKey this message is intended for"""
+  spk: String!
+}
+
+"""
+Input for the initial encrypted message used to establish a Shared Key between two devices
+"""
+input InitialEncryptedMessageInput {
+  """
+  The encrypted message contents. Unencrypted it is a JSON object of the form {text: String, attachments: [Attachment!]!}
+  """
+  content: String!
+
+  """The Ephemeral Key used to sign the message"""
+  ek: String!
+
+  """The Sender Identity Key used to sign the message"""
+  ik: String!
+
+  """The One Time PreKey used by this encryption, if any"""
+  opk: String
+
+  """The PreKey used by this encryption."""
+  spk: String!
+}
+
+"""A user invite to a chat room"""
+type Invite {
+  chat: Chat!
+  created_at: DateTime!
+  invitee: User!
+  updated_at: DateTime!
+  user: User!
+}
+
+type InviteEvent {
+  by: User!
+  to: Chat!
+}
+
+"""The JSON scalar type represents JSON values as specified by ECMA-404"""
+scalar JSON
+
+"""
+A field whose value is a valid decimal degrees latitude number(opens in a new tab) (53.471).
+
+The input value can be either in decimal (53.471) or sexagesimal (53° 21' 16") format.
+
+The output value is always in decimal format (53.471).
+
+The maximum decimal degrees' precision is 8. See Decimal Degrees Precision(opens in a new tab) for more information.
+"""
+scalar Latitude
+
+"""Login input fields"""
+input LoginInput {
+  """
+  The access token for the user on the silo owner's app network.
+  This will be used to verify the login authenticity with the silo owner's backend
+  """
+  access_token: String
+
+  """The Device that is logging in"""
+  device: CreateDeviceInput
+
+  """The display name of the User"""
+  display_name: String
+
+  """The email of the user"""
+  email: String
+
+  """The image associated with the User"""
+  image: String
+
+  """The ID of the user on the silo owner's app network"""
+  user_id: ID!
+
+  """The username of the User"""
+  username: String!
+}
+
+"""
+A field whose value is a valid decimal degrees longitude number(opens in a new tab) (53.471).
+
+The input value can be either in decimal (53.471) or sexagesimal (53° 21' 16") format.
+
+The output value is always in decimal format (53.471).
+
+The maximum decimal degrees' precision is 8. See Decimal Degrees Precision for more information.
+"""
+scalar Longitude
+
+union MeEvent = InviteEvent | ReactionEvent | ReplyEvent
+
+"""A member of a Chat"""
+type Member {
+  """The Chat the Member belongs to"""
+  chat: Chat!
+
+  """The ID of the Chat the Member belongs to"""
+  chat_id: String!
+
+  """The creation date of the membership"""
+  created_at: DateTime!
+
+  """
+  The date the Member last read the Chat. Maintained in order to provide unread statuses of Chats
+  """
+  last_read_at: DateTime!
+
+  """THe Role of the Member in the Chat"""
+  role: MemberRole!
+
+  """The updated date of the Chat"""
+  updated_at: DateTime!
+
+  """The User the Member represents"""
+  user: User!
+
+  """The ID of the User that is the member"""
+  user_id: String!
+}
+
+"""The role of a User Member of a Chat"""
+enum MemberRole {
+  """An Admin, has near total permissional control over a Chat"""
+  Admin
+
+  """
+  An Invite sent to a User for a Chat. The User can join the Chat if invited, even if the Chat is private
+  """
+  Invited
+
+  """
+  A User that was kicked from a group Chat. Retained in order to prevent the User rejoining the Chat.
+  """
+  Kicked
+
+  """A member can send Messages and read Messages from a Chat"""
+  Member
+
+  """An Owner, has total permisisonal control over a Chat"""
+  Owner
+
+  """
+  A User that rejected an Invite to a Chat. Retained in order to prevent multiple Invites
+  """
+  RejectedInvite
+}
+
+"""An @ mention in a message text"""
+type Mention {
+  """The position of the offset in the text"""
+  offset: Int!
+
+  """The ID of the user mentioned"""
+  user_id: ID!
+
+  """The username of the user mentioned"""
+  username: String!
+}
+
+"""A Message sent by a User to Chat"""
+type Message {
+  """Attachments to the Message"""
+  attachments: [Attachment!]
+
+  """The Chat this Message belongs to"""
+  chat: Chat!
+
+  """The ID of the Chat this message belongs to"""
+  chat_id: String!
+
+  """The creation date of the Message"""
+  created_at: DateTime!
+
+  """The ID of the Message"""
+  id: ID!
+
+  """The mentions in the message"""
+  mentions: [Mention!]
+
+  """The Message this Message is in reply to if it is a reply"""
+  parent: Message
+
+  """The ID of the Message this Message is in reply to if it is a reply"""
+  parent_id: String
+
+  """
+  Reactions to the Message, string of the form reaction1:uid1,uid2...;reaction2:uid1,uid2...
+  """
+  reactions: String
+
+  """The number of replies to this Message"""
+  reply_count: Int!
+
+  """
+  System Messages are special messages that are not sent by Users
+  if this is null it is not a system message
+  if is filled, this is a system message of the specified type
+  """
+  system: SystemMessageType
+
+  """The text content of the Message. Can contain Markdown"""
+  text: String
+
+  """The updated date of the Message"""
+  updated_at: DateTime!
+
+  """The User that sent this Message"""
+  user: User!
+}
+
+input ModMemberInput {
+  """The Chat to modify"""
+  chat: ID!
+
+  """The new Role of the User"""
+  role: MemberRole
+
+  """The User to modify"""
+  user: ID!
+}
+
+type Mutation {
+  """Blocks a User for the current User"""
+  block(user: ID!): Boolean!
+
+  """Create a new group Chat"""
+  createGroup(input: CreateGroupInput!): Chat
+
+  """Delete a group Chat"""
+  deleteGroup(id: ID!): Boolean!
+
+  """Rejects a Chat invite for the current User"""
+  dismissInvites(chat: ID): Boolean!
+
+  """Start a directmessage Chat with a User"""
+  dm(user: ID!): Chat
+
+  """Login as an NFT authenticated user"""
+  ethLogin(input: EthLoginInput!): Auth
+
+  """Favorite a Message as the current User"""
+  favorite(id: ID!): Boolean!
+
+  """Flag a User, Chat or Message"""
+  flag(input: CreateFlagInput!): Flag!
+
+  """Invites a User to a Chat"""
+  invite(chat: ID!, user: ID!): Member!
+  inviteMany(chat: ID!, users: [ID!]!): [Member!]!
+
+  """
+  Joins a Chat. Always succeeds if that Chat is public and the user hasn't been Kicked.
+  """
+  join(chat: ID!): Member
+
+  """Leaves a Chat"""
+  leave(chat: ID!): Boolean!
+
+  """Login as User from the Chat silo owner's App"""
+  login(input: LoginInput!): Auth
+
+  """Logs out of a device, deleting it, and wiping out the auth token"""
+  logout: Boolean
+
+  """Marks a Chat as read now for the current User"""
+  markChatRead(chat: ID!): Boolean!
+
+  """Mod a user Role in a Chat"""
+  modMember(input: ModMemberInput!): Boolean!
+
+  """
+  React to a Message as the current User. If no reaction is passed, the reaction for the current User is removed.
+  """
+  react(id: ID!, reaction: String): Boolean!
+
+  """
+  Consume all Messages for the current Device up to a given Message header
+  """
+  read(header: String!): Boolean!
+
+  """Registers a push token for a device"""
+  registerPush(fcm: Boolean, kind: DeviceType!, token: String!): Boolean!
+
+  """Delete a Flag"""
+  removeFlag(id: String!): Flag
+
+  """Delete a Message if priveledged"""
+  removeMessage(id: ID!): Boolean!
+
+  """A content review for a Flag"""
+  reviewFlag(input: ReviewFlagInput!): Flag!
+
+  """Send an Encrypted Message"""
+  sendEncryptedMessage(input: SendEncryptedMessageInput!): Boolean
+
+  """Send a message to a Chat"""
+  sendMessage(input: SendMessageInput): Message!
+
+  """Set the notification setting for the current User in this chat"""
+  setNotificationSetting(chat: ID!, setting: NotificationSetting!): Boolean!
+
+  """Sync a users phone book with the server"""
+  syncContacts(numbers: [String!]!): Boolean!
+
+  """Unblocks a User for the current User"""
+  unblock(user: ID!): Boolean!
+
+  """Unfavorite a Message as the current User"""
+  unfavorite(id: ID!): Boolean!
+
+  """Update a Device"""
+  updateDevice(input: UpdateDeviceInput!): Device!
+
+  """Update a group Chat"""
+  updateGroup(input: UpdateGroupInput!): Boolean!
+
+  """Update the contents of a Message"""
+  updateMessage(input: UpdateMessageInput!): Boolean!
+
+  """Updates the current User's profile"""
+  updateProfile(input: UpdateProfileInput!): Boolean!
+}
+
+"""Notification setting for a user, can be set per chat"""
+enum NotificationSetting {
+  """Allow all notifications, mentions and dms"""
+  all
+
+  """Allow only mention notifictions"""
+  mentions
+
+  """No notifications"""
+  none
+}
+
+"""A User's online status in this Chat silo"""
+enum OnlineStatus {
+  """
+  A user that is connected to the network but is "Away". This suggests a likely response in the near future
+  """
+  Away
+
+  """
+  A user that has explicitely marked their Chat availbility as Do Not Disturb.
+  The user is actively connected to the network and would like his peers to know he is connect4ed, but does not wish to receive any messages.
+  """
+  DND
+
+  """
+  The user is not connected to the network. This suggests an entirely random response time
+  """
+  Offline
+
+  """Actively available. The suggests a near immediate response"""
+  Online
+}
+
+"""
+A field whose value conforms to the standard E.164 format as specified in E.164 specification(opens in a new tab). Basically, this is +17895551234. The very powerful libphonenumber library(opens in a new tab) is available to take that format, parse and display it in whatever display format you want. It can also be used to parse user input and get the E.164 format to pass into a schema.
+"""
+scalar PhoneNumber
+
+type Query {
+  """Returns the current User's active list of groups"""
+  activeGroups(count: Int, offset: Int): [Chat!]!
+  app: App!
+
+  """Returns a chat with the specified ID"""
+  chat(id: ID!): Chat
+
+  """Returns the list of devices for a Chat"""
+  devices(chat: ID!): [Device!]!
+
+  """Returns the currents User's active list of dms"""
+  dms(count: Int, offset: Int): [Chat!]!
+
+  """Returns the Messages favorited by the current User in descending order"""
+  favorites(count: Int, offset: Int): [Message!]!
+
+  """The list of Flags available, unreviewed or neither"""
+  flags(count: Int, notReviewed: Boolean, offset: Int): [Flag!]!
+
+  """Lists public and private Group chats on the network"""
+  groups(count: Int, offset: Int): [Chat!]!
+
+  """The Device's inbox of Messages"""
+  inbox: [EncryptedMessage!]!
+
+  """The current user's invites"""
+  invites: [Invite!]!
+
+  """The current User"""
+  me: User!
+
+  """The members of a Chat"""
+  members(chat: ID!, count: Int, offset: Int): [Member!]!
+
+  """Retrieves a User's memberships"""
+  memberships(user: ID): [Member!]!
+
+  """Fetch a Message by ID"""
+  message(id: ID!): Message
+
+  """The messages in a Chat. Can be filted by a search term"""
+  messages(chat: ID!, count: Int, offset: Int, searchTerm: String): [Message!]!
+
+  """The replies to a Message"""
+  replies(count: Int, message: ID!, offset: Int): [Message!]!
+
+  """Retrieves a User by ID"""
+  user(id: ID!): User
+
+  """Retrieves Users in the current Chat silo"""
+  users(botsOnly: Boolean, count: Int, offset: Int, searchTerm: String): [User!]!
+}
+
+type ReactionEvent {
+  message: Message!
+  reaction: String!
+  user: User!
+}
+
+type ReplyEvent {
+  message: Message!
+}
+
+"""The review content input for  a Flag review"""
+input ReviewFlagInput {
+  """The ID of the Flag to review"""
+  flag: ID!
+
+  """The rationale for the review status if any"""
+  rationale: String
+
+  """The rational status, Approved or Rejected"""
+  status: FlagReviewStatus!
+}
+
+"""Input for sending an Encrypted Message"""
+input SendEncryptedMessageInput {
+  device: ID!
+  forward: ForwardEncryptedMessageInput
+  initial: InitialEncryptedMessageInput
+}
+
+"""The input necessary to send a Message to a Chat"""
+input SendMessageInput {
+  """Input Attachments to include with the Message"""
+  attachments: [AttachmentInput!]
+
+  """The Chat to send the Message to"""
+  chat: ID!
+
+  """The ID of the Message this Message is replying to if it is a reply"""
+  parent: ID
+
+  """The text content of the message. May contain markdown and @mentions"""
+  text: String
+}
+
+type Subscription {
+  core: BroadcastEvent!
+  me: MeEvent!
+}
+
+"""A kind of System Message"""
+enum SystemMessageType {
+  Default
+  UserJoined
+  UserLeft
+}
+
+"""A User's Role in this Chat silo"""
+enum TenantUserRole {
+  """A User with Admin priveleges"""
+  Admin
+
+  """A standard User, can Chat, create Groups and update own Profile"""
+  Member
+
+  """A moderator, can manage flags, and content"""
+  Moderator
+
+  """A fully priveleged User"""
+  Owner
+}
+
+"""
+A field whose value conforms to the standard URL format as specified in RFC3986(opens in a new tab), and it uses real JavaScript URL objects.
+"""
+scalar URL
+
+"""A field whose value is a generic Universally Unique Identifier"""
+scalar UUID
+
+"""The params to update a device"""
+input UpdateDeviceInput {
+  """The Device's One Time PreKey Set"""
+  opk: [String!]!
+
+  """The Device's PreKey Signature Sig(IK, Encode(SPK))"""
+  pks: String!
+
+  """The Device's Signed PreKey"""
+  spk: String!
+}
+
+"""Represents the fields updatable on a group Chat"""
+input UpdateGroupInput {
+  """The new privacy of the group"""
+  _private: Boolean
+
+  """The new description of the group"""
+  description: String
+
+  """The ID of the chat to update"""
+  id: ID!
+
+  """The new image of the group"""
+  image: String
+
+  """The new name of the group"""
+  name: String
+}
+
+"""The input to update a Message"""
+input UpdateMessageInput {
+  """
+  Input Attachments to include with the Message. Replaces the old attachments array
+  """
+  attachments: [AttachmentInput]
+
+  """The ID of the Message to update"""
+  id: ID!
+
+  """The ID of the Message this Message is replying to if it is a reply"""
+  parent: ID
+
+  """The text content of the message. May contain markdown and @mentions"""
+  text: String
+}
+
+"""The available fields for updating on the current User's profile"""
+input UpdateProfileInput {
+  """The User's desired new display name"""
+  display_name: String
+
+  """The User's desired new image"""
+  image: String
+
+  """Notifications"""
+  notification_setting: NotificationSetting
+
+  """The User's desired new online status"""
+  status: OnlineStatus
+
+  """The User's desired new username"""
+  username: String
+}
+
+"""A chat User. This user only exists in this Chat silo"""
+type User {
+  """The IDs fo Users that have blocked this User"""
+  blocked_by: [ID!]
+
+  """The IDs of Users this User has blocked"""
+  blocks: [ID!]
+
+  """The date this User was created"""
+  created_at: DateTime!
+
+  """The User's bio or profile description"""
+  description: String
+
+  """The User's devices"""
+  devices: [Device!]!
+
+  """A freeform display name for a user. Can contain emojis"""
+  display_name: String
+
+  """The ID of the User"""
+  id: ID!
+
+  """The image associated with the User"""
+  image: String
+
+  """Whether or not this bot user is capable of 1webchat"""
+  is_1webchat: Boolean
+
+  """Whether or not this user is an AI bot"""
+  is_bot: Boolean
+
+  """Last seen date of the user"""
+  last_seen: DateTime!
+
+  """Network notification settings for this user"""
+  notification_settings: NotificationSetting!
+
+  """The Role of this User in their Chat silo"""
+  role: UserRole!
+
+  """The online status of this user"""
+  status: OnlineStatus!
+
+  """The Role of this User in their primary Tenant"""
+  tenant_role: TenantUserRole!
+
+  """The date this User was updated"""
+  updated_at: DateTime!
+
+  """
+  This User's unique handle. Can be alphanumeric and "_"
+  """
+  username: String!
+}
+
+"""A User's Role across all network silos, ie, InAppChat"""
+enum UserRole {
+  """A User with InAppChat Admin priveleges"""
+  Admin
+
+  """A standard User, usually a customer"""
+  Member
+
+  """A moderator, can manage flags, and content, support requests"""
+  Moderator
+
+  """A fully priveleged User"""
+  Owner
+}

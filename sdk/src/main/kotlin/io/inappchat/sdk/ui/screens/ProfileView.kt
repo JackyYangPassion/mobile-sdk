@@ -28,85 +28,90 @@ import io.inappchat.sdk.utils.*
 
 @Composable
 fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
-  val scrollState = rememberScrollState()
-  Column(
-    modifier = Modifier
-      .verticalScroll(scrollState)
-      .fillMaxSize(1f)
-  ) {
-    Header(title = user.usernameFb, icon = { Avatar(url = user.avatar) }, back = back)
-    Space(16f)
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-      Avatar(url = user.avatar, 150.0)
-      Space()
-      Text(text = user.displayNameFb, iac = fonts.headline, color = colors.text)
-      Box(
+    val scrollState = rememberScrollState()
+    Column(
         modifier = Modifier
-          .padding(12.dp, 5.dp)
-          .radius(30.dp)
-          .background(colors.softBackground),
-        contentAlignment = Alignment.Center
-      ) {
-        Text(
-          text = if (user.status == AvailabilityStatus.online) "Online" else user.lastSeen?.timeAgo()
-            ?: "",
-          iac = fonts.body,
-          color = if (user.status == AvailabilityStatus.online) colors.primary else colors.caption
-        )
-      }
+            .verticalScroll(scrollState)
+            .fillMaxSize(1f)
+    ) {
+        Header(title = user.username, icon = { Avatar(url = user.avatar) }, back = back)
+        Space(16f)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Avatar(url = user.avatar, 150.0)
+            Space()
+            Text(text = user.displayNameFb, iac = fonts.headline, color = colors.text)
+            Box(
+                modifier = Modifier
+                    .padding(12.dp, 5.dp)
+                    .radius(30.dp)
+                    .background(colors.softBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (user.status == AvailabilityStatus.online) "Online" else user.lastSeen?.timeAgo()
+                        ?: "",
+                    iac = fonts.body,
+                    color = if (user.status == AvailabilityStatus.online) colors.primary else colors.caption
+                )
+            }
 
-      if (!user.isCurrent) {
-        Divider(color = colors.softBackground)
-        SimpleRow(
-          icon = R.drawable.paper_plane_tilt_fill,
-          text = "Send a Chat",
-          iconPrimary = true
-        ) {
-          openChat(user)
+            if (!user.isCurrent) {
+                Divider(color = colors.softBackground)
+                SimpleRow(
+                    icon = R.drawable.paper_plane_tilt_fill,
+                    text = "Send a Chat",
+                    iconPrimary = true
+                ) {
+                    openChat(user)
+                }
+            }
+            Row(
+                Modifier
+                    .padding(top = 8.dp, start = 8.dp)
+                    .fillMaxWidth()
+            ) {
+                Text("Shared Media", iac = fonts.body, color = colors.text)
+            }
+            val listState = rememberLazyListState()
+            LazyRow(
+                state = listState, modifier = Modifier
+                    .padding(start = 16.dp, top = 8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                itemsIndexed(
+                    user.sharedMedia.items,
+                    key = { index, item -> item.id }) { index, item ->
+                    MessageContent(message = item)
+                }
+            }
+            Space(24f)
+            Divider(color = colors.caption)
+            if (!user.isCurrent) {
+                SimpleRow(
+                    icon = if (user.blocked) R.drawable.lock_simple_open_fill else R.drawable.lock_fill,
+                    text = if (user.blocked) "Unblock ${user.username}" else "Block ${user.username}",
+                    iconPrimary = user.blocked,
+                    destructive = !user.blocked
+                ) {
+                    user.block()
+                }
+            }
+            GrowSpacer()
         }
-      }
-      Row(
-        Modifier
-          .padding(top = 8.dp, start = 8.dp)
-          .fillMaxWidth()
-      ) {
-        Text("Shared Media", iac = fonts.body, color = colors.text)
-      }
-      val listState = rememberLazyListState()
-      LazyRow(
-        state = listState, modifier = Modifier
-          .padding(start = 16.dp, top = 8.dp)
-          .fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-      ) {
-        itemsIndexed(user.sharedMedia.items, key = { index, item -> item.id }) { index, item ->
-          MessageContent(message = item)
-        }
-      }
-      Space(24f)
-      Divider(color = colors.caption)
-      if (!user.isCurrent) {
-        SimpleRow(
-          icon = if (user.blocked) R.drawable.lock_simple_open_fill else R.drawable.lock_fill,
-          text = if (user.blocked) "Unblock ${user.usernameFb}" else "Block ${user.usernameFb}",
-          iconPrimary = user.blocked,
-          destructive = !user.blocked
-        ) {
-          user.block()
-        }
-      }
-      GrowSpacer()
     }
-  }
 }
 
 @IPreviews
 @Composable
 fun ProfileViewPreview() {
-  val u = genU()
-  val ms = random(10, { genImageMessage(user = u) })
-  u.sharedMedia.items.addAll(ms)
-  InAppChatContext {
-    ProfileView(user = u, back = { /*TODO*/ }, openChat = {})
-  }
+    val u = genU()
+    val ms = random(10, { genImageMessage(user = u) })
+    u.sharedMedia.items.addAll(ms)
+    InAppChatContext {
+        ProfileView(user = u, back = { /*TODO*/ }, openChat = {})
+    }
 }

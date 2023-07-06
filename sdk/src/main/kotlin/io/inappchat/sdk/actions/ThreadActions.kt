@@ -4,59 +4,67 @@
 
 package io.inappchat.sdk.actions
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.toMutableStateList
 import io.inappchat.sdk.API
-import io.inappchat.sdk.models.Contact
-import io.inappchat.sdk.models.Location
-import io.inappchat.sdk.models.NotificationSettings
+import io.inappchat.sdk.fragment.FMessage
 import io.inappchat.sdk.state.*
+import io.inappchat.sdk.type.AttachmentInput
+import io.inappchat.sdk.type.NotificationSetting
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
 import io.inappchat.sdk.utils.uuid
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import java.time.Instant
+import kotlinx.datetime.Clock
 
-fun Room.send(
-  inReplyTo: String?,
-  text: String? = null,
-  attachment: Attachment? = null,
-  gif: String? = null,
-  location: Location? = null,
-  contact: Contact? = null,
-  mediaType: MediaType = "application/octet-stream".toMediaType()
+fun Chat.send(
+    inReplyTo: String?,
+    text: String? = null,
+    attachments: List<AttachmentInput>? = null,
 ) {
-  val m = Message(
-    id = uuid(),
-    createdAt = Instant.now(),
-    userID = User.current!!.id,
-    parentID = inReplyTo,
-    threadID = id,
-    attachment = attachment ?: gif?.let { Attachment(gif, AttachmentKind.image) },
-    location = location,
-    contact = contact
-  )
-  m.text = text ?: ""
-  m.sending = true
-  sending.add(0, m)
-  op({
-    val sm = bg { API.send(id, inReplyTo, text, attachment, gif, location, contact, mediaType) }
-    items.add(0, sm)
-    sending.remove(m)
-  }) {
-    m.failed = true
-  }
+    val m = Message(
+        id = uuid(),
+        createdAt = Clock.System.now(),
+        userID = User.current!!.id,
+        parentID = inReplyTo,
+        chatID = id,
+        attachments = attachments?.map {
+            FMessage.Attachment(
+                id = it.id,
+                url = it.url,
+                data = it.data.getOrNull(),
+                type = it.type,
+                width = it.width.getOrNull(),
+                height = it.height.getOrNull(),
+                duration = it.duration.getOrNull(),
+                latitude = it.latitude.getOrNull(),
+                longitude = it.longitude.getOrNull(),
+                address = it.address.getOrNull(),
+                mime = it.mime.getOrNull()
+            )
+        }?.toMutableStateList() ?: mutableStateListOf(),
+    )
+    m.text = text ?: ""
+    m.sending = true
+    sending.add(0, m)
+    op({
+        val sm = bg { API.send(id, inReplyTo, text, attachments) }
+        items.add(0, sm)
+        sending.remove(m)
+    }) {
+        m.failed = true
+    }
 }
-  
 
-fun Room.setNotifications(settings: NotificationSettings.AllowFrom, isSync: Boolean) {
-  val og = this.notification
-  this.notification = settings
-  if (isSync) {
-    return
-  }
-  op({
-    API.updateThreadNotifications(id, settings)
-  }) {
-    this.notification = og
-  }
+
+fun Chat.setNotifications(settings: NotificationSetting, isSync: Boolean) {
+    val og = this.notification_setting
+    this.notification_setting = settings
+    if (isSync) {
+        return
+    }
+    op({
+        API.updateChatNotifications(id, settings)
+    }) {
+        this.notification_setting = og
+    }
 }

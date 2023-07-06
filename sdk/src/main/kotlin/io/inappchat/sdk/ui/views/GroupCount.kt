@@ -26,7 +26,7 @@ class CountProvider : PreviewParameterProvider<Int> {
 }
 
 @Composable
-fun GroupCount(count: Int) {
+fun ChatCount(count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(id = R.drawable.users_fill),
@@ -45,14 +45,14 @@ fun GroupCount(count: Int) {
 
 @IPreviews
 @Composable
-fun GrouppCountPreview() {
+fun ChatpCountPreview() {
     InAppChatContext {
         Column {
-            GroupCount(count = 1)
-            GroupCount(count = 4)
-            GroupCount(count = 10)
-            GroupCount(count = 301)
-            GroupCount(count = 2931)
+            ChatCount(count = 1)
+            ChatCount(count = 4)
+            ChatCount(count = 10)
+            ChatCount(count = 301)
+            ChatCount(count = 2931)
         }
     }
 }

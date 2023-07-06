@@ -29,7 +29,7 @@ fun Message.decr(emoji: String) {
 
 fun Message.updateStatus(status: MessageStatus = MessageStatus.seen) {
     if (user.isCurrent) return
-    if (room?.group != null) return
+    if (room?.chat != null) return
     if (status != MessageStatus.seen) {
         val og = status
         this.status = MessageStatus.seen

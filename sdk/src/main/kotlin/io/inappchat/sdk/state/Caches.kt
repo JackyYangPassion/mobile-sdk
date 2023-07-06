@@ -12,10 +12,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 data class Caches(
     val users: SnapshotStateMap<String, User> = mutableStateMapOf(),
     val messages: SnapshotStateMap<String, Message> = mutableStateMapOf(),
-    val groups: SnapshotStateMap<String, Group> = mutableStateMapOf(),
-    val threads: SnapshotStateMap<String, Room> = mutableStateMapOf(),
-    val threadsByUID: SnapshotStateMap<String, Room> = mutableStateMapOf(),
-    val threadsByGroup: SnapshotStateMap<String, Room> = mutableStateMapOf(),
+    val chats: SnapshotStateMap<String, Chat> = mutableStateMapOf(),
+    val chatsByUID: SnapshotStateMap<String, Chat> = mutableStateMapOf(),
     val repliesPagers: SnapshotStateMap<String, RepliesPager> = mutableStateMapOf(),
-    val threadFetches: MutableSet<String> = mutableSetOf()
+    val chatFetches: MutableSet<String> = mutableSetOf()
 )

@@ -15,9 +15,9 @@ import io.inappchat.sdk.utils.uuid
 import java.util.*
 
 @Stable
-data class ChannelsPager(val id: String = UUID.randomUUID().toString()) : Pager<Group>() {
-    override suspend fun load(skip: Int, limit: Int): List<Group> {
-        return API.groups(skip, limit)
+data class ChannelsPager(val id: String = UUID.randomUUID().toString()) : Pager<Chat>() {
+    override suspend fun load(skip: Int, limit: Int): List<Chat> {
+        return API.chats(skip, limit)
     }
 }
 
@@ -58,14 +58,6 @@ data class FavoritesPager(val id: String = uuid()) : Pager<Message>() {
 }
 
 @Stable
-data class GroupsPager(val id: String = uuid()) : Pager<Room>() {
-    override suspend fun load(skip: Int, limit: Int): List<Room> {
-        return API.getJoinedGroupThreads(skip, limit)
-    }
-
-}
-
-@Stable
 data class RepliesPager(val message: Message) : Pager<Message>() {
     init {
         Chats.current.cache.repliesPagers[message.id] = this
@@ -84,9 +76,9 @@ data class RepliesPager(val message: Message) : Pager<Message>() {
 }
 
 @Stable
-data class ThreadsPager(val id: String = uuid()) : Pager<Message>() {
+data class ThreadPager(val id: String = uuid()) : Pager<Message>() {
     override suspend fun load(skip: Int, limit: Int): List<Message> {
-        return API.getReplyThreads(skip, limit)
+        return API.getReplyChats(skip, limit)
     }
 
 }
@@ -97,11 +89,4 @@ data class UserSharedMedia(val user: User) : Pager<Message>() {
         return API.getSharedMedia(user.id)
     }
 
-}
-
-@Stable
-data class UserThreadsPager(val id: String = uuid()) : Pager<Room>() {
-    override suspend fun load(skip: Int, limit: Int): List<Room> {
-        return API.getJoinedUserThreads(skip, limit)
-    }
 }

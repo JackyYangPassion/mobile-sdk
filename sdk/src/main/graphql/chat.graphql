@@ -1,0 +1,46 @@
+query ListGroups($count: Int, $offset: Int) {
+  groups(count: $count, offset: $offset) {
+    ...FChat
+  }
+}
+
+mutation CreateGroup($input: CreateGroupInput!) {
+  createGroup(input: $input) {
+    ...FChat
+  }
+}
+
+mutation UpdateGroup($input: UpdateGroupInput!) {
+  updateGroup(input: $input)
+}
+
+mutation DeleteGroup($id: ID!) {
+  deleteGroup(id: $id)
+}
+
+query GetChat($id: ID!) {
+  chat(id: $id) {
+    ...FChat
+  }
+}
+
+mutation markChatRead($id: ID!) {
+  markChatRead(chat: $id)
+}
+
+query GetInvites {
+  invites {
+    created_at
+    updated_at
+    user {
+      ...FUser
+    }
+    chat {
+      ...FChat
+    }
+  }
+}
+
+mutation SetNotificationSetting($chat: ID!, $setting: NotificationSetting!) {
+  setNotificationSetting(chat: $chat, setting: $setting)
+}

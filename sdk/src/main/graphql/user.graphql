@@ -1,0 +1,61 @@
+query GetMe {
+  me {
+    ...FUser
+    blocks
+    blocked_by
+    notification_settings
+    devices {
+      ...FDevice
+    }
+  }
+
+  memberships {
+    ...FMember
+    last_read_at
+    chat {
+      ...FChat
+    }
+  }
+}
+
+query GetUser($id: ID!) {
+  user(id: $id) {
+    ...FUser
+  }
+}
+
+mutation ReadMessages($header: String!) {
+  read(header: $header)
+}
+
+query ListUsers($count: Int, $offset: Int) {
+  users(count: $count, offset: $offset) {
+    ...FUser
+  }
+}
+
+mutation DM($user: ID!) {
+  dm(user: $user) {
+    ...FChat
+  }
+}
+
+mutation Block($user: ID!) {
+  block(user: $user)
+}
+
+mutation Unblock($user: ID!) {
+  unblock(user: $user)
+}
+
+mutation UpdateProfile($input: UpdateProfileInput!) {
+  updateProfile(input: $input)
+}
+
+mutation SyncContacts($numbers: [String!]!) {
+  syncContacts(numbers: $numbers)
+}
+
+mutation registerPush($token: String!, $kind: DeviceType!, $fcm: Boolean) {
+  registerPush(token: $token, kind: $kind, fcm: $fcm)
+}

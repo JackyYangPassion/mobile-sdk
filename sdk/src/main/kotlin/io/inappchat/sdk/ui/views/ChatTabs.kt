@@ -22,66 +22,69 @@ import kotlin.random.Random
 
 @Composable
 private fun Tab(
-  tab: Chats.List,
-  selected: Boolean,
-  unreadCount: Int,
-  modifier: Modifier = Modifier,
-  onPress: (Chats.List) -> Unit
+    tab: Chats.List,
+    selected: Boolean,
+    unreadCount: Int,
+    modifier: Modifier = Modifier,
+    onPress: (Chats.List) -> Unit
 ) {
-  Row(modifier = modifier.clickable { onPress(tab) }, horizontalArrangement = Arrangement.Center) {
-    if (tab == Chats.List.groups) {
-      Spacer(modifier = Modifier.weight(1f))
-    }
-    Column(
-      verticalArrangement = Arrangement.spacedBy(2.dp),
-      modifier = Modifier.width(IntrinsicSize.Max)
+    Row(
+        modifier = modifier.clickable { onPress(tab) },
+        horizontalArrangement = Arrangement.Center
     ) {
-      Box(contentAlignment = Alignment.TopEnd) {
-        Text(
-          tab.label,
-          fonts.title2.copy(weight = FontWeight.Bold),
-          color = if (selected) colors.primary else colors.caption,
-        )
-        Badge(count = unreadCount, modifier = Modifier.offset(10.dp, -5.dp))
-      }
-      if (selected) {
-        Spacer(
-          modifier = Modifier
-            .background(colors.primary, CircleShape)
-            .height(4.dp)
-            .fillMaxWidth()
-        )
-      }
+        if (tab == Chats.List.chats) {
+            Spacer(modifier = Modifier.weight(1f))
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier.width(IntrinsicSize.Max)
+        ) {
+            Box(contentAlignment = Alignment.TopEnd) {
+                Text(
+                    tab.label,
+                    fonts.title2.copy(weight = FontWeight.Bold),
+                    color = if (selected) colors.primary else colors.caption,
+                )
+                Badge(count = unreadCount, modifier = Modifier.offset(10.dp, -5.dp))
+            }
+            if (selected) {
+                Spacer(
+                    modifier = Modifier
+                        .background(colors.primary, CircleShape)
+                        .height(4.dp)
+                        .fillMaxWidth()
+                )
+            }
+        }
+        if (tab == Chats.List.chats) {
+            Spacer(modifier = Modifier.weight(1f))
+        }
     }
-    if (tab == Chats.List.threads) {
-      Spacer(modifier = Modifier.weight(1f))
-    }
-  }
 }
 
 @Composable
 fun ChatTabs(list: Chats.List, onSelect: (Chats.List) -> Unit) {
-  Row(modifier = Modifier.height(44.dp)) {
-    for (tab in Chats.List.values()) {
-      Tab(
-        tab = tab,
-        selected = list == tab,
-        unreadCount = Random.nextInt(25),
-        modifier = Modifier.weight(1f),
-        onPress = onSelect
-      )
+    Row(modifier = Modifier.height(44.dp)) {
+        for (tab in Chats.List.values()) {
+            Tab(
+                tab = tab,
+                selected = list == tab,
+                unreadCount = Random.nextInt(25),
+                modifier = Modifier.weight(1f),
+                onPress = onSelect
+            )
+        }
     }
-  }
 }
 
 @IPreviews
 @Composable
 fun ChatTabsPreview() {
-  InAppChatContext {
-    Column {
-      ChatTabs(list = Chats.List.users, onSelect = {})
-      ChatTabs(list = Chats.List.groups, onSelect = {})
-      ChatTabs(list = Chats.List.threads, onSelect = {})
+    InAppChatContext {
+        Column {
+            ChatTabs(list = Chats.List.users, onSelect = {})
+            ChatTabs(list = Chats.List.chats, onSelect = {})
+            ChatTabs(list = Chats.List.chats, onSelect = {})
+        }
     }
-  }
 }

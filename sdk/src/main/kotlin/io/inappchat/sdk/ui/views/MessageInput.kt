@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.actions.send
 import io.inappchat.sdk.state.Message
-import io.inappchat.sdk.state.Room
+import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.InAppChatContext
@@ -29,57 +29,57 @@ import io.inappchat.sdk.utils.genT
 
 @Composable
 fun MessageInput(
-  room: Room,
-  replyingTo: Message? = null,
-  focusRequester: FocusRequester = remember { FocusRequester() },
-  onMedia: Fn
+    room: Chat,
+    replyingTo: Message? = null,
+    focusRequester: FocusRequester = remember { FocusRequester() },
+    onMedia: Fn
 ) {
-  var text by remember {
-    mutableStateOf("")
-  }
-
-  Column(modifier = Modifier.padding(16.dp, 8.dp)) {
-    Row {
-      TextInput(
-        text = text,
-        onChange = { text = it },
-        focusRequester = focusRequester,
-        modifier = Modifier.weight(1f)
-      ) {
-        IconButton(onClick = onMedia, modifier = Modifier.size(20.dp)) {
-          Icon(
-            painter = painterResource(id = R.drawable.paperclip_fill),
-            contentDescription = "send attachment",
-            modifier = Modifier.size(20.dp),
-            tint = IAC.colors.caption
-          )
-        }
-      }
-      Space(8f)
-      IconButton(onClick = {
-        if (!text.isBlank()) {
-          room.send(replyingTo?.id, text)
-          text = ""
-        }
-      }, modifier = Modifier.circle(44.dp, colors.softBackground)) {
-        Icon(
-          painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
-          contentDescription = "send message",
-          modifier = Modifier.size(22.dp),
-          tint = colors.primary
-        )
-      }
+    var text by remember {
+        mutableStateOf("")
     }
-  }
+
+    Column(modifier = Modifier.padding(16.dp, 8.dp)) {
+        Row {
+            TextInput(
+                text = text,
+                onChange = { text = it },
+                focusRequester = focusRequester,
+                modifier = Modifier.weight(1f)
+            ) {
+                IconButton(onClick = onMedia, modifier = Modifier.size(20.dp)) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.paperclip_fill),
+                        contentDescription = "send attachment",
+                        modifier = Modifier.size(20.dp),
+                        tint = colors.caption
+                    )
+                }
+            }
+            Space(8f)
+            IconButton(onClick = {
+                if (!text.isBlank()) {
+                    room.send(replyingTo?.id, text)
+                    text = ""
+                }
+            }, modifier = Modifier.circle(44.dp, colors.softBackground)) {
+                Icon(
+                    painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
+                    contentDescription = "send message",
+                    modifier = Modifier.size(22.dp),
+                    tint = colors.primary
+                )
+            }
+        }
+    }
 }
 
 @IPreviews
 @Composable
 fun MessageInputPreview() {
-  InAppChatContext {
-    MessageInput(room = genT(), null) {
+    InAppChatContext {
+        MessageInput(room = genT(), null) {
 
+        }
     }
-  }
 
 }

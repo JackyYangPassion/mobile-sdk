@@ -10,12 +10,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import io.inappchat.sdk.state.Group
+import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.Message
-import io.inappchat.sdk.state.Room
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.screens.ChatRoute
-import io.inappchat.sdk.ui.screens.CreateGroup
+import io.inappchat.sdk.ui.screens.CreateChat
 import io.inappchat.sdk.ui.screens.FavoritesView
 import io.inappchat.sdk.ui.screens.InviteView
 import io.inappchat.sdk.ui.screens.NotificationSettingsView
@@ -24,13 +23,13 @@ import io.inappchat.sdk.ui.screens.SearchView
 import io.inappchat.sdk.ui.screens.Tabs
 
 fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
-    val openChat = { it: Room -> navController.navigate(it.path) }
+    val openChat = { it: Chat -> navController.navigate(it.path) }
     val openReplies = { it: Message ->
         navController.navigate(it.path)
     }
     val openProfile = { it: User -> navController.navigate(it.path) }
-    val openInvite = { it: Group -> navController.navigate(it.invitePath) }
-    val openEditGroup = { it: Group -> navController.navigate(it.editPath) }
+    val openInvite = { it: Chat -> navController.navigate(it.invitePath) }
+    val openEditChat = { it: Chat -> navController.navigate(it.editPath) }
 
     val back = {
         navController.popBackStack()
@@ -42,7 +41,7 @@ fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphB
             openReplies = openReplies,
             openProfile = { openProfile(it) },
             openCompose = {},
-            openCreateGroup = { navController.navigate("group/new") },
+            openCreateChat = { navController.navigate("chat/new") },
             openSearch = { navController.navigate("search") },
             openFavorites = { navController.navigate("favorites") },
             openNotificationSettings = { navController.navigate("settings/notificications") },
@@ -74,40 +73,40 @@ fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphB
                 uid = it.arguments?.getString("id")!!,
                 openProfile = openProfile,
                 openInvite = openInvite,
-                openEditGroup = openEditGroup,
+                openEditChat = openEditChat,
                 openReply = openReplies,
                 back = back
             )
         }
         composable(
-            "group/{id}",
+            "chat/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
             ChatRoute(
                 gid = it.arguments?.getString("id")!!,
                 openProfile = openProfile,
                 openInvite = openInvite,
-                openEditGroup = openEditGroup,
+                openEditChat = openEditChat,
                 openReply = openReplies,
                 back = back
             )
         }
         composable(
-            "group/{id}/edit",
+            "chat/{id}/edit",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
-            CreateGroup(
-                group = Group.get(it.arguments?.getString("id")!!),
+            CreateChat(
+                chat = Chat.get(it.arguments?.getString("id")!!),
                 openInvite = openInvite,
                 _back = back
             )
         }
         composable(
-            "group/{id}/invite",
+            "chat/{id}/invite",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
             InviteView(
-                group = Group.get(it.arguments?.getString("id")!!)!!,
+                chat = Chat.get(it.arguments?.getString("id")!!)!!,
                 back = back
             )
         }
@@ -119,13 +118,13 @@ fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphB
                 mid = it.arguments?.getString("id")!!,
                 openProfile = openProfile,
                 openInvite = openInvite,
-                openEditGroup = openEditGroup,
+                openEditChat = openEditChat,
                 openReply = openReplies,
                 back = back
             )
         }
-        composable("groups/new") {
-            CreateGroup(group = null, openInvite = openInvite, _back = back)
+        composable("chats/new") {
+            CreateChat(chat = null, openInvite = openInvite, _back = back)
         }
         composable("favorites") {
             FavoritesView(

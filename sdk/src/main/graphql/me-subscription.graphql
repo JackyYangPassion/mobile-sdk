@@ -1,0 +1,29 @@
+subscription MeSubscription {
+  me {
+    ... on InviteEvent {
+      __typename
+      by {
+        ...FUser
+      }
+      to {
+        ...FChat
+      }
+    }
+    ... on ReplyEvent {
+      __typename
+      message {
+        ...FMessage
+      }
+    }
+    ... on ReactionEvent {
+      __typename
+      reaction
+      user {
+        ...FUser
+      }
+      message {
+        ...FMessage
+      }
+    }
+  }
+}

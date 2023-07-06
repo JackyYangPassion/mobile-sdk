@@ -18,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.actions.invite
 import io.inappchat.sdk.state.Chats
-import io.inappchat.sdk.state.Group
+import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
@@ -30,79 +30,79 @@ import io.inappchat.sdk.utils.genU
 import io.inappchat.sdk.utils.random
 
 @Composable
-fun InviteView(group: Group, back: () -> Unit) {
-  val selected = remember {
-    mutableStateListOf<User>()
-  }
+fun InviteView(chat: Chat, back: () -> Unit) {
+    val selected = remember {
+        mutableStateListOf<User>()
+    }
 
-  Column {
-    Header(title = "Invite to ${group.name}", back = back)
-    PagerList(pager = Chats.current.contacts, divider = true, modifier = Modifier.weight(1f)) {
-      val isSelected = selected.contains(it)
-      ContactRow(user = it, modifier = Modifier
-        .padding(end = 16.dp)
-        .fillMaxWidth()
-        .clickable { if (!isSelected) selected.add(it) else selected.remove(it) }) {
-        Box(
-          modifier =
-          Modifier.circle(25.dp, if (isSelected) colors.primary else colors.caption),
-          contentAlignment = Alignment.Center
-        ) {
-          Icon(
-            painter = painterResource(id = io.inappchat.sdk.R.drawable.check),
-            contentDescription = "Check mark",
-            tint = colors.background,
-            modifier = Modifier.size(14.dp)
-          )
-        }
-      }
-    }
-    Row(
-      modifier = Modifier
-        .padding(20.dp, 12.dp)
-        .fillMaxWidth(),
-      horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-      Box(
-        modifier = Modifier
-          .circle(50.dp, colors.caption)
-          .clickable { back() }, contentAlignment = Alignment.Center
-      ) {
-        Icon(
-          painter = painterResource(id = io.inappchat.sdk.R.drawable.caret_left),
-          contentDescription = "back",
-          tint = colors.background,
-          modifier = Modifier.size(22.dp)
-        )
-      }
-      Row(verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-          .height(50.dp)
-          .weight(1f)
-          .background(
-            if (selected.isNotEmpty()) colors.primary else colors.caption,
-            RoundedCornerShape(25.dp)
-          )
-          .clickable {
-            if (selected.isNotEmpty() && !group.inviting) {
-              group.invite(selected)
-              back()
+    Column {
+        Header(title = "Invite to ${chat.name}", back = back)
+        PagerList(pager = Chats.current.contacts, divider = true, modifier = Modifier.weight(1f)) {
+            val isSelected = selected.contains(it)
+            ContactRow(user = it, modifier = Modifier
+                .padding(end = 16.dp)
+                .fillMaxWidth()
+                .clickable { if (!isSelected) selected.add(it) else selected.remove(it) }) {
+                Box(
+                    modifier =
+                    Modifier.circle(25.dp, if (isSelected) colors.primary else colors.caption),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = io.inappchat.sdk.R.drawable.check),
+                        contentDescription = "Check mark",
+                        tint = colors.background,
+                        modifier = Modifier.size(14.dp)
+                    )
+                }
             }
-          }) {
-        Text(text = "Invite Friends", iac = fonts.headline, color = colors.background)
-      }
+        }
+        Row(
+            modifier = Modifier
+                .padding(20.dp, 12.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .circle(50.dp, colors.caption)
+                    .clickable { back() }, contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = io.inappchat.sdk.R.drawable.caret_left),
+                    contentDescription = "back",
+                    tint = colors.background,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .height(50.dp)
+                    .weight(1f)
+                    .background(
+                        if (selected.isNotEmpty()) colors.primary else colors.caption,
+                        RoundedCornerShape(25.dp)
+                    )
+                    .clickable {
+                        if (selected.isNotEmpty() && !chat.inviting) {
+                            chat.invite(selected)
+                            back()
+                        }
+                    }) {
+                Text(text = "Invite Friends", iac = fonts.headline, color = colors.background)
+            }
+        }
     }
-  }
 }
 
 @IPreviews
 @Composable
 fun InvitePreview() {
-  InAppChatContext {
-    Chats.current.contacts.items.addAll(random(20, { genU() }))
-    InviteView(group = genG()) {
+    InAppChatContext {
+        Chats.current.contacts.items.addAll(random(20, { genU() }))
+        InviteView(chat = genG()) {
 
+        }
     }
-  }
 }

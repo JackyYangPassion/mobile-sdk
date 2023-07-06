@@ -77,7 +77,7 @@ class AppState {
                 var first = true
                 accounts.map { account ->
                     if (!first)
-                        Thread.sleep(1000)
+                        Chat.sleep(1000)
                     first = false
                     Etherscan.getTokens(account)
                 }

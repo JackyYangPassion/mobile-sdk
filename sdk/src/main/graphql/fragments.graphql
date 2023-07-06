@@ -1,0 +1,92 @@
+fragment FMember on Member {
+  __typename
+  role
+  created_at
+  user {
+    ...FUser
+  }
+  chat_id
+}
+
+fragment FChat on Chat {
+  __typename
+  id
+  kind
+  created_at
+  updated_at
+  name
+  description
+  image
+  _private
+  encrypted
+  unread_count
+  members {
+    ...FMember
+  }
+  last_message {
+    ...FMessage
+  }
+  notification_setting
+}
+
+fragment FMessage on Message {
+  __typename
+  id
+  system
+  created_at
+  updated_at
+  text
+  parent_id
+  reply_count
+  reactions
+  chat_id
+  user {
+    ...FUser
+  }
+  attachments {
+    id
+    type
+    url
+    data
+    mime
+    width
+    height
+    duration
+    address
+    latitude
+    longitude
+  }
+  mentions {
+    user_id
+    username
+    offset
+  }
+}
+
+fragment FUser on User {
+  __typename
+  id
+  updated_at
+  created_at
+  last_seen
+  username
+  display_name
+  description
+  image
+  is_bot
+  status
+  devices {
+    ...FDevice
+  }
+}
+
+fragment FDevice on Device {
+  __typename
+  id
+  created_at
+  updated_at
+  ik
+  spk
+  pks
+  opk
+}

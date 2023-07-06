@@ -8,17 +8,29 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloRequest
+import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Operation
+import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.api.http.HttpRequest
+import com.apollographql.apollo3.api.http.HttpResponse
+import com.apollographql.apollo3.interceptor.ApolloInterceptor
+import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
+import com.apollographql.apollo3.network.http.HttpInterceptor
+import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import com.apollographql.apollo3.network.http.LoggingInterceptor
+import com.apollographql.apollo3.network.okHttpClient
 import com.moczul.ok2curl.CurlInterceptor
-import io.inappchat.sdk.apis.*
+import com.moczul.ok2curl.logger.Logger
 import io.inappchat.sdk.auth.ApiKeyAuth
 import io.inappchat.sdk.auth.HttpBearerAuth
-import io.inappchat.sdk.infrastructure.ApiClient
-import io.inappchat.sdk.models.*
 import io.inappchat.sdk.state.*
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.Socket
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CompletionHandler
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -46,16 +58,27 @@ fun String.sha256(): String {
     return digest.fold("", { str, it -> str + "%02x".format(it) })
 }
 
-val provisioningServerProd = "https://prov.ripbullertc.com/v1/tenants/get-tenant-details/"
-val provisioningServerDev = "https://prov-dev.inappchat.io/v1/tenants/get-tenant-details/"
-
 val env = "prod"
 
-fun provisioningServer(): String =
-    when (env) {
-        "dev" -> provisioningServerDev
-        else -> provisioningServerProd
+object Servers {
+    data class Server(val host: String, val ssl: Boolean) {
+        val http: String
+            get() = "http${if (ssl) "s" else ""}://${host}/graphql"
+
+        val ws: String
+            get() = "ws${if (ssl) "s" else ""}://${host}/graphql"
     }
+
+    val prod = Server("chat.inappchat.io", true)
+    val dev = Server("chat.dev.inappchat.io", true)
+    val local = Server("chat.dev.inappchat.io", true)
+
+    fun get() = when (env) {
+        "dev" -> dev
+        "local" -> local
+        else -> prod
+    }
+}
 
 
 suspend inline fun Call.await(): Response {
@@ -89,91 +112,38 @@ class ContinuationCallback(
     }
 }
 
-fun APIMessage.m() = Message.get(this)
-fun APIGroup.g() = Group.get(this)
-fun APIThread.t() = Room.get(this)
-fun APIUser.u() = User.get(this)
-
 object API {
     lateinit var deviceId: String
-    var cfg: JSONObject? = null
-    var server: String by Delegates.observable("https://chat.inappchat.io/") { property, old, new ->
-        client = makeClient()
-    }
-
     var apiKey: String? = null
 
     var authToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
         InAppChat.shared.prefs.edit().putString("auth-token", newValue).apply()
-        client = makeClient()
-    }
-    var refreshToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
-        InAppChat.shared.prefs.edit().putString("refresh-token", newValue).apply()
-    }
-    var tokenExpiresAt: LocalDateTime? by Delegates.observable(null) { property, oldValue, newValue ->
-        if (newValue != null) {
-            InAppChat.shared.prefs.edit()
-                .putLong("token-expires", newValue.toEpochSecond(ZoneOffset.UTC))
-                .apply()
-        } else {
-            InAppChat.shared.prefs.edit().remove("token-expires").apply()
-        }
     }
 
-    fun okHttpBuilder() = OkHttpClient()
-        .newBuilder()
 
-
-    fun makeClient(): ApiClient {
-        Log.v("InAppChat", "make client")
-        val builder = okHttpBuilder()
-        val client = ApiClient(
-            baseUrl = server,
-            okHttpClientBuilder = builder
+    var client = ApolloClient.Builder()
+        .serverUrl(Servers.get().http)
+        .okHttpClient(
+            OkHttpClient.Builder()
+                .addInterceptor(Interceptor { chain ->
+                    val request = chain.request().newBuilder()
+                        .apply {
+                            authToken?.let { addHeader("Authorization", "Bearer $it") }
+                            apiKey?.let { addHeader("X-API-Key", it) }
+                            addHeader("X-Device-ID", deviceId)
+                        }.build()
+                    chain.proceed(request)
+                })
+                .addInterceptor(CurlInterceptor(logger = object : Logger {
+                    override fun log(message: String) {
+                        Log.v("InAppChat", message)
+                    }
+                }))
+                .addInterceptor(LoggingInterceptor)
+                .build()
         )
-        apiKey?.let {
-            Log.v("InAppChat", "Add Client Authorization API Key")
-            client.addAuthorization("ApiKeyAuth", ApiKeyAuth("header", "X-API-Key", it))
-        }
-        authToken?.let {
-            Log.v("InAppChat", "Add Client Authorization Auth Token")
-            client.addAuthorization("BearerAuth", HttpBearerAuth("bearer", it))
-        }
-        if (this::deviceId.isInitialized) {
-            client.addAuthorization("DeviceId", ApiKeyAuth("header", "X-Device-ID", deviceId))
-        }
-        builder.addInterceptor(CurlInterceptor(object : com.moczul.ok2curl.logger.Logger {
-            override fun log(message: String) {
-                Log.d("API", message)
-            }
-        }))
-            .addInterceptor(HttpLoggingInterceptor { message -> Log.d("API", message) }
-                .apply { level = HttpLoggingInterceptor.Level.BODY }
-            )
-        chat = client.createService(ChatApi::class.java)
-        auth = client.createService(AuthApi::class.java)
-        settings = client.createService(ChatSettingApi::class.java)
-        group = client.createService(GroupApi::class.java)
-        search = client.createService(SearchApi::class.java)
-        thread = client.createService(ThreadApi::class.java)
-        user = client.createService(UserApi::class.java)
-        _default = client.createService(DefaultApi::class.java)
-        return client
-    }
+        .build()
 
-    var client = makeClient()
-    lateinit var chat: ChatApi
-    lateinit var auth: AuthApi
-    lateinit var settings: ChatSettingApi
-    lateinit var group: GroupApi
-    lateinit var search: SearchApi
-    lateinit var thread: ThreadApi
-    lateinit var user: UserApi
-    lateinit var _default: DefaultApi
-
-    fun updateClient() {
-        this.client = makeClient()
-    }
 
     fun init() {
         var deviceId = InAppChat.shared.prefs
@@ -186,54 +156,22 @@ object API {
         this.authToken = InAppChat.shared.prefs.getString("auth-token", null)
     }
 
-    fun headers(): Headers {
-        val ts = (Date().time / 1000.0).toInt().toString()
-        val signature =
-            "${InAppChat.shared.apiKey}~${InAppChat.shared.appContext.packageName}~$ts".sha256()
-        return Headers.Builder().add(
-            "X-API-Key", InAppChat.shared.apiKey
-        )
-            .add(
-                "X-Request-Signature", signature
+
+    suspend fun getMessages(chat: String, skip: Int = 0, limit: Int = 40) =
+        client.query(
+            ListMessagesQuery(
+                chat = chat,
+                offset = Optional.present(skip),
+                count = Optional.present(limit)
             )
-            .add(
-                "X-nonce", (ts)
-            )
-            .add(
-                "DeviceId", deviceId
-            )
-            .build()
-    }
-
-    suspend fun getTenant(): JSONObject {
-        val client = okHttpBuilder().build()
-        val request = Request.Builder()
-            .url(provisioningServer() + InAppChat.shared.namespace)
-            .headers(headers()).build()
-        val response = client.newCall(request).await()
-        val body = response.body?.string()
-        if (body == null) {
-            throw IOException("Empty body, expected json")
-        }
-        val cfg = JSONObject(body).getJSONObject("result")
-        this.cfg = cfg
-        return cfg
-    }
-
-    suspend fun getMessages(thread: String, pageSize: Int, currentMsgId: String? = null) =
-        chat.getMessages(thread, pageSize = pageSize, currentMsgId = currentMsgId).result()
-            .map(Message::get)
-
-
-    fun reply(to: String?): Reply? =
-        to?.let { Reply(baseMsgUniqueId = it, replyMsgConfig = BigDecimal.ONE) }
+        ).execute().data?.let { it.messages.map(Message::get) }
 
     suspend fun updateMessageStatus(mid: String, status: MessageStatus) {
         chat.updateMessage(mid, UpdateMessageInput(status = status)).result()
     }
 
     suspend fun send(
-        thread: String,
+        chat: String,
         inReplyTo: String?,
         text: String? = null,
         attachment: Attachment? = null,
@@ -244,7 +182,7 @@ object API {
     ) =
         chat.sendMessage(
             senderTimeStampMs = System.currentTimeMillis().toBigDecimal(),
-            thread,
+            chat,
             message = text,
             gif = gif,
             location = location,
@@ -260,35 +198,35 @@ object API {
                     )
                 )
             },
-            replyThreadFeatureData = reply(inReplyTo)
+            replyChatFeatureData = reply(inReplyTo)
         ).result().message!!.m()
 
-    suspend fun updateGroup(
+    suspend fun updateChat(
         id: String,
         name: String? = null,
-        groupType: UpdateGroupInput.GroupType? = null,
+        chatType: UpdateChatInput.ChatType? = null,
         description: String? = null,
         profilePic: File? = null
-    ) = group.updateGroup(
+    ) = chat.updateChat(
         id,
-        updateGroupInput = UpdateGroupInput(
+        updateChatInput = UpdateChatInput(
             name,
-            groupType = groupType,
+            chatType = chatType,
             description = description,
             profilePic = profilePic
         )
     ).result().g()
 
-    suspend fun createGroup(
+    suspend fun createChat(
         name: String,
         _private: Boolean,
         description: String? = null,
         profilePic: File? = null,
         profilePicType: MediaType = "application/octet-stream".toMediaType(),
         participants: List<String> = listOf()
-    ) = group.createGroup(
+    ) = chat.createChat(
         name = name,
-        groupType = if (_private) "private" else "public",
+        chatType = if (_private) "private" else "public",
         description = description,
         profilePic = profilePic?.let {
             MultipartBody.Part.create(
@@ -302,14 +240,14 @@ object API {
         participants = participants
     ).result().g()
 
-    suspend fun deleteGroup(id: String) = group.deleteGroup(id).result()
-    suspend fun addParticipant(g: String, u: String) = group.addParticipant(g, u).result()
-    suspend fun removeParticipant(g: String, u: String) = group.addParticipant(g, u).result()
-    suspend fun joinGroup(g: String) = group.addParticipant(g, User.current!!.id).result()
-    suspend fun leaveGroup(g: String) = group.removeParticipant(g, User.current!!.id).result()
-    suspend fun getGroup(g: String) = group.getGroup(g).result().g()
-    suspend fun promoteAdmin(g: String, uid: String) = group.groupAddAdmin(g, uid).result()
-    suspend fun dismissAdmin(g: String, uid: String) = group.groupDismissAdmin(g, uid).result()
+    suspend fun deleteChat(id: String) = chat.deleteChat(id).result()
+    suspend fun addParticipant(g: String, u: String) = chat.addParticipant(g, u).result()
+    suspend fun removeParticipant(g: String, u: String) = chat.addParticipant(g, u).result()
+    suspend fun joinChat(g: String) = chat.addParticipant(g, User.current!!.id).result()
+    suspend fun leaveChat(g: String) = chat.removeParticipant(g, User.current!!.id).result()
+    suspend fun getChat(g: String) = chat.getChat(g).result().g()
+    suspend fun promoteAdmin(g: String, uid: String) = chat.chatAddAdmin(g, uid).result()
+    suspend fun dismissAdmin(g: String, uid: String) = chat.chatDismissAdmin(g, uid).result()
 
     suspend fun deleteMessage(id: String) = chat.deleteMessage(id).result()
 
@@ -321,16 +259,16 @@ object API {
 
     suspend fun react(mid: String, emoji: String) = chat.react(mid, emoji).result()
     suspend fun unreact(mid: String, emoji: String) = chat.unreact(mid, emoji).result()
-    suspend fun invites() = group.getInvites().result()
+    suspend fun invites() = chat.getInvites().result()
 
     suspend fun editMessageText(id: String, text: String) =
         chat.updateMessage(id, UpdateMessageInput(message = text)).result()
 
-    suspend fun dismissInvites(g: String) = group.dismissGroupInvite(g).result()
-    suspend fun acceptInvites(g: String) = group.acceptGroupInvite(g).result()
+    suspend fun dismissInvites(g: String) = chat.dismissChatInvite(g).result()
+    suspend fun acceptInvites(g: String) = chat.acceptChatInvite(g).result()
 
-    suspend fun invite(users: List<String>, toGroup: String) =
-        group.inviteUser(toGroup, users).result()
+    suspend fun invite(users: List<String>, toChat: String) =
+        chat.inviteUser(toChat, users).result()
 
     suspend fun getSharedMedia(uid: String) =
         _default.getUserMessages(uid, 0, 10, MessageType.image).result().map { it.m() }
@@ -432,40 +370,40 @@ object API {
             UpdateUserInput(availabilityStatus = (setting))
         )
 
-    suspend fun updateThreadNotifications(id: String, setting: NotificationSettings.AllowFrom) =
-        thread.updateThread(
+    suspend fun updateChatNotifications(id: String, setting: NotificationSettings.AllowFrom) =
+        chat.updateChat(
             id,
-            UpdateThreadInput(notificationSettings = NotificationSettings(setting))
+            UpdateChatInput(notificationSettings = NotificationSettings(setting))
         )
 
     suspend fun getContacts(existing: List<String>): List<User> =
         user.syncContacts(SyncContactsInput(existing)).result().map { it.u() }
 
-    suspend fun getJoinedUserThreads(skip: Int, limit: Int) = thread.getThreads(
+    suspend fun getJoinedUserChats(skip: Int, limit: Int) = chat.getChats(
         skip = skip,
         limit = limit,
-        threadType = ThreadApi.ThreadType_getThreads.single
+        chatType = ChatApi.ChatType_getChats.single
     )
         .result().map { it.t() }
 
-    suspend fun getJoinedGroupThreads(skip: Int, limit: Int) = thread.getThreads(
+    suspend fun getJoinedChatChats(skip: Int, limit: Int) = chat.getChats(
         skip = skip,
         limit = limit,
-        threadType = ThreadApi.ThreadType_getThreads.group
+        chatType = ChatApi.ChatType_getChats.chat
     )
         .result().map { it.t() }
 
-    suspend fun groups(skip: Int, limit: Int) =
-        group.getGroups(limit = limit, skip = skip, joined = GroupApi.Joined_getGroups.no).result()
+    suspend fun chats(skip: Int, limit: Int) =
+        chat.getChats(limit = limit, skip = skip, joined = ChatApi.Joined_getChats.no).result()
             .map { it.g() }
 
-    suspend fun getReplyThreads(skip: Int, limit: Int) =
-        chat.getReplyThreads(limit = limit, skip = skip, deep = true).result().map { it.m() }
+    suspend fun getReplyChats(skip: Int, limit: Int) =
+        chat.getReplyChats(limit = limit, skip = skip, deep = true).result().map { it.m() }
 
-    suspend fun getThread(id: String) = thread.getThread(id).result().t()
+    suspend fun getChat(id: String) = chat.getChat(id).result().t()
     suspend fun getMessage(id: String) = chat.getMessage(id).result().m()
-    suspend fun getGroupThread(gid: String) = thread.getGroupThread(gid).result().t()
-    suspend fun getUserThread(uid: String) = thread.createThread(uid).result().t()
+    suspend fun getChatChat(gid: String) = chat.getChatChat(gid).result().t()
+    suspend fun getUserChat(uid: String) = chat.createChat(uid).result().t()
 
     suspend fun getReplies(mid: String, skip: Int, limit: Int) =
         chat.getReplies(mid, skip, limit).result().map { it.m() }
