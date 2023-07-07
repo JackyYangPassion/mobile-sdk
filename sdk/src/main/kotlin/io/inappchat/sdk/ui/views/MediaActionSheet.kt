@@ -47,14 +47,14 @@ enum class Media {
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun MediaActionSheet(
-    open: Boolean,
-    room: Chat,
-    inReplyTo: Message?,
-    dismiss: () -> Unit,
-    content: @Composable () -> Unit
+        open: Boolean,
+        chat: Chat,
+        inReplyTo: Message?,
+        dismiss: () -> Unit,
+        content: @Composable () -> Unit
 ) {
     val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+            ModalBottomSheetValue.Hidden, skipHalfExpanded = true
     )
     var media by remember { mutableStateOf<Media?>(null) }
     LaunchedEffect(key1 = open, block = {
@@ -71,43 +71,43 @@ fun MediaActionSheet(
 
     when (media) {
         Media.pickPhoto, Media.pickVideo -> AssetPicker(video = media == Media.pickVideo, onUri = {
-            room.send(
-                inReplyTo?.id,
-                attachment = Attachment(
-                    it.toFile().absolutePath,
-                    if (media == Media.pickVideo) AttachmentType.video else AttachmentType.image
-                )
+            chat.send(
+                    inReplyTo?.id,
+                    attachment = Attachment(
+                            it.toFile().absolutePath,
+                            if (media == Media.pickVideo) AttachmentType.video else AttachmentType.image
+                    )
             )
             hide()
         }) { hide() }
 
         Media.recordPhoto, Media.recordVideo -> CameraPicker(
-            video = media == Media.recordVideo,
-            onUri = {
-                room.send(
-                    inReplyTo?.id,
-                    attachment = Attachment(
-                        it.toFile().absolutePath,
-                        if (media == Media.recordVideo) AttachmentType.video else AttachmentType.image
+                video = media == Media.recordVideo,
+                onUri = {
+                    chat.send(
+                            inReplyTo?.id,
+                            attachment = Attachment(
+                                    it.toFile().absolutePath,
+                                    if (media == Media.recordVideo) AttachmentType.video else AttachmentType.image
+                            )
                     )
-                )
-                hide()
-            }) { hide() }
+                    hide()
+                }) { hide() }
 
         Media.gif -> GifPicker(onUri = {
-            room.send(inReplyTo?.id, gif = it.toString())
+            chat.send(inReplyTo?.id, gif = it.toString())
             hide()
         }) { hide() }
 
         Media.contact -> ContactPicker(onContact = {
-            room.send(inReplyTo?.id, contact = it)
+            chat.send(inReplyTo?.id, contact = it)
             hide()
         }) {
             hide()
         }
 
         Media.location -> LocationPicker(onLocation = {
-            room.send(inReplyTo?.id, location = it.toLocation())
+            chat.send(inReplyTo?.id, location = it.toLocation())
             hide()
         }) {
             hide()
@@ -117,35 +117,35 @@ fun MediaActionSheet(
     }
 
     ModalBottomSheetLayout(
-        sheetState = state,
-        sheetBackgroundColor = IAC.colors.background,
-        sheetContentColor = IAC.colors.text,
-        scrimColor = IAC.colors.caption,
-        sheetContent = {
-            Space(8f)
-            ActionItem(icon = R.drawable.image_square, text = "Upload Photo", divider = false) {
-                media = Media.pickPhoto
-            }
-            ActionItem(icon = R.drawable.camera, text = "Take Photo", divider = true) {
-                media = Media.recordPhoto
-            }
-            ActionItem(icon = R.drawable.file_video, text = "Upload Video", divider = false) {
-                media = Media.pickVideo
-            }
-            ActionItem(icon = R.drawable.video_camera, text = "Video Camera", divider = true) {
-                media = Media.recordVideo
-            }
-            ActionItem(icon = R.drawable.gif, text = "Send a GIF", divider = true) {
-                media = Media.gif
-            }
-            ActionItem(icon = R.drawable.map_pin, text = "Send Location", divider = true) {
-                media = Media.location
-            }
-            ActionItem(icon = R.drawable.address_book, text = "Share Contact", divider = true) {
-                media = Media.contact
-            }
-        },
-        content = content
+            sheetState = state,
+            sheetBackgroundColor = IAC.colors.background,
+            sheetContentColor = IAC.colors.text,
+            scrimColor = IAC.colors.caption,
+            sheetContent = {
+                Space(8f)
+                ActionItem(icon = R.drawable.image_square, text = "Upload Photo", divider = false) {
+                    media = Media.pickPhoto
+                }
+                ActionItem(icon = R.drawable.camera, text = "Take Photo", divider = true) {
+                    media = Media.recordPhoto
+                }
+                ActionItem(icon = R.drawable.file_video, text = "Upload Video", divider = false) {
+                    media = Media.pickVideo
+                }
+                ActionItem(icon = R.drawable.video_camera, text = "Video Camera", divider = true) {
+                    media = Media.recordVideo
+                }
+                ActionItem(icon = R.drawable.gif, text = "Send a GIF", divider = true) {
+                    media = Media.gif
+                }
+                ActionItem(icon = R.drawable.map_pin, text = "Send Location", divider = true) {
+                    media = Media.location
+                }
+                ActionItem(icon = R.drawable.address_book, text = "Share Contact", divider = true) {
+                    media = Media.contact
+                }
+            },
+            content = content
     )
 }
 
@@ -167,11 +167,11 @@ fun MediaActionSheetPreview() {
 @Composable
 fun AssetPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {
-            Log.v("IAC", "Got image Uri $it")
-            it?.let(onUri) ?: onCancel()
-        })
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = {
+                Log.v("IAC", "Got image Uri $it")
+                it?.let(onUri) ?: onCancel()
+            })
     LaunchedEffect(key1 = true, block = {
         launcher.launch(PickVisualMediaRequest(if (video) ActivityResultContracts.PickVisualMedia.VideoOnly else ActivityResultContracts.PickVisualMedia.ImageOnly))
     })
@@ -181,14 +181,14 @@ fun AssetPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
 fun CameraPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
     val uri = LocalContext.current.cacheDir.resolve(uuid()).toUri()
     val launcher = rememberLauncherForActivityResult(
-        contract = if (video) ActivityResultContracts.CaptureVideo() else ActivityResultContracts.TakePicture(),
-        onResult = {
-            if (it) {
-                onUri(uri)
-            } else {
-                onCancel()
-            }
-        })
+            contract = if (video) ActivityResultContracts.CaptureVideo() else ActivityResultContracts.TakePicture(),
+            onResult = {
+                if (it) {
+                    onUri(uri)
+                } else {
+                    onCancel()
+                }
+            })
     LaunchedEffect(key1 = true, block = {
         launcher.launch(uri)
     })
@@ -197,10 +197,10 @@ fun CameraPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
 @Composable
 fun ContactPicker(onContact: (Contact) -> Unit, onCancel: () -> Unit) {
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickContact(),
-        onResult = {
-            it?.let({ contactUriToContact(it) })?.let(onContact) ?: onCancel()
-        }
+            contract = ActivityResultContracts.PickContact(),
+            onResult = {
+                it?.let({ contactUriToContact(it) })?.let(onContact) ?: onCancel()
+            }
     )
     LaunchedEffect(key1 = true, block = { launcher.launch(null) })
 }
@@ -224,10 +224,10 @@ fun GifPicker(onUri: (Uri) -> Unit, onCancel: () -> Unit) {
 fun LocationPicker(onLocation: (Location) -> Unit, onCancel: () -> Unit) {
     // Camera permission state
     val state = rememberMultiplePermissionsState(
-        listOf(
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION
-        )
+            listOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+            )
     )
     val have = state.allPermissionsGranted || state.permissions.contains { it.status.isGranted }
     val activity = LocalContext.current as Activity
@@ -236,8 +236,8 @@ fun LocationPicker(onLocation: (Location) -> Unit, onCancel: () -> Unit) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
             val cancellationToken = CancellationTokenSource()
             val loc = fusedLocationClient.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY,
-                cancellationToken.token
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    cancellationToken.token
             ).await()
             if (loc != null) {
                 onLocation(loc)

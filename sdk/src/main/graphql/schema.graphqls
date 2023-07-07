@@ -1,7 +1,3 @@
-type App {
-  wek: String!
-}
-
 """A mutlimedia or data attachment to a message"""
 type Attachment {
   """The address of the location"""
@@ -464,7 +460,7 @@ input InitialEncryptedMessageInput {
   spk: String!
 }
 
-"""A user invite to a chat room"""
+"""A user invite to a chat chat"""
 type Invite {
   chat: Chat!
   created_at: DateTime!
@@ -806,7 +802,6 @@ scalar PhoneNumber
 type Query {
   """Returns the current User's active list of groups"""
   activeGroups(count: Int, offset: Int): [Chat!]!
-  app: App!
 
   """Returns a chat with the specified ID"""
   chat(id: ID!): Chat

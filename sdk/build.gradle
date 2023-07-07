@@ -91,6 +91,8 @@ dependencies {
 
     implementation 'io.sentry:sentry-android:6.18.1'
     implementation("com.apollographql.apollo3:apollo-runtime:4.0.0-alpha.2")
+    implementation("com.apollographql.apollo3:apollo-adapters:4.0.0-alpha.2")
+
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     implementation 'com.googlecode.ez-vcard:ez-vcard:0.12.0'

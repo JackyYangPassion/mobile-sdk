@@ -4,14 +4,17 @@
 
 package io.inappchat.sdk.actions
 
+import com.apollographql.apollo3.api.Optional
 import io.inappchat.sdk.API
-import io.inappchat.sdk.models.Participant
-import io.inappchat.sdk.models.UpdateChatInput
 import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Chat
+import io.inappchat.sdk.state.Member
 import io.inappchat.sdk.state.User
+import io.inappchat.sdk.type.MemberRole
+import io.inappchat.sdk.type.UpdateGroupInput
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
+import kotlinx.datetime.Clock
 import java.io.File
 import java.time.OffsetDateTime
 
@@ -29,26 +32,22 @@ fun Chat.dismissInvites() {
 }
 
 fun Chat.join() {
-    if (joining) return
+    if (joining || isMember) return
     joining = true
-    val p = Participant(
-        User.current!!.email,
-        User.current!!.id,
-        Participant.Role.user,
-        OffsetDateTime.now()
+    val p = Member(
+        user_id = User.current!!.id,
+        chat_id = id,
+        created_at = Clock.System.now(),
+        role = MemberRole.Member,
     )
-    participants.add(p)
+    members.add(p)
     op({
         bg {
-            if (!invites.isEmpty()) {
-                API.acceptInvites(id)
-            } else {
-                API.joinChat(id)
-            }
+            API.joinChat(id)
         }
         joining = false
     }) {
-        participants.remove(p)
+        members.remove(p)
         joining = false
     }
 }
@@ -56,16 +55,17 @@ fun Chat.join() {
 fun Chat.leave() {
     if (!isMember || joining) return
     joining = true
-    val p = participants.find { it.eRTCUserId == User.current?.id }
-    if (p == null) return
-    participants.remove(p)
+    if (!isMember) return
+    val membership = this.membership
+    membership?.let { members.remove(it) }
     op({
         bg {
             API.leaveChat(id)
         }
         joining = false
+        Chats.current.memberships.removeIf { it.chat_id == membership?.chat_id }
     }) {
-        participants.add(p)
+        membership?.let { members.add(it) }
         joining = false
     }
 }
@@ -73,7 +73,7 @@ fun Chat.leave() {
 fun Chat.update(
     name: String?,
     description: String?,
-    image: File?,
+    image: String?,
     _private: Boolean?,
     onComplete: () -> Unit = {}
 ) {
@@ -83,7 +83,7 @@ fun Chat.update(
     updating = true
     val ogName = this.name
     val ogDescription = this.description
-    val ogImage = this.avatar
+    val ogImage = this.image
     val ogPrivate = this._private
     name?.let {
         this.name = it
@@ -92,7 +92,7 @@ fun Chat.update(
         this.description = it
     }
     image?.let {
-        this.avatar = it.absolutePath
+        this.image = it
     }
     _private?.let {
         this._private = it
@@ -100,11 +100,13 @@ fun Chat.update(
     op({
         bg {
             API.updateChat(
-                id,
-                name = name,
-                description = description,
-                profilePic = image,
-                chatType = _private?.let { if (it) UpdateChatInput.ChatType.private else UpdateChatInput.ChatType.public }
+                UpdateGroupInput(
+                    id = id,
+                    name = Optional.present(name),
+                    description = Optional.present(description),
+                    image = Optional.present(image),
+                    _private = Optional.present(_private)
+                )
             )
         }
         updating = false
@@ -112,7 +114,7 @@ fun Chat.update(
     }) {
         this.name = ogName
         this.description = ogDescription
-        avatar = ogImage
+        this.image = ogImage
         this._private = ogPrivate
         updating = false
     }
@@ -121,13 +123,10 @@ fun Chat.update(
 fun Chat.delete() {
     op({
         bg { API.deleteChat(id) }
+        friend?.let { Chats.current.cache.chatsByUID.remove(it.id) }
         Chats.current.cache.chats.remove(id)
         Chats.current.network.items.removeAll { it.id == id }
-        io.inappchat.sdk.state.Chat.getByChat(id)?.let { t ->
-            Chats.current.cache.chats.remove(t.id)
-            Chats.current.chats.items.removeAll { t.id == it.id }
-        }
-        Chats.current.cache.chatsByChat.remove(id)
+        Chats.current.memberships.removeAll { it.chat_id == id }
     })
 }
 

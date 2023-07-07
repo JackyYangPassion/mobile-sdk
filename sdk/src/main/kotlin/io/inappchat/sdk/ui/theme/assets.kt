@@ -14,27 +14,27 @@ data class EmptyScreenConfig(@DrawableRes val image: Int? = null, val caption: S
 
 @Stable
 data class Assets(
-    @DrawableRes val chat: Int? = null,
-    val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_chats,
-        "Your friends are waiting for you"
-    ),
-    val emptyChannels: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_channels,
-        "No channels yet. Go join one"
-    ),
-    val emptyChats: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_chats,
-        "You haven't added any chats yet"
-    ),
-    val emptyAllChannels: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_all_channels,
-        "No channels around here yet. Make one"
-    )
+        @DrawableRes val chat: Int? = null,
+        val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
+                R.drawable.empty_chats,
+                "Your friends are waiting for you"
+        ),
+        val emptyChannels: EmptyScreenConfig = EmptyScreenConfig(
+                R.drawable.empty_channels,
+                "No channels yet. Go join one"
+        ),
+        val emptyChats: EmptyScreenConfig = EmptyScreenConfig(
+                R.drawable.empty_chats,
+                "You haven't added any chats yet"
+        ),
+        val emptyAllChannels: EmptyScreenConfig = EmptyScreenConfig(
+                R.drawable.empty_all_channels,
+                "No channels around here yet. Make one"
+        )
 ) {
     fun list(list: Chats.List) = when (list) {
         Chats.List.users -> emptyChat
         Chats.List.chats -> emptyChannels
-        Chats.List.chats -> emptyChats
+        Chats.List.threads -> emptyChats
     }
 }

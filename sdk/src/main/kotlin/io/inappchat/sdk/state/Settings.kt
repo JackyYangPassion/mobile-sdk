@@ -7,45 +7,45 @@ package io.inappchat.sdk.state
 import androidx.compose.runtime.*
 import io.inappchat.sdk.API
 import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.models.AvailabilityStatus
-import io.inappchat.sdk.models.NotificationSettings
+import io.inappchat.sdk.type.NotificationSetting
+import io.inappchat.sdk.type.OnlineStatus
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.launch
 
 @Stable
 class Settings {
 
-    var notifications by mutableStateOf(NotificationSettings.AllowFrom.all)
-    var availabilityStatus by mutableStateOf(AvailabilityStatus.online)
+    var notifications by mutableStateOf(NotificationSetting.all)
+    var availabilityStatus by mutableStateOf(OnlineStatus.Online)
     var blocked = mutableStateListOf<String>()
     val lastUsedReactions = "😀,🤟,❤️,🔥,🤣".split(",").toMutableStateList()
 
     fun init() {
-        notifications = InAppChat.shared.prefs.getString("notifications", null)
-            ?.let { NotificationSettings.AllowFrom.valueOf(it) }
-            ?: NotificationSettings.AllowFrom.all
-        availabilityStatus = InAppChat.shared.prefs.getString("availabilityStatus", null)
-            ?.let { AvailabilityStatus.valueOf(it) }
-            ?: AvailabilityStatus.online
+        notifications = InAppChat.shared.prefs.getString("iac-notifications", null)
+                ?.let { NotificationSetting.valueOf(it) }
+                ?: NotificationSetting.all
+        availabilityStatus = InAppChat.shared.prefs.getString("iac-availabilityStatus", null)
+                ?.let { OnlineStatus.valueOf(it) }
+                ?: OnlineStatus.Online
         blocked =
-            InAppChat.shared.prefs.getStringSet("blocked", mutableSetOf())?.toMutableStateList()
-                ?: mutableStateListOf()
+                InAppChat.shared.prefs.getStringSet("iac-blocked", mutableSetOf())?.toMutableStateList()
+                        ?: mutableStateListOf()
         lastUsedReactions.addAll(
-            InAppChat.shared.prefs.getString("reactions", "😀,🤟,❤️,🔥,🤣")!!.split(",")
+                InAppChat.shared.prefs.getString("iac-reactions", "😀,🤟,❤️,🔥,🤣")!!.split(",")
         )
     }
 
 
-    fun setNotifications(setting: NotificationSettings.AllowFrom, isSync: Boolean = false) {
+    fun setNotifications(setting: NotificationSetting, isSync: Boolean = false) {
         this.notifications = setting
-        InAppChat.shared.prefs.edit().putString("notifications", setting.value).apply()
+        InAppChat.shared.prefs.edit().putString("notifications", setting.rawValue).apply()
         if (isSync) return
         launch { bg { API.updateNotifications(setting) } }
     }
 
-    fun setAvailability(setting: AvailabilityStatus, isSync: Boolean = false) {
+    fun setAvailability(setting: OnlineStatus, isSync: Boolean = false) {
         this.availabilityStatus = setting
-        InAppChat.shared.prefs.edit().putString("availability", setting.value).apply()
+        InAppChat.shared.prefs.edit().putString("availability", setting.rawValue).apply()
         if (isSync) return
         launch { bg { API.updateAvailability(setting) } }
     }
@@ -71,6 +71,6 @@ class Settings {
             lastUsedReactions.removeRange(5, lastUsedReactions.size - 1)
         }
         InAppChat.shared.prefs.edit().putString("reactions", lastUsedReactions.joinToString { "," })
-            .apply()
+                .apply()
     }
 }

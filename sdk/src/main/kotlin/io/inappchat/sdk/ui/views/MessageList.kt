@@ -10,5 +10,5 @@ import io.inappchat.sdk.state.Chat
 
 
 @Composable
-fun MessageList(room: Chat, onLongPress: (Message) -> Unit) {
+fun MessageList(chat: Chat, onLongPress: (Message) -> Unit) {
 }

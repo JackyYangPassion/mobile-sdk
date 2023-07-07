@@ -4,51 +4,39 @@
 
 package io.inappchat.sdk
 
-import android.content.ContentResolver
-import android.net.Uri
 import android.util.Log
-import androidx.core.net.toUri
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.ApolloRequest
-import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.Operation
 import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.api.http.HttpRequest
-import com.apollographql.apollo3.api.http.HttpResponse
-import com.apollographql.apollo3.interceptor.ApolloInterceptor
-import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
-import com.apollographql.apollo3.network.http.HttpInterceptor
-import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import com.apollographql.apollo3.network.http.LoggingInterceptor
 import com.apollographql.apollo3.network.okHttpClient
 import com.moczul.ok2curl.CurlInterceptor
 import com.moczul.ok2curl.logger.Logger
-import io.inappchat.sdk.auth.ApiKeyAuth
-import io.inappchat.sdk.auth.HttpBearerAuth
-import io.inappchat.sdk.state.*
+import io.inappchat.sdk.fragment.FUser
+import io.inappchat.sdk.state.Chat
+import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.Member
+import io.inappchat.sdk.state.Message
+import io.inappchat.sdk.state.User
+import io.inappchat.sdk.type.AttachmentInput
+import io.inappchat.sdk.type.CreateGroupInput
+import io.inappchat.sdk.type.DeviceType
+import io.inappchat.sdk.type.EthLoginInput
+import io.inappchat.sdk.type.LoginInput
+import io.inappchat.sdk.type.MemberRole
+import io.inappchat.sdk.type.ModMemberInput
+import io.inappchat.sdk.type.NotificationSetting
+import io.inappchat.sdk.type.OnlineStatus
+import io.inappchat.sdk.type.SendMessageInput
+import io.inappchat.sdk.type.UpdateGroupInput
+import io.inappchat.sdk.type.UpdateMessageInput
+import io.inappchat.sdk.type.UpdateProfileInput
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.Socket
-import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.CompletionHandler
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.logging.HttpLoggingInterceptor
-import okio.BufferedSink
-import okio.IOException
-import okio.source
-import org.json.JSONObject
-import timber.log.Timber
-import java.io.File
-import java.math.BigDecimal
+import io.inappchat.sdk.utils.ift
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import java.security.MessageDigest
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.util.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import java.util.UUID
 import kotlin.properties.Delegates
 
 fun String.sha256(): String {
@@ -63,10 +51,10 @@ val env = "prod"
 object Servers {
     data class Server(val host: String, val ssl: Boolean) {
         val http: String
-            get() = "http${if (ssl) "s" else ""}://${host}/graphql"
+            get() = "http${if (ssl) "s" else ""}://${host}"
 
         val ws: String
-            get() = "ws${if (ssl) "s" else ""}://${host}/graphql"
+            get() = "ws${if (ssl) "s" else ""}://${host}"
     }
 
     val prod = Server("chat.inappchat.io", true)
@@ -80,38 +68,6 @@ object Servers {
     }
 }
 
-
-suspend inline fun Call.await(): Response {
-    return suspendCancellableCoroutine { continuation ->
-        val callback = ContinuationCallback(this, continuation)
-        enqueue(callback)
-        continuation.invokeOnCancellation(callback)
-    }
-}
-
-class ContinuationCallback(
-    private val call: Call,
-    private val continuation: CancellableContinuation<Response>
-) : Callback, CompletionHandler {
-
-    override fun onResponse(call: Call, response: Response) {
-        continuation.resume(response)
-    }
-
-    override fun onFailure(call: Call, e: IOException) {
-        if (!call.isCanceled()) {
-            continuation.resumeWithException(e)
-        }
-    }
-
-    override fun invoke(cause: Throwable?) {
-        try {
-            call.cancel()
-        } catch (_: Throwable) {
-        }
-    }
-}
-
 object API {
     lateinit var deviceId: String
     var apiKey: String? = null
@@ -122,32 +78,33 @@ object API {
 
 
     var client = ApolloClient.Builder()
-        .serverUrl(Servers.get().http)
-        .okHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(Interceptor { chain ->
-                    val request = chain.request().newBuilder()
-                        .apply {
-                            authToken?.let { addHeader("Authorization", "Bearer $it") }
-                            apiKey?.let { addHeader("X-API-Key", it) }
-                            addHeader("X-Device-ID", deviceId)
-                        }.build()
-                    chain.proceed(request)
-                })
-                .addInterceptor(CurlInterceptor(logger = object : Logger {
-                    override fun log(message: String) {
-                        Log.v("InAppChat", message)
-                    }
-                }))
-                .addInterceptor(LoggingInterceptor)
-                .build()
-        )
-        .build()
+            .serverUrl(Servers.get().http + "/graphql")
+            .webSocketServerUrl(Servers.get().ws + "/graphql")
+            .okHttpClient(
+                    OkHttpClient.Builder()
+                            .addInterceptor(Interceptor { chain ->
+                                val request = chain.request().newBuilder()
+                                        .apply {
+                                            authToken?.let { addHeader("Authorization", "Bearer $it") }
+                                            apiKey?.let { addHeader("X-API-Key", it) }
+                                            addHeader("X-Device-ID", deviceId)
+                                        }.build()
+                                chain.proceed(request)
+                            })
+                            .addInterceptor(CurlInterceptor(logger = object : Logger {
+                                override fun log(message: String) {
+                                    Log.v("InAppChat", message)
+                                }
+                            }))
+                            .build()
+            )
+            .addHttpInterceptor(LoggingInterceptor())
+            .build()
 
 
     fun init() {
         var deviceId = InAppChat.shared.prefs
-            .getString("device-id", null)
+                .getString("device-id", null)
         if (deviceId == null) {
             deviceId = UUID.randomUUID().toString()
             InAppChat.shared.prefs.edit().putString("device-id", deviceId).apply()
@@ -158,128 +115,128 @@ object API {
 
 
     suspend fun getMessages(chat: String, skip: Int = 0, limit: Int = 40) =
-        client.query(
-            ListMessagesQuery(
-                chat = chat,
-                offset = Optional.present(skip),
-                count = Optional.present(limit)
-            )
-        ).execute().data?.let { it.messages.map(Message::get) }
+            client.query(
+                    ListMessagesQuery(
+                            chat = chat,
+                            offset = Optional.present(skip),
+                            count = Optional.present(limit)
+                    )
+            ).execute().dataOrThrow().messages.map { Message.get(it.fMessage) }
 
-    suspend fun updateMessageStatus(mid: String, status: MessageStatus) {
-        chat.updateMessage(mid, UpdateMessageInput(status = status)).result()
-    }
 
     suspend fun send(
-        chat: String,
-        inReplyTo: String?,
-        text: String? = null,
-        attachment: Attachment? = null,
-        gif: String? = null,
-        location: Location? = null,
-        contact: Contact? = null,
-        mediaType: MediaType = "application/octet-stream".toMediaType()
+            chat: String,
+            inReplyTo: String?,
+            text: String? = null,
+            attachments: List<AttachmentInput>? = null,
     ) =
-        chat.sendMessage(
-            senderTimeStampMs = System.currentTimeMillis().toBigDecimal(),
-            chat,
-            message = text,
-            gif = gif,
-            location = location,
-            msgType = attachment?.let { MessageType.valueOf(it.kind.value) }
-                ?: gif?.let { MessageType.gif },
-            contact = contact,
-            file = attachment?.let {
-                MultipartBody.Part.create(
-                    InputStreamRequestBody(
-                        mediaType,
-                        InAppChat.shared.appContext.contentResolver,
-                        attachment.url.toUri()
+            client.mutation(
+                    SendMessageMutation(
+                            SendMessageInput(
+                                    chat = chat,
+                                    parent = Optional.presentIfNotNull(inReplyTo),
+                                    text = Optional.presentIfNotNull(text),
+                                    attachments = Optional.presentIfNotNull(attachments),
+                            )
                     )
-                )
-            },
-            replyChatFeatureData = reply(inReplyTo)
-        ).result().message!!.m()
+            ).execute().data?.sendMessage?.fMessage?.let { Message.get(it) }
 
+    suspend fun dm(user: String) = client.mutation(DMMutation(user)).execute().dataOrThrow().dm?.let { Chat.get(it.fChat) }
     suspend fun updateChat(
-        id: String,
-        name: String? = null,
-        chatType: UpdateChatInput.ChatType? = null,
-        description: String? = null,
-        profilePic: File? = null
-    ) = chat.updateChat(
-        id,
-        updateChatInput = UpdateChatInput(
-            name,
-            chatType = chatType,
-            description = description,
-            profilePic = profilePic
-        )
-    ).result().g()
+            input: UpdateGroupInput
+    ) = client.mutation(UpdateGroupMutation(input)).execute().data?.updateGroup
 
     suspend fun createChat(
-        name: String,
-        _private: Boolean,
-        description: String? = null,
-        profilePic: File? = null,
-        profilePicType: MediaType = "application/octet-stream".toMediaType(),
-        participants: List<String> = listOf()
-    ) = chat.createChat(
-        name = name,
-        chatType = if (_private) "private" else "public",
-        description = description,
-        profilePic = profilePic?.let {
-            MultipartBody.Part.create(
-                InputStreamRequestBody(
-                    profilePicType,
-                    InAppChat.shared.appContext.contentResolver,
-                    it.toUri()
-                )
+            name: String,
+            _private: Boolean,
+            description: String? = null,
+            image: String? = null,
+            invites: List<String> = listOf()
+    ) = client.mutation(
+            CreateGroupMutation(
+                    CreateGroupInput(
+                            name = name,
+                            _private = Optional.presentIfNotNull(_private),
+                            description = Optional.presentIfNotNull(description),
+                            image = Optional.presentIfNotNull(image),
+                            invites = Optional.presentIfNotNull(invites)
+                    )
             )
-        },
-        participants = participants
-    ).result().g()
+    ).execute().dataOrThrow().createGroup?.fChat?.let { Chat.get(it) }
 
-    suspend fun deleteChat(id: String) = chat.deleteChat(id).result()
-    suspend fun addParticipant(g: String, u: String) = chat.addParticipant(g, u).result()
-    suspend fun removeParticipant(g: String, u: String) = chat.addParticipant(g, u).result()
-    suspend fun joinChat(g: String) = chat.addParticipant(g, User.current!!.id).result()
-    suspend fun leaveChat(g: String) = chat.removeParticipant(g, User.current!!.id).result()
-    suspend fun getChat(g: String) = chat.getChat(g).result().g()
-    suspend fun promoteAdmin(g: String, uid: String) = chat.chatAddAdmin(g, uid).result()
-    suspend fun dismissAdmin(g: String, uid: String) = chat.chatDismissAdmin(g, uid).result()
+    suspend fun deleteChat(id: String) =
+            client.mutation(DeleteGroupMutation(id)).execute().data?.deleteGroup
 
-    suspend fun deleteMessage(id: String) = chat.deleteMessage(id).result()
+    suspend fun joinChat(g: String) =
+            client.mutation(JoinChatMutation(g)).execute().data?.join?.let { Member.get(it.fMember) }
+
+    suspend fun leaveChat(g: String) = client.mutation(LeaveChatMutation(g)).execute().data?.leave
+    suspend fun getChat(g: String) =
+            client.query(GetChatQuery(g)).execute().data?.chat?.fChat?.let { Chat.get(it) }
+
+    suspend fun modAdmin(g: String, uid: String, promote: Boolean) = client.mutation(
+            ModMemberRoleMutation(
+                    ModMemberInput(
+                            chat = g,
+                            user = uid,
+                            role = Optional.present(ift(promote, MemberRole.Admin, MemberRole.Member))
+                    )
+            )
+    ).execute().data?.modMember
+
+    suspend fun dismissAdmin(g: String, uid: String) = modAdmin(g, uid, true)
+    suspend fun promoteAdmin(g: String, uid: String) = modAdmin(g, uid, true)
+
+    suspend fun deleteMessage(id: String) =
+            client.mutation(DeleteMessageMutation(id)).execute().data?.removeMessage
 
     suspend fun favorite(message: String, remove: Boolean) =
-        chat.updateMessage(message, UpdateMessageInput(isStarred = !remove)).result()
+            if (remove) client.mutation(UnfavoriteMutation(message)).execute().data?.unfavorite else
+                client.mutation(FavoriteMutation(message)).execute().data?.favorite
 
     suspend fun favorites(skip: Int, limit: Int) =
-        chat.getFavorites(skip, limit).result().map { it.m() }
+            client.query(
+                    ListFavoritesQuery(
+                            count = Optional.present(limit),
+                            offset = Optional.present(skip)
+                    )
+            ).execute().dataOrThrow().favorites.map { Message.get(it.fMessage) }
 
-    suspend fun react(mid: String, emoji: String) = chat.react(mid, emoji).result()
-    suspend fun unreact(mid: String, emoji: String) = chat.unreact(mid, emoji).result()
-    suspend fun invites() = chat.getInvites().result()
+    suspend fun react(mid: String, emoji: String) =
+            client.mutation(ReactMutation(mid, Optional.present(emoji))).execute().data?.react
+
+    suspend fun invites() = client.query(GetInvitesQuery()).execute().dataOrThrow().invites
+
+    suspend fun getUsers(skip: Int, limit: Int) = client.query(ListUsersQuery(count = Optional.present(limit), offset = Optional.present(skip)))
+            .execute().dataOrThrow().users.map { User.get(it.fUser) }
 
     suspend fun editMessageText(id: String, text: String) =
-        chat.updateMessage(id, UpdateMessageInput(message = text)).result()
+            client.mutation(
+                    UpdateMessageMutation(
+                            UpdateMessageInput(
+                                    id = id,
+                                    text = Optional.present(text)
+                            )
+                    )
+            )
 
-    suspend fun dismissInvites(g: String) = chat.dismissChatInvite(g).result()
-    suspend fun acceptInvites(g: String) = chat.acceptChatInvite(g).result()
+    suspend fun dismissInvites(g: String) =
+            client.mutation(DismissInvitesMutation(g)).execute().data?.dismissInvites
+
+    suspend fun acceptInvites(g: String) = joinChat(g)
 
     suspend fun invite(users: List<String>, toChat: String) =
-        chat.inviteUser(toChat, users).result()
+            client.mutation(InviteUsersMutation(toChat, users))
+                    .execute().data?.inviteMany?.map { Member.get(it.fMember) }
 
-    suspend fun getSharedMedia(uid: String) =
-        _default.getUserMessages(uid, 0, 10, MessageType.image).result().map { it.m() }
+//    suspend fun getSharedMedia(uid: String) =
+//        _default.getUserMessages(uid, 0, 10, MessageType.image).result().map { it.m() }
 
-    suspend fun onLogin(auth: Auth) {
+    suspend fun onLogin(token: String, user: FUser) {
         onToken(
-            auth.token.accessToken,
-            auth.token.refreshToken,
-            LocalDateTime.now().plusSeconds(auth.token.expiresIn.toLong())
+                token
         )
-        onUser(auth.user.u())
+        onUser(User.get(user))
     }
 
     suspend fun onUser(user: User) {
@@ -294,149 +251,137 @@ object API {
         }
     }
 
-    fun onToken(access: String, refresh: String?, expires: LocalDateTime) {
+    fun onToken(access: String) {
         authToken = access
-        refreshToken = refresh
-        tokenExpiresAt = expires
     }
 
     suspend fun login(
-        accessToken: String,
-        userId: String,
-        email: String,
-        name: String?,
-        nickname: String?,
-        picture: String?
-    ): User {
-        val res = auth.login(
-            LoginInput(
-                userId = userId,
-                accessToken = accessToken,
-                email = email,
-                deviceId = deviceId,
-                picture = picture,
-                name = name,
-                nickname = nickname,
-                deviceType = LoginInput.DeviceType.android
-            )
-        ).result()
-        val user = res.user.u()
-        onLogin(res)
-        return user
+            accessToken: String,
+            userId: String,
+            username: String,
+            displayName: String?,
+            picture: String?
+    ) {
+        val res = client.mutation(
+                LoginMutation(
+                        LoginInput(
+                                user_id = userId,
+                                access_token = Optional.presentIfNotNull(accessToken),
+                                image = Optional.presentIfNotNull(picture),
+                                username = username,
+                                display_name = Optional.presentIfNotNull(displayName)
+                        )
+                )
+        ).execute().dataOrThrow().login
+        if (res != null) {
+            onLogin(res.token, res.user.fUser)
+            return
+        }
+        throw Error("There was a problem logging in")
     }
 
     suspend fun nftLogin(
-        contract: String,
-        address: String,
-        tokenID: String,
-        signature: String,
-        profilePicture: String,
-        username: String?
-    ): User {
-        val res = auth.nftLogin(
-            NFTLoginInput(
-                address = address, contract = contract, signature = signature, tokenID = tokenID,
-                username = username, profilePicture = profilePicture
-            )
-        ).result()
-        onLogin(res)
-        return res.user.u()
-    }
-
-    suspend fun getUser(id: String): User = user.getUser(id).result().let(User::get)
-
-    suspend fun logout() {
-        auth.logout()
-        refreshToken = null
-        authToken = null
-        tokenExpiresAt = null
-    }
-
-    suspend fun block(id: String, isBlock: Boolean) {
-        if (isBlock) {
-            user.blockUser(id)
+            wallet: String,
+            tokenID: String,
+            signature: String,
+            picture: String?,
+            username: String,
+            displayName: String?
+    ) {
+        val res = client.mutation(
+                EthLoginMutation(
+                        EthLoginInput(
+                                wallet = wallet,
+                                signed_message = signature,
+                                token_id = tokenID,
+                                username = username,
+                                image = Optional.presentIfNotNull(picture)
+                        )
+                )
+        ).execute().dataOrThrow().ethLogin
+        if (res != null) {
+            onLogin(res.token, res.user.fUser)
         } else {
-            user.unblockUser(id)
+            throw Error("There was a problem logging in")
         }
     }
 
-    suspend fun updateNotifications(setting: NotificationSettings.AllowFrom) =
-        user.updateMe(
-            UpdateUserInput(notificationSettings = NotificationSettings(setting))
-        )
+    suspend fun getUser(id: String): User? =
+            client.query(GetUserQuery(id)).execute().data?.user?.fUser?.let { User.get(it) }
 
-    suspend fun updateAvailability(setting: AvailabilityStatus) =
-        user.updateMe(
-            UpdateUserInput(availabilityStatus = (setting))
-        )
+    suspend fun logout() {
+        client.mutation(LogoutMutation()).execute().data?.logout
+        authToken = null
+    }
 
-    suspend fun updateChatNotifications(id: String, setting: NotificationSettings.AllowFrom) =
-        chat.updateChat(
-            id,
-            UpdateChatInput(notificationSettings = NotificationSettings(setting))
-        )
+    suspend fun block(id: String, isBlock: Boolean) =
+            if (isBlock)
+                client.mutation(BlockMutation(id)).execute().data?.block
+            else
+                client.mutation(UnblockMutation(id)).execute().data?.unblock
 
-    suspend fun getContacts(existing: List<String>): List<User> =
-        user.syncContacts(SyncContactsInput(existing)).result().map { it.u() }
 
-    suspend fun getJoinedUserChats(skip: Int, limit: Int) = chat.getChats(
-        skip = skip,
-        limit = limit,
-        chatType = ChatApi.ChatType_getChats.single
+    suspend fun updateProfile(input: UpdateProfileInput) = client.mutation(
+            UpdateProfileMutation(
+                    input
+            )
+    ).execute().data?.updateProfile
+
+    suspend fun updateNotifications(setting: NotificationSetting) = updateProfile(
+            UpdateProfileInput(
+                    notification_setting = Optional.present(
+                            setting
+                    )
+            )
     )
-        .result().map { it.t() }
 
-    suspend fun getJoinedChatChats(skip: Int, limit: Int) = chat.getChats(
-        skip = skip,
-        limit = limit,
-        chatType = ChatApi.ChatType_getChats.chat
+
+    suspend fun updateAvailability(status: OnlineStatus) = updateProfile(
+            UpdateProfileInput(
+                    status = Optional.present(
+                            status
+                    )
+            )
     )
-        .result().map { it.t() }
+
+    suspend fun updateChatNotifications(id: String, setting: NotificationSetting) =
+            client.mutation(SetNotificationSettingMutation(id, setting)).execute()
+                    .data?.setNotificationSetting
+
+    suspend fun getContacts(existing: List<String>) =
+            client.mutation(SyncContactsMutation(existing)).execute().data?.syncContacts
 
     suspend fun chats(skip: Int, limit: Int) =
-        chat.getChats(limit = limit, skip = skip, joined = ChatApi.Joined_getChats.no).result()
-            .map { it.g() }
+            client.query(
+                    ListGroupsQuery(
+                            count = Optional.present(limit),
+                            offset = Optional.present(skip)
+                    )
+            )
+                    .execute().dataOrThrow().groups.map { Chat.get(it.fChat) }
 
-    suspend fun getReplyChats(skip: Int, limit: Int) =
-        chat.getReplyChats(limit = limit, skip = skip, deep = true).result().map { it.m() }
-
-    suspend fun getChat(id: String) = chat.getChat(id).result().t()
-    suspend fun getMessage(id: String) = chat.getMessage(id).result().m()
-    suspend fun getChatChat(gid: String) = chat.getChatChat(gid).result().t()
-    suspend fun getUserChat(uid: String) = chat.createChat(uid).result().t()
+    suspend fun getMessage(id: String) = client.query(GetMessageQuery(id)).execute()
+            .dataOrThrow().message?.let { Message.get(it.fMessage) }
 
     suspend fun getReplies(mid: String, skip: Int, limit: Int) =
-        chat.getReplies(mid, skip, limit).result().map { it.m() }
+            client.query(
+                    ListRepliesQuery(
+                            mid,
+                            skip = Optional.present(skip),
+                            limit = Optional.present(limit)
+                    )
+            )
+                    .execute().dataOrThrow().replies.map { Message.get(it.fMessage) }
 
-    suspend fun registerFcmToken(token: String) = user.updateMe(UpdateUserInput(fcmToken = token))
+    suspend fun registerFcmToken(token: String) =
+            client.mutation(RegisterPushMutation(token, DeviceType.ANDROID, Optional.present(true)))
+                    .execute()
+                    .dataOrThrow().registerPush
 
-    suspend fun me(): User = user.me().result().u()
+    suspend fun me(): User =
+            client.query(GetMeQuery()).execute().dataOrThrow().me.let {
+                Chats.current.settings.blocked.addAll(it.blocks ?: listOf())
+                User.get(it.fUser)
+            }
 
-}
-
-fun <T> retrofit2.Response<T>.result(): T {
-    val result = this.body()
-    if (result == null) {
-        throw IOException("${this.code()} ${this.message()} ${this.headers()}")
-    } else {
-        return result
-    }
-}
-
-class InputStreamRequestBody(
-    private val contentType: MediaType,
-    private val contentResolver: ContentResolver,
-    private val uri: Uri
-) : RequestBody() {
-    override fun contentType() = contentType
-
-    override fun contentLength(): Long = -1
-
-    @Throws(IOException::class)
-    override fun writeTo(sink: BufferedSink) {
-        val input = contentResolver.openInputStream(uri)
-
-        input?.use { sink.writeAll(it.source()) }
-            ?: throw IOException("Could not open $uri")
-    }
 }

@@ -29,10 +29,10 @@ import io.inappchat.sdk.utils.genT
 
 @Composable
 fun MessageInput(
-    room: Chat,
-    replyingTo: Message? = null,
-    focusRequester: FocusRequester = remember { FocusRequester() },
-    onMedia: Fn
+        chat: Chat,
+        replyingTo: Message? = null,
+        focusRequester: FocusRequester = remember { FocusRequester() },
+        onMedia: Fn
 ) {
     var text by remember {
         mutableStateOf("")
@@ -41,32 +41,32 @@ fun MessageInput(
     Column(modifier = Modifier.padding(16.dp, 8.dp)) {
         Row {
             TextInput(
-                text = text,
-                onChange = { text = it },
-                focusRequester = focusRequester,
-                modifier = Modifier.weight(1f)
+                    text = text,
+                    onChange = { text = it },
+                    focusRequester = focusRequester,
+                    modifier = Modifier.weight(1f)
             ) {
                 IconButton(onClick = onMedia, modifier = Modifier.size(20.dp)) {
                     Icon(
-                        painter = painterResource(id = R.drawable.paperclip_fill),
-                        contentDescription = "send attachment",
-                        modifier = Modifier.size(20.dp),
-                        tint = colors.caption
+                            painter = painterResource(id = R.drawable.paperclip_fill),
+                            contentDescription = "send attachment",
+                            modifier = Modifier.size(20.dp),
+                            tint = colors.caption
                     )
                 }
             }
             Space(8f)
             IconButton(onClick = {
                 if (!text.isBlank()) {
-                    room.send(replyingTo?.id, text)
+                    chat.send(replyingTo?.id, text)
                     text = ""
                 }
             }, modifier = Modifier.circle(44.dp, colors.softBackground)) {
                 Icon(
-                    painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
-                    contentDescription = "send message",
-                    modifier = Modifier.size(22.dp),
-                    tint = colors.primary
+                        painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
+                        contentDescription = "send message",
+                        modifier = Modifier.size(22.dp),
+                        tint = colors.primary
                 )
             }
         }
@@ -77,7 +77,7 @@ fun MessageInput(
 @Composable
 fun MessageInputPreview() {
     InAppChatContext {
-        MessageInput(room = genT(), null) {
+        MessageInput(chat = genT(), null) {
 
         }
     }

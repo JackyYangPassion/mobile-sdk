@@ -1,9 +1,3 @@
-query GetApp {
-  app {
-    wek
-  }
-}
-
 mutation Login($input: LoginInput!) {
   login(input: $input) {
     token

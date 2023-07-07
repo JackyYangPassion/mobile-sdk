@@ -17,7 +17,7 @@ import kotlinx.datetime.Instant
 
 @Stable
 data class User(
-    override val id: String
+        override val id: String
 ) : Identifiable {
     var username by mutableStateOf("")
     var displayName by mutableStateOf<String?>("")
@@ -30,7 +30,7 @@ data class User(
     var description by mutableStateOf<String?>(null)
 
     constructor(user: FUser, blocked: Boolean = false, haveContact: Boolean = false) : this(
-        user.id
+            user.id
     ) {
         this.username = user.username
         this.description = user.description
@@ -68,7 +68,7 @@ data class User(
 
     var blocking by mutableStateOf(false)
 
-    val sharedMedia by lazy { UserSharedMedia(this) }
+//    val sharedMedia by lazy { UserSharedMedia(this) }
 
     @Stable
     companion object {
@@ -88,7 +88,7 @@ data class User(
         }
 
         fun fetched(id: String) =
-            get(id) ?: User(id)
+                get(id) ?: User(id)
 
     }
 }

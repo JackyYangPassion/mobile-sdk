@@ -38,10 +38,10 @@ fun genU(): User {
     u.status = OnlineStatus.values().random()
     u.statusMessage = ift(Random.nextBoolean(), faker.lorem().sentence(), null)
     u.lastSeen = ift(
-        Random.nextBoolean(),
-        Clock.System.now()
-            .minus(Random.nextLong(10000000).toDuration(DurationUnit.SECONDS)),
-        null
+            Random.nextBoolean(),
+            Clock.System.now()
+                    .minus(Random.nextLong(10000000).toDuration(DurationUnit.SECONDS)),
+            null
     )
     u.displayName = faker.funnyName().name()
     return u
@@ -61,9 +61,9 @@ fun reqT() {
 
 fun randomUsers() = randomAmount(Chats.current.cache.users.values).let {
     ift(
-        it.isEmpty(),
-        (0..30).map { genU() },
-        it
+            it.isEmpty(),
+            (0..30).map { genU() },
+            it
     )
 }
 
@@ -76,21 +76,21 @@ fun genG(): Chat {
     g.avatar = ift(Random.nextBoolean(), randomImage(), null)
     g._private = Random.nextBoolean()
     val members = randomUsers().let { ift(it.isEmpty(), random(40, ::genU), it) }
-        .map {
-            Member(it.id, g.id, Clock.System.now(), MemberRole.values().random())
-        }
+            .map {
+                Member(it.id, g.id, Clock.System.now(), MemberRole.values().random())
+            }
     if (Random.nextBoolean())
         g.invites.addAll(randomAmount(members).map { it.user })
     return g
 }
 
 fun genA(
-    kind: AttachmentType = listOf(
-        AttachmentType.video,
-        AttachmentType.audio,
-        AttachmentType.image,
-        AttachmentType.file
-    ).random()
+        kind: AttachmentType = listOf(
+                AttachmentType.video,
+                AttachmentType.audio,
+                AttachmentType.image,
+                AttachmentType.file
+        ).random()
 ): FMessage.Attachment {
     var url = when (kind) {
         AttachmentType.video ->
@@ -107,19 +107,19 @@ fun genA(
 fun bool() = Random.nextBoolean()
 
 fun genM(
-    chat: String = genChat().id,
-    parent: String? = null,
-    attachments: SnapshotStateList<FMessage.Attachment>? = null,
-    user: User = randomUser()
+        chat: String = genChat().id,
+        parent: String? = null,
+        attachments: SnapshotStateList<FMessage.Attachment>? = null,
+        user: User = randomUser()
 ): Message {
     val _attachments =
-        attachments ?: ift(bool(), mutableStateListOf(genA()), null)
+            attachments ?: ift(bool(), mutableStateListOf(genA()), null)
     val m = Message(
-        uuid(), Clock.System.now().minus(Random.nextLong(100000L).seconds),
-        user.id,
-        parent,
-        chat,
-        _attachments ?: mutableStateListOf()
+            uuid(), Clock.System.now().minus(Random.nextLong(100000L).seconds),
+            user.id,
+            parent,
+            chat,
+            _attachments ?: mutableStateListOf()
     )
     m.updateText(faker.lorem().paragraph())
     if (parent == null && chance(1, 5)) {
@@ -127,12 +127,12 @@ fun genM(
     }
     if (chance(1, 4))
         m.reactions.addAll(
-            random(
-                10
-            ) {
-                faker.emoji().smiley() to (Chat.get(chat)?.let { randomAmount(it.members) }
-                    ?.map { it.user_id }?.toMutableStateList() ?: mutableStateListOf())
-            }
+                random(
+                        10
+                ) {
+                    faker.emoji().smiley() to (Chat.get(chat)?.let { randomAmount(it.members) }
+                            ?.map { it.user_id }?.toMutableStateList() ?: mutableStateListOf())
+                }
         )
     m.replyCount = m.replies.items.size
     m.favorite = chance(1, 5)
@@ -146,51 +146,51 @@ fun genM(
 fun genChat() = if (bool()) genG() else genDM()
 
 fun genImageMessage(user: User = genU()) =
-    genM(attachments = mutableStateListOf(genA(AttachmentType.image)), user = user)
+        genM(attachments = mutableStateListOf(genA(AttachmentType.image)), user = user)
 
 fun genFileMessage() = genM(attachments = mutableStateListOf(genA(AttachmentType.file)))
 
-fun genTextMessage(user: User = randomUser(), room: String = genG().id) = Message(
-    uuid(), Clock.System.now().minus(Random.nextLong(100000L).seconds),
-    user.id,
-    null,
-    room,
+fun genTextMessage(user: User = randomUser(), chat: String = genG().id) = Message(
+        uuid(), Clock.System.now().minus(Random.nextLong(100000L).seconds),
+        user.id,
+        null,
+        chat,
 ).apply {
     updateText(faker.lorem().paragraph())
     reactions.addAll(
-        random(
-            4,
-            {
-                (faker.emoji().smiley() to randomAmount(randomUsers()).map { it.id }
-                    .toMutableStateList())
-            })
+            random(
+                    4,
+                    {
+                        (faker.emoji().smiley() to randomAmount(randomUsers()).map { it.id }
+                                .toMutableStateList())
+                    })
     )
     currentReaction = reactions.firstOrNull()?.first
     replyCount = if (Random.nextBoolean()) Random.nextInt(20) else 0
 }
 
-fun genRepliesMessage() = genTextMessage(room = genG().id).apply {
-    replies.items.addAll(random(4, { genTextMessage(room = this.chatID) }))
+fun genRepliesMessage() = genTextMessage(chat = genG().id).apply {
+    replies.items.addAll(random(4, { genTextMessage(chat = this.chatID) }))
     replyCount = replies.items.size
 }
 
 
 fun genDM() =
-    Chat(uuid(), ChatType.DirectMessage).apply {
-        val u = genU()
-        val c = genCurrentUser()
-        members.add(Member(u.id, id, Clock.System.now(), MemberRole.Member))
-        members.add(Member(c.id, id, Clock.System.now(), MemberRole.Member))
-        items.addAll(
-            random(
-                10,
-                { genTextMessage(room = id, user = u) })
-        )
-        items.sortByDescending { it.createdAt }
-        latest = items.firstOrNull()
-        if (!items.isEmpty())
-            unreadCount = Random.nextInt(0, items.size)
-    }
+        Chat(uuid(), ChatType.DirectMessage).apply {
+            val u = genU()
+            val c = genCurrentUser()
+            members.add(Member(u.id, id, Clock.System.now(), MemberRole.Member))
+            members.add(Member(c.id, id, Clock.System.now(), MemberRole.Member))
+            items.addAll(
+                    random(
+                            10,
+                            { genTextMessage(chat = id, user = u) })
+            )
+            items.sortByDescending { it.createdAt }
+            latest = items.firstOrNull()
+            if (!items.isEmpty())
+                unreadCount = Random.nextInt(0, items.size)
+        }
 
 class SampleUser : PreviewParameterProvider<User> {
     override val values: Sequence<User> = (0..40).map {

@@ -30,23 +30,22 @@ data class ContactsPager(val id: String = UUID.randomUUID().toString()) : Pager<
 
     fun fetchContacts(): List<String> {
         val contacts =
-            Contacts(InAppChat.shared.appContext).query()
-                .where { Phone.Number.isNotNullOrEmpty() or Phone.NormalizedNumber.isNotNullOrEmpty() }
-                .include {
-                    setOf(
-                        Phone.Number,
-                        Phone.NormalizedNumber
-                    )
-                }
-                .find()
+                Contacts(InAppChat.shared.appContext).query()
+                        .where { Phone.Number.isNotNullOrEmpty() or Phone.NormalizedNumber.isNotNullOrEmpty() }
+                        .include {
+                            setOf(
+                                    Phone.Number,
+                                    Phone.NormalizedNumber
+                            )
+                        }
+                        .find()
         return contacts.flatMap { it.phones().map { it.normalizedNumber ?: it.number ?: "" } }
     }
 
     override var isSinglePage = true
 
     override suspend fun load(skip: Int, limit: Int): List<User> {
-        val contacts = fetchContacts()
-        return API.getContacts(contacts)
+        return API.getUsers(skip, limit)
     }
 }
 
@@ -75,18 +74,18 @@ data class RepliesPager(val message: Message) : Pager<Message>() {
 
 }
 
-@Stable
-data class ThreadPager(val id: String = uuid()) : Pager<Message>() {
-    override suspend fun load(skip: Int, limit: Int): List<Message> {
-        return API.getReplyChats(skip, limit)
-    }
-
-}
-
-@Stable
-data class UserSharedMedia(val user: User) : Pager<Message>() {
-    override suspend fun load(skip: Int, limit: Int): List<Message> {
-        return API.getSharedMedia(user.id)
-    }
-
-}
+//@Stable
+//data class ThreadPager(val id: String = uuid()) : Pager<Message>() {
+//    override suspend fun load(skip: Int, limit: Int): List<Message> {
+//        return API.getReplyChats(skip, limit)
+//    }
+//
+//}
+//
+//@Stable
+//data class UserSharedMedia(val user: User) : Pager<Message>() {
+//    override suspend fun load(skip: Int, limit: Int): List<Message> {
+//        return API.getSharedMedia(user.id)
+//    }
+//
+//}

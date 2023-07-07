@@ -1,9 +1,6 @@
 mutation JoinChat($id: ID!) {
   join(chat: $id) {
-    role
-    created_at
-    updated_at
-    last_read_at
+    ...FMember
   }
 }
 

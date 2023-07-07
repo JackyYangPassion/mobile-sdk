@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.FocusRequester
-import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.User
@@ -18,17 +17,17 @@ import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.ui.views.*
 import io.inappchat.sdk.utils.IPreviews
-import io.inappchat.sdk.utils.genChatChat
+import io.inappchat.sdk.utils.genChat
 
 @Composable
 fun ChatChat(
-    room: Chat,
-    message: Message? = null,
-    openProfile: (User) -> Unit,
-    openInvite: (Chat) -> Unit,
-    openReply: (Message) -> Unit,
-    openEdit: (Chat) -> Unit,
-    back: () -> Unit
+        chat: Chat,
+        message: Message? = null,
+        openProfile: (User) -> Unit,
+        openInvite: (Chat) -> Unit,
+        openReply: (Message) -> Unit,
+        openEdit: (Chat) -> Unit,
+        back: () -> Unit
 ) {
     var focusRequester = remember { FocusRequester() }
     var media by remember { mutableStateOf(false) }
@@ -36,39 +35,39 @@ fun ChatChat(
     var messageForAction by remember {
         mutableStateOf<Message?>(null)
     }
-    MediaActionSheet(open = media, room = room, dismiss = { menu = false }, inReplyTo = message) {
+    MediaActionSheet(open = media, chat = chat, dismiss = { menu = false }, inReplyTo = message) {
         MessageActionSheet(
-            message = messageForAction,
-            hide = { messageForAction = null },
-            onReply = openReply
+                message = messageForAction,
+                hide = { messageForAction = null },
+                onReply = openReply
         ) {
             ChatDrawer(
-                chat = room.chat,
-                open = menu,
-                hide = { menu = false },
-                openEdit = openEdit,
-                openInvite = openInvite,
-                openProfile = openProfile,
-                back = back
+                    chat = chat,
+                    open = menu,
+                    hide = { menu = false },
+                    openEdit = openEdit,
+                    openInvite = openInvite,
+                    openProfile = openProfile,
+                    back = back
             ) {
                 Header(title = "", icon = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Avatar(room.image, 35.0, room.chat != null)
+                        Avatar(chat.displayImage, 35.0, chat != null)
                         Column {
                             Text(
-                                text = room.name,
-                                iac = fonts.title2,
-                                color = colors.text,
-                                maxLines = 1
+                                    text = chat.displayName,
+                                    iac = fonts.title2,
+                                    color = colors.text,
+                                    maxLines = 1
                             )
-                            room.chat?.let {
-                                ChatCount(count = it.participants.size)
+                            chat.let {
+                                ChatCount(count = it.members.size)
                             }
                         }
                     }
                 }, back = back, menu = { menu = true })
-                MessageList(room = room, onLongPress = { messageForAction = it })
-                MessageInput(room = room, replyingTo = message, focusRequester = focusRequester) {
+                MessageList(chat = chat, onLongPress = { messageForAction = it })
+                MessageInput(chat = chat, replyingTo = message, focusRequester = focusRequester) {
                     media = true
                 }
             }
@@ -81,11 +80,11 @@ fun ChatChat(
 fun ChatChatPreview() {
     InAppChatContext {
         ChatChat(
-            room = genChatChat(),
-            openProfile = {},
-            openInvite = {},
-            openReply = {},
-            openEdit = {}
+                chat = genChat(),
+                openProfile = {},
+                openInvite = {},
+                openReply = {},
+                openEdit = {}
         ) {
 
         }

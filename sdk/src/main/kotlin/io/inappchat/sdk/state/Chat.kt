@@ -147,5 +147,7 @@ class Chat(override val id: String, val kind: ChatType) : Pager<Message>(), Iden
             }
             return Chat(chat)
         }
+
+        fun getByUser(id: String) = Chats.current.cache.chatsByUID[id]
     }
 }

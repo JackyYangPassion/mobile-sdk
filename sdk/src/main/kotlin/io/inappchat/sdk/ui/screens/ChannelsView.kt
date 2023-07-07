@@ -22,26 +22,26 @@ import io.inappchat.sdk.utils.random
 
 @Composable
 fun ChannelsView(
-    scrollToTop: Int,
-    search: Fn,
-    openChat: (Chat) -> Unit,
-    openCreateChat: () -> Unit
+        scrollToTop: Int,
+        search: Fn,
+        openChat: (Chat) -> Unit,
+        openCreateChat: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         PagerList(
-            pager = Chats.current.network,
-            topInset = HeaderHeight,
-            bottomInset = 0.dp,
-            scrollToTop = scrollToTop.toString(),
-            empty = {
-                EmptyListView(
-                    config = theme.assets.emptyAllChannels,
-                    cta = CTA(icon = null, text = "Create A Channel", to = openCreateChat)
-                )
-            }) { chat ->
+                pager = Chats.current.network,
+                topInset = HeaderHeight,
+                bottomInset = 0.dp,
+                scrollToTop = scrollToTop.toString(),
+                empty = {
+                    EmptyListView(
+                            config = theme.assets.emptyAllChannels,
+                            cta = CTA(icon = null, text = "Create A Channel", to = openCreateChat)
+                    )
+                }) { chat ->
             ChannelRow(chat = chat, onClick = {
-                if (it.isMember) {
-                    Chat.getByChat(it.id)?.let { openChat(it) }
+                if (!chat._private || it.isMember) {
+                    openChat(it)
                 }
             })
         }
@@ -55,10 +55,10 @@ fun EmptyChannelsViewPreview() {
     Chats.current.network.hasMore = false
     InAppChatContext {
         ChannelsView(
-            scrollToTop = 0,
-            search = { /*TODO*/ },
-            openCreateChat = { /*TODO*/ },
-            openChat = {})
+                scrollToTop = 0,
+                search = { /*TODO*/ },
+                openCreateChat = { /*TODO*/ },
+                openChat = {})
     }
 }
 
@@ -69,9 +69,9 @@ fun ChannelsViewPreview() {
     Chats.current.network.items.addAll(random(20, { genG() }))
     InAppChatContext {
         ChannelsView(
-            scrollToTop = 0,
-            search = { /*TODO*/ },
-            openCreateChat = { /*TODO*/ },
-            openChat = {})
+                scrollToTop = 0,
+                search = { /*TODO*/ },
+                openCreateChat = { /*TODO*/ },
+                openChat = {})
     }
 }

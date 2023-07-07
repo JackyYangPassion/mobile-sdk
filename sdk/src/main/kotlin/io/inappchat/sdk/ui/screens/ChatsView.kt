@@ -17,14 +17,14 @@ import io.inappchat.sdk.utils.*
 
 @Composable
 fun ChatsView(
-    scrollToTop: Int = 0,
-    openChat: (Chat) -> Unit,
-    openReplies: (Message) -> Unit,
-    openAllChannels: () -> Unit,
-    openContacts: () -> Unit,
-    openSearch: () -> Unit,
-    openCompose: () -> Unit,
-    openProfile: (User) -> Unit
+        scrollToTop: Int = 0,
+        openChat: (Chat) -> Unit,
+        openReplies: (Message) -> Unit,
+        openAllChannels: () -> Unit,
+        openContacts: () -> Unit,
+        openSearch: () -> Unit,
+        openCompose: () -> Unit,
+        openProfile: (User) -> Unit
 ) {
     var list by remember {
         mutableStateOf(Chats.List.users)
@@ -33,9 +33,9 @@ fun ChatsView(
     val cta = when (list) {
         Chats.List.users -> CTA(icon = null, text = "Explore Channels", to = openAllChannels)
         else -> CTA(
-            io.inappchat.sdk.R.drawable.paper_plane_tilt_fill,
-            "Send a Message",
-            openContacts
+                io.inappchat.sdk.R.drawable.paper_plane_tilt_fill,
+                "Send a Message",
+                openContacts
         )
     }
     val header = @Composable {
@@ -47,45 +47,39 @@ fun ChatsView(
     val empty = @Composable {
         EmptyListView(config = theme.assets.list(list), cta = cta)
     }
-    if (list == Chats.List.chats) {
-        PagerList(
-            pager = Chats.current.messages,
-            header = header,
-            scrollToTop = scrollToTop.toString(),
-            empty = empty,
-            divider = true
-        ) {
-            RepliesView(message = it, onPress = openReplies, onPressUser = openProfile)
-        }
-    } else {
-        val pager = if (list == Chats.List.users) Chats.current.users else Chats.current.chats
-        PagerList(
-            pager = pager,
+//        PagerList(
+//            pager = Chats.current.messages,
+//            header = header,
+//            scrollToTop = scrollToTop.toString(),
+//            empty = empty,
+//            divider = true
+//        ) {
+//            RepliesView(message = it, onPress = openReplies, onPressUser = openProfile)
+//        }
+    val items = if (list == Chats.List.dms) Chats.current.dms else Chats.current.groups
+    IACList(
+            items = items,
             header = header,
             empty = empty,
             scrollToTop = scrollToTop.toString(),
             divider = true
-        ) {
-            ChatRow(chat = it, onClick = openChat)
-        }
+    ) {
+        ChatRow(chat = it, onClick = openChat)
     }
 }
 
 @IPreviews
 @Composable
 fun EmptyUserChatsViewPreview() {
-    Chats.current.users.hasMore = false
-    Chats.current.chats.hasMore = false
-    Chats.current.messages.hasMore = false
     InAppChatContext {
         ChatsView(
-            openChat = {},
-            openReplies = {},
-            openAllChannels = { /*TODO*/ },
-            openContacts = { /*TODO*/ },
-            openSearch = { /*TODO*/ },
-            openCompose = { /*TODO*/ },
-            openProfile = {}
+                openChat = {},
+                openReplies = {},
+                openAllChannels = { /*TODO*/ },
+                openContacts = { /*TODO*/ },
+                openSearch = { /*TODO*/ },
+                openCompose = { /*TODO*/ },
+                openProfile = {}
         )
     }
 }
@@ -93,18 +87,18 @@ fun EmptyUserChatsViewPreview() {
 @IPreviews
 @Composable
 fun ChatsViewPreview() {
-    Chats.current.users.items.addAll(random(10, { genUserChat() }))
-    Chats.current.chats.items.addAll(random(10, { genChatChat() }))
-    Chats.current.messages.items.addAll(random(10, { genRepliesMessage() }))
+//    Chats.current.users.items.addAll(random(10, { genUserChat() }))
+//    Chats.current.chats.items.addAll(random(10, { genChatChat() }))
+//    Chats.current.messages.items.addAll(random(10, { genRepliesMessage() }))
     InAppChatContext {
         ChatsView(
-            openChat = {},
-            openReplies = {},
-            openAllChannels = { /*TODO*/ },
-            openContacts = { /*TODO*/ },
-            openSearch = { /*TODO*/ },
-            openCompose = { /*TODO*/ },
-            openProfile = {}
+                openChat = {},
+                openReplies = {},
+                openAllChannels = { /*TODO*/ },
+                openContacts = { /*TODO*/ },
+                openSearch = { /*TODO*/ },
+                openCompose = { /*TODO*/ },
+                openProfile = {}
         )
     }
 }

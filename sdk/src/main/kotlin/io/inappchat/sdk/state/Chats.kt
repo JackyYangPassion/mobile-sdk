@@ -17,7 +17,7 @@ import kotlin.properties.Delegates
 @Stable
 data class Chats(val id: String = UUID.randomUUID().toString()) {
 
-    val messages = ThreadPager()
+    //    val messages = ThreadPager()
     val favorites = FavoritesPager()
     val settings = Settings()
     val network = ChannelsPager()
@@ -27,10 +27,10 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
     val memberships = mutableStateListOf<Member>()
     val dms: kotlin.collections.List<Chat>
         get() = memberships.filter { it.isMember && it.chat.kind == ChatType.DirectMessage }
-            .map { it.chat }
+                .map { it.chat }
     val groups: kotlin.collections.List<Chat>
         get() = memberships.filter { it.isMember && it.chat.kind == ChatType.Group }
-            .map { it.chat }
+                .map { it.chat }
 
     var fcmToken: String? = null
 
@@ -71,46 +71,37 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
     private suspend fun loadInvites() {
         val invites = API.invites()
         for (invite in invites) {
-            val users = this.invites[invite.chatId] ?: mutableListOf()
-            val user = User.fetched(invite.by)
-            if (!users.contains(user)) {
-                users.add(user)
-            }
-            this.invites[invite.chatId] = users
+            val chat = Chat.get(invite.chat.fChat)
+            val user = User.get(invite.user.fUser)
+            if (!chat.invites.contains(user))
+                chat.invites.add(user)
         }
     }
 
     enum class List(val label: String) {
-        chats("Channels"),
-        users("Chat"),
-        threads("Chats");
+        groups("Channels"),
+        dms("Chat");
 
         companion object {
             fun forRoute(r: String?): List {
-                if (r == null) return chats
+                if (r == null) return dms
                 when (r) {
-                    "channels" -> chats
-                    "chats" -> users
-                    "chats" -> chats
+                    "channels" -> groups
+                    "dms" -> dms
                 }
-                return chats
+                return dms
             }
         }
     }
 
     fun count(list: List): Int =
-        when (list) {
-            List.users ->
-                dms.sumOf { it.unreadCount }
+            when (list) {
+                List.dms ->
+                    dms.sumOf { it.unreadCount }
 
-            List.chats ->
-                groups.sumOf { it.unreadCount }
-
-            List.chats ->
-                0
-
-            else -> 0
-        }
+                List.groups ->
+                    groups.sumOf { it.unreadCount }
+            }
 
     var nextGif: ((String) -> Unit)? = null
 

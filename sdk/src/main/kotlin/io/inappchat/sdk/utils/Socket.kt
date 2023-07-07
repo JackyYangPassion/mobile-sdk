@@ -66,19 +66,19 @@ object Socket {
         val password = "$signature:$ts:${authToken!!}"
         val uri = server.toUri()
         client =
-            Mqtt3Client.builder().identifier(clientId).serverHost(uri.host!!).serverPort(uri.port)
-                .simpleAuth(
-                    Mqtt3SimpleAuth.builder().username(username)
-                        .password(password.encodeToByteArray())
-                        .build()
-                ).willPublish(
-                    Mqtt3Publish.builder().topic("disconnect/clients").payload(
-                        clientId
-                            .toByteArray()
-                    ).qos(MqttQos.EXACTLY_ONCE)
-                        .retain(true).build()
-                )
-                .buildAsync()
+                Mqtt3Client.builder().identifier(clientId).serverHost(uri.host!!).serverPort(uri.port)
+                        .simpleAuth(
+                                Mqtt3SimpleAuth.builder().username(username)
+                                        .password(password.encodeToByteArray())
+                                        .build()
+                        ).willPublish(
+                                Mqtt3Publish.builder().topic("disconnect/clients").payload(
+                                        clientId
+                                                .toByteArray()
+                                ).qos(MqttQos.EXACTLY_ONCE)
+                                        .retain(true).build()
+                        )
+                        .buildAsync()
     }
 
     fun connect() {
@@ -86,9 +86,9 @@ object Socket {
             createClient()
             client.connect().await()
             client.subscribe(
-                Mqtt3Subscribe.builder().addSubscriptions(
-                    subscriptions
-                ).build()
+                    Mqtt3Subscribe.builder().addSubscriptions(
+                            subscriptions
+                    ).build()
             ).await()
             client.publishes(MqttGlobalPublishFilter.ALL, Socket::event)
         }
@@ -105,55 +105,55 @@ object Socket {
         when (eventType) {
             Event.EventType.availabilityStatus -> {
                 val r = Serializer.moshi.adapter(AvailabilityEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.chat -> {
                 val r = Serializer.moshi.adapter(NewMessageEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.chatReaction -> {
                 val r = Serializer.moshi.adapter(ReactionEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.chatUpdated -> {
                 val r = Serializer.moshi.adapter(ChatUpdateEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.msgReadStatus -> {
                 val r = Serializer.moshi.adapter(MsgReadEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.typingStatus -> {
                 val r = Serializer.moshi.adapter(TypingEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.updateMessage -> {
                 val r = Serializer.moshi.adapter(UpdateMessageEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.userSelfUpdate -> {
                 val r = Serializer.moshi.adapter(UserSelfUpdateEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
             Event.EventType.availabilityStatus -> {
                 val r = Serializer.moshi.adapter(AvailabilityEvent::class.java)
-                    .fromJson(event.payloadAsBytes.decodeToString())
+                        .fromJson(event.payloadAsBytes.decodeToString())
                 on(r!!)
             }
 
@@ -164,22 +164,22 @@ object Socket {
 
 
     val subscriptions: List<Mqtt3Subscription> = arrayOf(
-        "${Topics.chat}:${clientId}",
-        "${Topics.typing}:${clientId}",
-        "${Topics.availability}:${clientId}",
-        "${Topics.read}:${clientId}",
-        "chatUpdated:${clientId}",
-        "chatReaction:${clientId}",
-        "userSelfUpdated:${clientId}",
-        "tenantConfigUpdated:${clientId}",
-        "chatSettingUpdated:${clientId}",
-        "announcement:${clientId}",
-        "chatUpdate:${clientId}",
-        "userDbUpdated:${clientId}",
-        "chatReportUpdated:${clientId}",
+            "${Topics.chat}:${clientId}",
+            "${Topics.typing}:${clientId}",
+            "${Topics.availability}:${clientId}",
+            "${Topics.read}:${clientId}",
+            "chatUpdated:${clientId}",
+            "chatReaction:${clientId}",
+            "userSelfUpdated:${clientId}",
+            "tenantConfigUpdated:${clientId}",
+            "chatSettingUpdated:${clientId}",
+            "announcement:${clientId}",
+            "chatUpdate:${clientId}",
+            "userDbUpdated:${clientId}",
+            "chatReportUpdated:${clientId}",
     ).map {
         Mqtt3Subscription.builder().topicFilter(it).qos(MqttQos.EXACTLY_ONCE)
-            .build()
+                .build()
     }
 
     fun on(event: AvailabilityEvent) {
@@ -188,7 +188,7 @@ object Socket {
 
     fun on(event: NewMessageEvent) {
         val m = event.message.m()
-        m.room?.let {
+        m.chat?.let {
             if (!it.items.contains(m)) {
                 it.items.add(0, m)
             }
@@ -222,21 +222,21 @@ object Socket {
                         ev.eventData.eventTriggeredOnUserList?.let {
                             for (u in it) {
                                 val newRole =
-                                    if (ev.eventType == ChatUpdateEventItem.EventType.adminMade) Participant.Role.admin else Participant.Role.user
+                                        if (ev.eventType == ChatUpdateEventItem.EventType.adminMade) Participant.Role.admin else Participant.Role.user
                                 val i =
-                                    chat.participants.indexOfFirst { it.eRTCUserId == u.eRTCUserId }
+                                        chat.participants.indexOfFirst { it.eRTCUserId == u.eRTCUserId }
                                 if (i > -1) {
                                     val p = chat.participants[i].copy(role = newRole)
                                     chat.participants.removeAt(i)
                                     chat.participants.add(i, p)
                                 } else {
                                     chat.participants.add(
-                                        Participant(
-                                            u.appUserId,
-                                            u.eRTCUserId,
-                                            newRole,
-                                            joinedAtDate = OffsetDateTime.now()
-                                        )
+                                            Participant(
+                                                    u.appUserId,
+                                                    u.eRTCUserId,
+                                                    newRole,
+                                                    joinedAtDate = OffsetDateTime.now()
+                                            )
                                     )
                                 }
                             }
@@ -247,10 +247,10 @@ object Socket {
                         ev.eventData.eventTriggeredOnUserList?.let {
                             for (u in it) {
                                 chat.participants.add(
-                                    Participant(
-                                        u.appUserId,
-                                        u.eRTCUserId, Participant.Role.user, OffsetDateTime.now()
-                                    )
+                                        Participant(
+                                                u.appUserId,
+                                                u.eRTCUserId, Participant.Role.user, OffsetDateTime.now()
+                                        )
                                 )
                             }
                         }
@@ -271,7 +271,7 @@ object Socket {
                             g.description = change.description?.new
                             g.avatar = change.profilePic?.new
                             g._private =
-                                change.chatType?.new == ChatUpdatEventChangeDataChatType.New.private
+                                    change.chatType?.new == ChatUpdatEventChangeDataChatType.New.private
                         }
                     }
 
@@ -284,7 +284,7 @@ object Socket {
                     ChatUpdateEventItem.EventType.descriptionChanged -> {
                         ev.eventData.changeData?.chatType?.let {
                             chat._private =
-                                it.new == ChatUpdatEventChangeDataChatType.New.private
+                                    it.new == ChatUpdatEventChangeDataChatType.New.private
                         }
                     }
 
@@ -307,7 +307,7 @@ object Socket {
                     ChatUpdateEventItem.EventType.chatTypeChanged -> {
                         ev.eventData.changeData?.chatType?.let {
                             chat._private =
-                                it.new == ChatUpdatEventChangeDataChatType.New.private
+                                    it.new == ChatUpdatEventChangeDataChatType.New.private
                         }
                     }
                 }
@@ -369,15 +369,15 @@ object Socket {
                     SelfUpdateItem.EventType.notificationSettingsChangedChat ->
                         ev.eventData.notificationSettings?.let { setting ->
                             ev.eventData.chatId?.let { io.inappchat.sdk.state.Chat.get(it) }
-                                ?.let { chat ->
-                                    chat.setNotifications(setting.allowFrom, true)
-                                }
+                                    ?.let { chat ->
+                                        chat.setNotifications(setting.allowFrom, true)
+                                    }
                         }
 
                     SelfUpdateItem.EventType.userBlockedStatusChanged ->
                         ev.eventData.targetUser?.eRTCUserId?.let {
                             val blocked =
-                                ev.eventData.blockedStatus == UserSelfUpdateEventData.BlockedStatus.blocked
+                                    ev.eventData.blockedStatus == UserSelfUpdateEventData.BlockedStatus.blocked
                             Chats.current.settings.setBlock(it, blocked)
                             User.get(it)?.let {
                                 it.blocked = blocked
@@ -391,7 +391,7 @@ object Socket {
     fun on(event: UpdateMessageEvent) {
         Message.get(event.msgUniqueId)?.let {
             Chats.current.cache.messages.remove(it.id)
-            it.room?.items?.remove(it)
+            it.chat?.items?.remove(it)
             Chats.current.cache.repliesPagers[event.msgUniqueId]?.let { r ->
 
                 r.items.remove(it)
