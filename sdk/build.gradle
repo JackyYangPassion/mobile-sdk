@@ -13,7 +13,7 @@ plugins {
     id("com.apollographql.apollo3") version "4.0.0-alpha.2"
 }
 
-def libraryVersion = '0.0.3'
+def libraryVersion = '0.0.4'
 
 
 android {
@@ -41,19 +41,14 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'String', "ENV", '"production"'
-            buildConfigField 'String', 'BASE_URL', '"https://prov.inappchat.io"'
+            buildConfigField 'String', 'BASE_URL', '"https://chat.inappchat.io"'
         }
         debug {
             buildConfigField 'String', "ENV", '"dev"'
-            buildConfigField 'String', 'BASE_URL', '"https://prov-dev.inappchat.io"'
-        }
-        qa {
-            initWith debug
-            buildConfigField 'String', "ENV", '"qa"'
-            buildConfigField 'String', 'BASE_URL', '"https://prov-qa.inappchat.io"'
+            buildConfigField 'String', 'BASE_URL', '"https://chat.dev.inappchat.io"'
         }
     }
 
