@@ -13,7 +13,7 @@ plugins {
     id("com.apollographql.apollo3") version "4.0.0-alpha.2"
 }
 
-def libraryVersion = '0.0.1'
+def libraryVersion = '0.0.2'
 
 
 android {
@@ -174,11 +174,10 @@ afterEvaluate {
                     }
                     developers {
                         developer {
-                            id = 'lightchaser411'
-                            name = 'Zaid Daghestani'
-                            email = 'zaid.daghestani@gmail.com'
+                            id = 'reaperdtme'
+                            name = 'reaper'
+                            email = 'reaper@fastapps.one'
                         }
-                        // Add all other devs here...
                     }
 
                     // Version control info - if you're using GitHub, follow the 
