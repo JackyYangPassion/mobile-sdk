@@ -9,6 +9,8 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.network.http.LoggingInterceptor
 import com.apollographql.apollo3.network.okHttpClient
+import com.apollographql.apollo3.network.ws.GraphQLWsProtocol
+import com.apollographql.apollo3.network.ws.WebSocketNetworkTransport
 import com.moczul.ok2curl.CurlInterceptor
 import com.moczul.ok2curl.logger.Logger
 import io.inappchat.sdk.fragment.FUser
@@ -17,6 +19,8 @@ import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Member
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
+import io.inappchat.sdk.state.onCoreEvent
+import io.inappchat.sdk.state.onMeEvent
 import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.type.CreateGroupInput
 import io.inappchat.sdk.type.DeviceType
@@ -31,8 +35,13 @@ import io.inappchat.sdk.type.UpdateGroupInput
 import io.inappchat.sdk.type.UpdateMessageInput
 import io.inappchat.sdk.type.UpdateProfileInput
 import io.inappchat.sdk.utils.Monitoring
-import io.inappchat.sdk.utils.Socket
+import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.ift
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.security.MessageDigest
@@ -79,7 +88,16 @@ object API {
 
     var client = ApolloClient.Builder()
             .serverUrl(Servers.get().http + "/graphql")
-            .webSocketServerUrl(Servers.get().ws + "/graphql")
+            .subscriptionNetworkTransport(
+                    WebSocketNetworkTransport.Builder()
+                            .protocol(GraphQLWsProtocol.Factory(
+                                    connectionPayload = {
+                                        authToken?.let { mapOf("authToken" to it) } ?: mapOf()
+                                    }
+                            ))
+                            .serverUrl(Servers.get().ws + "/graphql")
+                            .build()
+            )
             .okHttpClient(
                     OkHttpClient.Builder()
                             .addInterceptor(Interceptor { chain ->
@@ -245,10 +263,39 @@ object API {
         User.current = user
         try {
             Chats.current.loadAsync()
-            Socket.connect()
+            subscribe()
         } catch (err: Error) {
             Monitoring.error(err)
         }
+    }
+
+    val subscriptionScope = CoroutineScope(Dispatchers.IO)
+    fun subscribe() {
+        subscriptionScope.launch {
+            client.subscription(CoreSubscription()).toFlow().collectLatest {
+                it.data?.let {
+                    InAppChat.shared.scope.launch {
+                        Chats.current.onCoreEvent(it.core)
+                    }
+                } ?: it.errors?.forEach {
+                    Monitoring.error(it.message)
+                }
+            }
+
+            client.subscription(MeSubscription()).toFlow().collectLatest {
+                it.data?.let {
+                    InAppChat.shared.scope.launch {
+                        Chats.current.onMeEvent(it.me)
+                    }
+                } ?: it.errors?.forEach {
+                    Monitoring.error(it.message)
+                }
+            }
+        }
+    }
+
+    fun unsubscribe() {
+        subscriptionScope.cancel()
     }
 
     fun onToken(access: String) {
@@ -311,6 +358,7 @@ object API {
 
     suspend fun logout() {
         client.mutation(LogoutMutation()).execute().data?.logout
+        unsubscribe()
         authToken = null
     }
 

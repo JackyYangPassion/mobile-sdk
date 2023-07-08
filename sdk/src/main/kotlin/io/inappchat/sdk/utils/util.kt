@@ -14,6 +14,11 @@ import contacts.core.equalToIgnoreCase
 import contacts.core.util.emails
 import contacts.core.util.nameList
 import contacts.core.util.phones
+import ezvcard.Ezvcard
+import ezvcard.VCard
+import ezvcard.property.Email
+import ezvcard.property.FormattedName
+import ezvcard.property.Telephone
 import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.type.AttachmentType
@@ -30,12 +35,64 @@ fun <A> ift(cond: Boolean, a: A, b: A) = if (cond) a else b
 fun String.annotated() = AnnotatedString(this)
 
 
+fun contactUriToVCard(uri: Uri): VCard {
+    Log.v("IAC", "Contact URI $uri")
+    val result = Contacts(InAppChat.shared.appContext).query().where {
+        Contact.Id.equalToIgnoreCase(uri.lastPathSegment!!)
+    }.include {
+        listOf(
+                Phone.Number,
+                Phone.NormalizedNumber,
+                Phone.Type,
+                Email.Type,
+                Email.Address,
+                Name.DisplayName,
+                Name.FamilyName,
+                Name.GivenName
+        )
+    }.find()
+    return result.map {
+        VCard().apply {
+            it.displayNamePrimary?.let {
+                addFormattedName(FormattedName(it))
+            }
+            it.displayNameAlt?.let {
+                addFormattedNameAlt(FormattedName(it))
+            }
+            it.phones().toList().forEach {
+                addTelephoneNumber(Telephone(it.normalizedNumber ?: it.number
+                ?: it.primaryValue).apply {
+                    it.type?.let {
+                        this.addParameter("type", it.name)
+                    }
+                })
+            }
+            it.emails().toList().map {
+                addEmail(Email(it.address ?: it.primaryValue).apply {
+                    it.type?.let {
+                        this.addParameter("type", it.name)
+                    }
+                })
+            }
+        }
+    }.first()
+}
+
+fun VCard.attachment(): AttachmentInput {
+    return AttachmentInput(
+            url = "data",
+            type = AttachmentType.vcard,
+            data = Optional.present(Ezvcard.write(this).go()),
+            id = uuid()
+    )
+}
+
 fun android.location.Location.attachment(): AttachmentInput {
     return AttachmentInput(
-        longitude = Optional.present(this.longitude),
-        latitude = Optional.present(this.latitude),
-        id = uuid(),
-        type = AttachmentType.location,
-        url = "data"
+            longitude = Optional.present(this.longitude),
+            latitude = Optional.present(this.latitude),
+            id = uuid(),
+            type = AttachmentType.location,
+            url = "data"
     )
 }

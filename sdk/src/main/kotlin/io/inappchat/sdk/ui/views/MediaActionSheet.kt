@@ -27,6 +27,7 @@ import io.inappchat.sdk.actions.imageAttachment
 import io.inappchat.sdk.actions.send
 import io.inappchat.sdk.extensions.contains
 import io.inappchat.sdk.state.*
+import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.*
@@ -190,11 +191,11 @@ fun CameraPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
 }
 
 @Composable
-fun ContactPicker(onContact: (Contact) -> Unit, onCancel: () -> Unit) {
+fun ContactPicker(onContact: (AttachmentInput) -> Unit, onCancel: () -> Unit) {
     val launcher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickContact(),
             onResult = {
-                it?.let({ contactUriToContact(it) })?.let(onContact) ?: onCancel()
+                it?.let({ contactUriToVCard(it).attachment() })?.let(onContact) ?: onCancel()
             }
     )
     LaunchedEffect(key1 = true, block = { launcher.launch(null) })

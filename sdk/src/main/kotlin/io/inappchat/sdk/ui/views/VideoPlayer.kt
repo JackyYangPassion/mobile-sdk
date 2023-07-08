@@ -5,7 +5,7 @@
 package io.inappchat.sdk.ui.views
 
 import android.net.Uri
-import android.view.ViewChat.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -31,19 +31,19 @@ fun VideoPlayer(uri: Uri, modifier: Modifier = Modifier.clipToBounds()) {
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context)
-            .build()
-            .apply {
-                val defaultDataSourceFactory = DefaultDataSource.Factory(context)
-                val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(
-                    context,
-                    defaultDataSourceFactory
-                )
-                val source = ProgressiveMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(MediaItem.fromUri(uri))
+                .build()
+                .apply {
+                    val defaultDataSourceFactory = DefaultDataSource.Factory(context)
+                    val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(
+                            context,
+                            defaultDataSourceFactory
+                    )
+                    val source = ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(MediaItem.fromUri(uri))
 
-                setMediaSource(source)
-                prepare()
-            }
+                    setMediaSource(source)
+                    prepare()
+                }
     }
 
     exoPlayer.playWhenReady = true
@@ -52,14 +52,14 @@ fun VideoPlayer(uri: Uri, modifier: Modifier = Modifier.clipToBounds()) {
     exoPlayer.volume = 0.0f
 
     DisposableEffect(
-        AndroidView(factory = {
-            PlayerView(context).apply {
-                resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-                player = exoPlayer
-                layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-                clipToOutline = true
-            }
-        }, modifier = modifier)
+            AndroidView(factory = {
+                PlayerView(context).apply {
+                    resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                    player = exoPlayer
+                    layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                    clipToOutline = true
+                }
+            }, modifier = modifier)
     ) {
         onDispose { exoPlayer.release() }
     }

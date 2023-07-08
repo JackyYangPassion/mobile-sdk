@@ -1,7 +1,7 @@
 package com.g2minus.chatapp
 
 import io.inappchat.sdk.API
-import io.inappchat.sdk.await
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 
@@ -11,20 +11,20 @@ val poisonPogContract = "0x41112a2e8626330752a8f9353462edd4771a48a2"
 data class Token(val id: String, val account: String, val image: String)
 
 object Etherscan {
-    val client = API.okHttpBuilder().build()
+    val client = OkHttpClient.Builder().build()
     suspend fun getTokens(address: String): List<Token> {
         val request = Request.Builder()
-            .url(
-                "https://api.etherscan.io/api?module=account&acount=addresstokennftinventory&address=$address&contractaddress=$poisonPogContract&apikey=$etherscanApiKey"
+                .url(
+                        "https://api.etherscan.io/api?module=account&acount=addresstokennftinventory&address=$address&contractaddress=$poisonPogContract&apikey=$etherscanApiKey"
 
-            ).build()
-        val response = client.newCall(request).await()
+                ).build()
+        val response = client.newCall(request).execute()
         val tokens = response.body?.string()?.let {
             val json = JSONObject(it)
             val tokens = json.getJSONArray("result").let { array ->
                 val ids = mutableListOf<String>()
                 for (i in 0..array.length()) {
-                    array.getJSONObject(i).getString("TokenId")?.let { id -> ids.add(id) }
+                    array.getJSONObject(i).getString("TokenId").let { id -> ids.add(id) }
                 }
                 ids
             }

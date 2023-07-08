@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
-import io.inappchat.sdk.state.user
 import io.inappchat.sdk.state.usernames
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
@@ -36,7 +35,7 @@ fun RepliesView(
         ) {
             Text(text = "#${message.chat.name ?: ""}", iac = fonts.title3, color = colors.text)
             Text(
-                    text = message.chat.chat?.participants?.map { it.user() }?.usernames() ?: "",
+                    text = message.chat.members.map { it.user }.usernames() ,
                     iac = fonts.body,
                     color = colors.caption
             )

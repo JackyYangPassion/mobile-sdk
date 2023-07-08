@@ -13,6 +13,7 @@ import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -33,36 +34,36 @@ class AppState {
     var wc: WalletConnect? = null
 
     fun load(app: App) =
-        op({
-            println("Load InAppChat")
-            bg {
-                InAppChat.load()
-            }
-            println("InAppChat loaded")
-            if (!InAppChat.shared.isUserLoggedIn) {
-                println("Connecting to wallet connect")
-                wc = bg { WalletConnect(app) }
-                println("Created wallet")
-                uriString = bg {
-                    wc!!.connect()
+            op({
+                println("Load InAppChat")
+                bg {
+                    InAppChat.load()
                 }
-            }
-            loggedIn = InAppChat.shared.isUserLoggedIn
-            loading = false
-            println("Finish loading")
-        })
+                println("InAppChat loaded")
+                if (!InAppChat.shared.isUserLoggedIn) {
+                    println("Connecting to wallet connect")
+                    wc = bg { WalletConnect(app) }
+                    println("Created wallet")
+                    uriString = bg {
+                        wc!!.connect()
+                    }
+                }
+                loggedIn = InAppChat.shared.isUserLoggedIn
+                loading = false
+                println("Finish loading")
+            })
 
     fun login(cb: () -> Unit) {
         val token = this.token ?: return
+        val username = this.username ?: return
         op({
             bg {
                 InAppChat.shared.nftLogin(
-                    contract = "0x41112a2e8626330752a8f9353462edd4771a48a2",
-                    address = token.account,
-                    tokenID = token.id,
-                    signature = signature!!,
-                    profilePicture = token.image,
-                    username = username
+                        wallet = token.account,
+                        tokenID = token.id,
+                        signature = signature!!,
+                        picture = token.image,
+                        username = username,
                 )
             }
             cb()
@@ -77,7 +78,7 @@ class AppState {
                 var first = true
                 accounts.map { account ->
                     if (!first)
-                        Chat.sleep(1000)
+                        delay(1000)
                     first = false
                     Etherscan.getTokens(account)
                 }
@@ -93,8 +94,8 @@ class AppState {
             InAppChat.shared.scope.launch {
                 signature = bg {
                     wc?.sign(
-                        "Login to G2Minus with Poison Pog ${token.id} and username $username",
-                        token.account
+                            "Login to G2Minus with Poison Pog ${token.id} and username $username",
+                            token.account
                     ) {
                         activity.startActivity(Intent(Intent.ACTION_VIEW, it))
                     }

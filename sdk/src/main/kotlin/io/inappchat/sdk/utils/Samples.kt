@@ -73,7 +73,7 @@ fun genG(): Chat {
     val g = Chat(uuid(), ChatType.Group)
     g.name = faker.company().name()
     g.description = ift(chance(4, 5), faker.lorem().paragraph(), null)
-    g.avatar = ift(Random.nextBoolean(), randomImage(), null)
+    g.image = ift(Random.nextBoolean(), randomImage(), null)
     g._private = Random.nextBoolean()
     val members = randomUsers().let { ift(it.isEmpty(), random(40, ::genU), it) }
             .map {
@@ -150,7 +150,7 @@ fun genImageMessage(user: User = genU()) =
 
 fun genFileMessage() = genM(attachments = mutableStateListOf(genA(AttachmentType.file)))
 
-fun genTextMessage(user: User = randomUser(), chat: String = genG().id) = Message(
+fun genChatextMessage(user: User = randomUser(), chat: String = genG().id) = Message(
         uuid(), Clock.System.now().minus(Random.nextLong(100000L).seconds),
         user.id,
         null,
@@ -169,8 +169,8 @@ fun genTextMessage(user: User = randomUser(), chat: String = genG().id) = Messag
     replyCount = if (Random.nextBoolean()) Random.nextInt(20) else 0
 }
 
-fun genRepliesMessage() = genTextMessage(chat = genG().id).apply {
-    replies.items.addAll(random(4, { genTextMessage(chat = this.chatID) }))
+fun genRepliesMessage() = genChatextMessage(chat = genG().id).apply {
+    replies.items.addAll(random(4, { genChatextMessage(chat = this.chatID) }))
     replyCount = replies.items.size
 }
 
@@ -184,7 +184,7 @@ fun genDM() =
             items.addAll(
                     random(
                             10,
-                            { genTextMessage(chat = id, user = u) })
+                            { genChatextMessage(chat = id, user = u) })
             )
             items.sortByDescending { it.createdAt }
             latest = items.firstOrNull()

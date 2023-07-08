@@ -15,11 +15,9 @@ import androidx.compose.runtime.setValue
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.auth0.android.result.Credentials
 import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.utils.Monitoring
-import io.inappchat.sdk.utils.Socket
 import io.inappchat.sdk.utils.async
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.opbg
@@ -27,9 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import timber.log.Timber
-import kotlin.math.sign
-import kotlin.properties.Delegates
 
 @Stable
 class InAppChat private constructor() {
@@ -48,14 +43,14 @@ class InAppChat private constructor() {
         this.apiKey = apiKey
         Chats.current.init()
         ImageLoader.Builder(appContext)
-            .components {
-                if (SDK_INT >= 28) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(GifDecoder.Factory())
+                .components {
+                    if (SDK_INT >= 28) {
+                        add(ImageDecoderDecoder.Factory())
+                    } else {
+                        add(GifDecoder.Factory())
+                    }
                 }
-            }
-            .build()
+                .build()
         Log.v(TAG, "InAppChat Setup")
         if (!delayLoad) {
             Log.v("InAppChat", "Launch load")
@@ -90,21 +85,21 @@ class InAppChat private constructor() {
 
     var loggingIn by mutableStateOf(false)
     suspend fun login(
-        accessToken: String,
-        userId: String,
-        username: String,
-        displayName: String?,
-        picture: String?
+            accessToken: String,
+            userId: String,
+            username: String,
+            displayName: String?,
+            picture: String?
     ) {
         if (loggingIn) return
         loggingIn = true
         try {
             API.login(
-                accessToken = accessToken,
-                userId = userId,
-                username = username,
-                displayName = displayName,
-                picture = picture
+                    accessToken = accessToken,
+                    userId = userId,
+                    username = username,
+                    displayName = displayName,
+                    picture = picture
             )
         } catch (err: Error) {
             Monitoring.error(err)
@@ -112,12 +107,12 @@ class InAppChat private constructor() {
     }
 
     suspend fun nftLogin(
-        wallet: String,
-        tokenID: String,
-        username: String,
-        signature: String,
-        picture: String?,
-        displayName: String?
+            wallet: String,
+            tokenID: String,
+            username: String,
+            signature: String,
+            picture: String?,
+            displayName: String? = null
     ) {
         if (loggingIn) {
             return
@@ -125,12 +120,12 @@ class InAppChat private constructor() {
         loggingIn = true
         try {
             API.nftLogin(
-                wallet = wallet,
-                tokenID = tokenID,
-                signature = signature,
-                picture = picture,
-                username = username,
-                displayName = displayName
+                    wallet = wallet,
+                    tokenID = tokenID,
+                    signature = signature,
+                    picture = picture,
+                    username = username,
+                    displayName = displayName
             )
         } catch (err: Error) {
             Monitoring.error(err)
@@ -151,7 +146,6 @@ class InAppChat private constructor() {
             async {
                 try {
                     API.logout()
-                    Socket.disconnect()
                 } catch (err: Error) {
                     Monitoring.error(err)
                 }

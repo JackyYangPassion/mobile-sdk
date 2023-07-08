@@ -9,14 +9,14 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview(
     name = "Dark mode",
-    chat = "UI mode",
+    group = "UI mode",
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
     showBackground = true,
     backgroundColor = 0xFF000000
 )
 @Preview(
     name = "Light mode",
-    chat = "UI mode",
+    group = "UI mode",
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL,
     showBackground = true
 )

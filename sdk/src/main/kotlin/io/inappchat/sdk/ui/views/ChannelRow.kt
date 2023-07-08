@@ -129,7 +129,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                                chat.name.annotated(),
+                                chat.displayName.annotated(),
                                 theme.fonts.title3,
                                 color = colors.text,
                                 maxLines = 1,

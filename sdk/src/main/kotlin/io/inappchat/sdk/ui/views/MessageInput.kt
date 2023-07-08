@@ -24,7 +24,7 @@ import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.Fn
 import io.inappchat.sdk.utils.IPreviews
-import io.inappchat.sdk.utils.genT
+import io.inappchat.sdk.utils.genChat
 
 
 @Composable
@@ -77,7 +77,7 @@ fun MessageInput(
 @Composable
 fun MessageInputPreview() {
     InAppChatContext {
-        MessageInput(chat = genT(), null) {
+        MessageInput(chat = genChat(), null) {
 
         }
     }

@@ -39,21 +39,21 @@ fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (()
         })
     }
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
+            modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black),
+            contentAlignment = Alignment.Center
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(15.dp)
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.g2minus),
-                contentDescription = "InAppChat",
-                modifier = Modifier
-                    .width(120.dp)
-                    .height(120.dp)
+                    painter = painterResource(id = R.drawable.g2minus),
+                    contentDescription = "InAppChat",
+                    modifier = Modifier
+                            .width(120.dp)
+                            .height(120.dp)
             )
             if (!InAppChat.shared.loaded || InAppChat.shared.loggingIn)
                 Spinner()
@@ -63,11 +63,11 @@ fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (()
 }
 
 @Preview(
-    name = "Dark mode",
-    chat = "UI mode",
-    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-    showBackground = true,
-    backgroundColor = 0xFF000000
+        name = "Dark mode",
+        group = "UI mode",
+        uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
+        showBackground = true,
+        backgroundColor = 0xFF000000
 )
 @Composable
 fun SplashPreview() {

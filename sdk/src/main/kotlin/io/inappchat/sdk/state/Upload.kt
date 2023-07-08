@@ -50,6 +50,8 @@ data class Upload(val id: String = uuid(), val file: File) {
         }
     }
 
+    suspend fun awaitAttachment() = await().let { attachment()!! }
+
     fun upload() {
         if (url != null) return
         if (uploading) return
@@ -93,6 +95,10 @@ data class Upload(val id: String = uuid(), val file: File) {
     fun attachmentType(): AttachmentType {
         val mime = file.mimeType()
         if (mime.startsWith("image")) return AttachmentType.image
+        if (mime.startsWith("video")) return AttachmentType.video
+        if (mime.startsWith("audio")) return AttachmentType.audio
+        return AttachmentType.file
     }
-    fun attachment() = url?.let { AttachmentInput(url = url, type = ) }
+
+    fun attachment() = url?.let { AttachmentInput(url = it, type = attachmentType(), id = id) }
 }
