@@ -44,11 +44,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'String', "ENV", '"production"'
-            buildConfigField 'String', 'BASE_URL', '"https://chat.inappchat.io"'
+            buildConfigField 'String', 'HOST', '"chat.inappchat.io"'
+            buildConfigField 'boolean', 'SSL', "true"
         }
         debug {
             buildConfigField 'String', "ENV", '"dev"'
-            buildConfigField 'String', 'BASE_URL', '"https://chat.dev.inappchat.io"'
+            buildConfigField 'String', 'HOST', '"chat.dev.inappchat.io"'
+            buildConfigField 'boolean', 'SSL', "true"
         }
     }
 

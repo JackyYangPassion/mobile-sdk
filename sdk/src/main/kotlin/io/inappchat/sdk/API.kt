@@ -56,26 +56,11 @@ fun String.sha256(): String {
     return digest.fold("", { str, it -> str + "%02x".format(it) })
 }
 
-val env = "dev"
-
-object Servers {
-    data class Server(val host: String, val ssl: Boolean) {
-        val http: String
-            get() = "http${if (ssl) "s" else ""}://${host}"
-
-        val ws: String
-            get() = "ws${if (ssl) "s" else ""}://${host}"
-    }
-
-    val prod = Server("chat.inappchat.io", true)
-    val dev = Server("chat.dev.inappchat.io", true)
-    val local = Server("chat.dev.inappchat.io", true)
-
-    fun get() = when (env) {
-        "dev" -> dev
-        "local" -> local
-        else -> prod
-    }
+object Server {
+    val host = BuildConfig.HOST
+    val ssl = BuildConfig.SSL
+    val http = "http${if (ssl) "s" else ""}://${host}"
+    val ws = "ws${if (ssl) "s" else ""}://${host}"
 }
 
 object API {
@@ -87,7 +72,7 @@ object API {
 
 
     var client = ApolloClient.Builder()
-        .serverUrl(Servers.get().http + "/graphql")
+        .serverUrl(Server.http + "/graphql")
         .subscriptionNetworkTransport(
             WebSocketNetworkTransport.Builder()
                 .protocol(GraphQLWsProtocol.Factory(
@@ -95,7 +80,7 @@ object API {
                         authToken?.let { mapOf("authToken" to it) } ?: mapOf()
                     }
                 ))
-                .serverUrl(Servers.get().ws + "/graphql")
+                .serverUrl(Server.ws + "/graphql")
                 .build()
         )
         .httpEngine(

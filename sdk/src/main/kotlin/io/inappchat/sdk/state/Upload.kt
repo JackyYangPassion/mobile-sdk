@@ -5,7 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import io.inappchat.sdk.Servers
+import io.inappchat.sdk.Server
 import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.type.AttachmentType
 import io.inappchat.sdk.utils.Monitoring
@@ -27,8 +27,8 @@ import kotlin.coroutines.suspendCoroutine
 
 
 fun File.mimeType(): String =
-        MimeTypeMap.getSingleton().getMimeTypeFromExtension(this.extension)
-                ?: "application/octet-stream"
+    MimeTypeMap.getSingleton().getMimeTypeFromExtension(this.extension)
+        ?: "application/octet-stream"
 
 val uploadClient = OkHttpClient.Builder().build()
 
@@ -62,9 +62,9 @@ data class Upload(val id: String = uuid(), val file: File) {
             try {
                 response = bg {
                     val body = file.asRequestBody(file.mimeType().toMediaTypeOrNull())
-                    val request = Request.Builder().url(Servers.get().http + "/misc/upload/${file.name}")
-                            .post(body)
-                            .build()
+                    val request = Request.Builder().url(Server.http + "/misc/upload/${file.name}")
+                        .post(body)
+                        .build()
                     uploadClient.newCall(request).execute()
                 }
                 if (!response.isSuccessful) {
