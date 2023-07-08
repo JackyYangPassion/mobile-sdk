@@ -26,19 +26,11 @@ class MainActivity : ComponentActivity() {
             InAppChatContext(g2mTheme) {
                 NavHost(navController = navController, startDestination = "splash") {
                     val openChat = {
-                        navController.navigate("chats") {
-                            popUpTo("splash") {
-                                inclusive = true
-                            }
-                        }
+                        navController.navigate("chats")
                     }
                     composable("splash") {
                         Splash(openChat = openChat, openLogin = {
-                            navController.navigate("login") {
-                                popUpTo("splash") {
-                                    inclusive = true
-                                }
-                            }
+                            navController.navigate("login")
                         })
                     }
                     composable("login") {
