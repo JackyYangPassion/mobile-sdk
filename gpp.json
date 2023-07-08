@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "inappchat",
+  "private_key_id": "536eb0a21220cb0f169217bd93388754757ffa74",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCsjxv3nuq1fZ2H\n70pq52JlQp+brZA4kIXxRv4w76XKxiw7ZZLbyt0Ju1U+VSlJsw9jvurmZrB8QmbZ\nbTwTY9UuINKd146xNxYPzuvJXn7DtPMyzqmtWf/eDxWuFntjTBDhKwCynYI0dm3Q\npIXzWv1IMDfxa6hWXgMirEgCGKzXLucyrIb47zK0UuIUP1vAPHDDNdvXuOdMypSh\n+6tn8HbHbcrgC05qkOlBQFYHqdHDDxI18VZw0DEF0S6v4yws+62iChlSZt//GPMe\nDBhf0ZkrTnfrX1hw4F057+a2FTyRLSJxo7YOVEk3ucgc+KsPUq86usRw8oak5RCa\nf/tk0EKXAgMBAAECggEAGKl5Z0oEpHy4A4INIjtAolVDx3WmW5c4NXQehzLxAIqT\nLsgFFbmoHqhx9e8o7/oR9IEIRHafuZqp5WBJykGl6apSP7HbmHNViVva8hQ5zNGz\nQmsr7/UhbwS75f4bk2T/Mpc5Sc3eGo5kgoHJDS9PbL5LeIsY64MTMqTpw7bwGO7E\nSEfh/cTNhO1IaRhtzlC8mMIvtAnGbtrJMeVLajWpqfUIrO2fvOF+RSncLx0tFhka\nrO7fdV4Kd45772AOkxegNndTUdxWy8QOnDC9am76VvF4c+mLVC+0VP51YTtEkh1O\n5MeUiygrSuhwtfRa7quaqzLmwO9hNsn9kSMGuJrwjQKBgQDn/Gy8xl9ouXnGGyze\nJYqTzv4WmxyYSh7UHmoC1QGVIVOi9YwioSqZ+PqqdJ9ZDU3HbGBsiJWhmEFePL74\n3CZoOJ4zI0u77QOuKbLivG80/XVI8UA9NyKFCtCtJNlrBSMUorbIR6L+P9rv10yJ\nY/V4WisH0EbtbRfEu/QcglrWowKBgQC+a+H0Gyvs+LU9vohcNlUhQWFltQwU1Pd8\ncKRpvST5TQmI5xX3v1zZUMTHfoFRHOYSokaaOrqO1nKR4NYdqkiPfb3KPwWx8f/+\nxjQTrJWTXnZpFj7i4B7wXfJLoNJ9EZkCxxUD5PvQO/ld4oMYsLhXgK5LcFu7YK8n\nWd0CB30HfQKBgDFWXAHh5pStLZrWWLp+HXTGBv/jyTcSPHA8b6tehdGjntf/hOgw\ngpDwhM8PsnwL+ki5YeBzQ+90JCLYpHzkxT5RHEQf85FqHOhDcgoKrVQFu5XhyRm7\nyhmlbTAFsD+0fft7h4gcxCtyhSuRDHQD0EbiVlh5ETyZgP6UQpx1lMAlAoGABi4c\nLD8BgvRjdXiMlmmRA75KefGRTc/HpHtHasMfwxOT/qR5WwwT6F2ttUfOzKIieXJY\n1kKXsXEWUNO6P0Y6iqWrFjhLaAYRp+Qo5oaQaDMFps15BwX9GxIBfiDfE/4RODzb\n2r+AyLZZlol2dcOuh/B+N6aS45b0uFM7UAiML0UCgYBhN34ESu6rhEyUgxt2gjG9\n3UF1EEFCqAkz4TT6psZoRrJI/YI+71lOXGOfh37cA6Fcn1cz3SZIWc4mlH+5I3Mn\nvNX3j9NpOYI5xghIcib4EfHC4Igbz7R7raoLB2vxAawlnIlMVqJtXbYNdlObU5YM\nGGn/Uddd8LiXAKUn8mj+/Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "play-store-publisher@inappchat.iam.gserviceaccount.com",
+  "client_id": "100438239307302453491",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/play-store-publisher%40inappchat.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
