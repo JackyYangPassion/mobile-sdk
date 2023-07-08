@@ -23,14 +23,15 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import io.inappchat.sdk.InAppChatActivity
 import io.inappchat.sdk.R
+import io.inappchat.sdk.actions.imageAttachment
 import io.inappchat.sdk.actions.send
 import io.inappchat.sdk.extensions.contains
-import io.inappchat.sdk.models.Contact
 import io.inappchat.sdk.state.*
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.*
 import kotlinx.coroutines.tasks.await
+import java.io.File
 
 
 enum class Media {
@@ -69,45 +70,39 @@ fun MediaActionSheet(
         dismiss()
     }
 
+    val onFile = { file: File ->
+        op({
+            val img = Upload(file = file).awaitAttachment()
+            chat.send(inReplyTo?.id, attachments = listOf(img))
+        })
+        hide()
+    }
+
     when (media) {
         Media.pickPhoto, Media.pickVideo -> AssetPicker(video = media == Media.pickVideo, onUri = {
-            chat.send(
-                    inReplyTo?.id,
-                    attachment = Attachment(
-                            it.toFile().absolutePath,
-                            if (media == Media.pickVideo) AttachmentType.video else AttachmentType.image
-                    )
-            )
-            hide()
+            onFile(it.toFile())
         }) { hide() }
 
         Media.recordPhoto, Media.recordVideo -> CameraPicker(
                 video = media == Media.recordVideo,
                 onUri = {
-                    chat.send(
-                            inReplyTo?.id,
-                            attachment = Attachment(
-                                    it.toFile().absolutePath,
-                                    if (media == Media.recordVideo) AttachmentType.video else AttachmentType.image
-                            )
-                    )
-                    hide()
+                    onFile(it.toFile())
                 }) { hide() }
 
         Media.gif -> GifPicker(onUri = {
-            chat.send(inReplyTo?.id, gif = it.toString())
+            chat.send(inReplyTo?.id, attachments = listOf(it.imageAttachment()))
             hide()
         }) { hide() }
 
         Media.contact -> ContactPicker(onContact = {
-            chat.send(inReplyTo?.id, contact = it)
+            chat.send(inReplyTo?.id, attachments = listOf(it))
             hide()
         }) {
             hide()
         }
 
         Media.location -> LocationPicker(onLocation = {
-            chat.send(inReplyTo?.id, location = it.toLocation())
+            chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
             hide()
         }) {
             hide()
@@ -156,7 +151,7 @@ fun MediaActionSheetPreview() {
         var open by remember {
             mutableStateOf(false)
         }
-        MediaActionSheet(true, genChatChat(), dismiss = { open = false }, inReplyTo = null) {
+        MediaActionSheet(true, genChat(), dismiss = { open = false }, inReplyTo = null) {
             Button(onClick = { open = true }) {
                 Text(text = "Open Sheet", iac = IAC.fonts.headline)
             }

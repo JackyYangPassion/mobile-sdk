@@ -4,13 +4,17 @@
 
 package io.inappchat.sdk.actions
 
+import android.net.Uri
 import androidx.compose.runtime.toMutableStateList
 import io.inappchat.sdk.API
 import io.inappchat.sdk.state.Chats
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
+import io.inappchat.sdk.type.AttachmentInput
+import io.inappchat.sdk.type.AttachmentType
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
+import io.inappchat.sdk.utils.uuid
 
 
 fun Message.react(emoji: String) {
@@ -72,3 +76,9 @@ fun Message.delete() {
         bg { API.deleteMessage(id) }
     })
 }
+
+fun Uri.imageAttachment() = AttachmentInput(
+        url = this.toString(),
+        type = AttachmentType.image,
+        id = uuid()
+)

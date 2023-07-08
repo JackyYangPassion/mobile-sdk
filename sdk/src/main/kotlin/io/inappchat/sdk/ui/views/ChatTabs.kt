@@ -22,42 +22,36 @@ import kotlin.random.Random
 
 @Composable
 private fun Tab(
-    tab: Chats.List,
-    selected: Boolean,
-    unreadCount: Int,
-    modifier: Modifier = Modifier,
-    onPress: (Chats.List) -> Unit
+        tab: Chats.List,
+        selected: Boolean,
+        unreadCount: Int,
+        modifier: Modifier = Modifier,
+        onPress: (Chats.List) -> Unit
 ) {
     Row(
-        modifier = modifier.clickable { onPress(tab) },
-        horizontalArrangement = Arrangement.Center
+            modifier = modifier.clickable { onPress(tab) },
+            horizontalArrangement = Arrangement.Center
     ) {
-        if (tab == Chats.List.chats) {
-            Spacer(modifier = Modifier.weight(1f))
-        }
         Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.width(IntrinsicSize.Max)
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                modifier = Modifier.weight(1f, true)
         ) {
             Box(contentAlignment = Alignment.TopEnd) {
                 Text(
-                    tab.label,
-                    fonts.title2.copy(weight = FontWeight.Bold),
-                    color = if (selected) colors.primary else colors.caption,
+                        tab.label,
+                        fonts.title2.copy(weight = FontWeight.Bold),
+                        color = if (selected) colors.primary else colors.caption,
                 )
                 Badge(count = unreadCount, modifier = Modifier.offset(10.dp, -5.dp))
             }
             if (selected) {
                 Spacer(
-                    modifier = Modifier
-                        .background(colors.primary, CircleShape)
-                        .height(4.dp)
-                        .fillMaxWidth()
+                        modifier = Modifier
+                                .background(colors.primary, CircleShape)
+                                .height(4.dp)
+                                .fillMaxWidth()
                 )
             }
-        }
-        if (tab == Chats.List.chats) {
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -67,11 +61,11 @@ fun ChatTabs(list: Chats.List, onSelect: (Chats.List) -> Unit) {
     Row(modifier = Modifier.height(44.dp)) {
         for (tab in Chats.List.values()) {
             Tab(
-                tab = tab,
-                selected = list == tab,
-                unreadCount = Random.nextInt(25),
-                modifier = Modifier.weight(1f),
-                onPress = onSelect
+                    tab = tab,
+                    selected = list == tab,
+                    unreadCount = Random.nextInt(25),
+                    modifier = Modifier.weight(1f),
+                    onPress = onSelect
             )
         }
     }
@@ -82,9 +76,8 @@ fun ChatTabs(list: Chats.List, onSelect: (Chats.List) -> Unit) {
 fun ChatTabsPreview() {
     InAppChatContext {
         Column {
-            ChatTabs(list = Chats.List.users, onSelect = {})
-            ChatTabs(list = Chats.List.chats, onSelect = {})
-            ChatTabs(list = Chats.List.chats, onSelect = {})
+            ChatTabs(list = Chats.List.dms, onSelect = {})
+            ChatTabs(list = Chats.List.groups, onSelect = {})
         }
     }
 }

@@ -33,8 +33,7 @@ data class Assets(
         )
 ) {
     fun list(list: Chats.List) = when (list) {
-        Chats.List.users -> emptyChat
-        Chats.List.chats -> emptyChannels
-        Chats.List.threads -> emptyChats
+        Chats.List.dms -> emptyChat
+        Chats.List.groups -> emptyChannels
     }
 }

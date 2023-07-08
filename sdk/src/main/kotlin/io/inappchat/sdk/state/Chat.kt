@@ -32,7 +32,7 @@ class Chat(override val id: String, val kind: ChatType) : Pager<Message>(), Iden
     var sending = mutableStateListOf<Message>()
     var failed = mutableStateListOf<Message>()
 
-    //    var notification by mutableStateOf(NotificationSettings.AllowFrom.all)
+    //    var notification by mutableStateOf(NotificationSetting.all)
     var latest by mutableStateOf<Message?>(null)
     val membership: Member?
         get() = members.find { it.user_id == User.current?.id }

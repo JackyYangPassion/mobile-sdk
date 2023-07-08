@@ -23,6 +23,7 @@ import io.inappchat.sdk.API
 import io.inappchat.sdk.R
 import io.inappchat.sdk.actions.update
 import io.inappchat.sdk.state.Chat
+import io.inappchat.sdk.state.Upload
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.InAppChatContext
@@ -48,18 +49,22 @@ data class CreateChatState(val chat: Chat? = null) {
     fun exec(openInvite: (Chat) -> Unit, back: () -> Unit) {
         if (executing) return
         if (chat != null) {
-            chat.update(name, description, , _private) {
-                back()
-            }
+            op({
+                val img = upload?.await()
+                chat.update(name, description, img, _private) {
+                    back()
+                }
+            })
         } else {
             op({
                 creating = true
+                val img = upload?.await()
                 val chat =
                         API.createChat(
                                 name,
                                 description = description,
                                 _private = _private,
-                                image = file
+                                image = img
                         )
                 creating = false
                 chat?.let {

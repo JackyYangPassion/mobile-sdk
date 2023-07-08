@@ -27,11 +27,11 @@ fun ChatsView(
         openProfile: (User) -> Unit
 ) {
     var list by remember {
-        mutableStateOf(Chats.List.users)
+        mutableStateOf(Chats.List.dms)
     }
 
     val cta = when (list) {
-        Chats.List.users -> CTA(icon = null, text = "Explore Channels", to = openAllChannels)
+        Chats.List.dms -> CTA(icon = null, text = "Explore Channels", to = openAllChannels)
         else -> CTA(
                 io.inappchat.sdk.R.drawable.paper_plane_tilt_fill,
                 "Send a Message",

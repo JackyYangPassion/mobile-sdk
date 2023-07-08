@@ -125,7 +125,7 @@ Class | Method | HTTP request | Description
 - [io.inappchat.sdk.models.Auth](docs/Auth.md)
 - [io.inappchat.sdk.models.AutoDeleteSettings](docs/AutoDeleteSettings.md)
 - [io.inappchat.sdk.models.AvailabilityEvent](docs/AvailabilityEvent.md)
-- [io.inappchat.sdk.models.AvailabilityStatus](docs/AvailabilityStatus.md)
+- [io.inappchat.sdk.models.OnlineStatus](docs/OnlineStatus.md)
 - [io.inappchat.sdk.models.ChannelQuery](docs/ChannelQuery.md)
 - [io.inappchat.sdk.models.ChatReportEvent](docs/ChatReportEvent.md)
 - [io.inappchat.sdk.models.ChatReportEventEvent](docs/ChatReportEventEvent.md)

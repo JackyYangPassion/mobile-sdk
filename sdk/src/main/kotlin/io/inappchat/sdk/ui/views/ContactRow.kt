@@ -19,8 +19,8 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
-import io.inappchat.sdk.models.AvailabilityStatus
 import io.inappchat.sdk.state.User
+import io.inappchat.sdk.type.OnlineStatus
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.InAppChatContext
@@ -31,45 +31,45 @@ import io.inappchat.sdk.utils.ift
 
 @Composable
 fun ContactRow(
-    user: User,
-    modifier: Modifier = Modifier,
-    right: @Composable () -> Unit = {}
+        user: User,
+        modifier: Modifier = Modifier,
+        right: @Composable () -> Unit = {}
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(
-                start = 16.dp, top = 12.dp, bottom = 12.dp
-            )
-            .height(84.dp)
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                    .padding(
+                            start = 16.dp, top = 12.dp, bottom = 12.dp
+                    )
+                    .height(84.dp)
     ) {
         Avatar(url = user.avatar, size = 60.0)
         Space(8f)
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = user.username.annotated(),
-                    iac = fonts.title3,
-                    maxLines = 1,
-                    color = colors.text
+                        text = user.username.annotated(),
+                        iac = fonts.title3,
+                        maxLines = 1,
+                        color = colors.text
                 )
                 if (user.haveContact) {
                     Image(
-                        painter = painterResource(id = R.drawable.address_book_fill),
-                        contentDescription = "contact",
-                        modifier = Modifier.size(18),
-                        colorFilter = ColorFilter.tint(Color(0x488AC7))
+                            painter = painterResource(id = R.drawable.address_book_fill),
+                            contentDescription = "contact",
+                            modifier = Modifier.size(18),
+                            colorFilter = ColorFilter.tint(Color(0x488AC7))
                     )
                 }
             }
             Text(
-                text = user.status.value.capitalize(Locale.current).annotated(),
-                iac = fonts.body,
-                color = ift(
-                    user.status == AvailabilityStatus.online,
-                    colors.primary,
-                    colors.caption
-                )
+                    text = user.status.rawValue.capitalize(Locale.current).annotated(),
+                    iac = fonts.body,
+                    color = ift(
+                            user.status == OnlineStatus.Online,
+                            colors.primary,
+                            colors.caption
+                    )
             )
         }
         GrowSpacer()
