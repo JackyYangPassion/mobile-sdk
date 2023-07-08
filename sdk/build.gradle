@@ -161,11 +161,11 @@ afterEvaluate {
                 pom {
                     name = 'InAppChat'
                     description = 'InAppChat Android Chat SDK'
-                    url = 'https://github.com/ripbullnetworks/inappchat-android'
+                    url = 'https://github.com/inappchat/android-example'
                     licenses {
                         license {
                             name = 'Stream License'
-                            url = 'https://github.com/ripbullnetworks/inappchat-android/blob/main/LICENSE'
+                            url = 'https://github.com/inappchat/android-example/blob/main/LICENSE'
                         }
                     }
                     developers {
@@ -179,9 +179,9 @@ afterEvaluate {
                     // Version control info - if you're using GitHub, follow the 
                     // format as seen here
                     scm {
-                        connection = 'scm:git:github.com/ripbullnetworks/inappchat-android.git'
-                        developerConnection = 'scm:git:ssh://github.com/ripbullnetworks/inappchat-android.git'
-                        url = 'https://github.com/ripbullnetworks/inappchat-android/tree/main'
+                        connection = 'scm:git:github.com/inappchat/android.git'
+                        developerConnection = 'scm:git:ssh://github.com/inappchat/android-example.git'
+                        url = 'https://github.com/inappchat/android/tree/main'
                     }
                 }
             }
