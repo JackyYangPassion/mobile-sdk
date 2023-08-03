@@ -36,7 +36,10 @@ query ListUsers($count: Int, $offset: Int) {
 
 mutation DM($user: ID!) {
   dm(user: $user) {
-    ...FChat
+    ...FMember
+    chat {
+      ...FChat
+    }
   }
 }
 

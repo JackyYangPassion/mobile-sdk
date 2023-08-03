@@ -59,6 +59,7 @@ fun Login(openChat: () -> Unit) {
                 Log.v("InAppChat-Sample", "Login Click")
                 launch {
                     App.app.login(activity)
+                    Log.v("InAppChat-Sample", "Finish login")
                     if (InAppChat.shared.isUserLoggedIn) {
                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     }

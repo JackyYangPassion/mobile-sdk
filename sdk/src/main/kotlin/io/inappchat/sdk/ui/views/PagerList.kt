@@ -4,6 +4,7 @@
 
 package io.inappchat.sdk.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
@@ -30,40 +31,39 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Identifiable> IACList(
-        items: List<T> = listOf(),
-        invert: Boolean = false,
-        header: @Composable Fn? = null,
-        footer: @Composable Fn? = null,
-        empty: @Composable () -> Unit = {},
-        divider: Boolean = false,
-        topInset: Dp = 0.dp,
-        bottomInset: Dp = 0.dp,
-        scrollToTop: String? = null,
-        modifier: Modifier = Modifier,
-        hasMore: Boolean = false,
-        loadMore: (() -> Unit)? = null,
-        refresh: (() -> Unit)? = null,
-        refreshing: Boolean = false,
-        content: @Composable LazyItemScope.(T) -> Unit
+    items: List<T> = listOf(),
+    invert: Boolean = false,
+    header: @Composable Fn? = null,
+    footer: @Composable Fn? = null,
+    empty: @Composable () -> Unit = {},
+    divider: Boolean = false,
+    topInset: Dp = 0.dp,
+    bottomInset: Dp = 0.dp,
+    scrollToTop: String? = null,
+    modifier: Modifier = Modifier,
+    hasMore: Boolean = false,
+    loadMore: (() -> Unit)? = null,
+    refresh: (() -> Unit)? = null,
+    refreshing: Boolean = false,
+    content: @Composable LazyItemScope.(T) -> Unit
 ) {
     val pullRefreshState = rememberPullRefreshState(refreshing, { refresh?.let { it() } })
     if (items.isEmpty() && !hasMore) {
         Column(
-                modifier = modifier
-                        .pullRefresh(pullRefreshState)
-                        .padding(top = topInset, bottom = bottomInset + 12.dp)
-                        .fillMaxSize()
+            modifier = modifier
+                .pullRefresh(pullRefreshState)
+                .fillMaxSize()
         ) {
-            PullRefreshIndicator(
-                    refreshing,
-                    pullRefreshState,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
             header?.invoke()
+            PullRefreshIndicator(
+                refreshing,
+                pullRefreshState,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
             Spacer(modifier = Modifier.weight(1f))
             Column(
-                    modifier = Modifier.padding(16.dp, 0.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.padding(16.dp, 0.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 empty()
             }
@@ -71,15 +71,18 @@ fun <T : Identifiable> IACList(
             footer?.invoke()
         }
     } else {
-        Box(modifier = modifier
+        Box(
+            modifier = modifier
                 .pullRefresh(pullRefreshState)
-                .fillMaxSize()) {
+                .fillMaxSize()
+        ) {
             val listState = rememberLazyListState()
             val coroutineScope = rememberCoroutineScope()
             LazyColumn(
-                    contentPadding = PaddingValues(top = topInset, bottom = bottomInset),
-                    state = listState,
-                    reverseLayout = invert
+                contentPadding = PaddingValues(top = topInset, bottom = bottomInset),
+                state = listState,
+                reverseLayout = invert,
+                modifier = Modifier.fillMaxSize()
             ) {
                 header?.let { item { it() } }
                 items(items, key = { item -> item.id }) { item ->
@@ -90,9 +93,9 @@ fun <T : Identifiable> IACList(
                 }
             }
             PullRefreshIndicator(
-                    refreshing,
-                    pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                refreshing,
+                pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
             )
 
             InfiniteListHandler(listState = listState) {
@@ -109,22 +112,38 @@ fun <T : Identifiable> IACList(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Identifiable> PagerList(
-        pager: Pager<T>,
-        prefix: List<T> = listOf(),
-        invert: Boolean = false,
-        header: @Composable Fn? = null,
-        footer: @Composable Fn? = null,
-        empty: @Composable () -> Unit = {},
-        divider: Boolean = false,
-        topInset: Dp = 0.dp,
-        bottomInset: Dp = 0.dp,
-        scrollToTop: String? = null,
-        modifier: Modifier = Modifier,
-        content: @Composable LazyItemScope.(T) -> Unit
+    pager: Pager<T>,
+    prefix: List<T> = listOf(),
+    invert: Boolean = false,
+    header: @Composable Fn? = null,
+    footer: @Composable Fn? = null,
+    empty: @Composable () -> Unit = {},
+    divider: Boolean = false,
+    topInset: Dp = 0.dp,
+    bottomInset: Dp = 0.dp,
+    scrollToTop: String? = null,
+    modifier: Modifier = Modifier,
+    content: @Composable LazyItemScope.(T) -> Unit
 ) {
     val array = prefix + pager.items
-    LaunchedEffect(key1 = true, block = {
+    LaunchedEffect(key1 = pager.id, block = {
         pager.loadMoreIfEmpty()
     })
-    IACList(array, invert, header, footer, empty, divider, topInset, bottomInset, scrollToTop, modifier, pager.hasMore, pager::loadMore, pager::refresh, pager.refreshing, content)
+    IACList(
+        array,
+        invert,
+        header,
+        footer,
+        empty,
+        divider,
+        topInset,
+        bottomInset,
+        scrollToTop,
+        modifier,
+        pager.hasMore,
+        pager::loadMore,
+        pager::refresh,
+        pager.refreshing,
+        content
+    )
 }

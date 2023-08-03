@@ -4,8 +4,13 @@
 
 package io.inappchat.sdk.ui.views
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
@@ -25,8 +30,14 @@ import io.inappchat.sdk.ui.IAC.theme
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.*
 
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun MessageView(message: Message, onPressUser: (User) -> Unit) {
+fun MessageView(
+    message: Message,
+    onPressUser: (User) -> Unit,
+    onLongPress: (Message) -> Unit,
+    onClick: ((Message) -> Unit)? = null
+) {
     if (message.user.blocked) {
         return
     }
@@ -35,13 +46,24 @@ fun MessageView(message: Message, onPressUser: (User) -> Unit) {
 
 
 
-    Column(horizontalAlignment = align, modifier = Modifier.fillMaxWidth()) {
+    Column(
+        horizontalAlignment = align,
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = {
+                    onClick?.invoke(message)
+                },
+                onLongClick = {
+                    onLongPress(message)
+                })
+    ) {
         Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.Top,
-                modifier = Modifier
-                        .padding(10.dp, 5.dp)
-                        .fillMaxWidth(0.8f)
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier
+                .padding(10.dp, 5.dp)
+                .fillMaxWidth(0.8f)
         ) {
             if (align == Alignment.Start) {
                 Spinner(loading = message.sending && current)
@@ -63,8 +85,11 @@ fun MessageView(message: Message, onPressUser: (User) -> Unit) {
 fun MessageViewPreview() {
     InAppChatContext {
         Column {
-            MessageView(message = genChatextMessage(genU()), onPressUser = {})
-            MessageView(message = genChatextMessage(genCurrentUser()), onPressUser = {})
+            MessageView(message = genChatextMessage(genU()), onPressUser = {}, onLongPress = {})
+            MessageView(
+                message = genChatextMessage(genCurrentUser()),
+                onPressUser = {},
+                onLongPress = {})
         }
     }
 }
@@ -73,10 +98,10 @@ fun MessageViewPreview() {
 fun ReplyCount(count: Int) {
     if (count > 0) {
         Text(
-                text = "$count replies",
-                iac = fonts.body,
-                color = colors.primary,
-                modifier = Modifier.padding(4.dp)
+            text = "$count replies",
+            iac = fonts.body,
+            color = colors.primary,
+            modifier = Modifier.padding(4.dp)
         )
     }
 }
@@ -86,10 +111,10 @@ fun Favorite(favorite: Boolean) {
     if (favorite) {
         Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center) {
             Icon(
-                    painter = painterResource(id = io.inappchat.sdk.R.drawable.star_fill),
-                    contentDescription = "favorite",
-                    tint = colors.primary,
-                    modifier = Modifier.size(20),
+                painter = painterResource(id = io.inappchat.sdk.R.drawable.star_fill),
+                contentDescription = "favorite",
+                tint = colors.primary,
+                modifier = Modifier.size(20),
             )
         }
     }
@@ -105,6 +130,7 @@ fun Spinner(loading: Boolean) {
 @Composable
 fun Avvy(url: String?, onClick: Fn) {
     Pressable(onClick = onClick) {
+        println("User avatar $url")
         Avatar(url)
     }
 }
@@ -115,22 +141,22 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
             for (reaction in reactions) {
                 ClickableText(
-                        text = "${reaction.first} ${
-                            reaction.second
-                                    .size
-                        }",
-                        onClick = { msg.react(reaction.first) },
-                        iac = fonts.body,
-                        color = colors.text,
-                        modifier = Modifier
-                                .radius(36.dp)
-                                .background(colors.bubble)
-                                .border(
-                                        2.dp,
-                                        if (msg.currentReaction == reaction.first) colors.primary else Color.Transparent,
-                                        RoundedCornerShape(36.dp)
-                                )
-                                .padding(theme.bubblePadding)
+                    text = "${reaction.first} ${
+                        reaction.second
+                            .size
+                    }",
+                    onClick = { msg.react(reaction.first) },
+                    iac = fonts.body,
+                    color = colors.text,
+                    modifier = Modifier
+                        .radius(36.dp)
+                        .background(colors.bubble)
+                        .border(
+                            2.dp,
+                            if (msg.currentReaction == reaction.first) colors.primary else Color.Transparent,
+                            RoundedCornerShape(36.dp)
+                        )
+                        .padding(theme.bubblePadding)
                 )
             }
         }
@@ -140,12 +166,12 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
 @Composable
 fun Content(msg: Message, modifier: Modifier = Modifier) {
     Column(
-            horizontalAlignment = ift(
-                    msg.user.isCurrent,
-                    theme.senderAlignment,
-                    theme.messageAlignment
-            ), verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = modifier
+        horizontalAlignment = ift(
+            msg.user.isCurrent,
+            theme.senderAlignment,
+            theme.messageAlignment
+        ), verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier
     ) {
         MessageTop(msg)
         MessageContent(message = msg)
@@ -158,11 +184,12 @@ fun Content(msg: Message, modifier: Modifier = Modifier) {
 fun MessageTop(msg: Message) {
     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-                text = msg.user.username,
-                iac = fonts.username,
-                color = ift(msg.user.isCurrent, colors.senderUsername, colors.username),
-                modifier = Modifier.requiredSizeIn(maxWidth = 120.dp),
-                maxLines = 1
+            text = msg.user.username,
+            iac = fonts.username,
+            color = ift(msg.user.isCurrent, colors.senderUsername, colors.username),
+            modifier = Modifier
+                .requiredSizeIn(maxWidth = 120.dp),
+            maxLines = 1
         )
         Text(text = msg.createdAt.timeAgo(), iac = fonts.timestamp, color = colors.timestamp)
     }

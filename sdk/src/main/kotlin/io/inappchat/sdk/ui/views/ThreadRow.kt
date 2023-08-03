@@ -7,6 +7,7 @@ package io.inappchat.sdk.ui.views
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -39,6 +40,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
         modifier = Modifier
             .padding(16.dp, 12.dp)
             .height(84.dp)
+            .clickable { onClick(chat) }
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -61,13 +63,14 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
                     PrivacyPill(chat._private)
                 }
             }
-            Row {
-                Image(
-                    painter = painterResource(id = R.drawable.check_circle_fill),
-                    contentDescription = "message read",
-                    modifier = Modifier.size(12.dp),
-                    colorFilter = ColorFilter.tint(colors.primary)
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!chat.isUnread)
+                    Image(
+                        painter = painterResource(id = R.drawable.check_circle_fill),
+                        contentDescription = "message read",
+                        modifier = Modifier.size(12.dp),
+                        colorFilter = ColorFilter.tint(colors.primary)
+                    )
                 Text(
                     text = chat.latest?.summary ?: "No messages yet",
                     iac = fonts.body,

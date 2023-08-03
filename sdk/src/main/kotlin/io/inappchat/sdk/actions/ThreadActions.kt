@@ -49,7 +49,7 @@ fun Chat.send(
     op({
         val sm = bg { API.send(id, inReplyTo, text, attachments) }
         sm?.let {
-            items.add(it)
+            items.add(0, it)
             sending.remove(m)
         } ?: {
             m.failed = true

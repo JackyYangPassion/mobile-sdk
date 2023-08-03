@@ -1,3 +1,93 @@
+"""An APN Configuration"""
+type APNConfig {
+  """An APN token capable of sending apn notificationsto the topic"""
+  token: APNToken!
+
+  """The topic of the APN Configuration"""
+  topic: String!
+}
+
+input APNConfigInput {
+  """An APN token capable of sending apn notificationsto the topic"""
+  token: APNTokenInput!
+
+  """The topic of the APN Configuration"""
+  topic: String!
+}
+
+"""An APN token used to send push notifications on a Apps behalf"""
+type APNToken {
+  """The key of the token"""
+  key: String!
+
+  """The Key ID of the token"""
+  keyId: String!
+
+  """The team ID the token belongs to"""
+  teamId: String!
+}
+
+input APNTokenInput {
+  """The key of the token"""
+  key: String!
+
+  """The Key ID of the token"""
+  keyId: String!
+
+  """The team ID the token belongs to"""
+  teamId: String!
+}
+
+"""A app which is representing a Chat service contract"""
+type App {
+  api_key: String
+
+  """An optional APN configuration for the app"""
+  apn: APNConfig
+
+  """Wehthere or not E2E is enabled for this app"""
+  e2e: Boolean
+
+  """An optional FCM key for the app to enable push notifications"""
+  fcm_key: String
+
+  """The ID of the app"""
+  id: ID!
+
+  """The name of the app"""
+  name: String!
+
+  """An optional NFT configuration for the app"""
+  nft: NFTConfig
+
+  """The App Slug"""
+  slug: String!
+
+  """The webhook URL for InAppChat to verify user logins with"""
+  verify_url: String
+
+  """
+  An optional Vapid configuration for web push.
+  FCM key must be set in order for this to work.
+  """
+  web_push: VapidDetails
+}
+
+"""A User's Role in this Chat silo"""
+enum AppUserRole {
+  """A User with Admin priveleges"""
+  Admin
+
+  """A standard User, can Chat, create Groups and update own Profile"""
+  Member
+
+  """A moderator, can manage flags, and content"""
+  Moderator
+
+  """A fully priveleged User"""
+  Owner
+}
+
 """A mutlimedia or data attachment to a message"""
 type Attachment {
   """The address of the location"""
@@ -113,6 +203,41 @@ type Auth {
   user: User!
 }
 
+type BillingData {
+  currency: String
+  currentPeriodEnd: DateTime
+  currentPeriodStart: DateTime
+  planName: String
+  price: String
+}
+
+type BillingPeriod {
+  end: Int
+  start: Int
+}
+
+type Bot {
+  """The config of the bot"""
+  config: BotConfig!
+
+  """The creation date of this Bot"""
+  created_at: DateTime!
+
+  """The ID of this Bot"""
+  id: ID!
+
+  """The nlu provider"""
+  nluProvider: NLUProvider!
+
+  """The update date of this Bot"""
+  updated_at: DateTime!
+}
+
+type BotConfig {
+  aliasId: String
+  botId: String
+}
+
 union BroadcastEvent = DeleteEvent | EntityEvent
 
 """
@@ -182,6 +307,10 @@ enum ChatType {
   Thread
 }
 
+input CreateAppInput {
+  name: String!
+}
+
 """The input with params necessary to create a Device"""
 input CreateDeviceInput {
   """The type of the device"""
@@ -233,6 +362,25 @@ input CreateGroupInput {
 
   """The name of the group to create"""
   name: String!
+}
+
+input CreateNluProviderInput {
+  awsAccessKey: String
+  awsRegion: String
+  awsSecretKey: String
+  gcpEmail: String
+  gcpPrivateKey: String
+  gcpProjectId: String
+  ibmApiKey: String
+
+  """The type of the nlu provider"""
+  type: String
+}
+
+input CreateOneChatbotInput {
+  bot_configs: [String]
+  description: String
+  name: String
 }
 
 """
@@ -460,7 +608,7 @@ input InitialEncryptedMessageInput {
   spk: String!
 }
 
-"""A user invite to a chat chat"""
+"""A user invite to a chat room"""
 type Invite {
   chat: Chat!
   created_at: DateTime!
@@ -507,6 +655,11 @@ input LoginInput {
 
   """The image associated with the User"""
   image: String
+
+  """
+  Signifies that a user is guest / 1webchat and not intended for normal chat
+  """
+  is_1webchat: Boolean
 
   """The ID of the user on the silo owner's app network"""
   user_id: ID!
@@ -659,20 +812,32 @@ input ModMemberInput {
 }
 
 type Mutation {
+  basicLogin(email: String!, password: String!): Auth
+
   """Blocks a User for the current User"""
   block(user: ID!): Boolean!
+  changeAppMemberRole(app: ID!, role: AppUserRole!, user: ID!): Boolean!
+  changePassword(password: String!, token: String!): Boolean!
+
+  """Create a new nlu provider"""
+  create(input: CreateNluProviderInput!): NLUProvider
+  createApp(input: CreateAppInput!): App!
 
   """Create a new group Chat"""
   createGroup(input: CreateGroupInput!): Chat
+  createOneChatbot(input: CreateOneChatbotInput!): User!
+  createSetupIntent: String
 
   """Delete a group Chat"""
   deleteGroup(id: ID!): Boolean!
+  deleteOneChatbot(id: ID!): Boolean!
+  deleteProvider(id: ID!): Boolean!
 
   """Rejects a Chat invite for the current User"""
   dismissInvites(chat: ID): Boolean!
 
   """Start a directmessage Chat with a User"""
-  dm(user: ID!): Chat
+  dm(user: ID!): Member
 
   """Login as an NFT authenticated user"""
   ethLogin(input: EthLoginInput!): Auth
@@ -685,6 +850,7 @@ type Mutation {
 
   """Invites a User to a Chat"""
   invite(chat: ID!, user: ID!): Member!
+  inviteAppMember(app: ID!, email: String!, role: AppUserRole): Boolean!
   inviteMany(chat: ID!, users: [ID!]!): [Member!]!
 
   """
@@ -716,15 +882,18 @@ type Mutation {
   Consume all Messages for the current Device up to a given Message header
   """
   read(header: String!): Boolean!
+  register(input: RegisterInput!): Auth
 
   """Registers a push token for a device"""
   registerPush(fcm: Boolean, kind: DeviceType!, token: String!): Boolean!
+  removeAppMember(app: ID!, user: ID!): Boolean!
 
   """Delete a Flag"""
   removeFlag(id: String!): Flag
 
   """Delete a Message if priveledged"""
   removeMessage(id: ID!): Boolean!
+  resetPassword(email: String!): Boolean!
 
   """A content review for a Flag"""
   reviewFlag(input: ReviewFlagInput!): Flag!
@@ -734,18 +903,31 @@ type Mutation {
 
   """Send a message to a Chat"""
   sendMessage(input: SendMessageInput): Message!
+  setAPN(apn: APNConfigInput!, app: ID!): Boolean!
+
+  """Set the App's FCM push token for Android and Web push notifications"""
+  setFCM(app: ID!, fcm_key: String!): Boolean!
+  setNFT(app: ID!, nft: NFTConfigInput!): Boolean!
 
   """Set the notification setting for the current User in this chat"""
   setNotificationSetting(chat: ID!, setting: NotificationSetting!): Boolean!
+  setVapid(app: ID!, vapid: VapidDetailsInput!): Boolean!
+  setVerifyURL(app: ID!, url: String!): Boolean!
+  subscribeToPlan(input: SubscribeInput!): BillingData
 
   """Sync a users phone book with the server"""
   syncContacts(numbers: [String!]!): Boolean!
+  toggleE2E(app: ID!, enabled: Boolean!): Boolean!
 
   """Unblocks a User for the current User"""
   unblock(user: ID!): Boolean!
 
   """Unfavorite a Message as the current User"""
   unfavorite(id: ID!): Boolean!
+
+  """Update an nlu provider"""
+  update(input: UpdateNLUProviderInput!): Boolean!
+  updateApp(input: UpdateAppInput!): App!
 
   """Update a Device"""
   updateDevice(input: UpdateDeviceInput!): Device!
@@ -755,9 +937,71 @@ type Mutation {
 
   """Update the contents of a Message"""
   updateMessage(input: UpdateMessageInput!): Boolean!
+  updateOrg(input: UpdateOrgInput!): Organization!
 
   """Updates the current User's profile"""
   updateProfile(input: UpdateProfileInput!): Boolean!
+  verifyEmail(token: String!): Boolean!
+}
+
+"""An NFT Login configuration"""
+type NFTConfig {
+  """The contract address of the NFT"""
+  contract_address: String!
+
+  """If NFT login is enabled for the app"""
+  enabled: Boolean!
+
+  """The image URL for a token"""
+  image_url: String!
+
+  """The name of the NFT"""
+  nft_name: String!
+}
+
+input NFTConfigInput {
+  """The contract address of the NFT"""
+  contract_address: String!
+
+  """If NFT login is enabled for the app"""
+  enabled: Boolean!
+
+  """The image URL for a token"""
+  image_url: String!
+
+  """The name of the NFT"""
+  nft_name: String!
+}
+
+type NLUBot {
+  id: ID!
+  name: String
+  nlu_provider_id: String
+  service_url: String
+  type: String
+}
+
+"""
+A group of messages between users. Can be persistent or ephemeral. Can also be branded.
+"""
+type NLUProvider {
+  """The creation date of this NLUProvider"""
+  created_at: DateTime!
+
+  """The ID of this NLUProvider"""
+  id: ID!
+
+  """The location of the nlu provider key details"""
+  location: String
+
+  """The generated name of the key"""
+  name: String
+
+  """The type of the nlu provider"""
+  type: String!
+
+  """The update date of this NLUProvider"""
+  updated_at: DateTime!
 }
 
 """Notification setting for a user, can be set per chat"""
@@ -794,6 +1038,21 @@ enum OnlineStatus {
   Online
 }
 
+type OrgMember {
+  app: App!
+  org_id: String!
+  organization: Organization
+  role: AppUserRole!
+  user: User!
+  user_id: String!
+}
+
+type Organization {
+  apps: [App]
+  id: ID
+  name: String
+}
+
 """
 A field whose value conforms to the standard E.164 format as specified in E.164 specification(opens in a new tab). Basically, this is +17895551234. The very powerful libphonenumber library(opens in a new tab) is available to take that format, parse and display it in whatever display format you want. It can also be used to parse user input and get the E.164 format to pass into a schema.
 """
@@ -802,6 +1061,10 @@ scalar PhoneNumber
 type Query {
   """Returns the current User's active list of groups"""
   activeGroups(count: Int, offset: Int): [Chat!]!
+  app: App!
+  apps: [App!]!
+  billingSubscription: BillingData
+  changePlanInvoice(plan: String!): UpcomingInvoice
 
   """Returns a chat with the specified ID"""
   chat(id: ID!): Chat
@@ -817,6 +1080,7 @@ type Query {
 
   """The list of Flags available, unreviewed or neither"""
   flags(count: Int, notReviewed: Boolean, offset: Int): [Flag!]!
+  getAvailableBots: [NLUBot!]!
 
   """Lists public and private Group chats on the network"""
   groups(count: Int, offset: Int): [Chat!]!
@@ -842,6 +1106,13 @@ type Query {
   """The messages in a Chat. Can be filted by a search term"""
   messages(chat: ID!, count: Int, offset: Int, searchTerm: String): [Message!]!
 
+  """Retrieves onechatbot users"""
+  onechatbots: [User!]!
+  org: Organization
+
+  """Retrieves an app nlu providers"""
+  providers: [NLUProvider!]!
+
   """The replies to a Message"""
   replies(count: Int, message: ID!, offset: Int): [Message!]!
 
@@ -856,6 +1127,16 @@ type ReactionEvent {
   message: Message!
   reaction: String!
   user: User!
+}
+
+input RegisterInput {
+  appName: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  orgName: String!
+  password: String!
+  username: String!
 }
 
 type ReplyEvent {
@@ -896,6 +1177,10 @@ input SendMessageInput {
   text: String
 }
 
+input SubscribeInput {
+  plan: String!
+}
+
 type Subscription {
   core: BroadcastEvent!
   me: MeEvent!
@@ -908,21 +1193,6 @@ enum SystemMessageType {
   UserLeft
 }
 
-"""A User's Role in this Chat silo"""
-enum TenantUserRole {
-  """A User with Admin priveleges"""
-  Admin
-
-  """A standard User, can Chat, create Groups and update own Profile"""
-  Member
-
-  """A moderator, can manage flags, and content"""
-  Moderator
-
-  """A fully priveleged User"""
-  Owner
-}
-
 """
 A field whose value conforms to the standard URL format as specified in RFC3986(opens in a new tab), and it uses real JavaScript URL objects.
 """
@@ -930,6 +1200,28 @@ scalar URL
 
 """A field whose value is a generic Universally Unique Identifier"""
 scalar UUID
+
+type UpcomingInvoice {
+  amount_due: Int!
+  lines: UpcomingInvoiceLine
+  period_end: Int!
+  period_start: Int!
+}
+
+type UpcomingInvoiceLine {
+  data: [UpcomingInvoiceLineItem]
+}
+
+type UpcomingInvoiceLineItem {
+  amount: Int
+  description: String
+  period: BillingPeriod
+}
+
+input UpdateAppInput {
+  id: ID!
+  name: String!
+}
 
 """The params to update a device"""
 input UpdateDeviceInput {
@@ -978,6 +1270,22 @@ input UpdateMessageInput {
   text: String
 }
 
+"""Represents the fields updatable on a nlu provider"""
+input UpdateNLUProviderInput {
+  awsAccessKey: String
+  awsRegion: String
+  awsSecretKey: String
+  gcpApiKey: String
+  gcpProjectId: String
+  ibmApiKey: String
+  ibmPassword: String
+  ibmUid: String
+}
+
+input UpdateOrgInput {
+  name: String
+}
+
 """The available fields for updating on the current User's profile"""
 input UpdateProfileInput {
   """The User's desired new display name"""
@@ -998,11 +1306,15 @@ input UpdateProfileInput {
 
 """A chat User. This user only exists in this Chat silo"""
 type User {
+  """The Role of this User in their primary App"""
+  app_role: AppUserRole!
+
   """The IDs fo Users that have blocked this User"""
   blocked_by: [ID!]
 
   """The IDs of Users this User has blocked"""
   blocks: [ID!]
+  bots: [Bot!]
 
   """The date this User was created"""
   created_at: DateTime!
@@ -1015,6 +1327,8 @@ type User {
 
   """A freeform display name for a user. Can contain emojis"""
   display_name: String
+  email: String
+  first_name: String
 
   """The ID of the User"""
   id: ID!
@@ -1027,6 +1341,7 @@ type User {
 
   """Whether or not this user is an AI bot"""
   is_bot: Boolean
+  last_name: String
 
   """Last seen date of the user"""
   last_seen: DateTime!
@@ -1039,9 +1354,6 @@ type User {
 
   """The online status of this user"""
   status: OnlineStatus!
-
-  """The Role of this User in their primary Tenant"""
-  tenant_role: TenantUserRole!
 
   """The date this User was updated"""
   updated_at: DateTime!
@@ -1065,4 +1377,27 @@ enum UserRole {
 
   """A fully priveleged User"""
   Owner
+}
+
+"""A Vapid Configuration for web push."""
+type VapidDetails {
+  """The private key of the VAPID keys"""
+  privateKey: String!
+
+  """The public key of the VAPID keys"""
+  publicKey: String!
+
+  """The subject of the VAPID keys"""
+  subject: String!
+}
+
+input VapidDetailsInput {
+  """The private key of the VAPID keys"""
+  privateKey: String!
+
+  """The public key of the VAPID keys"""
+  publicKey: String!
+
+  """The subject of the VAPID keys"""
+  subject: String!
 }

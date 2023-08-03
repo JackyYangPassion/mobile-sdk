@@ -44,7 +44,7 @@ fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphB
             openCreateChat = { navController.navigate("chat/new") },
             openSearch = { navController.navigate("search") },
             openFavorites = { navController.navigate("favorites") },
-            openNotificationSettings = { navController.navigate("settings/notificications") },
+            openNotificationSettings = { navController.navigate("settings/notifications") },
         )
     }
     val routes: NavGraphBuilder.() -> Unit = {

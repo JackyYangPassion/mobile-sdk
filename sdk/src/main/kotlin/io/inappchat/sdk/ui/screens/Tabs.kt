@@ -5,6 +5,7 @@
 package io.inappchat.sdk.ui.screens
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -13,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -51,41 +53,48 @@ fun Tabs(
             selectedTab = tab
     }
     Column(modifier = Modifier.fillMaxSize()) {
-        when (selectedTab) {
-            Tab.home -> ChatsView(
-                openChat = openChat,
-                openReplies = openReplies,
-                openAllChannels = { openTab(Tab.channels) },
-                openContacts = { openTab(Tab.contacts) },
-                openSearch = openSearch,
-                openCompose = openCompose,
-                openProfile = openProfile,
-                scrollToTop = scrollToTop
-            )
+        Column(modifier = Modifier.weight(1.0f)) {
+            when (selectedTab) {
+                Tab.home -> ChatsView(
+                    openChat = openChat,
+                    openReplies = openReplies,
+                    openAllChannels = { openTab(Tab.channels) },
+                    openContacts = { openTab(Tab.contacts) },
+                    openSearch = openSearch,
+                    openCompose = openCompose,
+                    openProfile = openProfile,
+                    scrollToTop = scrollToTop
+                )
 
-            Tab.channels -> ChannelsView(
-                scrollToTop = scrollToTop,
-                search = openSearch,
-                openCreateChat = openCreateChat,
-                openChat = openChat,
-            )
+                Tab.channels -> ChannelsView(
+                    scrollToTop = scrollToTop,
+                    search = openSearch,
+                    openCreateChat = openCreateChat,
+                    openChat = openChat,
+                )
 
-            Tab.contacts -> ContactsView(
-                scrollToTop = scrollToTop, openProfile = openProfile
-            )
+                Tab.contacts -> ContactsView(
+                    scrollToTop = scrollToTop, openProfile = openProfile
+                )
 
-            Tab.settings -> MyProfile(
-                openProfile = { openProfile(User.current!!) },
-                openNotificationSettings = openNotificationSettings,
-                openFavorites = openFavorites
-            )
+                Tab.settings -> MyProfile(
+                    openProfile = { openProfile(User.current!!) },
+                    openNotificationSettings = openNotificationSettings,
+                    openFavorites = openFavorites
+                )
+            }
         }
-        Row(modifier = Modifier.height(57.dp)) {
+        Row(modifier = Modifier
+            .height(57.dp)
+            .background(colors.softBackground)) {
             for (tab in Tab.values()) {
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clickable { openTab(tab) }) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clickable { openTab(tab) },
+                    contentAlignment = Alignment.Center
+                ) {
                     Icon(
                         painter = painterResource(id = tab.icon),
                         contentDescription = tab.route,

@@ -19,24 +19,26 @@ import io.inappchat.sdk.utils.random
 
 @Composable
 fun FavoritesView(
-  back: () -> Unit,
-  openReplies: (Message) -> Unit,
-  openProfile: (User) -> Unit,
-  scrollToTop: Int
+    back: () -> Unit,
+    openReplies: (Message) -> Unit,
+    openProfile: (User) -> Unit,
+    scrollToTop: Int
 ) {
-  Column {
-    Header(title = "Favorites", back = back)
-    PagerList(pager = Chats.current.favorites, scrollToTop = scrollToTop.toString()) {
-      MessageView(message = it, onPressUser = openProfile)
+    Column {
+        Header(title = "Favorites", back = back)
+        PagerList(pager = Chats.current.favorites, scrollToTop = scrollToTop.toString()) {
+            MessageView(message = it, onPressUser = openProfile, onLongPress = {}, onClick = {
+                openReplies(it)
+            })
+        }
     }
-  }
 }
 
 @IPreviews
 @Composable
 fun FavoritesViewPreview() {
-  Chats.current.favorites.items.addAll(random(50, { genM() }))
-  InAppChatContext {
-    FavoritesView(back = {}, openReplies = {}, openProfile = {}, scrollToTop = 0)
-  }
+    Chats.current.favorites.items.addAll(random(50, { genM() }))
+    InAppChatContext {
+        FavoritesView(back = {}, openReplies = {}, openProfile = {}, scrollToTop = 0)
+    }
 }

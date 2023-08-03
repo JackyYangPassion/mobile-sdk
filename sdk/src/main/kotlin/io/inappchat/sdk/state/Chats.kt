@@ -27,17 +27,21 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
     val memberships = mutableStateListOf<Member>()
     val dms: kotlin.collections.List<Chat>
         get() = memberships.filter { it.isMember && it.chat.kind == ChatType.DirectMessage }
-                .map { it.chat }
+            .map { it.chat }
     val groups: kotlin.collections.List<Chat>
         get() = memberships.filter { it.isMember && it.chat.kind == ChatType.Group }
-                .map { it.chat }
+            .map { it.chat }
 
     var fcmToken: String? = null
 
     var loading by mutableStateOf(false)
-    var loggedIn by mutableStateOf(false)
 
-    var currentUserID: String? by Delegates.observable(null) { _, _, newValue ->
+    var currentUserID: String? by Delegates.observable(
+        InAppChat.shared.prefs.getString(
+            "user-id",
+            null
+        )
+    ) { _, _, newValue ->
         InAppChat.shared.prefs.edit().putString("user-id", newValue).apply()
     }
 
@@ -49,17 +53,10 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
         settings.init()
     }
 
-    fun load() {
-        if (loading) return
-        loading = true
-        op({
-            loadAsync()
-        })
-    }
-
     suspend fun loadAsync() {
         currentUserID ?: return
         val user = API.me()
+        print("user id ${user.id}")
         User.current = user
         val fcmToken = this.fcmToken
         if (fcmToken != null) {
@@ -95,13 +92,13 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
     }
 
     fun count(list: List): Int =
-            when (list) {
-                List.dms ->
-                    dms.sumOf { it.unreadCount }
+        when (list) {
+            List.dms ->
+                dms.sumOf { it.unreadCount }
 
-                List.groups ->
-                    groups.sumOf { it.unreadCount }
-            }
+            List.groups ->
+                groups.sumOf { it.unreadCount }
+        }
 
     var nextGif: ((String) -> Unit)? = null
 

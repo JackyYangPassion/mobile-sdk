@@ -44,74 +44,74 @@ import io.inappchat.sdk.utils.ift
 @Composable
 fun MessageContent(message: Message, modifier: Modifier = Modifier) {
     Column(
-            modifier = modifier.background(
-                    ift(
-                            message.user.isCurrent,
-                            colors.senderBubble,
-                            colors.bubble
-                    ),
-                    RoundedCornerShape(theme.bubbleRadius.dp)
-            )
+        modifier = modifier.background(
+            ift(
+                message.user.isCurrent,
+                colors.senderBubble,
+                colors.bubble
+            ),
+            RoundedCornerShape(theme.bubbleRadius.dp)
+        )
     ) {
 
         val openUrl = LocalUriHandler.current
         if (!message.attachments.isEmpty()) {
             FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 for (attachment in message.attachments) {
                     when (attachment.type) {
                         AttachmentType.image -> AsyncImage(
-                                model = attachment.url,
-                                contentDescription = "shareed image",
-                                contentScale = ContentScale.FillBounds,
-                                modifier = Modifier
-                                        .width(
-                                                theme.imagePreviewSize.width.dp,
-                                        )
-                                        .height(
-                                                theme.imagePreviewSize.height.dp
-                                        )
+                            model = attachment.url,
+                            contentDescription = "shareed image",
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier
+                                .width(
+                                    theme.imagePreviewSize.width.dp,
+                                )
+                                .height(
+                                    theme.imagePreviewSize.height.dp
+                                )
                         )
 
                         AttachmentType.video -> VideoPlayer(
-                                uri = attachment.url.toUri(),
-                                modifier = Modifier
-                                        .width(theme.videoPreviewSize.width.dp)
-                                        .height(theme.videoPreviewSize.height.dp)
+                            uri = attachment.url.toUri(),
+                            modifier = Modifier
+                                .width(theme.videoPreviewSize.width.dp)
+                                .height(theme.videoPreviewSize.height.dp)
                         )
 
                         AttachmentType.audio -> AudioPlayer(
-                                url = attachment.url
+                            url = attachment.url
                         )
 
                         AttachmentType.file -> Image(
-                                painter = painterResource(id = R.drawable.file_arrow_down_fill),
-                                contentDescription = "File",
-                                colorFilter = ColorFilter.tint(
-                                        ift(
-                                                message.user.isCurrent,
-                                                theme.colors.senderText,
-                                                theme.colors.bubbleText
-                                        )
-                                ),
-                                modifier = Modifier.size(64)
+                            painter = painterResource(id = R.drawable.file_arrow_down_fill),
+                            contentDescription = "File",
+                            colorFilter = ColorFilter.tint(
+                                ift(
+                                    message.user.isCurrent,
+                                    theme.colors.senderText,
+                                    theme.colors.bubbleText
+                                )
+                            ),
+                            modifier = Modifier.size(64)
                         )
 
                         AttachmentType.location, AttachmentType.vcard -> MarkdownViewComposable(
-                                modifier = Modifier.padding(theme.bubblePadding),
-                                content = attachment.location()?.markdown ?: attachment.vcard()
-                                        ?.markdown()
-                                ?: "",
-                                config = theme.markdownConfig(message.user.isCurrent),
-                                onLinkClickListener = { link, type ->
-                                    when (type) {
-                                        MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked
-                                        MarkdownConfig.LINK_TYPE -> {
-                                            openUrl.openUri(link)
-                                        } // Link Clicked
-                                    }
+                            modifier = Modifier.padding(theme.bubblePadding),
+                            content = attachment.location()?.markdown ?: attachment.vcard()
+                                ?.markdown()
+                            ?: "No content",
+                            config = theme.markdownConfig(message.user.isCurrent),
+                            onLinkClickListener = { link, type ->
+                                when (type) {
+                                    MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked
+                                    MarkdownConfig.LINK_TYPE -> {
+                                        openUrl.openUri(link)
+                                    } // Link Clicked
                                 }
+                            }
                         )
 
                         else -> null
@@ -120,17 +120,19 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
             }
         }
         val ct = message.markdown
-        MarkdownViewComposable(
+        if (!ct.isNullOrEmpty()) {
+            MarkdownViewComposable(
                 modifier = Modifier
-                        .padding(theme.bubblePadding),
+                    .padding(theme.bubblePadding),
                 content = ct,
                 config = theme.markdownConfig(message.user.isCurrent)
-        ) { link, type ->
-            when (type) {
-                MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked
-                MarkdownConfig.LINK_TYPE -> {
-                    openUrl.openUri(link)
-                } // Link Clicked
+            ) { link, type ->
+                when (type) {
+                    MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked
+                    MarkdownConfig.LINK_TYPE -> {
+                        openUrl.openUri(link)
+                    } // Link Clicked
+                }
             }
         }
     }

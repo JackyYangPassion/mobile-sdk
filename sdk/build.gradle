@@ -126,7 +126,7 @@ dependencies {
     implementation "com.yazantarifi:markdown-compose:1.0.2"
 
 
-    implementation 'com.giphy.sdk:ui:2.3.1'
+    implementation 'com.giphy.sdk:ui:2.3.8'
 
     implementation("io.coil-kt:coil-compose:2.3.0")
     implementation("io.coil-kt:coil-gif:2.2.2")

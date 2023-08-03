@@ -1,27 +1,34 @@
 subscription CoreSubscription {
   core {
     ... on DeleteEvent {
-      __typename
-      id
-      kind
+      ...FDelete
     }
     ... on EntityEvent {
-      __typename
-      type
-      entity {
-        ... on User {
-          ...FUser
-        }
-        ... on Message {
-          ...FMessage
-        }
-        ... on Member {
-          ...FMember
-        }
-        ... on Chat {
-          ...FChat
-        }
-      }
+      ...FEntity
+    }
+  }
+}
+
+fragment FDelete on DeleteEvent {
+  __typename
+  id
+  kind
+}
+fragment FEntity on EntityEvent {
+  __typename
+  type
+  entity {
+    ... on User {
+      ...FUser
+    }
+    ... on Message {
+      ...FMessage
+    }
+    ... on Member {
+      ...FMember
+    }
+    ... on Chat {
+      ...FChat
     }
   }
 }

@@ -31,8 +31,10 @@ data class Member(
         get() = Chat.get(chat_id)!!
 
     companion object {
-        fun get(props: FMember) =
-            Member(props.user.fUser.id, props.chat_id, props.created_at, props.role)
+        fun get(props: FMember): Member {
+            User.get(props.user.fUser)
+            return Member(props.user.fUser.id, props.chat_id, props.created_at, props.role)
+        }
     }
 
 }

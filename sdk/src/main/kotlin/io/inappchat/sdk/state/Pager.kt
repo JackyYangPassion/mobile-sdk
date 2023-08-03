@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
+import io.inappchat.sdk.utils.uuid
 
 interface Identifiable {
     val id: String
@@ -15,6 +16,7 @@ interface Identifiable {
 
 @Stable
 abstract class Pager<T : Identifiable>(
+    val id: String = uuid(),
     val items: SnapshotStateList<T> = mutableStateListOf<T>(),
     val pageSize: Int = 20
 ) {

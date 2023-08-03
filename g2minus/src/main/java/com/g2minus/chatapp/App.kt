@@ -29,10 +29,10 @@ class App : Application() {
         app = this
         Giphy.configure(this, getString(R.string.giphy))
         account = Auth0(
-                getString(R.string.auth0_client_id),
-                getString(R.string.com_auth0_domain)
+            getString(R.string.auth0_client_id),
+            getString(R.string.com_auth0_domain)
         )
-        InAppChat.shared.setup(this, "g2minus.ertc.com", "tsxghv2g", delayLoad = true)
+        InAppChat.shared.setup(this, "rp1pptcmrxceuwj31oj8uwlo", delayLoad = true)
         appState.load(this)
     }
 
@@ -42,11 +42,11 @@ class App : Application() {
         val uid = credentials.user.getId() ?: throw Error("Expected a user ID")
         bg {
             InAppChat.shared.login(
-                    accessToken = credentials.accessToken,
-                    userId = uid,
-                    picture = credentials.user.pictureURL,
-                    username = credentials.user.name ?: uuid(),
-                    displayName = credentials.user.nickname
+                accessToken = credentials.accessToken,
+                userId = uid,
+                picture = credentials.user.pictureURL,
+                username = credentials.user.name ?: uuid(),
+                displayName = credentials.user.nickname
             )
         }
     }
@@ -58,22 +58,22 @@ class App : Application() {
     private suspend fun auth0(activity: Activity) = suspendCoroutine<Credentials> { continuation ->
         // Setup the WebAuthProvider, using the custom scheme and scope.
         WebAuthProvider.login(account)
-                .withScheme(this.packageName)
-                .withScope("openid profile email")
-                // Launch the authentication passing the callback where the results will be received
-                .start(activity, object : Callback<Credentials, AuthenticationException> {
-                    // Called when there is an authentication failure
-                    override fun onFailure(exception: AuthenticationException) {
-                        // Something went wrong!
-                        continuation.resumeWithException(exception)
-                    }
+            .withScheme(this.packageName)
+            .withScope("openid profile email")
+            // Launch the authentication passing the callback where the results will be received
+            .start(activity, object : Callback<Credentials, AuthenticationException> {
+                // Called when there is an authentication failure
+                override fun onFailure(exception: AuthenticationException) {
+                    // Something went wrong!
+                    continuation.resumeWithException(exception)
+                }
 
-                    // Called when authentication completed successfully
-                    override fun onSuccess(credentials: Credentials) {
-                        // Get the access token from the credentials object.
-                        // This can be used to call APIs
-                        continuation.resume(credentials)
-                    }
-                })
+                // Called when authentication completed successfully
+                override fun onSuccess(credentials: Credentials) {
+                    // Get the access token from the credentials object.
+                    // This can be used to call APIs
+                    continuation.resume(credentials)
+                }
+            })
     }
 }

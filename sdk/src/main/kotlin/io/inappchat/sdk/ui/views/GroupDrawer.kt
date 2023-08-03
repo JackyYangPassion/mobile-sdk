@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -40,11 +41,11 @@ import io.inappchat.sdk.utils.genG
 fun ChatDrawerHeader(chat: Chat) {
     Column {
         Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(64.dp, 24.dp, 64.dp, 24.dp)
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(64.dp, 24.dp, 64.dp, 24.dp)
         ) {
             Space(24f)
-            Avatar(url = chat.displayImage, 70.0, true)
+            Avatar(url = chat.displayImage, size = 70.0, chat = true)
             Space(12f)
             Text(chat.displayName, fonts.title2, color = colors.text)
             Text(chat.displayDescription ?: "", fonts.body, color = colors.caption)
@@ -52,16 +53,16 @@ fun ChatDrawerHeader(chat: Chat) {
             Divider(color = colors.text.copy(alpha = 0.1f))
         }
         Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = 16.dp)
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 16.dp)
         ) {
             Text(text = "All Members", iac = fonts.headline, color = colors.text)
             Space(14f)
             Image(
-                    painter = painterResource(id = R.drawable.users_three_fill),
-                    contentDescription = "member count",
-                    colorFilter = ColorFilter.tint(colors.caption),
-                    modifier = Modifier.size(16)
+                painter = painterResource(id = R.drawable.users_three_fill),
+                contentDescription = "member count",
+                colorFilter = ColorFilter.tint(colors.caption),
+                modifier = Modifier.size(16)
             )
             Space()
             Text(chat.members.size.toString(), fonts.caption, color = colors.caption)
@@ -72,15 +73,15 @@ fun ChatDrawerHeader(chat: Chat) {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ChatDrawer(
-        chat: Chat?, open: Boolean, hide: () -> Unit, openEdit: (Chat) -> Unit,
-        openInvite: (Chat) -> Unit,
-        openProfile: (User) -> Unit,
-        back: () -> Unit,
-        content: @Composable () -> Unit
+    chat: Chat?, open: Boolean, hide: () -> Unit, openEdit: (Chat) -> Unit,
+    openInvite: (Chat) -> Unit,
+    openProfile: (User) -> Unit,
+    back: () -> Unit,
+    content: @Composable () -> Unit
 ) {
     if (chat == null) return content()
     val state = rememberModalBottomSheetState(
-            ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
     )
     LaunchedEffect(key1 = open, block = {
         if (open) {
@@ -90,48 +91,49 @@ fun ChatDrawer(
         }
     })
     ModalBottomSheetLayout(
-            sheetState = state,
-            sheetBackgroundColor = colors.background,
-            sheetContentColor = colors.text,
-            scrimColor = colors.caption,
-            sheetContent = {
-                Box(contentAlignment = Alignment.BottomCenter) {
-                    Column {
-                        ChatDrawerHeader(chat = chat)
-                        val headers = mapOf(
-                                "Admins" to chat.admins,
-                                "Online" to chat.onlineNotAdminUsers,
-                                "Offline" to chat.offlineNotAdminUsers
-                        )
-                        LazyColumn {
-                            headers.forEach { (name, users) ->
-                                stickyHeader {
-                                    Text(
-                                            text = name.uppercase(),
-                                            iac = fonts.caption.copy(weight = FontWeight.Bold),
-                                            color = colors.caption,
-                                            modifier = Modifier.padding(top = 24.dp)
-                                    )
-                                }
-                                items(users, { it.user_id }) {
-                                    ContactRow(user = it.user, modifier = Modifier.clickable {
-                                        hide()
-                                        openProfile(it.user)
-                                    })
-                                }
+        sheetState = state,
+        modifier = Modifier.fillMaxSize(),
+        sheetBackgroundColor = colors.background,
+        sheetContentColor = colors.text,
+        scrimColor = colors.caption,
+        sheetContent = {
+            Box(contentAlignment = Alignment.BottomCenter) {
+                Column {
+                    ChatDrawerHeader(chat = chat)
+                    val headers = mapOf(
+                        "Admins" to chat.admins,
+                        "Online" to chat.onlineNotAdminUsers,
+                        "Offline" to chat.offlineNotAdminUsers
+                    )
+                    LazyColumn {
+                        headers.forEach { (name, users) ->
+                            stickyHeader {
+                                Text(
+                                    text = name.uppercase(),
+                                    iac = fonts.caption.copy(weight = FontWeight.Bold),
+                                    color = colors.caption,
+                                    modifier = Modifier.padding(top = 24.dp)
+                                )
+                            }
+                            items(users, { it.user_id }) {
+                                ContactRow(user = it.user, modifier = Modifier.clickable {
+                                    hide()
+                                    openProfile(it.user)
+                                })
                             }
                         }
                     }
-                    ChatDrawerButtons(
-                            chat = chat,
-                            openEdit = openEdit,
-                            openInvite = openInvite,
-                            dismiss = hide,
-                            back = back
-                    )
                 }
-            },
-            content = content
+                ChatDrawerButtons(
+                    chat = chat,
+                    openEdit = openEdit,
+                    openInvite = openInvite,
+                    dismiss = hide,
+                    back = back
+                )
+            }
+        },
+        content = content
     )
 }
 
@@ -142,10 +144,10 @@ fun ChatDrawerPreview() {
         var open by remember { mutableStateOf(false) }
         ChatDrawer(chat = genG(), open, {}, {}, {}, {}, {}) {
             ClickableText(
-                    text = "hello",
-                    iac = fonts.body,
-                    color = colors.text,
-                    onClick = { open = true })
+                text = "hello",
+                iac = fonts.body,
+                color = colors.text,
+                onClick = { open = true })
         }
     }
 }

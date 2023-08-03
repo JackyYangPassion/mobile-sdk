@@ -15,7 +15,7 @@ import io.inappchat.sdk.utils.op
 
 
 @Stable
-class Chat(override val id: String, val kind: ChatType) : Pager<Message>(), Identifiable {
+class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
 
     init {
         Chats.current.cache.chats[id] = this
@@ -44,13 +44,13 @@ class Chat(override val id: String, val kind: ChatType) : Pager<Message>(), Iden
     val isMember: Boolean
         get() = membership?.isMember ?: false
     val path: String
-        get() = "/chat/$id"
+        get() = "chat/$id"
 
     val editPath: String
-        get() = "/chat/$id/edit"
+        get() = "chat/$id/edit"
 
     val invitePath: String
-        get() = "/chat/$id/invite"
+        get() = "chat/$id/invite"
 
     val displayImage: String?
         get() = image ?: friend?.avatar

@@ -1,29 +1,39 @@
+fragment FInvite on InviteEvent {
+  __typename
+  by {
+    ...FUser
+  }
+  to {
+    ...FChat
+  }
+}
+fragment FReply on ReplyEvent {
+  __typename
+  message {
+    ...FMessage
+  }
+}
+
+fragment FReaction on ReactionEvent {
+  __typename
+  reaction
+  user {
+    ...FUser
+  }
+  message {
+    ...FMessage
+  }
+}
 subscription MeSubscription {
   me {
     ... on InviteEvent {
-      __typename
-      by {
-        ...FUser
-      }
-      to {
-        ...FChat
-      }
+      ...FInvite
     }
     ... on ReplyEvent {
-      __typename
-      message {
-        ...FMessage
-      }
+      ...FReply
     }
     ... on ReactionEvent {
-      __typename
-      reaction
-      user {
-        ...FUser
-      }
-      message {
-        ...FMessage
-      }
+      ...FReaction
     }
   }
 }

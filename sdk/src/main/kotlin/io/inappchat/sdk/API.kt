@@ -147,7 +147,13 @@ object API {
         ).execute().data?.sendMessage?.fMessage?.let { Message.get(it) }
 
     suspend fun dm(user: String) =
-        client.mutation(DMMutation(user)).execute().dataOrThrow().dm?.let { Chat.get(it.fChat) }
+        client.mutation(DMMutation(user)).execute().dataOrThrow().dm?.let {
+            val chat = Chat.get(it.chat.fChat)
+            chat.membership?.let { membership ->
+                Chats.current.memberships.add(membership)
+            }
+            chat
+        }
 
     suspend fun updateChat(
         input: UpdateGroupInput
@@ -421,9 +427,15 @@ object API {
 //            .dataOrThrow().registerPush
 
     suspend fun me(): User =
-        client.query(GetMeQuery()).execute().dataOrThrow().me.let {
-            Chats.current.settings.blocked.addAll(it.blocks ?: listOf())
-            User.get(it.fUser)
+        client.query(GetMeQuery()).execute().dataOrThrow().let { data ->
+            data.memberships.forEach {
+                Chat.get(it.chat.fChat)
+            }
+            Chats.current.memberships.addAll(data.memberships.map { Member.get(it.fMember) })
+            data.me.let {
+                Chats.current.settings.blocked.addAll(it.blocks ?: listOf())
+                User.get(it.fUser)
+            }
         }
 
 }

@@ -38,7 +38,7 @@ data class Message(
         get() = User.get(userID)!!
     val chat: Chat
         get() = Chat.get(chatID)!!
-    val path: String get() = "/message/$id"
+    val path: String get() = "message/$id"
     var sending by mutableStateOf(false)
     var failed by mutableStateOf(false)
 
@@ -125,7 +125,7 @@ fun FMessage.Attachment.vcard() =
     if (type == AttachmentType.vcard) Ezvcard.parse(data).first() else null
 
 
-fun VCard.markdown(): String = "$${formattedName}\n" +
+fun VCard.markdown(): String = "${formattedName.value}\n" +
         (telephoneNumbers?.map {
             "[${
                 it.types.firstOrNull()?.let { "${it.value}: " } ?: ""

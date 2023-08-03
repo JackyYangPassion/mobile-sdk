@@ -18,20 +18,21 @@ class Settings {
     var notifications by mutableStateOf(NotificationSetting.all)
     var availabilityStatus by mutableStateOf(OnlineStatus.Online)
     var blocked = mutableStateListOf<String>()
-    val lastUsedReactions = "😀,🤟,❤️,🔥,🤣".split(",").toMutableStateList()
+    val lastUsedReactions = mutableStateListOf<String>()
 
     fun init() {
         notifications = InAppChat.shared.prefs.getString("iac-notifications", null)
-                ?.let { NotificationSetting.valueOf(it) }
-                ?: NotificationSetting.all
+            ?.let { NotificationSetting.valueOf(it) }
+            ?: NotificationSetting.all
         availabilityStatus = InAppChat.shared.prefs.getString("iac-availabilityStatus", null)
-                ?.let { OnlineStatus.valueOf(it) }
-                ?: OnlineStatus.Online
+            ?.let { OnlineStatus.valueOf(it) }
+            ?: OnlineStatus.Online
         blocked =
-                InAppChat.shared.prefs.getStringSet("iac-blocked", mutableSetOf())?.toMutableStateList()
-                        ?: mutableStateListOf()
+            InAppChat.shared.prefs.getStringSet("iac-blocked", mutableSetOf())?.toMutableStateList()
+                ?: mutableStateListOf()
+        lastUsedReactions.clear()
         lastUsedReactions.addAll(
-                InAppChat.shared.prefs.getString("iac-reactions", "😀,🤟,❤️,🔥,🤣")!!.split(",")
+            InAppChat.shared.prefs.getString("iac-reactions", "😀,🤟,❤️,🔥,🤣")!!.split(",")
         )
     }
 
@@ -71,6 +72,6 @@ class Settings {
             lastUsedReactions.removeRange(5, lastUsedReactions.size - 1)
         }
         InAppChat.shared.prefs.edit().putString("reactions", lastUsedReactions.joinToString { "," })
-                .apply()
+            .apply()
     }
 }

@@ -34,8 +34,8 @@ fun MyProfile(
     var logoutDialogue by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
-          .fillMaxSize(1f)
-          .verticalScroll(scrollState),
+            .fillMaxSize(1f)
+            .verticalScroll(scrollState),
     ) {
         Header(title = "My Profile")
         Space(16f)
@@ -53,15 +53,13 @@ fun MyProfile(
                 modifier = Modifier.widthIn(max = 150.dp)
             )
         }
-        SimpleRow(icon = R.drawable.user_fill, text = "Profile") {
-            openProfile()
-        }
-        SimpleRow(icon = R.drawable.star_fill, text = "Favorites") {
-            openFavorites()
-        }
-        SimpleRow(icon = R.drawable.bell_simple_fill, text = "Manage Notifications") {
-            openNotificationSettings()
-        }
+        SimpleRow(icon = R.drawable.user_fill, text = "Profile", onClick = openProfile)
+        SimpleRow(icon = R.drawable.star_fill, text = "Favorites", onClick = openFavorites)
+        SimpleRow(
+            icon = R.drawable.bell_simple_fill,
+            text = "Manage Notifications",
+            onClick = openNotificationSettings
+        )
         SimpleRow(icon = R.drawable.door_fill, text = "Logout") {
             logoutDialogue = true
         }

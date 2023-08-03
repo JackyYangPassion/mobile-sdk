@@ -27,7 +27,7 @@ fun ChatsView(
         openProfile: (User) -> Unit
 ) {
     var list by remember {
-        mutableStateOf(Chats.List.dms)
+        mutableStateOf(Chats.List.groups)
     }
 
     val cta = when (list) {
