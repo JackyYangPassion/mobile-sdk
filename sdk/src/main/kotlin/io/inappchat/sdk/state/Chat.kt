@@ -17,10 +17,6 @@ import io.inappchat.sdk.utils.op
 @Stable
 class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
 
-    init {
-        Chats.current.cache.chats[id] = this
-    }
-
     var name by mutableStateOf<String?>(null)
     var image by mutableStateOf<String?>(null)
     var description by mutableStateOf<String?>(null)
@@ -55,7 +51,9 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     val displayImage: String?
         get() = image ?: friend?.avatar
     val displayName: String
-        get() = name ?: friend?.username ?: ""
+        get() {
+            return if (kind == ChatType.DirectMessage) friend?.displayNameFb ?: "" else name ?: ""
+        }
     val displayDescription: String?
         get() = description ?: friend?.description
 
@@ -72,7 +70,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
         get() = members.filter { !it.isAdmin && it.user.status == OnlineStatus.Offline }
 
     val friend: User?
-        get() = if (kind == ChatType.DirectMessage) members.find { it.isMember }?.user else null
+        get() = if (kind == ChatType.DirectMessage) members.find { !it.user.isCurrent }?.user else null
 
     val isGroup: Boolean
         get() = kind == ChatType.Group
@@ -102,6 +100,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     }
 
     constructor(chat: FChat) : this(chat.id, chat.kind) {
+        print("Chat Kind ${chat.kind}")
         update(chat)
     }
 

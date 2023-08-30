@@ -20,7 +20,7 @@ data class User(
     override val id: String
 ) : Identifiable {
     var username by mutableStateOf("")
-    var displayName by mutableStateOf<String?>("")
+    var displayName by mutableStateOf<String?>(null)
     var avatar by mutableStateOf<String?>(null)
     var lastSeen by mutableStateOf<Instant?>(null)
     var status by mutableStateOf(OnlineStatus.Offline)
@@ -61,7 +61,8 @@ data class User(
     val haveChatWith: Boolean get() = Chats.current.dms.contains { it.friend?.id == id }
 
     @Stable
-    val displayNameFb: String get() = displayName ?: username
+    val displayNameFb: String
+        get() = if (displayName.isNullOrEmpty()) username else displayName ?: username
 
     @Stable
     val isCurrent: Boolean get() = current?.id == id

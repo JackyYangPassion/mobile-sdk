@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
@@ -44,14 +45,16 @@ import io.inappchat.sdk.utils.ift
 @Composable
 fun MessageContent(message: Message, modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.background(
-            ift(
-                message.user.isCurrent,
-                colors.senderBubble,
-                colors.bubble
-            ),
-            RoundedCornerShape(theme.bubbleRadius.dp)
-        )
+        modifier = modifier
+            .background(
+                ift(
+                    message.user.isCurrent,
+                    colors.senderBubble,
+                    colors.bubble
+                ),
+                RoundedCornerShape(theme.bubbleRadius.dp)
+            )
+            .clipToBounds()
     ) {
 
         val openUrl = LocalUriHandler.current
@@ -64,7 +67,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                         AttachmentType.image -> AsyncImage(
                             model = attachment.url,
                             contentDescription = "shareed image",
-                            contentScale = ContentScale.FillBounds,
+                            contentScale = ContentScale.Fit,
                             modifier = Modifier
                                 .width(
                                     theme.imagePreviewSize.width.dp,

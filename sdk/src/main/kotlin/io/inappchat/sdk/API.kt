@@ -70,7 +70,6 @@ object API {
         InAppChat.shared.prefs.edit().putString("auth-token", newValue).apply()
     }
 
-
     var client = ApolloClient.Builder()
         .serverUrl(Server.http + "/graphql")
         .subscriptionNetworkTransport(
@@ -148,7 +147,7 @@ object API {
 
     suspend fun dm(user: String) =
         client.mutation(DMMutation(user)).execute().dataOrThrow().dm?.let {
-            val chat = Chat.get(it.chat.fChat)
+            val chat = Chat.get(it.fChat)
             chat.membership?.let { membership ->
                 Chats.current.memberships.add(membership)
             }

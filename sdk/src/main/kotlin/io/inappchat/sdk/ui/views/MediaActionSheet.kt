@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,6 +54,7 @@ import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.ui.IAC
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.File
 
@@ -71,26 +73,17 @@ enum class Media {
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun MediaActionSheet(
-    open: Boolean,
+    state: ModalBottomSheetState,
     chat: Chat,
     inReplyTo: Message?,
     dismiss: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
-    )
     var media by remember { mutableStateOf<Media?>(null) }
-    LaunchedEffect(key1 = open, block = {
-        if (open) {
-            state.show()
-        } else {
-            state.hide()
-        }
-    })
+    val scope = rememberCoroutineScope()
     val hide = {
         media = null
-        dismiss()
+        scope.launch { state.hide() }
     }
 
     val onFile = { file: File ->
@@ -101,81 +94,107 @@ fun MediaActionSheet(
         hide()
     }
 
-    when (media) {
-        Media.pickPhoto, Media.pickVideo -> AssetPicker(video = media == Media.pickVideo, onUri = {
-            onFile(it.toFile())
-        }) { hide() }
-
-        Media.recordPhoto, Media.recordVideo -> CameraPicker(
-            video = media == Media.recordVideo,
-            onUri = {
-                onFile(it.toFile())
-            }) { hide() }
-
-        Media.gif -> GifPicker(onUri = {
-            chat.send(inReplyTo?.id, attachments = listOf(it.toUri().imageAttachment()))
-            hide()
-        }) { hide() }
-
-        Media.contact -> ContactPicker(onContact = {
-            chat.send(inReplyTo?.id, attachments = listOf(it))
-            hide()
-        }) {
-            hide()
-        }
-
-        Media.location -> LocationPicker(onLocation = {
-            chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
-            hide()
-        }) {
-            hide()
-        }
-
-        else -> Log.d("IAC", "empty media")
-    }
-
     ModalBottomSheetLayout(
         sheetState = state,
         sheetBackgroundColor = IAC.colors.background,
         sheetContentColor = IAC.colors.text,
         scrimColor = IAC.colors.caption,
         sheetContent = {
-            Space(8f)
-            ActionItem(icon = R.drawable.image_square, text = "Upload Photo", divider = false) {
-                media = Media.pickPhoto
-            }
-            ActionItem(icon = R.drawable.camera, text = "Take Photo", divider = true) {
-                media = Media.recordPhoto
-            }
-            ActionItem(icon = R.drawable.file_video, text = "Upload Video", divider = false) {
-                media = Media.pickVideo
-            }
-            ActionItem(icon = R.drawable.video_camera, text = "Video Camera", divider = true) {
-                media = Media.recordVideo
-            }
-            ActionItem(icon = R.drawable.gif, text = "Send a GIF", divider = true) {
-                media = Media.gif
-            }
-            ActionItem(icon = R.drawable.map_pin, text = "Send Location", divider = true) {
-                media = Media.location
-            }
-            ActionItem(icon = R.drawable.address_book, text = "Share Contact", divider = true) {
-                media = Media.contact
+            Box {
+                Column {
+                    Space(8f)
+                    ActionItem(
+                        icon = R.drawable.image_square,
+                        text = "Upload Photo",
+                        divider = false
+                    ) {
+                        media = Media.pickPhoto
+                    }
+                    ActionItem(icon = R.drawable.camera, text = "Take Photo", divider = true) {
+                        media = Media.recordPhoto
+                    }
+                    ActionItem(
+                        icon = R.drawable.file_video,
+                        text = "Upload Video",
+                        divider = false
+                    ) {
+                        media = Media.pickVideo
+                    }
+                    ActionItem(
+                        icon = R.drawable.video_camera,
+                        text = "Video Camera",
+                        divider = true
+                    ) {
+                        media = Media.recordVideo
+                    }
+                    ActionItem(icon = R.drawable.gif, text = "Send a GIF", divider = true) {
+                        media = Media.gif
+                    }
+                    ActionItem(icon = R.drawable.map_pin, text = "Send Location", divider = true) {
+                        media = Media.location
+                    }
+                    ActionItem(
+                        icon = R.drawable.address_book,
+                        text = "Share Contact",
+                        divider = true
+                    ) {
+                        media = Media.contact
+                    }
+                }
+                when (media) {
+                    Media.pickPhoto, Media.pickVideo -> AssetPicker(
+                        video = media == Media.pickVideo,
+                        onUri = {
+                            onFile(it.toFile())
+                        }) { hide() }
+
+                    Media.recordPhoto, Media.recordVideo -> CameraPicker(
+                        video = media == Media.recordVideo,
+                        onUri = {
+                            onFile(it.toFile())
+                        }) { hide() }
+
+                    Media.gif -> GifPicker(onUri = {
+                        chat.send(inReplyTo?.id, attachments = listOf(it.toUri().imageAttachment()))
+                        hide()
+                    }) { hide() }
+
+                    Media.contact -> ContactPicker(onContact = {
+                        chat.send(inReplyTo?.id, attachments = listOf(it))
+                        hide()
+                    }) {
+                        hide()
+                    }
+
+                    Media.location -> LocationPicker(onLocation = {
+                        chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
+                        hide()
+                    }) {
+                        hide()
+                    }
+
+                    else -> Log.d("IAC", "empty media")
+                }
             }
         },
         content = content
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @IPreviews
 @Composable
 fun MediaActionSheetPreview() {
     InAppChatContext {
-        var open by remember {
-            mutableStateOf(false)
-        }
-        MediaActionSheet(true, genChat(), dismiss = { open = false }, inReplyTo = null) {
-            Button(onClick = { open = true }) {
+        var open = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+        val ctx = rememberCoroutineScope()
+        MediaActionSheet(
+            open,
+            genChat(),
+            dismiss = { ctx.launch { open.hide() } },
+            inReplyTo = null
+        ) {
+            Button(onClick = { ctx.launch { open.show() } }) {
                 Text(text = "Open Sheet", iac = IAC.fonts.headline)
             }
         }
@@ -253,7 +272,7 @@ fun GifPicker(onUri: (String) -> Unit, onCancel: () -> Unit) {
                     ) {
                         (media.imageWithRenditionType(RenditionType.fixedWidth)?.gifUrl
                             ?: media.contentUrl ?: media.source)?.let {
-
+                            onUri(it)
                         }
                     }
                 }

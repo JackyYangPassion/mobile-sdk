@@ -7,10 +7,14 @@ package io.inappchat.sdk.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.style.TextOverflow
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.User
@@ -20,7 +24,9 @@ import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.ui.views.*
 import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.genChat
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ChatChat(
     chat: Chat,
@@ -31,13 +37,23 @@ fun ChatChat(
     openEdit: (Chat) -> Unit,
     back: () -> Unit
 ) {
+    val ctx = rememberCoroutineScope()
     var focusRequester = remember { FocusRequester() }
-    var media by remember { mutableStateOf(false) }
-    var menu by remember { mutableStateOf(false) }
     var messageForAction by remember {
         mutableStateOf<Message?>(null)
     }
-    MediaActionSheet(open = media, chat = chat, dismiss = { menu = false }, inReplyTo = message) {
+    val media = androidx.compose.material.rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+    )
+    val menu = androidx.compose.material.rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+    )
+    MediaActionSheet(
+        state = media,
+        chat = chat,
+        dismiss = { ctx.launch { menu.hide() } },
+        inReplyTo = message
+    ) {
         MessageActionSheet(
             message = messageForAction,
             hide = { messageForAction = null },
@@ -45,8 +61,8 @@ fun ChatChat(
         ) {
             ChatDrawer(
                 chat = chat,
-                open = menu,
-                hide = { menu = false },
+                state = menu,
+                hide = { ctx.launch { menu.hide() } },
                 openEdit = openEdit,
                 openInvite = openInvite,
                 openProfile = openProfile,
@@ -61,14 +77,15 @@ fun ChatChat(
                                     text = chat.displayName,
                                     iac = fonts.title2,
                                     color = colors.text,
-                                    maxLines = 1
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 chat.let {
                                     ChatCount(count = it.members.size)
                                 }
                             }
                         }
-                    }, back = back, menu = { menu = true })
+                    }, back = back, menu = { ctx.launch { menu.show() } })
                     MessageList(
                         chat = chat,
                         modifier = Modifier.weight(1f),
@@ -79,7 +96,7 @@ fun ChatChat(
                         replyingTo = message,
                         focusRequester = focusRequester
                     ) {
-                        media = true
+                        ctx.launch { media.show() }
                     }
                 }
             }

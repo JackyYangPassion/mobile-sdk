@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.actions.react
 import io.inappchat.sdk.state.Message
@@ -189,7 +190,8 @@ fun MessageTop(msg: Message) {
             color = ift(msg.user.isCurrent, colors.senderUsername, colors.username),
             modifier = Modifier
                 .requiredSizeIn(maxWidth = 120.dp),
-            maxLines = 1
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Text(text = msg.createdAt.timeAgo(), iac = fonts.timestamp, color = colors.timestamp)
     }

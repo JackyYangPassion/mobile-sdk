@@ -67,7 +67,7 @@ fun MessageActionSheet(
             }
 
             ActionItem(
-                text = if (message?.favorite == true) "Save to Favorites" else "Remove from Favorites",
+                text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
                 icon = io.inappchat.sdk.R.drawable.star_fill
             )
             {

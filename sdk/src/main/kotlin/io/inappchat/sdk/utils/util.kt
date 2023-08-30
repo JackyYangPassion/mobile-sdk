@@ -18,6 +18,7 @@ import ezvcard.Ezvcard
 import ezvcard.VCard
 import ezvcard.property.Email
 import ezvcard.property.FormattedName
+import ezvcard.property.StructuredName
 import ezvcard.property.Telephone
 import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.type.AttachmentInput
@@ -48,7 +49,7 @@ fun contactUriToVCard(uri: Uri): VCard {
                 Email.Address,
                 Name.DisplayName,
                 Name.FamilyName,
-                Name.GivenName
+                Name.GivenName,
         )
     }.find()
     return result.map {
@@ -58,6 +59,14 @@ fun contactUriToVCard(uri: Uri): VCard {
             }
             it.displayNameAlt?.let {
                 addFormattedNameAlt(FormattedName(it))
+            }
+            it.nameList().forEach {
+                structuredName = StructuredName().apply {
+                    given = it.givenName
+                    family = it.familyName
+                    it.prefix?.let { prefixes.add(it) }
+                    it.suffix?.let { suffixes.add(it) }
+                }
             }
             it.phones().toList().forEach {
                 addTelephoneNumber(Telephone(it.normalizedNumber ?: it.number

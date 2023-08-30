@@ -36,10 +36,7 @@ query ListUsers($count: Int, $offset: Int) {
 
 mutation DM($user: ID!) {
   dm(user: $user) {
-    ...FMember
-    chat {
-      ...FChat
-    }
+    ...FChat
   }
 }
 
@@ -61,4 +58,14 @@ mutation SyncContacts($numbers: [String!]!) {
 
 mutation registerPush($token: String!, $kind: DeviceType!, $fcm: Boolean) {
   registerPush(token: $token, kind: $kind, fcm: $fcm)
+}
+
+mutation Flag($input: CreateFlagInput!) {
+  flag(input: $input) {
+    id
+  }
+}
+
+mutation DeleteAccount {
+  deleteAccount
 }

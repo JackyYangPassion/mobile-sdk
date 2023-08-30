@@ -21,13 +21,14 @@ import io.inappchat.sdk.utils.Monitoring
 
 @Composable
 fun ChatRoute(
-        gid: String? = null, uid: String? = null, mid: String? = null,
-        openProfile: (User) -> Unit,
-        openInvite: (Chat) -> Unit,
-        openEditChat: (Chat) -> Unit,
-        openReply: (Message) -> Unit,
-        back: () -> Unit
+    gid: String? = null, uid: String? = null, mid: String? = null,
+    openProfile: (User) -> Unit,
+    openInvite: (Chat) -> Unit,
+    openEditChat: (Chat) -> Unit,
+    openReply: (Message) -> Unit,
+    back: () -> Unit
 ) {
+    println("Chat route with uid $uid")
     var chat by remember {
         mutableStateOf<Chat?>(gid?.let { Chat.get(it) } ?: uid?.let { Chat.getByUser(it) }
         ?: mid?.let { Message.Companion.get(it)?.chat })
@@ -82,8 +83,8 @@ fun ChatRoute(
 
     chat?.let {
         ChatChat(
-                chat = it, openProfile = openProfile, openInvite = openInvite, openReply = openReply,
-                openEdit = openEditChat, back = back
+            chat = it, openProfile = openProfile, openInvite = openInvite, openReply = openReply,
+            openEdit = openEditChat, back = back
         )
     } ?: if (notFound) NotFound(back = back) else Column {
         Header(title = "Chat")

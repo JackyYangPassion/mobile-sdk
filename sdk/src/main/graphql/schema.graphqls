@@ -207,6 +207,7 @@ type BillingData {
   currency: String
   currentPeriodEnd: DateTime
   currentPeriodStart: DateTime
+  limits: PlanLimits
   planName: String
   price: String
 }
@@ -236,6 +237,7 @@ type Bot {
 type BotConfig {
   aliasId: String
   botId: String
+  oneWebchatWhitelist: String
 }
 
 union BroadcastEvent = DeleteEvent | EntityEvent
@@ -284,6 +286,13 @@ type Chat {
 
   """The update date of this Chat"""
   updated_at: DateTime!
+}
+
+input ChatRegisterInput {
+  email: String!
+  image: String
+  password: String!
+  username: String!
 }
 
 """The type of a Chat entity."""
@@ -818,6 +827,7 @@ type Mutation {
   block(user: ID!): Boolean!
   changeAppMemberRole(app: ID!, role: AppUserRole!, user: ID!): Boolean!
   changePassword(password: String!, token: String!): Boolean!
+  chatRegister(input: ChatRegisterInput!): Auth
 
   """Create a new nlu provider"""
   create(input: CreateNluProviderInput!): NLUProvider
@@ -827,6 +837,7 @@ type Mutation {
   createGroup(input: CreateGroupInput!): Chat
   createOneChatbot(input: CreateOneChatbotInput!): User!
   createSetupIntent: String
+  deleteAccount: Boolean!
 
   """Delete a group Chat"""
   deleteGroup(id: ID!): Boolean!
@@ -837,7 +848,7 @@ type Mutation {
   dismissInvites(chat: ID): Boolean!
 
   """Start a directmessage Chat with a User"""
-  dm(user: ID!): Member
+  dm(user: ID!): Chat
 
   """Login as an NFT authenticated user"""
   ethLogin(input: EthLoginInput!): Auth
@@ -903,20 +914,21 @@ type Mutation {
 
   """Send a message to a Chat"""
   sendMessage(input: SendMessageInput): Message!
-  setAPN(apn: APNConfigInput!, app: ID!): Boolean!
+  setAPN(apn: APNConfigInput!): App!
 
   """Set the App's FCM push token for Android and Web push notifications"""
-  setFCM(app: ID!, fcm_key: String!): Boolean!
-  setNFT(app: ID!, nft: NFTConfigInput!): Boolean!
+  setFCM(fcm_key: String!): App!
+  setNFT(nft: NFTConfigInput!): App!
 
   """Set the notification setting for the current User in this chat"""
   setNotificationSetting(chat: ID!, setting: NotificationSetting!): Boolean!
-  setVapid(app: ID!, vapid: VapidDetailsInput!): Boolean!
+  setVapid(vapid: VapidDetailsInput!): App!
   setVerifyURL(app: ID!, url: String!): Boolean!
   subscribeToPlan(input: SubscribeInput!): BillingData
 
   """Sync a users phone book with the server"""
   syncContacts(numbers: [String!]!): Boolean!
+  testConnection(id: ID!): NLUProvider!
   toggleE2E(app: ID!, enabled: Boolean!): Boolean!
 
   """Unblocks a User for the current User"""
@@ -937,6 +949,7 @@ type Mutation {
 
   """Update the contents of a Message"""
   updateMessage(input: UpdateMessageInput!): Boolean!
+  updateOneWebchatWhitelist(input: UpdateOneWebchatInput!): Bot!
   updateOrg(input: UpdateOrgInput!): Organization!
 
   """Updates the current User's profile"""
@@ -990,6 +1003,8 @@ type NLUProvider {
 
   """The ID of this NLUProvider"""
   id: ID!
+  last_status: String
+  last_test_date: DateTime
 
   """The location of the nlu provider key details"""
   location: String
@@ -1058,6 +1073,12 @@ A field whose value conforms to the standard E.164 format as specified in E.164 
 """
 scalar PhoneNumber
 
+type PlanLimits {
+  concurrent: Int
+  maus: Int
+  messages: Int
+}
+
 type Query {
   """Returns the current User's active list of groups"""
   activeGroups(count: Int, offset: Int): [Chat!]!
@@ -1081,6 +1102,7 @@ type Query {
   """The list of Flags available, unreviewed or neither"""
   flags(count: Int, notReviewed: Boolean, offset: Int): [Flag!]!
   getAvailableBots: [NLUBot!]!
+  getUsageMetrics(input: UsageRequestInput!): UsageData!
 
   """Lists public and private Group chats on the network"""
   groups(count: Int, offset: Int): [Chat!]!
@@ -1169,6 +1191,9 @@ input SendMessageInput {
 
   """The Chat to send the Message to"""
   chat: ID!
+
+  """The client generated ID for the message"""
+  id: ID
 
   """The ID of the Message this Message is replying to if it is a reply"""
   parent: ID
@@ -1282,6 +1307,11 @@ input UpdateNLUProviderInput {
   ibmUid: String
 }
 
+input UpdateOneWebchatInput {
+  urlWhitelist: String
+  userId: ID!
+}
+
 input UpdateOrgInput {
   name: String
 }
@@ -1302,6 +1332,23 @@ input UpdateProfileInput {
 
   """The User's desired new username"""
   username: String
+}
+
+type Usage {
+  limits: PlanLimits
+  maus: Int!
+  messages: Int!
+  periodEnd: Int!
+  periodStart: Int!
+}
+
+type UsageData {
+  current: Usage
+  history: [Usage!]
+}
+
+input UsageRequestInput {
+  appId: String
 }
 
 """A chat User. This user only exists in this Chat silo"""

@@ -40,62 +40,64 @@ fun ChatDrawerButtons(
     val dialog = remember {
         mutableStateOf(false)
     }
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
-        modifier = Modifier
-            .height(60.dp)
-            .background(colors.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
-            .padding(8.dp, 0.dp)
-    ) {
-        if (chat.isAdmin) {
+    Box(modifier = Modifier.padding(bottom = 12.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(3.dp),
+            modifier = Modifier
+                .height(60.dp)
+                .background(colors.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
+                .padding(8.dp, 0.dp)
+        ) {
+            if (chat.isAdmin) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable {
+                        dismiss()
+                        openEdit(chat)
+                    }) {
+                    Image(
+                        painter = painterResource(id = io.inappchat.sdk.R.drawable.gear_fill),
+                        contentDescription = "settings",
+                        colorFilter = ColorFilter.tint(colors.border),
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Text(text = "Edit", iac = theme.fonts.mini, color = colors.border)
+                }
+                Space()
+            }
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.clickable {
                     dismiss()
-                    openEdit(chat)
+                    openInvite(chat)
                 }) {
                 Image(
-                    painter = painterResource(id = io.inappchat.sdk.R.drawable.gear_fill),
+                    painter = painterResource(id = io.inappchat.sdk.R.drawable.archive_box_fill),
                     contentDescription = "settings",
                     colorFilter = ColorFilter.tint(colors.border),
                     modifier = Modifier.size(24.dp)
                 )
-                Text(text = "Edit", iac = theme.fonts.mini, color = colors.border)
+                Text(text = "Invite", iac = theme.fonts.mini, color = colors.border)
             }
             Space()
-        }
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable {
-                dismiss()
-                openInvite(chat)
-            }) {
-            Image(
-                painter = painterResource(id = io.inappchat.sdk.R.drawable.archive_box_fill),
-                contentDescription = "settings",
-                colorFilter = ColorFilter.tint(colors.border),
-                modifier = Modifier.size(24.dp)
-            )
-            Text(text = "Invite", iac = theme.fonts.mini, color = colors.border)
-        }
-        Space()
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.clickable {
-                dismiss()
-                dialog.value = true
-            }) {
-            Image(
-                painter = painterResource(id = io.inappchat.sdk.R.drawable.trash_fill),
-                contentDescription = "settings",
-                colorFilter = ColorFilter.tint(colors.border),
-                modifier = Modifier.size(24.dp)
-            )
-            Text(text = "Leave", iac = theme.fonts.mini, color = colors.border)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable {
+                    dismiss()
+                    dialog.value = true
+                }) {
+                Image(
+                    painter = painterResource(id = io.inappchat.sdk.R.drawable.trash_fill),
+                    contentDescription = "settings",
+                    colorFilter = ColorFilter.tint(colors.border),
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(text = "Leave", iac = theme.fonts.mini, color = colors.border)
+            }
         }
     }
     if (dialog.value) {

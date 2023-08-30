@@ -23,7 +23,6 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,7 +70,10 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
     val activity = LocalContext.current
     val isEthLogin =
         !InAppChat.shared.config?.optString("loginType", "email").equals("email")
-    val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val state = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    )
     val scope = rememberCoroutineScope()
     val haveAccounts = appState.ethAccounts.isNotEmpty()
     LaunchedEffect(key1 = haveAccounts, block = {
@@ -177,7 +178,8 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
                         if (isEthLogin) {
                             Icon(
                                 painter = painterResource(id = R.drawable.eth),
-                                contentDescription = "Ethereum Login"
+                                contentDescription = "Ethereum Login",
+                                modifier = Modifier.padding(end = 8.dp)
                             )
                             Text(text = "Login with Ethereum")
                         } else {

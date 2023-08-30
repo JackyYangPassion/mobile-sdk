@@ -1,3 +1,14 @@
+query GetNFTConfig {
+  app {
+    nft {
+      enabled
+      nft_name
+      contract_address
+      image_url
+    }
+  }
+}
+
 mutation Login($input: LoginInput!) {
   login(input: $input) {
     token
@@ -24,4 +35,28 @@ mutation EthLogin($input: EthLoginInput!) {
 
 mutation Logout {
   logout
+}
+
+mutation BasicLogin($email: String!, $password: String!) {
+  basicLogin(email: $email, password: $password) {
+    token
+    user {
+      ...FUser
+      blocks
+      blocked_by
+      role
+    }
+  }
+}
+
+mutation ChatRegister($input: ChatRegisterInput!) {
+  chatRegister(input: $input) {
+    token
+    user {
+      ...FUser
+      blocks
+      blocked_by
+      role
+    }
+  }
 }

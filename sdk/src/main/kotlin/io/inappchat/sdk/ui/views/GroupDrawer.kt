@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Divider
@@ -35,6 +36,7 @@ import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
 import io.inappchat.sdk.utils.genG
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -73,23 +75,13 @@ fun ChatDrawerHeader(chat: Chat) {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ChatDrawer(
-    chat: Chat?, open: Boolean, hide: () -> Unit, openEdit: (Chat) -> Unit,
+    chat: Chat?, state: ModalBottomSheetState, hide: () -> Unit, openEdit: (Chat) -> Unit,
     openInvite: (Chat) -> Unit,
     openProfile: (User) -> Unit,
     back: () -> Unit,
     content: @Composable () -> Unit
 ) {
     if (chat == null) return content()
-    val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
-    )
-    LaunchedEffect(key1 = open, block = {
-        if (open) {
-            state.show()
-        } else {
-            state.hide()
-        }
-    })
     ModalBottomSheetLayout(
         sheetState = state,
         modifier = Modifier.fillMaxSize(),
@@ -112,7 +104,7 @@ fun ChatDrawer(
                                     text = name.uppercase(),
                                     iac = fonts.caption.copy(weight = FontWeight.Bold),
                                     color = colors.caption,
-                                    modifier = Modifier.padding(top = 24.dp)
+                                    modifier = Modifier.padding(top = 24.dp, start = 16.dp)
                                 )
                             }
                             items(users, { it.user_id }) {
@@ -137,17 +129,22 @@ fun ChatDrawer(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @IPreviews
 @Composable
 fun ChatDrawerPreview() {
     InAppChatContext {
-        var open by remember { mutableStateOf(false) }
+        var open = rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Expanded,
+            skipHalfExpanded = true
+        )
+        val coroutineContext = rememberCoroutineScope()
         ChatDrawer(chat = genG(), open, {}, {}, {}, {}, {}) {
             ClickableText(
                 text = "hello",
                 iac = fonts.body,
                 color = colors.text,
-                onClick = { open = true })
+                onClick = { coroutineContext.launch { open.show() } })
         }
     }
 }
