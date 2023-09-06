@@ -9,6 +9,7 @@ import androidx.compose.runtime.toMutableStateList
 import io.inappchat.sdk.API
 import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.Message
+import io.inappchat.sdk.state.SendingMessage
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.type.AttachmentType
@@ -82,3 +83,10 @@ fun Uri.imageAttachment() = AttachmentInput(
     type = AttachmentType.image,
     id = uuid()
 )
+
+fun SendingMessage.retry() {
+    if (failed) {
+        failed = false
+        msg.chat.send(this)
+    }
+}

@@ -10,6 +10,7 @@ import ezvcard.Ezvcard
 import ezvcard.VCard
 import io.inappchat.sdk.API
 import io.inappchat.sdk.fragment.FMessage
+import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.type.AttachmentType
 import io.inappchat.sdk.utils.*
 import kotlinx.datetime.Instant
@@ -17,7 +18,15 @@ import net.datafaker.providers.base.Bool
 import java.net.URLEncoder
 
 @Stable
-data class SendingMessage(val msg: Message, val upload: Upload? = null, var failed: Boolean = false)
+data class SendingMessage(
+    val msg: Message,
+    val attachments: List<AttachmentInput> = listOf(),
+    val upload: Upload? = null,
+    var failed: Boolean = false
+) : Identifiable {
+    override val id: String
+        get() = msg.id
+}
 
 @Stable
 data class Message(
@@ -42,8 +51,6 @@ data class Message(
     val chat: Chat
         get() = Chat.get(chatID)!!
     val path: String get() = "message/$id"
-    var sending by mutableStateOf(false)
-    var failed by mutableStateOf(false)
 
     constructor(msg: FMessage) : this(
         msg.id,

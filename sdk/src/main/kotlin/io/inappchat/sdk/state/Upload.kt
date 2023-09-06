@@ -53,7 +53,7 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
     var uploading by mutableStateOf(false)
     var url by mutableStateOf<String?>(null)
     var error by mutableStateOf<Error?>(null)
-    
+
     private var _await: Continuation<String>? = null
     suspend fun await() = suspendCoroutine<String> { cont ->
         url?.let {
@@ -123,4 +123,7 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
     }
 
     fun attachment() = url?.let { AttachmentInput(url = it, type = attachmentType(), id = id) }
+
+    fun localAttachment() = AttachmentInput(url = uri.toString(), type = attachmentType(), id = id)
+
 }

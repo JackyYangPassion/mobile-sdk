@@ -128,6 +128,7 @@ object API {
 
     suspend fun send(
         chat: String,
+        id: String,
         inReplyTo: String?,
         text: String? = null,
         attachments: List<AttachmentInput>? = null,
@@ -136,6 +137,7 @@ object API {
             SendMessageMutation(
                 SendMessageInput(
                     chat = chat,
+                    id = Optional.present(id),
                     parent = Optional.presentIfNotNull(inReplyTo),
                     text = Optional.presentIfNotNull(text),
                     attachments = Optional.presentIfNotNull(attachments),

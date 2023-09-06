@@ -66,7 +66,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                     when (attachment.type) {
                         AttachmentType.image -> AsyncImage(
                             model = attachment.url,
-                            contentDescription = "shareed image",
+                            contentDescription = "shared image",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
                                 .width(
