@@ -9,14 +9,13 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.network.http.DefaultHttpEngine
 import com.apollographql.apollo3.network.http.LoggingInterceptor
-import com.apollographql.apollo3.network.okHttpClient
 import com.apollographql.apollo3.network.ws.GraphQLWsProtocol
 import com.apollographql.apollo3.network.ws.WebSocketNetworkTransport
 import com.moczul.ok2curl.CurlInterceptor
 import com.moczul.ok2curl.logger.Logger
 import io.inappchat.sdk.fragment.FUser
 import io.inappchat.sdk.state.Chat
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.Member
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
@@ -36,7 +35,6 @@ import io.inappchat.sdk.type.UpdateGroupInput
 import io.inappchat.sdk.type.UpdateMessageInput
 import io.inappchat.sdk.type.UpdateProfileInput
 import io.inappchat.sdk.utils.Monitoring
-import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.ift
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -149,7 +147,7 @@ object API {
         client.mutation(DMMutation(user)).execute().dataOrThrow().dm?.let {
             val chat = Chat.get(it.fChat)
             chat.membership?.let { membership ->
-                Chats.current.memberships.add(membership)
+                InAppChatStore.current.memberships.add(membership)
             }
             chat
         }
@@ -257,11 +255,11 @@ object API {
     }
 
     suspend fun onUser(user: User) {
-        Chats.current.user = user
-        Chats.current.currentUserID = user.id
+        InAppChatStore.current.user = user
+        InAppChatStore.current.currentUserID = user.id
         User.current = user
         try {
-            Chats.current.loadAsync()
+            InAppChatStore.current.loadAsync()
             subscribe()
         } catch (err: Error) {
             Monitoring.error(err)
@@ -274,7 +272,7 @@ object API {
             client.subscription(CoreSubscription()).toFlow().collectLatest {
                 it.data?.let {
                     InAppChat.shared.scope.launch {
-                        Chats.current.onCoreEvent(it.core)
+                        InAppChatStore.current.onCoreEvent(it.core)
                     }
                 } ?: it.errors?.forEach {
                     Monitoring.error(it.message)
@@ -284,7 +282,7 @@ object API {
             client.subscription(MeSubscription()).toFlow().collectLatest {
                 it.data?.let {
                     InAppChat.shared.scope.launch {
-                        Chats.current.onMeEvent(it.me)
+                        InAppChatStore.current.onMeEvent(it.me)
                     }
                 } ?: it.errors?.forEach {
                     Monitoring.error(it.message)
@@ -430,9 +428,9 @@ object API {
             data.memberships.forEach {
                 Chat.get(it.chat.fChat)
             }
-            Chats.current.memberships.addAll(data.memberships.map { Member.get(it.fMember) })
+            InAppChatStore.current.memberships.addAll(data.memberships.map { Member.get(it.fMember) })
             data.me.let {
-                Chats.current.settings.blocked.addAll(it.blocks ?: listOf())
+                InAppChatStore.current.settings.blocked.addAll(it.blocks ?: listOf())
                 User.get(it.fUser)
             }
         }

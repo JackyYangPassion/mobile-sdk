@@ -2,6 +2,10 @@
 .gradle/
 build/
 release
+gpp.json
+google-services.json
+
+
 
 # Local configuration file (sdk path, etc)
 local.properties

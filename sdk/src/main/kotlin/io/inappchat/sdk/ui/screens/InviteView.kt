@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.actions.invite
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.IAC.colors
@@ -37,7 +37,11 @@ fun InviteView(chat: Chat, back: () -> Unit) {
 
     Column {
         Header(title = "Invite to ${chat.name}", back = back)
-        PagerList(pager = Chats.current.contacts, divider = true, modifier = Modifier.weight(1f)) {
+        PagerList(
+            pager = InAppChatStore.current.contacts,
+            divider = true,
+            modifier = Modifier.weight(1f)
+        ) {
             val isSelected = selected.contains(it)
             ContactRow(user = it, modifier = Modifier
                 .padding(end = 16.dp)
@@ -100,7 +104,7 @@ fun InviteView(chat: Chat, back: () -> Unit) {
 @Composable
 fun InvitePreview() {
     InAppChatContext {
-        Chats.current.contacts.items.addAll(random(20, { genU() }))
+        InAppChatStore.current.contacts.items.addAll(random(20, { genU() }))
         InviteView(chat = genG()) {
 
         }

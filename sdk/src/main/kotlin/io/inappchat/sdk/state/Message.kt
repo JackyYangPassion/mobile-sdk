@@ -55,7 +55,7 @@ data class Message(
     }
 
     init {
-        Chats.current.cache.messages[id] = this
+        InAppChatStore.current.cache.messages[id] = this
         parentID?.let { parentId ->
             get(parentId)?.let { parent = it } ?: op({
                 parent = bg { API.getMessage(parentId) }
@@ -107,7 +107,7 @@ data class Message(
 
     companion object {
         fun get(id: String): Message? {
-            return Chats.current.cache.messages[id]
+            return InAppChatStore.current.cache.messages[id]
         }
 
         fun get(apiMessage: FMessage): Message {

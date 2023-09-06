@@ -8,11 +8,9 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import io.inappchat.sdk.API
 import io.inappchat.sdk.extensions.contains
 import io.inappchat.sdk.fragment.FUser
 import io.inappchat.sdk.type.OnlineStatus
-import io.inappchat.sdk.utils.op
 import kotlinx.datetime.Instant
 
 @Stable
@@ -43,7 +41,7 @@ data class User(
     }
 
     init {
-        Chats.current.cache.users[id] = this
+        InAppChatStore.current.cache.users[id] = this
     }
 
     fun update(user: FUser) {
@@ -58,7 +56,7 @@ data class User(
     val chatPath: String get() = "user/$id/chat"
 
     @Stable
-    val haveChatWith: Boolean get() = Chats.current.dms.contains { it.friend?.id == id }
+    val haveChatWith: Boolean get() = InAppChatStore.current.dms.contains { it.friend?.id == id }
 
     @Stable
     val displayNameFb: String
@@ -76,7 +74,7 @@ data class User(
         var current by mutableStateOf<User?>(null)
 
         fun get(id: String): User? {
-            return Chats.current.cache.users[id]
+            return InAppChatStore.current.cache.users[id]
         }
 
         fun get(user: FUser): User {

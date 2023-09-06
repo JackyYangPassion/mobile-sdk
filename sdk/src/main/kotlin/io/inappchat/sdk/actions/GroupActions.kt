@@ -6,7 +6,7 @@ package io.inappchat.sdk.actions
 
 import com.apollographql.apollo3.api.Optional
 import io.inappchat.sdk.API
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.Member
 import io.inappchat.sdk.state.User
@@ -15,8 +15,6 @@ import io.inappchat.sdk.type.UpdateGroupInput
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
 import kotlinx.datetime.Clock
-import java.io.File
-import java.time.OffsetDateTime
 
 fun Chat.dismissInvites() {
     if (invites.isEmpty()) return
@@ -63,7 +61,7 @@ fun Chat.leave() {
             API.leaveChat(id)
         }
         joining = false
-        Chats.current.memberships.removeIf { it.chat_id == membership?.chat_id }
+        InAppChatStore.current.memberships.removeIf { it.chat_id == membership?.chat_id }
     }) {
         membership?.let { members.add(it) }
         joining = false
@@ -123,10 +121,10 @@ fun Chat.update(
 fun Chat.delete() {
     op({
         bg { API.deleteChat(id) }
-        friend?.let { Chats.current.cache.chatsByUID.remove(it.id) }
-        Chats.current.cache.chats.remove(id)
-        Chats.current.network.items.removeAll { it.id == id }
-        Chats.current.memberships.removeAll { it.chat_id == id }
+        friend?.let { InAppChatStore.current.cache.chatsByUID.remove(it.id) }
+        InAppChatStore.current.cache.chats.remove(id)
+        InAppChatStore.current.network.items.removeAll { it.id == id }
+        InAppChatStore.current.memberships.removeAll { it.chat_id == id }
     })
 }
 

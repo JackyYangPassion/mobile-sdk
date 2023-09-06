@@ -32,7 +32,7 @@ class App : Application() {
             getString(R.string.auth0_client_id),
             getString(R.string.com_auth0_domain)
         )
-        InAppChat.shared.setup(this, "rp1pptcmrxceuwj31oj8uwlo", delayLoad = true)
+        InAppChat.shared.setup(this, getString(R.string.inappchat), delayLoad = true)
         appState.load(this)
     }
 

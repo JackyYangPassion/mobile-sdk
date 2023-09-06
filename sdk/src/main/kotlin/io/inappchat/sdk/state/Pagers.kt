@@ -13,8 +13,6 @@ import io.inappchat.sdk.API
 import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
-import io.inappchat.sdk.utils.uuid
-import java.util.*
 
 @Stable
 data class ChannelsPager(val list: String = "channels") : Pager<Chat>() {
@@ -69,7 +67,7 @@ data class FavoritesPager(val list: String = "favorites") : Pager<Message>() {
 @Stable
 data class RepliesPager(val message: Message) : Pager<Message>(message.id) {
     init {
-        Chats.current.cache.repliesPagers[message.id] = this
+        InAppChatStore.current.cache.repliesPagers[message.id] = this
     }
 
     fun setReplies(list: List<Message>) {

@@ -13,20 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
-import kotlin.random.Random
 
 @Composable
 private fun Tab(
-    tab: Chats.List,
+    tab: InAppChatStore.List,
     selected: Boolean,
     unreadCount: Int,
     modifier: Modifier = Modifier,
-    onPress: (Chats.List) -> Unit
+    onPress: (InAppChatStore.List) -> Unit
 ) {
     Row(
         modifier = modifier.clickable { onPress(tab) },
@@ -61,13 +60,13 @@ private fun Tab(
 }
 
 @Composable
-fun ChatTabs(list: Chats.List, onSelect: (Chats.List) -> Unit) {
+fun ChatTabs(list: InAppChatStore.List, onSelect: (InAppChatStore.List) -> Unit) {
     Row(modifier = Modifier.height(44.dp)) {
-        for (tab in Chats.List.values()) {
+        for (tab in InAppChatStore.List.values()) {
             Tab(
                 tab = tab,
                 selected = list == tab,
-                unreadCount = Chats.current.count(list),
+                unreadCount = InAppChatStore.current.count(list),
                 modifier = Modifier.weight(1f),
                 onPress = onSelect
             )
@@ -80,8 +79,8 @@ fun ChatTabs(list: Chats.List, onSelect: (Chats.List) -> Unit) {
 fun ChatTabsPreview() {
     InAppChatContext {
         Column {
-            ChatTabs(list = Chats.List.dms, onSelect = {})
-            ChatTabs(list = Chats.List.groups, onSelect = {})
+            ChatTabs(list = InAppChatStore.List.dms, onSelect = {})
+            ChatTabs(list = InAppChatStore.List.groups, onSelect = {})
         }
     }
 }

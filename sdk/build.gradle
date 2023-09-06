@@ -13,7 +13,7 @@ plugins {
     id("com.apollographql.apollo3") version "4.0.0-alpha.2"
 }
 
-def libraryVersion = '0.0.4'
+def libraryVersion = '1.0.0'
 
 
 android {

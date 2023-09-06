@@ -6,7 +6,7 @@ package io.inappchat.sdk.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.InAppChatContext
@@ -26,7 +26,7 @@ fun FavoritesView(
 ) {
     Column {
         Header(title = "Favorites", back = back)
-        PagerList(pager = Chats.current.favorites, scrollToTop = scrollToTop.toString()) {
+        PagerList(pager = InAppChatStore.current.favorites, scrollToTop = scrollToTop.toString()) {
             MessageView(message = it, onPressUser = openProfile, onLongPress = {}, onClick = {
                 openReplies(it)
             })
@@ -37,7 +37,7 @@ fun FavoritesView(
 @IPreviews
 @Composable
 fun FavoritesViewPreview() {
-    Chats.current.favorites.items.addAll(random(50, { genM() }))
+    InAppChatStore.current.favorites.items.addAll(random(50, { genM() }))
     InAppChatContext {
         FavoritesView(back = {}, openReplies = {}, openProfile = {}, scrollToTop = 0)
     }

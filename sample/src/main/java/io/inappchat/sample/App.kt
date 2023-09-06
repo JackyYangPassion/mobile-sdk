@@ -33,7 +33,7 @@ class App : Application() {
         Giphy.configure(this, getString(R.string.giphy))
         InAppChat.shared.setup(
             this,
-            getString(R.string.inappchat_api_key)
+            getString(R.string.inappchat)
         )
     }
 

@@ -8,7 +8,6 @@ import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.os.Build.VERSION.SDK_INT
 import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -16,10 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.async
@@ -29,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.security.Permission
 
 @Stable
 class InAppChat private constructor() {
@@ -45,8 +40,8 @@ class InAppChat private constructor() {
         this.appContext = appContext
         this.prefs = appContext.getSharedPreferences("inappchat", Context.MODE_PRIVATE)
         this.apiKey = apiKey
-        Chats.current.init()
-        Chats.current.contacts.requestContacts =
+        InAppChatStore.current.init()
+        InAppChatStore.current.contacts.requestContacts =
             ContextCompat.checkSelfPermission(
                 appContext,
                 Manifest.permission.READ_CONTACTS
@@ -79,8 +74,8 @@ class InAppChat private constructor() {
         }
         if (didStartLoading) throw Error("SDK Already initialized")
         didStartLoading = true
-        Chats.current.loadAsync()
-        isUserLoggedIn = Chats.current.currentUserID != null
+        InAppChatStore.current.loadAsync()
+        isUserLoggedIn = InAppChatStore.current.currentUserID != null
         loaded = true
     }
 
@@ -102,7 +97,7 @@ class InAppChat private constructor() {
                 displayName = displayName,
                 picture = picture
             )
-            isUserLoggedIn = Chats.current.currentUserID != null
+            isUserLoggedIn = InAppChatStore.current.currentUserID != null
         } catch (err: Error) {
             Monitoring.error(err)
         }
@@ -130,7 +125,7 @@ class InAppChat private constructor() {
                 username = username,
                 displayName = displayName
             )
-            isUserLoggedIn = Chats.current.currentUserID != null
+            isUserLoggedIn = InAppChatStore.current.currentUserID != null
         } catch (err: Error) {
             Monitoring.error(err)
         }
@@ -145,8 +140,8 @@ class InAppChat private constructor() {
         }
 
         fun logout() {
-            Chats.current.currentUserID = null
-            Chats.current.user = null
+            InAppChatStore.current.currentUserID = null
+            InAppChatStore.current.user = null
             User.current = null
             async {
                 try {
@@ -158,7 +153,7 @@ class InAppChat private constructor() {
         }
 
         fun registerFCMToken(token: String) {
-            Chats.current.fcmToken = token
+            InAppChatStore.current.fcmToken = token
             if (shared.isUserLoggedIn) {
                 opbg({
                     API.registerFcmToken(token)

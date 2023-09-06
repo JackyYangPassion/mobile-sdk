@@ -105,12 +105,12 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     }
 
     init {
-        Chats.current.invites[id]?.let {
+        InAppChatStore.current.invites[id]?.let {
             this.invites.addAll(it)
         }
-        Chats.current.cache.chats[id] = this
+        InAppChatStore.current.cache.chats[id] = this
         friend?.let {
-            Chats.current.cache.chatsByUID[it.id] = this
+            InAppChatStore.current.cache.chatsByUID[it.id] = this
         }
     }
 
@@ -136,7 +136,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     var inviting by mutableStateOf(false)
 
     companion object {
-        fun get(id: String) = Chats.current.cache.chats[id]
+        fun get(id: String) = InAppChatStore.current.cache.chats[id]
 
         fun get(chat: FChat): Chat {
             val g = get(chat.id)
@@ -147,6 +147,6 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
             return Chat(chat)
         }
 
-        fun getByUser(id: String) = Chats.current.cache.chatsByUID[id]
+        fun getByUser(id: String) = InAppChatStore.current.cache.chatsByUID[id]
     }
 }

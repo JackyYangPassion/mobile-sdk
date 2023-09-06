@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.type.NotificationSetting
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.IAC.fonts
@@ -28,23 +28,23 @@ import io.inappchat.sdk.utils.IPreviews
 @Composable
 fun Option(name: String, selected: Boolean, onClick: () -> Unit) {
     Row(
-            modifier = Modifier
-                    .height(64.dp)
-                    .padding(16.dp)
+        modifier = Modifier
+            .height(64.dp)
+            .padding(16.dp)
     ) {
         Text(name, iac = fonts.headline, color = colors.text)
         GrowSpacer()
         RadioButton(
-                selected = selected,
-                onClick = onClick,
-                colors = RadioButtonDefaults.colors(selectedColor = colors.primary)
+            selected = selected,
+            onClick = onClick,
+            colors = RadioButtonDefaults.colors(selectedColor = colors.primary)
         )
     }
 }
 
 @Composable
 fun NotificationSettingsView(back: () -> Unit) {
-    val settings = Chats.current.settings
+    val settings = InAppChatStore.current.settings
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
         Header(title = "Manage Notifications", back = back)
         Row(modifier = Modifier.padding(start = 16.dp)) {
@@ -52,37 +52,37 @@ fun NotificationSettingsView(back: () -> Unit) {
         }
         Space(20f)
         Option(
-                name = "Allow All",
-                selected = settings.notifications == NotificationSetting.all
+            name = "Allow All",
+            selected = settings.notifications == NotificationSetting.all
         ) {
             settings.setNotifications(NotificationSetting.all)
         }
         Option(
-                name = "Mentions Only",
-                selected = settings.notifications == NotificationSetting.none
+            name = "Mentions Only",
+            selected = settings.notifications == NotificationSetting.none
         ) {
             settings.setNotifications(NotificationSetting.mentions)
         }
         Option(
-                name = "None",
-                selected = settings.notifications == NotificationSetting.none
+            name = "None",
+            selected = settings.notifications == NotificationSetting.none
         ) {
             settings.setNotifications(NotificationSetting.none)
         }
         GrowSpacer()
         Row(
-                modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
             Row(
-                    modifier = Modifier
-                            .clickable { back() }
-                            .height(60.dp)
-                            .background(colors.primary, RoundedCornerShape(30.dp))
-                            .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .clickable { back() }
+                    .height(60.dp)
+                    .background(colors.primary, RoundedCornerShape(30.dp))
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
             ) {
                 Text(text = "Update".uppercase(), iac = fonts.headline, color = colors.background)
             }

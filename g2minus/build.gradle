@@ -7,13 +7,13 @@ plugins {
 
 android {
     namespace 'com.g2minus.chatapp'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.g2minus.chatapp"
         minSdk 26
-        targetSdk 33
-        versionCode 2
+        targetSdk 34
+        versionCode 4
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -21,6 +21,7 @@ android {
             useSupportLibrary true
         }
         resValue "string", rootProject.ext["giphyg2m"], "@string/giphy"
+        resValue "string", rootProject.ext["g2minusApiKey"], "@string/inappchat"
         manifestPlaceholders = [auth0Domain: "@string/com_auth0_domain", auth0Scheme: "com.g2minus.chatapp"]
     }
 

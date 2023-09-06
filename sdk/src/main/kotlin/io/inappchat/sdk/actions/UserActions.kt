@@ -5,7 +5,7 @@
 package io.inappchat.sdk.actions
 
 import io.inappchat.sdk.API
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
@@ -17,7 +17,7 @@ fun User.block() {
     blocked = !blocked
     op({
         bg { API.block(id, blocked) }
-        Chats.current.settings.setBlock(id, blocked)
+        InAppChatStore.current.settings.setBlock(id, blocked)
         blocking = false
     }) {
         blocked = !blocked

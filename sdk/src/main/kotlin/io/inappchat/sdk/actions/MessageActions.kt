@@ -7,7 +7,7 @@ package io.inappchat.sdk.actions
 import android.net.Uri
 import androidx.compose.runtime.toMutableStateList
 import io.inappchat.sdk.API
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.type.AttachmentInput
@@ -71,14 +71,14 @@ fun Message.editText(newText: String) {
 fun Message.delete() {
     parent?.replies?.items?.remove(this)
     chat.items.remove(this)
-    Chats.current.cache.messages.remove(id)
+    InAppChatStore.current.cache.messages.remove(id)
     op({
         bg { API.deleteMessage(id) }
     })
 }
 
 fun Uri.imageAttachment() = AttachmentInput(
-        url = this.toString(),
-        type = AttachmentType.image,
-        id = uuid()
+    url = this.toString(),
+    type = AttachmentType.image,
+    id = uuid()
 )

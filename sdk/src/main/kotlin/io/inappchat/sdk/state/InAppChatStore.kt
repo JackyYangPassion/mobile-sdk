@@ -9,13 +9,11 @@ import io.inappchat.sdk.API
 import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.type.ChatType
 import io.inappchat.sdk.utils.Monitoring
-import io.inappchat.sdk.utils.op
 import java.util.*
-import kotlin.collections.set
 import kotlin.properties.Delegates
 
 @Stable
-data class Chats(val id: String = UUID.randomUUID().toString()) {
+data class InAppChatStore(val id: String = UUID.randomUUID().toString()) {
 
     //    val messages = ThreadPager()
     val favorites = FavoritesPager()
@@ -105,6 +103,6 @@ data class Chats(val id: String = UUID.randomUUID().toString()) {
 
     @Stable
     companion object {
-        var current = Chats()
+        var current = InAppChatStore()
     }
 }

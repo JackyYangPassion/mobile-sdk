@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.inappchat.sdk.R
-import io.inappchat.sdk.state.Chats
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.ui.IAC.colors
 import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.IPreviews
@@ -33,73 +33,75 @@ import nl.coffeeit.aroma.emojipicker.presentation.ui.emoji.EmojiBottomSheet
 
 @Composable
 fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
-  val emojiBottomSheetDialogFragment = EmojiBottomSheet.newInstance({ emoji ->
-    onEmoji(emoji.emoji)
-  })
-  (LocalContext.current as? AppCompatActivity)?.supportFragmentManager?.let {
-    emojiBottomSheetDialogFragment.show(it, EmojiBottomSheet.TAG)
-  }
+    val emojiBottomSheetDialogFragment = EmojiBottomSheet.newInstance({ emoji ->
+        onEmoji(emoji.emoji)
+    })
+    (LocalContext.current as? AppCompatActivity)?.supportFragmentManager?.let {
+        emojiBottomSheetDialogFragment.show(it, EmojiBottomSheet.TAG)
+    }
 }
 
 @Composable
 fun EmojiBar(
-  current: String? = null,
-  onEmoji: (String) -> Unit = { Log.d("EmojiBar", "Got Emoji" + it) }
+    current: String? = null,
+    onEmoji: (String) -> Unit = { Log.d("EmojiBar", "Got Emoji" + it) }
 ) {
-  var keyboard = remember {
-    false
-  }
-  val emojis = Chats.current.settings.lastUsedReactions.toMutableList()
-  current?.let {
-    if (!emojis.contains(it)) {
-      emojis.add(0, it)
-      emojis.removeLast()
+    var keyboard = remember {
+        false
     }
-  }
-  if (keyboard) {
-    EmojiKeyboard(onEmoji)
-    return
-  }
+    val emojis = InAppChatStore.current.settings.lastUsedReactions.toMutableList()
+    current?.let {
+        if (!emojis.contains(it)) {
+            emojis.add(0, it)
+            emojis.removeLast()
+        }
+    }
+    if (keyboard) {
+        EmojiKeyboard(onEmoji)
+        return
+    }
 
-  Row(horizontalArrangement = Arrangement.SpaceEvenly,
-    modifier = Modifier.fillMaxWidth()) {
-    emojis.map { emoji ->
-      Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .circle(40.dp, colors.softBackground)
-            .border(
-                2.dp,
-                ift(current == emoji, colors.primary, Color.Transparent),
-                CircleShape
-            )
-            .clickable { onEmoji(emoji) }
-      ) {
-        androidx.compose.material3.Text(text = emoji, fontSize = 18.sp)
-      }
-    }
-    Box(
-      contentAlignment = Alignment.Center,
-      modifier = Modifier
-          .circle(40.dp, colors.softBackground)
-          .clickable { keyboard = true }
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.fillMaxWidth()
     ) {
-      Icon(
-        painter = painterResource(id = R.drawable.plus),
-        contentDescription = "more reactions",
-        tint = colors.text,
-        modifier = Modifier.size(
-          20
-        )
-      )
+        emojis.map { emoji ->
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                  .circle(40.dp, colors.softBackground)
+                  .border(
+                    2.dp,
+                    ift(current == emoji, colors.primary, Color.Transparent),
+                    CircleShape
+                  )
+                  .clickable { onEmoji(emoji) }
+            ) {
+                androidx.compose.material3.Text(text = emoji, fontSize = 18.sp)
+            }
+        }
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+              .circle(40.dp, colors.softBackground)
+              .clickable { keyboard = true }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.plus),
+                contentDescription = "more reactions",
+                tint = colors.text,
+                modifier = Modifier.size(
+                    20
+                )
+            )
+        }
     }
-  }
 }
 
 @IPreviews
 @Composable
 fun EmojiBarPreviews() {
-  InAppChatContext {
-    EmojiBar(current = "🤟")
-  }
+    InAppChatContext {
+        EmojiBar(current = "🤟")
+    }
 }

@@ -10,27 +10,27 @@ import io.inappchat.sdk.fragment.FUser
 import io.inappchat.sdk.type.DeleteEntity
 import io.inappchat.sdk.type.EntityEventType
 
-fun Chats.onCreateMessage(it: FMessage) {
+fun InAppChatStore.onCreateMessage(it: FMessage) {
     val chat = Chat.get(it.chat_id)
     chat?.let { chat ->
         chat.addMessage(Message.get(it))
     }
 }
 
-fun Chats.onCreateMember(it: FMember) {
+fun InAppChatStore.onCreateMember(it: FMember) {
     val chat = Chat.get(it.chat_id) ?: return
 
 }
 
-fun Chats.onCreateUser(it: FUser) {
+fun InAppChatStore.onCreateUser(it: FUser) {
 
 }
 
-fun Chats.onCreateChat(it: FChat) {
+fun InAppChatStore.onCreateChat(it: FChat) {
 
 }
 
-fun Chats.onCoreEvent(event: CoreSubscription.Core) {
+fun InAppChatStore.onCoreEvent(event: CoreSubscription.Core) {
     Log.v("Events", "Got Core Event ${event}")
     event.onDeleteEvent?.fDelete?.let {
         when (it.kind) {
@@ -102,14 +102,14 @@ fun Chats.onCoreEvent(event: CoreSubscription.Core) {
     }
 }
 
-fun Chats.onMeEvent(event: MeSubscription.Me) {
+fun InAppChatStore.onMeEvent(event: MeSubscription.Me) {
     Log.v("Events", "Got Me Event ${event}")
     event.onInviteEvent?.let {
         val chat = Chat.get(it.fInvite.to.fChat)
         val user = User.get(it.fInvite.by.fUser)
         chat.invites.add(user)
-        if (!Chats.current.network.items.contains(chat)) {
-            Chats.current.network.items.add(chat)
+        if (!InAppChatStore.current.network.items.contains(chat)) {
+            InAppChatStore.current.network.items.add(chat)
         }
     }
     event.onReactionEvent?.let {

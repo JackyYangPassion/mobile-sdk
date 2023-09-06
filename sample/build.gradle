@@ -7,13 +7,13 @@ plugins {
 
 android {
     namespace 'io.inappchat.sample'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "io.inappchat.sample"
         minSdk 26
-        targetSdk 33
-        versionCode 2
+        targetSdk 34
+        versionCode 4
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -21,7 +21,8 @@ android {
             useSupportLibrary true
         }
         manifestPlaceholders = [auth0Domain: "@string/com_auth0_domain", auth0Scheme: "io.inappchat.sample"]
-
+        resValue "string", rootProject.ext["giphyIAC"], "@string/giphy"
+        resValue "string", rootProject.ext["inappchatApiKey"], "@string/inappchat"
     }
 
     signingConfigs {
