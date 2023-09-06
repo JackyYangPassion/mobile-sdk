@@ -25,8 +25,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     val invites = mutableStateListOf<User>()
     var unreadCount by mutableStateOf(0)
     var typingUsers = mutableStateListOf<User>()
-    var sending = mutableStateListOf<Message>()
-    var failed = mutableStateListOf<Message>()
+    var sending = mutableStateListOf<SendingMessage>()
 
     //    var notification by mutableStateOf(NotificationSetting.all)
     var latest by mutableStateOf<Message?>(null)

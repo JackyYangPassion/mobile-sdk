@@ -20,6 +20,7 @@ fun Chat.send(
     inReplyTo: String?,
     text: String? = null,
     attachments: List<AttachmentInput>? = null,
+    upload: Upload? = null
 ) {
     val m = Message(
         id = uuid(),
@@ -45,12 +46,13 @@ fun Chat.send(
     )
     m.text = text ?: ""
     m.sending = true
-    sending.add(0, m)
+    val sendingMessage = SendingMessage(m, upload)
+    sending.add(0, sendingMessage)
     op({
         val sm = bg { API.send(id, inReplyTo, text, attachments) }
         sm?.let {
             items.add(0, it)
-            sending.remove(m)
+            sending.remove(sendingMessage)
         } ?: {
             m.failed = true
         }

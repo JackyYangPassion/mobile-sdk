@@ -13,8 +13,11 @@ import io.inappchat.sdk.fragment.FMessage
 import io.inappchat.sdk.type.AttachmentType
 import io.inappchat.sdk.utils.*
 import kotlinx.datetime.Instant
+import net.datafaker.providers.base.Bool
 import java.net.URLEncoder
 
+@Stable
+data class SendingMessage(val msg: Message, val upload: Upload? = null, var failed: Boolean = false)
 
 @Stable
 data class Message(
