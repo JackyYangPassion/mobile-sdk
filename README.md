@@ -6,7 +6,8 @@ Delightful chat for your Android apps
 
 ## Overview
 
-This SDK integrates a fully serviced chat experience on the [InAppChat](https://inappchat.io) platform.
+This SDK integrates a fully serviced chat experience on the [InAppChat](https://inappchat.io)
+platform.
 
 ## Installation
 
@@ -22,20 +23,43 @@ dependencies {
 
 ## Usage
 
-The minimum it takes to add InAppChat is four lines of code. This repo is also an example app using the Android SDK. Feel free to clone it and view the source.
+The minimum it takes to add InAppChat is four lines of code. This repo is also an example app using
+the Android SDK. Feel free to clone it and view the source.
 
 ### Initialize the SDK
 
-In your Application class, call InAppChat.setup with your API key. Create an account at [InAppChat.io](https://inappchat.io) to get your own API key. If you don't have an Application class, [create one](https://guides.codepath.com/android/Understanding-the-Android-Application-Class).
+In your Application class, call InAppChat.setup with your API key. Create an account
+at [InAppChat.io](https://inappchat.io) to get your own API key. If you don't have an Application
+class, [create one](https://guides.codepath.com/android/Understanding-the-Android-Application-Class).
 
 ```kotlin
 InAppChat.setup(apiKey)
 ```
 
+### Log your user in
+
+Before displaying the UI, you must log your user in to InAppChat via one of the designatied login
+methods. The methods return a boolean indicating if the user is logged in or not.
+
+```kotlin
+var loading by mutableStateOf(false)
+suspend fun loginToInAppChat() {
+    loading = true
+    val loggedIn = InAppChat.shared.login(
+        userId = uid,
+        picture = credentials.user.pictureURL,
+        username = credentials.user.name ?: uuid(),
+        displayName = credentials.user.nickname
+    )
+    loading = false
+}
+```
+
 ### Render the UI
 
 The InAppChat UI Kit uses Jetpack Compose.
-You can add it to any `NavHost` by rendering inside an `InAppChatContext` and adding the `InAppChatRoutes`. Navigate to InAppChat by calling `navController.navigate("chats")`
+You can add it to any `NavHost` by rendering inside an `InAppChatContext` and adding
+the `InAppChatRoutes`. Navigate to InAppChat by calling `navController.navigate("chats")`
 
 ```kotlin
 InAppChatContext {
@@ -58,7 +82,8 @@ InAppChatContext {
 
 ## Theming
 
-You can theme your InAppChat UI kit by passing in a theme to `InAppChatContext`. The theme supports fonts, colors and things like bubble border radius and image sizes. Provide a `Theme` to InAppChatUI
+You can theme your InAppChat UI kit by passing in a theme to `InAppChatContext`. The theme supports
+fonts, colors and things like bubble border radius and image sizes. Provide a `Theme` to InAppChatUI
 
 ```kotlin
 val customTheme = remember {
@@ -71,7 +96,9 @@ InAppChatContext(theme) {
 
 ### Colors, Fonts and Assets
 
-You can provide your own color themes to the theme object with a wide array of parameters. The UI kit uses both a light and a dark theme so provide both, as well as Fonts and Assets. Here's an example makeTheme function that customizes fonts, colors and assets used by the SDK
+You can provide your own color themes to the theme object with a wide array of parameters. The UI
+kit uses both a light and a dark theme so provide both, as well as Fonts and Assets. Here's an
+example makeTheme function that customizes fonts, colors and assets used by the SDK
 
 ```kotlin
 fun makeTheme(context: Context): Theme {
@@ -79,12 +106,12 @@ fun makeTheme(context: Context): Theme {
     val fontName = GoogleFont("Nunito")
 
     val provider = GoogleFont.Provider(
-            providerAuthority = "com.google.android.gms.fonts",
-            providerPackage = "com.google.android.gms",
-            certificates = array.com_google_android_gms_fonts_certs
+        providerAuthority = "com.google.android.gms.fonts",
+        providerPackage = "com.google.android.gms",
+        certificates = array.com_google_android_gms_fonts_certs
     )
     val fontFamily = FontFamily(
-            Font(googleFont = fontName, fontProvider = provider)
+        Font(googleFont = fontName, fontProvider = provider)
     )
     val app = { size: TextUnit, weight: FontWeight ->
         FontStyle(size, weight, fontFamily)
@@ -92,49 +119,66 @@ fun makeTheme(context: Context): Theme {
 
     return Theme().apply {
         light = Colors(
-                true,
-                primary = primary,
-                senderBubble = Color(0xFFC0D99E),
-                senderUsername = primary
+            true,
+            primary = primary,
+            senderBubble = Color(0xFFC0D99E),
+            senderUsername = primary
         )
         dark = Colors(
-                false,
-                primary = primary,
-                senderBubble = Color(0xFFC0D99E),
-                senderText = Color(0xFF202127),
-                senderUsername = primary
+            false,
+            primary = primary,
+            senderBubble = Color(0xFFC0D99E),
+            senderText = Color(0xFF202127),
+            senderUsername = primary
         )
         fonts = Fonts(
-                title = app(22.sp, FontWeight.ExtraBold),
-                title2 = app(20.sp, FontWeight.SemiBold),
-                title3 = app(15.sp, FontWeight.SemiBold),
-                headline = app(13.sp, FontWeight.Bold),
-                body = app(14.sp, FontWeight.Normal),
-                caption = app(12.sp, FontWeight.Normal)
+            title = app(22.sp, FontWeight.ExtraBold),
+            title2 = app(20.sp, FontWeight.SemiBold),
+            title3 = app(15.sp, FontWeight.SemiBold),
+            headline = app(13.sp, FontWeight.Bold),
+            body = app(14.sp, FontWeight.Normal),
+            caption = app(12.sp, FontWeight.Normal)
         )
         assets = Assets(
-                drawable.pp_icon,
-                emptyChannels = EmptyScreenConfig(
-                        drawable.empty_channels,
-                        "You haven't joined any channels yet"
-                ),
-                emptyChat = EmptyScreenConfig(
-                        drawable.empty_chat,
-                        "Your friends are ***dying*** to see you"
-                ),
-                emptyChats = EmptyScreenConfig(
-                        drawable.empty_threads,
-                        "You haven't added to any chats yet"
-                ),
-                emptyAllChannels = EmptyScreenConfig(
-                        drawable.empty_all_channels,
-                        "It's dead in here"
-                )
+            drawable.pp_icon,
+            emptyChannels = EmptyScreenConfig(
+                drawable.empty_channels,
+                "You haven't joined any channels yet"
+            ),
+            emptyChat = EmptyScreenConfig(
+                drawable.empty_chat,
+                "Your friends are ***dying*** to see you"
+            ),
+            emptyChats = EmptyScreenConfig(
+                drawable.empty_threads,
+                "You haven't added to any chats yet"
+            ),
+            emptyAllChannels = EmptyScreenConfig(
+                drawable.empty_all_channels,
+                "It's dead in here"
+            )
 
         )
     }
 }
 ```
+
+## Running the sample app
+
+1. Clone this Repo and open it in Android Studio
+
+2. Get an InAppChat API key by [signing up for InAppChat](https://inappchat.io)
+
+3. Get a Giphy API key
+
+4. In your local.properties file, add the following two lines:
+
+```
+inappchatApiKey=
+giphyIAC=
+```
+
+5. Run the app
 
 Happy chatting!
 
