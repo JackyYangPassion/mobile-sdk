@@ -91,28 +91,24 @@ class InAppChat private constructor() {
         }
     }
 
-    fun login(
+    suspend fun login(
         email: String,
         password: String
     ) {
         if (loggingIn) return
         loggingIn = true
-        op({
-            bg {
-                try {
-                    API.login(email = email, password = password)
-                    isUserLoggedIn = InAppChatStore.current.currentUserID != null
-                } catch (ex: Throwable) {
-                    Monitoring.error(ex)
-                }
+        bg {
+            try {
+                API.login(email = email, password = password)
+                isUserLoggedIn = InAppChatStore.current.currentUserID != null
+            } catch (ex: Throwable) {
+                Monitoring.error(ex)
             }
-            loggingIn = false
-        }) {
-            loggingIn = false
         }
+        loggingIn = false
     }
 
-    fun register(
+    suspend fun register(
         email: String,
         password: String,
         displayName: String,
@@ -120,24 +116,20 @@ class InAppChat private constructor() {
     ) {
         if (loggingIn) return
         loggingIn = true
-        op({
-            bg {
-                try {
-                    API.register(
-                        email = email,
-                        password = password,
-                        displayName = displayName,
-                        picture = profilePicture
-                    )
-                    isUserLoggedIn = InAppChatStore.current.currentUserID != null
-                } catch (ex: Throwable) {
-                    Monitoring.error(ex)
-                }
+        bg {
+            try {
+                API.register(
+                    email = email,
+                    password = password,
+                    displayName = displayName,
+                    picture = profilePicture
+                )
+                isUserLoggedIn = InAppChatStore.current.currentUserID != null
+            } catch (ex: Throwable) {
+                Monitoring.error(ex)
             }
-            loggingIn = false
-        }) {
-            loggingIn = false
         }
+        loggingIn = false
     }
 
     var loggingIn by mutableStateOf(false)
@@ -201,6 +193,7 @@ class InAppChat private constructor() {
         }
 
         fun logout() {
+            shared.onLogout?.invoke()
             InAppChatStore.current.currentUserID = null
             InAppChatStore.current.user = null
             User.current = null

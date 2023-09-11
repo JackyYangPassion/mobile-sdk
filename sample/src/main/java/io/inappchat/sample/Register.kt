@@ -19,13 +19,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,9 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -47,22 +42,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.firebase.messaging.FirebaseMessaging
 import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.ui.IAC.colors
-import io.inappchat.sdk.ui.IAC.theme
+import io.inappchat.sdk.state.Upload
+import io.inappchat.sdk.ui.IAC
+import io.inappchat.sdk.ui.views.AssetPicker
+import io.inappchat.sdk.ui.views.Avatar
 import io.inappchat.sdk.ui.views.Space
 import io.inappchat.sdk.ui.views.TextInput
-import io.inappchat.sdk.utils.launch
 import kotlinx.coroutines.launch
 import timber.log.Timber
-
-val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$".toRegex()
-fun isValidEmail(email: String): Boolean {
-    return email.matches(emailRegex)
-}
 
 
 @OptIn(
@@ -70,7 +61,7 @@ fun isValidEmail(email: String): Boolean {
     ExperimentalMaterialApi::class
 )
 @Composable
-fun Login(openChat: () -> Unit, register: () -> Unit) {
+fun Register(openChat: () -> Unit, login: () -> Unit) {
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) {
@@ -87,19 +78,26 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
     }
     val scope = rememberCoroutineScope()
     val terms = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+    var pickImage by remember { mutableStateOf(false) }
     BackHandler(enabled = true) {
         scope.launch { terms.hide() }
     }
+    var profilePicture by remember { mutableStateOf<Upload?>(null) }
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val passwordFocus = remember { FocusRequester() }
-    val canLogin = isValidEmail(email) && password.length > 4
-    val login = {
+    val canLogin =
+        isValidEmail(email) && username.length >= 4 && password.length > 4
+    val register = {
         if (canLogin) {
             Log.v("InAppChat-Sample", "Login Click")
             scope.launch {
-                InAppChat.shared.login(email, password)
-                Log.v("InAppChat-Sample", "Finish login")
+                InAppChat.shared.register(
+                    email = email,
+                    password = password,
+                    displayName = username,
+                    profilePicture = profilePicture?.url
+                )
                 if (InAppChat.shared.isUserLoggedIn) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
@@ -113,15 +111,50 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
     }, sheetState = terms) {
         LazyColumn(
             modifier = Modifier
-                .background(theme.dark.background)
+                .background(IAC.theme.dark.background)
                 .padding(24.dp)
                 .imePadding()
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom)
         ) {
             item {
-                InAppChatLogo()
-                Space(60f)
+                InAppChatHeader()
+                Space(20f)
+                Text("Register", color = Color.White, fontSize = 24.sp)
+                Space(12f)
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            pickImage = true
+                        }
+                ) {
+                    Avatar(url = profilePicture?.uri.toString(), size = 75.0)
+                }
+                Space(12f)
+                val autofillUsername =
+                    AutoFillRequestHandler(autofillTypes = listOf(AutofillType.NewUsername),
+                        onFill = {
+                            username = it
+                        }
+                    )
+                TextInput(
+                    text = username,
+                    placeholder = "Username",
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    maxLines = 1,
+                    onChange = {
+                        username = it
+                    },
+                    inputModifier = Modifier
+                        .connectNode(handler = autofillUsername)
+                        .defaultFocusChangeAutoFill(handler = autofillUsername)
+                )
+                Space(12f)
                 val autofillEmail =
                     AutoFillRequestHandler(autofillTypes = listOf(AutofillType.EmailAddress),
                         onFill = {
@@ -135,7 +168,6 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         keyboardType = KeyboardType.Email,
                         imeAction = ImeAction.Next
                     ),
-                    keyboardActions = KeyboardActions(onNext = { passwordFocus.captureFocus() }),
                     maxLines = 1,
                     onChange = {
                         email = it
@@ -160,7 +192,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         imeAction = ImeAction.Go
                     ),
                     keyboardActions = KeyboardActions(onGo = {
-                        login()
+                        register()
                     }),
                     visualTransformation = PasswordVisualTransformation(),
                     onChange = {
@@ -168,23 +200,22 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                     },
                     inputModifier = Modifier
                         .connectNode(autofillPassword)
-                        .defaultFocusChangeAutoFill(autofillPassword),
-                    focusRequester = passwordFocus
+                        .defaultFocusChangeAutoFill(autofillPassword)
                 )
 
                 ElevatedButton(
-                    onClick = login,
+                    onClick = register,
                     enabled = !InAppChat.shared.loggingIn && canLogin,
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.elevatedButtonColors(
-                        containerColor = colors.primary,
+                        containerColor = IAC.colors.primary,
                         contentColor = Color.White
                     ),
                 ) {
-                    Text(text = "Login")
+                    Text(text = "Register")
                 }
-                Space(4f)
+                Space(24f)
                 Row(
                     modifier = Modifier
                         .padding(4.dp)
@@ -194,24 +225,24 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         }, horizontalArrangement = Arrangement.Center
                 ) {
                     val annotatedString = buildAnnotatedString {
-                        append("Don't have an account? ")
+                        append("Already have an account? ")
 
                         pushStringAnnotation(
-                            tag = "register",
+                            tag = "login",
                             annotation = ""
                         )
                         withStyle(
                             style = SpanStyle(
-                                color = theme.dark.primary,
+                                color = IAC.theme.dark.primary,
                                 textDecoration = TextDecoration.Underline
                             )
                         ) {
-                            append("Create one")
+                            append("Login")
                         }
                     }
-                    Text(annotatedString, color = theme.dark.text, textAlign = TextAlign.Center)
+                    Text(annotatedString, color = IAC.theme.dark.text, textAlign = TextAlign.Center)
                 }
-                Space(16f)
+                Space(32f)
                 Row(
                     modifier = Modifier
                         .clickable {
@@ -227,24 +258,24 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         )
                         withStyle(
                             style = SpanStyle(
-                                color = theme.dark.primary,
+                                color = IAC.theme.dark.primary,
                                 textDecoration = TextDecoration.Underline
                             )
                         ) {
                             append("terms of service")
                         }
                     }
-                    Text(annotatedString, color = theme.dark.text, textAlign = TextAlign.Center)
+                    Text(annotatedString, color = IAC.theme.dark.text, textAlign = TextAlign.Center)
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun LoginPreview() {
-    MaterialTheme {
-        Login(openChat = {}, register = {})
+        if (pickImage) {
+            AssetPicker(video = false, onUri = {
+                profilePicture = Upload(uri = it)
+                pickImage = false
+            }) {
+                pickImage = false
+            }
+        }
     }
 }

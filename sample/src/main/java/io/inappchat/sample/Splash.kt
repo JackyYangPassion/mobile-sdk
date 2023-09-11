@@ -6,7 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -90,7 +92,8 @@ fun SplashPreview() {
 fun InAppChatLogo() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(15.dp)
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
         Image(
             painter = painterResource(id = R.drawable.inappchat_icon),
@@ -113,5 +116,21 @@ fun InAppChatLogo() {
 
 @Composable
 fun InAppChatHeader() {
-
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(15.dp),
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.inappchat_icon),
+            contentDescription = "InAppChat",
+            modifier = Modifier
+                .width(36.dp)
+                .height(36.dp)
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.inappchat_text),
+            contentDescription = "InAppChat",
+            tint = Color.White,
+            modifier = Modifier.height(36.dp)
+        )
+    }
 }

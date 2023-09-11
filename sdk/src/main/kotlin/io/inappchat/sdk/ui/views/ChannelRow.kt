@@ -122,7 +122,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                         AsyncImage(
                             model = it,
                             contentDescription = "${chat.name} image",
-                            contentScale = ContentScale.FillBounds,
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
                     } ?: ChatPlaceholder(modifier = Modifier.fillMaxSize())

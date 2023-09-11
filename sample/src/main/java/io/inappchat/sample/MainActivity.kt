@@ -27,7 +27,14 @@ class MainActivity : ComponentActivity() {
                             })
                         }
                         composable("login") {
-                            Login(openChat)
+                            Login(openChat) {
+                                navController.navigate("register")
+                            }
+                        }
+                        composable("register") {
+                            Register(openChat = openChat) {
+                                navController.navigate("login")
+                            }
                         }
                         InAppChatRoutes(
                             navController = navController,

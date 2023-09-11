@@ -32,7 +32,7 @@ fun Avatar(url: String?, size: Double = 35.0, chat: Boolean = false) {
             AsyncImage(
                 model = url,
                 contentDescription = "user profile picture",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(CircleShape)

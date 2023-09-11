@@ -5,6 +5,7 @@
 package io.inappchat.sdk.ui.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -21,6 +22,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.ui.IAC
 
@@ -35,6 +38,8 @@ fun TextInput(
     onChange: (String) -> Unit,
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    enabled: Boolean = true,
     inputModifier: Modifier = Modifier.focusRequester(focusRequester),
     right: @Composable () -> Unit = {}
 ) {
@@ -44,6 +49,7 @@ fun TextInput(
             .background(IAC.colors.softBackground, RoundedCornerShape(22.dp))
             .clip(RoundedCornerShape(22.dp))
             .padding(12.dp)
+            .clickable { focusRequester.requestFocus() }
     ) {
         Box(modifier = Modifier.weight(1f)) {
 
@@ -61,6 +67,8 @@ fun TextInput(
                 modifier = inputModifier.focusRequester(focusRequester),
                 keyboardActions = keyboardActions,
                 keyboardOptions = keyboardOptions,
+                enabled = enabled,
+                visualTransformation = visualTransformation
             )
             if (text.isBlank()) {
                 Text(text = placeholder, iac = IAC.fonts.body, color = IAC.colors.caption)
