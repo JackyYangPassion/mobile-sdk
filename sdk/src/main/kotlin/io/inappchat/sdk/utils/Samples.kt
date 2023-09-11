@@ -133,7 +133,6 @@ fun genM(
         )
     m.replyCount = m.replies.items.size
     m.favorite = chance(1, 5)
-    m.sending = Random.nextBoolean()
     m.chat.addMessage(m)
     m.chat.items.sortByDescending { it.createdAt }
     m.chat.latest = m.chat.items.first()

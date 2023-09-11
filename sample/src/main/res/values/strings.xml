@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">InAppChat Sample App</string>
-    <string name="auth0_client_id">yh4DVVnaoqV2iVgBlNxpymEFmDKPZEq5</string>
-    <string name="com_auth0_domain">dev-r72f2gcykjmamnqv.us.auth0.com</string>
     <string name="giphy">giphy</string>
     <string name="inappchat">inappchat</string>
 </resources>

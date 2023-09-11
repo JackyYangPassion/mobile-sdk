@@ -89,10 +89,15 @@ fun InAppChatStore.onCoreEvent(event: CoreSubscription.Core) {
             }
         }
         it.entity.onMessage?.fMessage?.let {
+            println("On new Message")
             Chat.get(it.chat_id)?.let { chat ->
+                println("Have chat for message")
                 val message = Message.get(it)
                 if (!chat.items.contains(message)) {
-                    chat.items.add(message)
+                    chat.items.add(0, message)
+                    if (Chat.currentlyViewed != message.chatID) {
+                        chat.unreadCount += 1
+                    }
                 }
                 if (!isUpdate && (chat.latest == null || chat.latest!!.createdAt < message.createdAt)) {
                     chat.latest = message

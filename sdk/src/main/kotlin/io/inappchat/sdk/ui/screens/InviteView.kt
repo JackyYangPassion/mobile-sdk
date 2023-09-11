@@ -30,7 +30,7 @@ import io.inappchat.sdk.utils.genU
 import io.inappchat.sdk.utils.random
 
 @Composable
-fun InviteView(chat: Chat, back: () -> Unit) {
+fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
     val selected = remember {
         mutableStateListOf<User>()
     }
@@ -92,6 +92,10 @@ fun InviteView(chat: Chat, back: () -> Unit) {
                         if (selected.isNotEmpty() && !chat.inviting) {
                             chat.invite(selected)
                             back()
+                            if (CreateChatState.newChats.contains(chat.id)) {
+                                CreateChatState.newChats.remove(chat.id)
+                                openChat(chat)
+                            }
                         }
                     }) {
                 Text(text = "Invite Friends", iac = fonts.headline, color = colors.background)
@@ -105,7 +109,7 @@ fun InviteView(chat: Chat, back: () -> Unit) {
 fun InvitePreview() {
     InAppChatContext {
         InAppChatStore.current.contacts.items.addAll(random(20, { genU() }))
-        InviteView(chat = genG()) {
+        InviteView(chat = genG(), {}) {
 
         }
     }

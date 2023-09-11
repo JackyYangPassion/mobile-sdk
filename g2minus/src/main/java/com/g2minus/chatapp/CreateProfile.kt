@@ -49,7 +49,12 @@ import io.inappchat.sdk.utils.IPreviews
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CreateProfile(openSignIn: () -> Unit) {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+        appState.tokens.size
+    }
     var username by remember {
         mutableStateOf("")
     }
@@ -87,7 +92,6 @@ fun CreateProfile(openSignIn: () -> Unit) {
             fontWeight = FontWeight.ExtraBold
         )
         HorizontalPager(
-            pageCount = appState.tokens.size,
             state = pagerState,
             pageSpacing = 10.dp
         ) { page ->

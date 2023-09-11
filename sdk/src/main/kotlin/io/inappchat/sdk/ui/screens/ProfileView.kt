@@ -40,7 +40,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
         ) {
-            Avatar(url = user.avatar, 150.0)
+            Avatar(url = user.avatar, 130.0)
             Space()
             Text(text = user.displayNameFb, iac = fonts.headline, color = colors.text)
             Box(
@@ -68,26 +68,26 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
                     openChat(user)
                 }
             }
-            Row(
-                    Modifier
-                            .padding(top = 8.dp, start = 8.dp)
-                            .fillMaxWidth()
-            ) {
-                Text("Shared Media", iac = fonts.body, color = colors.text)
-            }
-            val listState = rememberLazyListState()
-            LazyRow(
-                    state = listState, modifier = Modifier
-                    .padding(start = 16.dp, top = 8.dp)
-                    .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-//                itemsIndexed(
-//                        user.sharedMedia.items,
-//                        key = { index, item -> item.id }) { index, item ->
-//                    MessageContent(message = item)
-//                }
-            }
+//            Row(
+//                    Modifier
+//                            .padding(top = 8.dp, start = 8.dp)
+//                            .fillMaxWidth()
+//            ) {
+//                Text("Shared Media", iac = fonts.body, color = colors.text)
+//            }
+//            val listState = rememberLazyListState()
+//            LazyRow(
+//                    state = listState, modifier = Modifier
+//                    .padding(start = 16.dp, top = 8.dp)
+//                    .fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+////                itemsIndexed(
+////                        user.sharedMedia.items,
+////                        key = { index, item -> item.id }) { index, item ->
+////                    MessageContent(message = item)
+////                }
+//            }
             Space(24f)
             Divider(color = colors.caption)
             if (!user.isCurrent) {

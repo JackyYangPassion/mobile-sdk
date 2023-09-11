@@ -40,7 +40,7 @@ fun SimpleRow(
                 painter = painterResource(id = icon),
                 contentDescription = "icon",
                 modifier = Modifier.size(40),
-                colorFilter = ColorFilter.tint(if (destructive) colors.destructive else if (iconPrimary) colors.primary else colors.caption)
+                colorFilter = ColorFilter.tint(if (destructive) colors.destructive else if (iconPrimary) colors.primary else colors.text)
             )
             Text(
                 text = text,

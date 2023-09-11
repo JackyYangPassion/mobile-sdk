@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.style.TextOverflow
+import io.inappchat.sdk.actions.markRead
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.User
@@ -48,6 +49,16 @@ fun ChatChat(
     val menu = androidx.compose.material.rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden, skipHalfExpanded = true
     )
+    DisposableEffect(key1 = chat.id, effect = {
+        Chat.currentlyViewed = chat.id
+        chat.markRead()
+        onDispose {
+            if (chat.id == Chat.currentlyViewed) {
+                Chat.currentlyViewed = null
+            }
+            chat.markRead()
+        }
+    })
     MediaActionSheet(
         state = media,
         chat = chat,

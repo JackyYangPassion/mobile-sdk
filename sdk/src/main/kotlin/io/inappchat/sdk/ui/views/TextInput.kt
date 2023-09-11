@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
@@ -31,15 +34,19 @@ fun TextInput(
     maxLines: Int = 4,
     onChange: (String) -> Unit,
     keyboardActions: KeyboardActions = KeyboardActions(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    inputModifier: Modifier = Modifier.focusRequester(focusRequester),
     right: @Composable () -> Unit = {}
 ) {
     Row(
         modifier = modifier
-          .defaultMinSize(minHeight = 44.dp)
-          .background(IAC.colors.softBackground, RoundedCornerShape(22.dp))
-          .padding(12.dp)
+            .defaultMinSize(minHeight = 44.dp)
+            .background(IAC.colors.softBackground, RoundedCornerShape(22.dp))
+            .clip(RoundedCornerShape(22.dp))
+            .padding(12.dp)
     ) {
         Box(modifier = Modifier.weight(1f)) {
+
             BasicTextField(
                 value = text,
                 onValueChange = onChange,
@@ -51,8 +58,9 @@ fun TextInput(
                 ),
                 minLines = minLines,
                 maxLines = maxLines,
-                modifier = Modifier.focusRequester(focusRequester),
-                keyboardActions = keyboardActions
+                modifier = inputModifier.focusRequester(focusRequester),
+                keyboardActions = keyboardActions,
+                keyboardOptions = keyboardOptions,
             )
             if (text.isBlank()) {
                 Text(text = placeholder, iac = IAC.fonts.body, color = IAC.colors.caption)

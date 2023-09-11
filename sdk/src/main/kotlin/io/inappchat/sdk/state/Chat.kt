@@ -128,6 +128,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
                 return
             latest = Message.get(chat.last_message.fMessage)
         }
+        unreadCount = chat.unread_count
     }
 
     var updating by mutableStateOf(false)
@@ -147,5 +148,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
         }
 
         fun getByUser(id: String) = InAppChatStore.current.cache.chatsByUID[id]
+
+        var currentlyViewed: String? = null
     }
 }

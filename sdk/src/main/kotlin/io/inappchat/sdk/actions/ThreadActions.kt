@@ -13,6 +13,7 @@ import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.type.NotificationSetting
 import io.inappchat.sdk.utils.bg
 import io.inappchat.sdk.utils.op
+import io.inappchat.sdk.utils.opbg
 import io.inappchat.sdk.utils.uuid
 import kotlinx.datetime.Clock
 
@@ -50,21 +51,24 @@ fun Chat.send(
     )
     m.text = text ?: ""
     val sendingMessage = SendingMessage(m, upload = upload, attachments = attachments ?: listOf())
-    sending.add(0, sendingMessage)
-
+    send(sendingMessage)
 }
 
 fun Chat.send(sendingMessage: SendingMessage) {
     if (!sending.contains(sendingMessage)) {
         sending.add(0, sendingMessage)
     }
+    print("Sending Message")
     op({
         val sm = bg {
             val attachments = sendingMessage.attachments.toMutableList()
             if (sendingMessage.upload != null) {
+                print("Awaiting upload")
                 val upload = sendingMessage.upload.awaitAttachment()
+                println("Got Upload " + upload.url)
                 attachments.add(upload)
             }
+            println("Sending")
             API.send(
                 id,
                 id = sendingMessage.msg.id,
@@ -96,4 +100,11 @@ fun Chat.setNotifications(settings: NotificationSetting, isSync: Boolean) {
     }) {
         this.notification_setting = og
     }
+}
+
+fun Chat.markRead() {
+    unreadCount = 0
+    opbg({
+        API.markChatRead(id)
+    })
 }

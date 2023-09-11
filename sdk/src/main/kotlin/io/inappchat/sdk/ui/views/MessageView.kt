@@ -45,8 +45,6 @@ fun MessageView(
     val current = message.user.isCurrent
     val align = if (current) theme.senderAlignment else theme.messageAlignment
 
-
-
     Column(
         horizontalAlignment = align,
         modifier = Modifier
@@ -67,7 +65,6 @@ fun MessageView(
                 .fillMaxWidth(0.8f)
         ) {
             if (align == Alignment.Start) {
-                Spinner(loading = message.sending && current)
                 Favorite(message.favorite)
                 Avvy(message.user.avatar) { onPressUser(message.user) }
                 Content(msg = message, modifier = Modifier.weight(1f))
@@ -75,7 +72,6 @@ fun MessageView(
                 Content(msg = message, modifier = Modifier.weight(1f))
                 Avvy(message.user.avatar) { onPressUser(message.user) }
                 Favorite(message.favorite)
-                Spinner(loading = message.sending && current)
             }
         }
     }

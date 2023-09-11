@@ -95,12 +95,24 @@ fun Tabs(
                         .clickable { openTab(tab) },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        painter = painterResource(id = tab.icon),
-                        contentDescription = tab.route,
-                        tint = if (selectedTab == tab) colors.primary else colors.caption,
-                        modifier = Modifier.size(45.dp)
-                    )
+                    if (tab == Tab.home) {
+                        Box(contentAlignment = Alignment.TopEnd) {
+                            Icon(
+                                painter = painterResource(id = tab.icon),
+                                contentDescription = tab.route,
+                                tint = if (selectedTab == tab) colors.primary else colors.caption,
+                                modifier = Modifier.size(45.dp)
+                            )
+                        }
+                    } else {
+                        Icon(
+                            painter = painterResource(id = tab.icon),
+                            contentDescription = tab.route,
+                            tint = if (selectedTab == tab) colors.primary else colors.caption,
+                            modifier = Modifier.size(45.dp)
+                        )
+                    }
+
                 }
             }
         }

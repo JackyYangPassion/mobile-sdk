@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.state.Chat
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
@@ -22,7 +23,12 @@ import io.inappchat.sdk.ui.screens.ProfileView
 import io.inappchat.sdk.ui.screens.SearchView
 import io.inappchat.sdk.ui.screens.Tabs
 
-fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphBuilder) {
+fun InAppChatRoutes(
+    navController: NavHostController,
+    navGraphBuilder: NavGraphBuilder,
+    onLogout: () -> Unit
+) {
+    InAppChat.shared.onLogout = onLogout
     val openChat = { it: Chat -> navController.navigate(it.path) }
     val openReplies = { it: Message ->
         navController.navigate(it.path)
@@ -41,7 +47,7 @@ fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphB
             openReplies = openReplies,
             openProfile = { openProfile(it) },
             openCompose = {},
-            openCreateChat = { navController.navigate("chat/new") },
+            openCreateChat = { navController.navigate("chats/new") },
             openSearch = { navController.navigate("search") },
             openFavorites = { navController.navigate("favorites") },
             openNotificationSettings = { navController.navigate("settings/notifications") },
@@ -107,7 +113,8 @@ fun InAppChatRoutes(navController: NavHostController, navGraphBuilder: NavGraphB
         ) {
             InviteView(
                 chat = Chat.get(it.arguments?.getString("id")!!)!!,
-                back = back
+                back = back,
+                openChat = openChat
             )
         }
         composable(

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -75,6 +76,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                                 .height(
                                     theme.imagePreviewSize.height.dp
                                 )
+                                .clip(RoundedCornerShape(15.dp))
                         )
 
                         AttachmentType.video -> VideoPlayer(
@@ -82,6 +84,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                             modifier = Modifier
                                 .width(theme.videoPreviewSize.width.dp)
                                 .height(theme.videoPreviewSize.height.dp)
+                                .clip(RoundedCornerShape(15.dp))
                         )
 
                         AttachmentType.audio -> AudioPlayer(

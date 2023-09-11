@@ -46,7 +46,12 @@ class MainActivity : ComponentActivity() {
                     composable("sign-in") {
                         SignIn(openChat)
                     }
-                    InAppChatRoutes(navController = navController, navGraphBuilder = this)
+                    InAppChatRoutes(
+                        navController = navController,
+                        navGraphBuilder = this,
+                        onLogout = {
+                            navController.navigate("login")
+                        })
                 }
             }
         }

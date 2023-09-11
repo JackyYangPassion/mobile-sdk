@@ -16,10 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.inappchat.sdk.R
@@ -128,13 +130,16 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                 Space(8f)
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        val configuration = LocalConfiguration.current
+                        val screenWidth = configuration.screenWidthDp
                         Text(
                             chat.displayName.annotated(),
                             theme.fonts.title3,
                             color = colors.text,
                             maxLines = 1,
                             softWrap = false,
-                            modifier = Modifier.requiredWidth(IntrinsicSize.Min)
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.heightIn(0.dp, (screenWidth * 0.5).dp)
                         )
                         Space()
                         PrivacyPill(chat._private)

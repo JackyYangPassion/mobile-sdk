@@ -324,6 +324,7 @@ fun LocationPicker(onLocation: (Location) -> Unit, onCancel: () -> Unit) {
     val activity = LocalContext.current as Activity
     LaunchedEffect(key1 = have, block = {
         if (have) {
+            onCancel()
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
             val cancellationToken = CancellationTokenSource()
             val loc = fusedLocationClient.getCurrentLocation(

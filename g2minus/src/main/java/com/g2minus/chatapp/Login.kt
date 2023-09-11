@@ -158,21 +158,8 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
                     Text("Fetching Tokens", color = Color.White)
                 } else {
                     ElevatedButton(onClick = {
-                        if (isEthLogin) {
-                            scope.launch {
-                                state.show()
-                            }
-                        } else {
-                            launch {
-                                App.app.login(activity as Activity)
-                                if (InAppChat.shared.isUserLoggedIn) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                    } else {
-                                        onPermission(true)
-                                    }
-                                }
-                            }
+                        scope.launch {
+                            state.show()
                         }
                     }, enabled = !InAppChat.shared.loggingIn, modifier = Modifier.fillMaxWidth()) {
                         if (isEthLogin) {

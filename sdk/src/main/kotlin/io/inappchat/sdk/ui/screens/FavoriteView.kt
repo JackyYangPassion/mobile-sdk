@@ -6,6 +6,7 @@ package io.inappchat.sdk.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.User
@@ -24,8 +25,11 @@ fun FavoritesView(
     openProfile: (User) -> Unit,
     scrollToTop: Int
 ) {
+    LaunchedEffect(key1 = true, block = {
+        InAppChatStore.current.favorites.loadMoreIfEmpty()
+    })
     Column {
-        Header(title = "Favorites", back = back)
+        Header(title = "Favorite Messages", back = back)
         PagerList(pager = InAppChatStore.current.favorites, scrollToTop = scrollToTop.toString()) {
             MessageView(message = it, onPressUser = openProfile, onLongPress = {}, onClick = {
                 openReplies(it)

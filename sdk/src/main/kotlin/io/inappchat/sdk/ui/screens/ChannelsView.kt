@@ -45,7 +45,7 @@ fun ChannelsView(
                 }
             })
         }
-        Header(title = "All Channels", search = search, add = openCreateChat)
+        Header(title = "All Channels", add = openCreateChat)
     }
 }
 

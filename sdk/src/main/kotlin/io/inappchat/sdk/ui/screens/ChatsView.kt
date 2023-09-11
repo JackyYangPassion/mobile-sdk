@@ -40,7 +40,7 @@ fun ChatsView(
     }
     val header = @Composable {
         Column {
-            Header(title = "Messages", compose = openCompose, search = openSearch)
+            Header(title = "Chats")
             ChatTabs(list = list, onSelect = { list = it })
         }
     }

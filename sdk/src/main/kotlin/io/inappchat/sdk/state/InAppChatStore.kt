@@ -91,13 +91,21 @@ data class InAppChatStore(val id: String = UUID.randomUUID().toString()) {
 
     fun count(list: List): Int =
         when (list) {
-            List.dms ->
-                dms.sumOf { it.unreadCount }
+            List.dms -> {
+                val it = dms.sumOf { it.unreadCount }
+                println("Dms unread count $it")
+                it
+            }
 
-            List.groups ->
-                groups.sumOf { it.unreadCount }
+            List.groups -> {
+                val it = groups.sumOf { it.unreadCount }
+                print("groups unread count $it")
+                it
+            }
         }
 
+    val totalCount: Int
+        get() = dms.sumOf { it.unreadCount } + groups.sumOf { it.unreadCount }
     var nextGif: ((String) -> Unit)? = null
 
 

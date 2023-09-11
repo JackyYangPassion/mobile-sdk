@@ -34,7 +34,9 @@ abstract class Pager<T : Identifiable>(
 
     fun loadMoreIfEmpty() {
         if (items.isEmpty()) {
-            loadMore()
+            if (hasMore)
+                loadMore()
+            else refresh()
         }
     }
 

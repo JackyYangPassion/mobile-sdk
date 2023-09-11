@@ -9,6 +9,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import ezvcard.Ezvcard
 import ezvcard.VCard
 import io.inappchat.sdk.API
+import io.inappchat.sdk.actions.send
 import io.inappchat.sdk.fragment.FMessage
 import io.inappchat.sdk.type.AttachmentInput
 import io.inappchat.sdk.type.AttachmentType
@@ -21,11 +22,24 @@ import java.net.URLEncoder
 data class SendingMessage(
     val msg: Message,
     val attachments: List<AttachmentInput> = listOf(),
-    val upload: Upload? = null,
-    var failed: Boolean = false
+    val upload: Upload? = null
 ) : Identifiable {
     override val id: String
         get() = msg.id
+
+    var failed by mutableStateOf(false)
+
+//    fun retry() {
+//        if (failed) {
+//            failed = false
+//            if (upload != null) {
+//                if (upload.error != null) {
+//                    upload.upload()
+//                }
+//            }
+//            msg.chat.send(this)
+//        }
+//    }
 }
 
 @Stable
@@ -121,6 +135,7 @@ data class Message(
         }
 
         fun get(apiMessage: FMessage): Message {
+            User.get((apiMessage.user.fUser))
             val m = get(apiMessage.id)
             if (m != null) {
                 m.update(apiMessage)

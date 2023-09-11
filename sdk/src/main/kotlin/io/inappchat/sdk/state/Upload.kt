@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import io.inappchat.sdk.API
 import io.inappchat.sdk.InAppChat
 import io.inappchat.sdk.Server
 import io.inappchat.sdk.type.AttachmentInput
@@ -29,11 +30,13 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+fun Uri.contentType() = InAppChat.shared.appContext.contentResolver.getType(this)
+    ?.toMediaTypeOrNull()
+
 fun Uri.asRequestBody(): RequestBody {
     return object : RequestBody() {
-        override fun contentType() =
-            InAppChat.shared.appContext.contentResolver.getType(this@asRequestBody)
-                ?.toMediaTypeOrNull()
+        override fun contentType() = this@asRequestBody.contentType()
+
 
         override fun contentLength() = -1L
 
@@ -68,7 +71,6 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
 
     suspend fun awaitAttachment() = await().let { attachment()!! }
 
-    var mediaType: MediaType? = null
 
     fun upload() {
         if (url != null) return
@@ -80,9 +82,11 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
             try {
                 response = bg {
                     val body = uri.asRequestBody()
-                    mediaType = body.contentType()
                     val request = Request.Builder()
                         .url(Server.http + "/misc/upload/${UUID.randomUUID()}")
+                        .addHeader("X-API-Key", InAppChat.shared.apiKey)
+                        .addHeader("X-Device-ID", API.deviceId)
+                        .addHeader("Referer", InAppChat.shared.packageName)
                         .post(body)
                         .build()
                     uploadClient.newCall(request).execute()
@@ -93,6 +97,7 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
                     url = response.body?.string()?.let { JSONObject(it).getString("url") }
                 }
             } catch (err: Error) {
+                println("Upload error")
                 Monitoring.error(err)
                 error = err
             } finally {
@@ -113,7 +118,7 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
     }
 
     fun attachmentType(): AttachmentType {
-        val mime = mediaType?.type
+        val mime = uri.contentType()?.type
         if (mime != null) {
             if (mime.startsWith("image")) return AttachmentType.image
             if (mime.startsWith("video")) return AttachmentType.video

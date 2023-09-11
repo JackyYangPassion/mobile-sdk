@@ -20,11 +20,14 @@ import io.inappchat.sdk.state.User
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.async
 import io.inappchat.sdk.utils.bg
+import io.inappchat.sdk.utils.op
 import io.inappchat.sdk.utils.opbg
+import io.inappchat.sdk.utils.retryIO
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.lang.Exception
 
 @Stable
 class InAppChat private constructor() {
@@ -35,11 +38,15 @@ class InAppChat private constructor() {
     lateinit var prefs: SharedPreferences
     lateinit var apiKey: String
     lateinit var imageLoader: ImageLoader
+    lateinit var packageName: String
+
+    var onLogout: (() -> Unit)? = null
 
     fun setup(appContext: Context, apiKey: String, delayLoad: Boolean = false) {
         this.appContext = appContext
         this.prefs = appContext.getSharedPreferences("inappchat", Context.MODE_PRIVATE)
         this.apiKey = apiKey
+        this.packageName = appContext.packageName
         InAppChatStore.current.init()
         InAppChatStore.current.contacts.requestContacts =
             ContextCompat.checkSelfPermission(
@@ -51,9 +58,12 @@ class InAppChat private constructor() {
             Log.v("InAppChat", "Launch load")
             scope.launch {
                 Log.v(TAG, "Launching load in bg")
-                bg {
-                    Log.v(TAG, "Loading app")
-                    load()
+                op({
+                    bg {
+                        load()
+                    }
+                }) {
+
                 }
             }
         }
@@ -74,9 +84,60 @@ class InAppChat private constructor() {
         }
         if (didStartLoading) throw Error("SDK Already initialized")
         didStartLoading = true
-        InAppChatStore.current.loadAsync()
-        isUserLoggedIn = InAppChatStore.current.currentUserID != null
-        loaded = true
+        retryIO {
+            InAppChatStore.current.loadAsync()
+            isUserLoggedIn = InAppChatStore.current.currentUserID != null
+            loaded = true
+        }
+    }
+
+    fun login(
+        email: String,
+        password: String
+    ) {
+        if (loggingIn) return
+        loggingIn = true
+        op({
+            bg {
+                try {
+                    API.login(email = email, password = password)
+                    isUserLoggedIn = InAppChatStore.current.currentUserID != null
+                } catch (ex: Throwable) {
+                    Monitoring.error(ex)
+                }
+            }
+            loggingIn = false
+        }) {
+            loggingIn = false
+        }
+    }
+
+    fun register(
+        email: String,
+        password: String,
+        displayName: String,
+        profilePicture: String? = null
+    ) {
+        if (loggingIn) return
+        loggingIn = true
+        op({
+            bg {
+                try {
+                    API.register(
+                        email = email,
+                        password = password,
+                        displayName = displayName,
+                        picture = profilePicture
+                    )
+                    isUserLoggedIn = InAppChatStore.current.currentUserID != null
+                } catch (ex: Throwable) {
+                    Monitoring.error(ex)
+                }
+            }
+            loggingIn = false
+        }) {
+            loggingIn = false
+        }
     }
 
     var loggingIn by mutableStateOf(false)

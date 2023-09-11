@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">G2minus</string>
-    <string name="auth0_client_id">IpGTctKKjImbE7dTVnR2f6limBaN3Pmz</string>
-    <string name="com_auth0_domain">dev-r72f2gcykjmamnqv.us.auth0.com</string>
     <string name="giphy">giphy</string>
     <string name="inappchat">inappchat</string>
 </resources>

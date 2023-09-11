@@ -21,7 +21,9 @@ class InAppChatActivity : AppCompatActivity() {
             InAppChatContext {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "chats") {
-                    InAppChatRoutes(navController, this)
+                    InAppChatRoutes(navController, this) {
+                        this@InAppChatActivity.finish()
+                    }
                 }
             }
         }

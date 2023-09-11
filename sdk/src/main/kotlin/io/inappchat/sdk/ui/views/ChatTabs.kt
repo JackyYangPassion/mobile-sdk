@@ -66,7 +66,7 @@ fun ChatTabs(list: InAppChatStore.List, onSelect: (InAppChatStore.List) -> Unit)
             Tab(
                 tab = tab,
                 selected = list == tab,
-                unreadCount = InAppChatStore.current.count(list),
+                unreadCount = InAppChatStore.current.count(tab),
                 modifier = Modifier.weight(1f),
                 onPress = onSelect
             )

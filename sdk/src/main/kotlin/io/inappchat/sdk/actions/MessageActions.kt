@@ -44,7 +44,7 @@ fun Message.toggleFavorite() {
     favorite = !favorite
     op({
         bg {
-            API.favorite(id, favorite)
+            API.favorite(id, !favorite)
         }
         favoriting = false
     }) {
@@ -87,6 +87,9 @@ fun Uri.imageAttachment() = AttachmentInput(
 fun SendingMessage.retry() {
     if (failed) {
         failed = false
+        if (upload?.error != null) {
+            upload.upload()
+        }
         msg.chat.send(this)
     }
 }

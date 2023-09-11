@@ -6,7 +6,12 @@ package io.inappchat.sdk
 
 import android.util.Log
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloRequest
+import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Operation
 import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo3.interceptor.ApolloInterceptor
+import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
 import com.apollographql.apollo3.network.http.DefaultHttpEngine
 import com.apollographql.apollo3.network.http.LoggingInterceptor
 import com.apollographql.apollo3.network.ws.GraphQLWsProtocol
@@ -22,6 +27,7 @@ import io.inappchat.sdk.state.User
 import io.inappchat.sdk.state.onCoreEvent
 import io.inappchat.sdk.state.onMeEvent
 import io.inappchat.sdk.type.AttachmentInput
+import io.inappchat.sdk.type.ChatRegisterInput
 import io.inappchat.sdk.type.CreateGroupInput
 import io.inappchat.sdk.type.DeviceType
 import io.inappchat.sdk.type.EthLoginInput
@@ -34,12 +40,15 @@ import io.inappchat.sdk.type.SendMessageInput
 import io.inappchat.sdk.type.UpdateGroupInput
 import io.inappchat.sdk.type.UpdateMessageInput
 import io.inappchat.sdk.type.UpdateProfileInput
+import io.inappchat.sdk.ui.InAppChatContext
 import io.inappchat.sdk.utils.Monitoring
 import io.inappchat.sdk.utils.ift
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -66,6 +75,7 @@ object API {
 
     var authToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
         InAppChat.shared.prefs.edit().putString("auth-token", newValue).apply()
+        client.subscriptionNetworkTransport
     }
 
     var client = ApolloClient.Builder()
@@ -74,7 +84,12 @@ object API {
             WebSocketNetworkTransport.Builder()
                 .protocol(GraphQLWsProtocol.Factory(
                     connectionPayload = {
-                        authToken?.let { mapOf("authToken" to it) } ?: mapOf()
+                        authToken?.let {
+                            mapOf(
+                                "authToken" to it,
+                                "apiKey" to InAppChat.shared.apiKey
+                            )
+                        } ?: mapOf("apiKey" to InAppChat.shared.apiKey)
                     }
                 ))
                 .serverUrl(Server.ws + "/graphql")
@@ -89,6 +104,7 @@ object API {
                                 authToken?.let { addHeader("Authorization", "Bearer $it") }
                                 addHeader("X-API-Key", InAppChat.shared.apiKey)
                                 addHeader("X-Device-ID", deviceId)
+                                addHeader("Referer", InAppChat.shared.packageName)
                             }.build()
                         chain.proceed(request)
                     })
@@ -101,6 +117,24 @@ object API {
             )
         )
         .addHttpInterceptor(LoggingInterceptor())
+        .addInterceptor(object : ApolloInterceptor {
+            override fun <D : Operation.Data> intercept(
+                request: ApolloRequest<D>,
+                chain: ApolloInterceptorChain
+            ): Flow<ApolloResponse<D>> {
+                return chain.proceed(request).onEach { response ->
+                    response.errors?.let {
+                        for (err in it) {
+                            println("Got error " + err.message)
+                            if (err.message == "login required") {
+                                onLogout()
+                            }
+                        }
+                    }
+                }
+            }
+
+        })
         .build()
 
 
@@ -113,6 +147,9 @@ object API {
         }
         this.deviceId = deviceId
         this.authToken = InAppChat.shared.prefs.getString("auth-token", null)
+        if (authToken != null) {
+            subscribe()
+        }
     }
 
 
@@ -273,6 +310,7 @@ object API {
         subscriptionScope.launch {
             client.subscription(CoreSubscription()).toFlow().collectLatest {
                 it.data?.let {
+                    println("Got subscription event $it")
                     InAppChat.shared.scope.launch {
                         InAppChatStore.current.onCoreEvent(it.core)
                     }
@@ -283,6 +321,7 @@ object API {
 
             client.subscription(MeSubscription()).toFlow().collectLatest {
                 it.data?.let {
+
                     InAppChat.shared.scope.launch {
                         InAppChatStore.current.onMeEvent(it.me)
                     }
@@ -326,6 +365,46 @@ object API {
         throw Error("There was a problem logging in")
     }
 
+    suspend fun login(
+        email: String,
+        password: String,
+    ) {
+        val res = client.mutation(
+            BasicLoginMutation(
+                email = email,
+                password = password,
+            )
+        ).execute().dataOrThrow().basicLogin
+        if (res != null) {
+            onLogin(res.token, res.user.fUser)
+            return
+        }
+        throw Error("There was a problem logging in")
+    }
+
+    suspend fun register(
+        email: String,
+        password: String,
+        displayName: String,
+        picture: String?
+    ) {
+        val res = client.mutation(
+            ChatRegisterMutation(
+                ChatRegisterInput(
+                    email = email,
+                    password = password,
+                    username = displayName,
+                    image = Optional.presentIfNotNull(picture)
+                )
+            )
+        ).execute().dataOrThrow().chatRegister
+        if (res != null) {
+            onLogin(res.token, res.user.fUser)
+            return
+        }
+        throw Error("There was a problem logging in")
+    }
+
     suspend fun nftLogin(
         wallet: String,
         tokenID: String,
@@ -357,9 +436,23 @@ object API {
 
     suspend fun logout() {
         client.mutation(LogoutMutation()).execute().data?.logout
+        InAppChat.shared.scope.launch {
+            onLogout()
+        }
+    }
+
+    fun onLogout() {
+        InAppChat.shared.onLogout?.invoke()
         unsubscribe()
         authToken = null
+        val store = InAppChatStore.current
+        store.user = null
+        store.currentUserID = null
+        InAppChatStore.current = InAppChatStore()
+        InAppChat.shared.isUserLoggedIn = false
+        InAppChat.shared.loaded = true
     }
+
 
     suspend fun block(id: String, isBlock: Boolean) =
         if (isBlock)
@@ -422,8 +515,8 @@ object API {
 
     suspend fun registerFcmToken(token: String) =
         client.mutation(RegisterPushMutation(token, DeviceType.ANDROID, Optional.present(true)))
-//            .execute()
-//            .dataOrThrow().registerPush
+            .execute()
+            .dataOrThrow().registerPush
 
     suspend fun me(): User =
         client.query(GetMeQuery()).execute().dataOrThrow().let { data ->
@@ -436,5 +529,8 @@ object API {
                 User.get(it.fUser)
             }
         }
+
+    suspend fun markChatRead(id: String) =
+        client.mutation(MarkChatReadMutation(id)).execute().dataOrThrow().markChatRead
 
 }

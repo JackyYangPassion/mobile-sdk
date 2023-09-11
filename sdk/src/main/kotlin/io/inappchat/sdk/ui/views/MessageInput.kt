@@ -57,7 +57,8 @@ fun MessageInput(
                 onChange = { text = it },
                 focusRequester = focusRequester,
                 modifier = Modifier.weight(1f),
-                keyboardActions = KeyboardActions(onDone = { onSend() })
+                keyboardActions = KeyboardActions(onDone = { onSend() }),
+                placeholder = "Send a message"
             ) {
                 IconButton(onClick = onMedia, modifier = Modifier.size(20.dp)) {
                     Icon(
@@ -68,14 +69,19 @@ fun MessageInput(
                     )
                 }
             }
-            Space(8f)
-            IconButton(onClick = onSend, modifier = Modifier.circle(44.dp, colors.softBackground)) {
-                Icon(
-                    painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
-                    contentDescription = "send message",
-                    modifier = Modifier.size(22.dp),
-                    tint = colors.primary
-                )
+            if (!text.isNullOrBlank()) {
+                Space(8f)
+                IconButton(
+                    onClick = onSend,
+                    modifier = Modifier.circle(44.dp, colors.softBackground)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
+                        contentDescription = "send message",
+                        modifier = Modifier.size(22.dp),
+                        tint = colors.primary
+                    )
+                }
             }
         }
     }

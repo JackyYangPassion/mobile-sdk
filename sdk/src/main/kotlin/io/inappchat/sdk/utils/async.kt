@@ -6,6 +6,7 @@ package io.inappchat.sdk.utils
 
 import io.inappchat.sdk.InAppChat
 import kotlinx.coroutines.*
+import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 fun launch(
@@ -45,3 +46,24 @@ fun opbg(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn
 fun <T : Unit> async(block: suspend CoroutineScope.() -> T) =
     launch(Dispatchers.IO, block = block)
 
+suspend fun <T> retryIO(
+    times: Int = Int.MAX_VALUE,
+    initialDelay: Long = 100, // 0.1 second
+    maxDelay: Long = 1000,    // 1 second
+    factor: Double = 2.0,
+    block: suspend () -> T
+): T {
+    var currentDelay = initialDelay
+    repeat(times - 1) {
+        try {
+            return block()
+        } catch (e: Exception) {
+            // you can log an error here and/or make a more finer-grained
+            // analysis of the cause to see if retry is needed
+            println(e)
+        }
+        delay(currentDelay)
+        currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
+    }
+    return block() // last attempt
+}

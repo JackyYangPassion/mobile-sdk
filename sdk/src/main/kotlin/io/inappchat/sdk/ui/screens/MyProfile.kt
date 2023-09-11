@@ -43,7 +43,7 @@ fun MyProfile(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Avatar(url = User.current?.avatar, 150.0)
+            Avatar(url = User.current?.avatar, 130.0)
             Space()
             Text(
                 text = User.current?.username ?: "",
@@ -73,13 +73,21 @@ fun MyProfile(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.clickable { logoutDialogue = false }) {
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable { logoutDialogue = false }) {
                         Text(text = "No", iac = fonts.headline, color = colors.text)
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.clickable { InAppChat.logout() }
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable {
+                                logoutDialogue = false
+                                InAppChat.logout() }
                     ) {
                         Text(text = "Log out", iac = fonts.headline, color = colors.primary)
                     }

@@ -20,29 +20,29 @@ import io.inappchat.sdk.utils.ift
 
 @Composable
 fun PrivacyPill(_private: Boolean = false) {
-  Box(
-    contentAlignment = Alignment.Center,
-    modifier = Modifier
-        .background(
-            ift(_private, IAC.theme.colors._private, IAC.theme.colors._public),
-            RoundedCornerShape(8.dp)
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .background(
+                ift(!_private, IAC.theme.colors._private, IAC.theme.colors._public),
+                RoundedCornerShape(8.dp)
+            )
+            .padding(6.dp, 1.dp)
+            .requiredWidth(IntrinsicSize.Max)
+    ) {
+        Text(
+            (if (_private) "Private" else "Public").uppercase().annotated(),
+            fonts.mini,
+            color = Color.White,
         )
-        .padding(6.dp, 1.dp)
-      .requiredWidth(IntrinsicSize.Max)
-  ) {
-    Text(
-      (if (_private) "Private" else "Public").uppercase().annotated(),
-      fonts.mini,
-      color = Color.White,
-    )
-  }
+    }
 }
 
 @IPreviews
 @Composable
 fun PrivacyPillPreview() {
-  Column {
-    PrivacyPill(true)
-    PrivacyPill(false)
-  }
+    Column {
+        PrivacyPill(true)
+        PrivacyPill(false)
+    }
 }
