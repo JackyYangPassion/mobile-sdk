@@ -42,12 +42,12 @@ dependencyResolutionManagement {
 
 &nbsp;
 
-Add `io.inappchat:sdk:1.0.0` to your dependencies
+Add `io.inappchat:sdk:1.0.1` to your dependencies
 
 ```gradle
 
 dependencies {
-    implementation 'io.inappchat:sdk:1.0.0'
+    implementation 'io.inappchat:sdk:1.0.1'
 }
 
 ```
