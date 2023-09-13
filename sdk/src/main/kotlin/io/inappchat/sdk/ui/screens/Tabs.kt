@@ -21,8 +21,10 @@ import androidx.compose.ui.unit.dp
 import io.inappchat.sdk.R
 import io.inappchat.sdk.state.Message
 import io.inappchat.sdk.state.Chat
+import io.inappchat.sdk.state.InAppChatStore
 import io.inappchat.sdk.state.User
 import io.inappchat.sdk.ui.IAC.colors
+import io.inappchat.sdk.ui.views.Badge
 
 enum class Tab(val route: String, @DrawableRes val icon: Int) {
     home("chats", R.drawable.chat_text_fill),
@@ -103,6 +105,10 @@ fun Tabs(
                                 tint = if (selectedTab == tab) colors.primary else colors.caption,
                                 modifier = Modifier.size(45.dp)
                             )
+                            val count = InAppChatStore.current.totalCount
+                            if (count > 0) {
+                                Badge(count = count)
+                            }
                         }
                     } else {
                         Icon(

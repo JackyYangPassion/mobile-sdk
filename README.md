@@ -1,4 +1,4 @@
-![Maven Central](https://img.shields.io/maven-central/v/io.inappchat/sdk) ![GitHub issues](https://img.shields.io/github/issues/inappchat/android-example) 
+![Maven Central](https://img.shields.io/maven-central/v/io.inappchat/sdk) ![GitHub issues](https://img.shields.io/github/issues/inappchat/android-example)
 
 ![IAC Android](https://github.com/ShadowArcanist/IACAndroid/assets/106978117/c52d5c77-b368-49a0-847c-c18f812fd130)
 
@@ -6,21 +6,24 @@
 
 > Delightful chat for your Android apps
 
-&nbsp;  
+Try the demo, download [InAppChat Android](https://play.google.com/store/apps/details?id=io.inappchat.sample)
+
+&nbsp;
 
 # 📃 Table of Contents
+
 - [Overview](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-overview)
 - [Installation](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-installation)
 - [Getting Started](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-getting-started)
 - [Theming](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-theming)
-  
-&nbsp;  
+
+&nbsp;
 
 # ✨ Overview
 
 This SDK integrates a fully serviced chat experience on the [InAppChat](https://inappchat.io) platform.
 
-&nbsp;  
+&nbsp;
 
 # ⚙ Installation
 
@@ -36,7 +39,8 @@ dependencyResolutionManagement {
     }
 }
 ```
-&nbsp;  
+
+&nbsp;
 
 Add `io.inappchat:sdk:1.0.0` to your dependencies
 
@@ -48,20 +52,20 @@ dependencies {
 
 ```
 
-&nbsp;  
+&nbsp;
 
 # 🚀 Getting Started
 
-The minimum it takes to add InAppChat is four lines of code. 
-This repo is also an example app using the Android SDK. 
+The minimum it takes to add InAppChat is four lines of code.
+This repo is also an example app using the Android SDK.
 
 Feel free to clone it and view the source.
 
-&nbsp;  
+&nbsp;
 
 ### Step 1: Initialize the SDK
 
-In your Application class, call InAppChat.setup with your API key. Create an account at [InAppChat.io](https://inappchat.io) to get your own API key. 
+In your Application class, call InAppChat.setup with your API key. Create an account at [InAppChat.io](https://inappchat.io) to get your own API key.
 
 If you don't have an Application class, [create one](https://guides.codepath.com/android/Understanding-the-Android-Application-Class).
 
@@ -69,12 +73,12 @@ If you don't have an Application class, [create one](https://guides.codepath.com
 InAppChat.setup(apiKey)
 ```
 
-&nbsp;  
+&nbsp;
 
 ## Step 2: Render the UI
 
 The InAppChat UI Kit uses Jetpack Compose.
-You can add it to any `NavHost` by rendering inside an `InAppChatContext` and adding the `InAppChatRoutes`. 
+You can add it to any `NavHost` by rendering inside an `InAppChatContext` and adding the `InAppChatRoutes`.
 Navigate to InAppChat by calling `navController.navigate("chats")`
 
 ```kotlin
@@ -96,7 +100,7 @@ InAppChatContext {
 }
 ```
 
-&nbsp;  
+&nbsp;
 
 ## Step 3: Push Notifications (Firebase Cloud Messaging)
 
@@ -106,7 +110,7 @@ For push notifications via FCM, just pass your push token to InAppChat
 InAppChat.registerFCMToken(it)
 ```
 
-&nbsp;  
+&nbsp;
 
 ## Step 4: Giphy Support
 
@@ -116,7 +120,7 @@ If you'd like Giphy support in your chats, add the Giphy UI SDK to the your appl
 Giphy.configure(this, getString(R.string.giphy))
 ```
 
-&nbsp;  
+&nbsp;
 
 # 🖍 Theming
 
@@ -131,7 +135,7 @@ InAppChatContext(theme) {
 }
 ```
 
-&nbsp;  
+&nbsp;
 
 ## Colors, Fonts and Assets
 
@@ -200,11 +204,12 @@ fun makeTheme(context: Context): Theme {
 }
 ```
 
-&nbsp;  
+&nbsp;
 
 # 🙋‍♂️ Help
 
 If you don't understand something in the documentation, you are experiencing problems, or you just need a gentle nudge in the right direction, please join our [Discord server](https://discord.com/invite/5kwyQCz3zZ)
 
 ---
+
 **All Content Copyright © 2023 Rip Bull Networks**

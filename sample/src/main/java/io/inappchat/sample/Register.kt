@@ -130,7 +130,7 @@ fun Register(openChat: () -> Unit, login: () -> Unit) {
                             pickImage = true
                         }
                 ) {
-                    Avatar(url = profilePicture?.uri.toString(), size = 75.0)
+                    Avatar(url = profilePicture?.uri?.toString(), size = 75.0)
                 }
                 Space(12f)
                 val autofillUsername =
