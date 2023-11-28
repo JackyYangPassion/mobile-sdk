@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -20,8 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import io.inappchat.sdk.ui.views.TextInput
-import io.inappchat.sdk.ui.views.size
+import ai.botstacks.sdk.ui.views.TextInput
 
 
 @Composable

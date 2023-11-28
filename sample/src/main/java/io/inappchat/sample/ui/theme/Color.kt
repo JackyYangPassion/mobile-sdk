@@ -1,4 +1,4 @@
-package io.inappchat.sample.ui.theme
+package ai.botstacks.sample.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

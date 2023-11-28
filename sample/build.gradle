@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'io.inappchat.sample'
+    namespace 'ai.botstacks.sample'
     compileSdk 34
 
     defaultConfig {
-        applicationId "io.inappchat.sample"
+        applicationId "ai.botstacks.sample"
         minSdk 26
         targetSdk 34
         versionCode 6

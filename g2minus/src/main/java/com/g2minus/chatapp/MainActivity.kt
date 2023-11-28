@@ -11,9 +11,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.g2minus.chatapp.ui.theme.InappchatTheme
-import io.inappchat.sdk.ui.InAppChatContext
-import io.inappchat.sdk.ui.InAppChatRoutes
+import com.g2minus.chatapp.ui.theme.BotStacksChatTheme
+import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.BotStacksChatRoutes
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
             val g2mTheme = remember {
                 makeTheme(this)
             }
-            InAppChatContext(g2mTheme) {
+            BotStacksChatContext(g2mTheme) {
                 NavHost(navController = navController, startDestination = "splash") {
                     val openChat = {
                         navController.navigate("chats")
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     composable("sign-in") {
                         SignIn(openChat)
                     }
-                    InAppChatRoutes(
+                    BotStacksChatRoutes(
                         navController = navController,
                         navGraphBuilder = this,
                         onLogout = {
@@ -69,7 +69,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    InappchatTheme {
+    BotStacksChatTheme {
         Greeting("Android")
     }
 }

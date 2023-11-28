@@ -1,7 +1,6 @@
 package com.g2minus.chatapp
 
 import android.content.Context
-import android.icu.text.UnicodeSet.SpanCondition
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -10,12 +9,12 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.g2minus.chatapp.R.*
-import io.inappchat.sdk.ui.theme.Assets
-import io.inappchat.sdk.ui.theme.Colors
-import io.inappchat.sdk.ui.theme.EmptyScreenConfig
-import io.inappchat.sdk.ui.theme.FontStyle
-import io.inappchat.sdk.ui.theme.Fonts
-import io.inappchat.sdk.ui.theme.Theme
+import ai.botstacks.sdk.ui.theme.Assets
+import ai.botstacks.sdk.ui.theme.Colors
+import ai.botstacks.sdk.ui.theme.EmptyScreenConfig
+import ai.botstacks.sdk.ui.theme.FontStyle
+import ai.botstacks.sdk.ui.theme.Fonts
+import ai.botstacks.sdk.ui.theme.Theme
 
 fun makeTheme(context: Context): Theme {
     val primary = Color(0xFF92C748)

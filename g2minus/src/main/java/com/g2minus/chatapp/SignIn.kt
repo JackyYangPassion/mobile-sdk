@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,12 +15,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.google.firebase.messaging.FirebaseMessaging
-import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.ui.InAppChatContext
-import io.inappchat.sdk.ui.views.GrowSpacer
-import io.inappchat.sdk.ui.views.Space
-import io.inappchat.sdk.ui.views.Spinner
-import io.inappchat.sdk.utils.IPreviews
+import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.views.GrowSpacer
+import ai.botstacks.sdk.ui.views.Space
+import ai.botstacks.sdk.ui.views.Spinner
+import ai.botstacks.sdk.utils.IPreviews
 import timber.log.Timber
 
 
@@ -35,7 +34,7 @@ fun SignIn(openChat: () -> Unit) {
         if (havePermission) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 it.result?.let {
-                    InAppChat.registerFCMToken(it)
+                    BotStacksChat.registerFCMToken(it)
                 }
             }.addOnFailureListener {
                 Timber.tag("Login").e(it.stackTraceToString())
@@ -51,7 +50,7 @@ fun SignIn(openChat: () -> Unit) {
     LaunchedEffect(key1 = appState.signature, block = {
         if (appState.signature != null) {
             appState.login {
-                if (InAppChat.shared.isUserLoggedIn) {
+                if (BotStacksChat.shared.isUserLoggedIn) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                     } else {
@@ -88,7 +87,7 @@ fun SignIn(openChat: () -> Unit) {
 @IPreviews
 @Composable
 fun SignInPreview() {
-    InAppChatContext {
+    BotStacksChatContext {
         SignIn {
 
         }

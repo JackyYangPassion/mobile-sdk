@@ -1,4 +1,4 @@
-package io.inappchat.sample.ui.theme
+package ai.botstacks.sample.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun InappchatTheme(
+fun BotStacksChatTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

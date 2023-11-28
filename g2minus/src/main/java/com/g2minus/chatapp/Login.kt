@@ -1,8 +1,5 @@
 package com.g2minus.chatapp
 
-import android.Manifest
-import android.app.Activity
-import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,9 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.messaging.FirebaseMessaging
-import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.ui.views.Spinner
-import io.inappchat.sdk.utils.launch
+import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.ui.views.Spinner
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -54,7 +50,7 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
         if (havePermission) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 it.result?.let {
-                    InAppChat.registerFCMToken(it)
+                    BotStacksChat.registerFCMToken(it)
                 }
             }.addOnFailureListener {
                 Timber.tag("Login").e(it.stackTraceToString())
@@ -69,7 +65,7 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
     }
     val activity = LocalContext.current
     val isEthLogin =
-        !InAppChat.shared.config?.optString("loginType", "email").equals("email")
+        !BotStacksChat.shared.config?.optString("loginType", "email").equals("email")
     val state = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
@@ -161,7 +157,7 @@ fun Login(openChat: () -> Unit, openCreateProfile: () -> Unit) {
                         scope.launch {
                             state.show()
                         }
-                    }, enabled = !InAppChat.shared.loggingIn, modifier = Modifier.fillMaxWidth()) {
+                    }, enabled = !BotStacksChat.shared.loggingIn, modifier = Modifier.fillMaxWidth()) {
                         if (isEthLogin) {
                             Icon(
                                 painter = painterResource(id = R.drawable.eth),

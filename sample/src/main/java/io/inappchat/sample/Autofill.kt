@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.view.autofill.AutofillManager
 import androidx.compose.runtime.Composable

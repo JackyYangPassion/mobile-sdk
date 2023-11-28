@@ -21,7 +21,7 @@
 
 
         <activity
-            android:name="io.inappchat.sdk.InAppChatActivity"
+            android:name="ai.botstacks.sdk.BotStacksChatActivity"
             android:configChanges="screenLayout|orientation|screenSize"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 

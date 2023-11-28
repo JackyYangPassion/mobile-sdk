@@ -17,7 +17,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "inappchat"
+rootProject.name = "botstackschat"
 include ':sdk'
 include ':g2minus'
 include ':sample'

@@ -17,7 +17,7 @@ def libraryVersion = '1.0.1'
 
 
 android {
-    namespace 'io.inappchat.sdk'
+    namespace 'ai.botstacks.sdk'
     compileSdk 34
 
     defaultConfig {
@@ -44,12 +44,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'String', "ENV", '"production"'
-            buildConfigField 'String', 'HOST', '"chat.inappchat.io"'
+            buildConfigField 'String', 'HOST', '"chat.botstacks.ai"'
             buildConfigField 'boolean', 'SSL', "true"
         }
         debug {
             buildConfigField 'String', "ENV", '"production"'
-            buildConfigField 'String', 'HOST', '"chat.inappchat.io"'
+            buildConfigField 'String', 'HOST', '"chat.botstacks.ai"'
             buildConfigField 'boolean', 'SSL', "true"
         }
     }
@@ -160,13 +160,13 @@ afterEvaluate {
 
                 // Mostly self-explanatory metadata
                 pom {
-                    name = 'InAppChat'
-                    description = 'InAppChat Android Chat SDK'
-                    url = 'https://github.com/inappchat/android-example'
+                    name = 'BotStacksChat'
+                    description = 'BotStacks Android Chat SDK'
+                    url = 'https://github.com/botstacks/android-example'
                     licenses {
                         license {
                             name = 'Stream License'
-                            url = 'https://github.com/inappchat/android-example/blob/main/LICENSE'
+                            url = 'https://github.com/botstacks/android-example/blob/main/LICENSE'
                         }
                     }
                     developers {
@@ -180,9 +180,9 @@ afterEvaluate {
                     // Version control info - if you're using GitHub, follow the 
                     // format as seen here
                     scm {
-                        connection = 'scm:git:github.com/inappchat/android.git'
-                        developerConnection = 'scm:git:ssh://github.com/inappchat/android-example.git'
-                        url = 'https://github.com/inappchat/android/tree/main'
+                        connection = 'scm:git:github.com/botstacks/android-sdl.git'
+                        developerConnection = 'scm:git:ssh://github.com/botstacks/android-example.git'
+                        url = 'https://github.com/botstacks/android-sdk/tree/main'
                     }
                 }
             }
@@ -204,7 +204,7 @@ if (rootProject.hasProperty("signing.keyId")) {
 }
 apollo {
     service("service") {
-        packageName.set("io.inappchat.sdk")
+        packageName.set("ai.botstacks.sdk")
         mapScalar("DateTime", "kotlinx.datetime.Instant", "com.apollographql.apollo3.adapter.KotlinxInstantAdapter")
         mapScalarToKotlinDouble("Latitude")
         mapScalarToKotlinDouble("Longitude")

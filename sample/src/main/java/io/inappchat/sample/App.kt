@@ -2,11 +2,11 @@
  * Copyright (c) 2023.
  */
 
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.app.Application
 import com.giphy.sdk.ui.Giphy
-import io.inappchat.sdk.InAppChat
+import ai.botstacks.sdk.BotStacksChat
 
 class App : Application() {
 
@@ -14,7 +14,7 @@ class App : Application() {
         super.onCreate()
         app = this
         Giphy.configure(this, getString(R.string.giphy))
-        InAppChat.shared.setup(
+        BotStacksChat.shared.setup(
             this,
             getString(R.string.inappchat)
         )

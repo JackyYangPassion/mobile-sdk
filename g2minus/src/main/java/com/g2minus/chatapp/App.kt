@@ -6,7 +6,7 @@ package com.g2minus.chatapp
 
 import android.app.Application
 import com.giphy.sdk.ui.Giphy
-import io.inappchat.sdk.InAppChat
+import ai.botstacks.sdk.BotStacksChat
 
 class App : Application() {
 
@@ -15,7 +15,7 @@ class App : Application() {
         super.onCreate()
         app = this
         Giphy.configure(this, getString(R.string.giphy))
-        InAppChat.shared.setup(this, getString(R.string.inappchat), delayLoad = true)
+        BotStacksChat.shared.setup(this, getString(R.string.botstackschat), delayLoad = true)
         appState.load(this)
     }
 

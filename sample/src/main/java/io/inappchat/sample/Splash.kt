@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -16,9 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,15 +23,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.ui.views.Spinner
+import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.ui.views.Spinner
 
 @Composable
 fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (() -> Unit)? = null) {
     if (content == null) {
-        LaunchedEffect(key1 = InAppChat.shared.loaded, block = {
-            if (InAppChat.shared.loaded) {
-                if (InAppChat.shared.isUserLoggedIn) {
+        LaunchedEffect(key1 = BotStacksChat.shared.loaded, block = {
+            if (BotStacksChat.shared.loaded) {
+                if (BotStacksChat.shared.isUserLoggedIn) {
                     openChat()
                 } else {
                     openLogin()
@@ -66,7 +63,7 @@ fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (()
                 modifier = Modifier.width(225.dp)
             )
             Text("Simple and elegant chat services", fontSize = 20.sp, color = Color.White)
-            if (!InAppChat.shared.loaded || InAppChat.shared.loggingIn)
+            if (!BotStacksChat.shared.loaded || BotStacksChat.shared.loggingIn)
                 Spinner()
         }
         content?.invoke()
@@ -109,7 +106,7 @@ fun InAppChatLogo() {
             modifier = Modifier.width(225.dp)
         )
         Text("Simple and elegant chat services", fontSize = 20.sp, color = Color.White)
-        if (!InAppChat.shared.loaded || InAppChat.shared.loggingIn)
+        if (!BotStacksChat.shared.loaded || BotStacksChat.shared.loggingIn)
             Spinner()
     }
 }

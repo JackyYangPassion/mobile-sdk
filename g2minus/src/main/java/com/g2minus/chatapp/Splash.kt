@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -20,9 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.ui.views.Spinner
+import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.ui.views.Spinner
 
 
 @Composable
@@ -30,7 +27,7 @@ fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (()
     if (content == null) {
         LaunchedEffect(key1 = appState.loading, block = {
             if (!appState.loading) {
-                if (InAppChat.shared.isUserLoggedIn) {
+                if (BotStacksChat.shared.isUserLoggedIn) {
                     openChat()
                 } else {
                     openLogin()
@@ -55,7 +52,7 @@ fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (()
                             .width(120.dp)
                             .height(120.dp)
             )
-            if (!InAppChat.shared.loaded || InAppChat.shared.loggingIn)
+            if (!BotStacksChat.shared.loaded || BotStacksChat.shared.loggingIn)
                 Spinner()
         }
         content?.invoke()

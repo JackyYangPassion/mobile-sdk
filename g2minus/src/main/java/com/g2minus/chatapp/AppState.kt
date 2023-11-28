@@ -2,17 +2,14 @@ package com.g2minus.chatapp
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat.startActivity
-import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.utils.Monitoring
-import io.inappchat.sdk.utils.bg
-import io.inappchat.sdk.utils.op
+import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.utils.bg
+import ai.botstacks.sdk.utils.op
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -37,10 +34,10 @@ class AppState {
             op({
                 println("Load InAppChat")
                 bg {
-                    InAppChat.load()
+                    BotStacksChat.load()
                 }
                 println("InAppChat loaded")
-                if (!InAppChat.shared.isUserLoggedIn) {
+                if (!BotStacksChat.shared.isUserLoggedIn) {
                     println("Connecting to wallet connect")
                     wc = bg { WalletConnect(app) }
                     println("Created wallet")
@@ -48,7 +45,7 @@ class AppState {
                         wc!!.connect()
                     }
                 }
-                loggedIn = InAppChat.shared.isUserLoggedIn
+                loggedIn = BotStacksChat.shared.isUserLoggedIn
                 loading = false
                 println("Finish loading")
             })
@@ -58,7 +55,7 @@ class AppState {
         val username = this.username ?: return
         op({
             bg {
-                InAppChat.shared.nftLogin(
+                BotStacksChat.shared.nftLogin(
                         wallet = token.account,
                         tokenID = token.id,
                         signature = signature!!,
@@ -91,7 +88,7 @@ class AppState {
     fun getSignature(activity: Activity) {
         val token = this.token ?: return
         try {
-            InAppChat.shared.scope.launch {
+            BotStacksChat.shared.scope.launch {
                 signature = bg {
                     wc?.sign(
                             "Login to G2Minus with Poison Pog ${token.id} and username $username",

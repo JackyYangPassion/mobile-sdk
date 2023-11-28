@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import org.junit.Test
 

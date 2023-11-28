@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -15,7 +15,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import io.inappchat.sdk.InAppChat
+import ai.botstacks.sdk.BotStacksChat
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -83,7 +83,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun sendRegistrationToServer(token: String?) {
         // TODO: Implement this method to send token to your app server.
-        token?.let { InAppChat.registerFCMToken(it) }
+        token?.let { BotStacksChat.registerFCMToken(it) }
     }
 
     private fun sendNotification(messageBody: String) {

@@ -41,10 +41,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
 import com.google.android.material.math.MathUtils.lerp
-import io.inappchat.sdk.ui.InAppChatContext
-import io.inappchat.sdk.ui.views.GrowSpacer
-import io.inappchat.sdk.ui.views.radius
-import io.inappchat.sdk.utils.IPreviews
+import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.views.GrowSpacer
+import ai.botstacks.sdk.ui.views.radius
+import ai.botstacks.sdk.utils.IPreviews
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -196,7 +196,7 @@ fun CreateProfile(openSignIn: () -> Unit) {
 @IPreviews
 @Composable
 fun CreateProfilePreview() {
-    InAppChatContext {
+    BotStacksChatContext {
         CreateProfile {
 
         }

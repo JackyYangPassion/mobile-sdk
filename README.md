@@ -6,7 +6,7 @@
 
 > Delightful chat for your Android apps
 
-Try the demo, download [InAppChat Android](https://play.google.com/store/apps/details?id=io.inappchat.sample)
+Try the demo, download [InAppChat Android](https://play.google.com/store/apps/details?id=ai.botstacks.sample)
 
 &nbsp;
 
@@ -78,11 +78,11 @@ InAppChat.setup(apiKey)
 ## Step 2: Render the UI
 
 The InAppChat UI Kit uses Jetpack Compose.
-You can add it to any `NavHost` by rendering inside an `InAppChatContext` and adding the `InAppChatRoutes`.
+You can add it to any `NavHost` by rendering inside an `BotStacksChatContext` and adding the `BotStacksChatRoutes`.
 Navigate to InAppChat by calling `navController.navigate("chats")`
 
 ```kotlin
-InAppChatContext {
+BotStacksChatContext {
     NavHost(navController = navController, startDestination = "splash") {
         val openChat = {
             navController.navigate("chats")
@@ -95,7 +95,7 @@ InAppChatContext {
         composable("login") {
             Login(openChat)
         }
-        InAppChatRoutes(navController = navController, navGraphBuilder = this)
+        BotStacksChatRoutes(navController = navController, navGraphBuilder = this)
     }
 }
 ```
@@ -124,13 +124,13 @@ Giphy.configure(this, getString(R.string.giphy))
 
 # 🖍 Theming
 
-You can theme your InAppChat UI kit by passing in a theme to `InAppChatContext`. The theme supports fonts, colors and things like bubble border radius and image sizes. Provide a `Theme` to InAppChatUI
+You can theme your InAppChat UI kit by passing in a theme to `BotStacksChatContext`. The theme supports fonts, colors and things like bubble border radius and image sizes. Provide a `Theme` to InAppChatUI
 
 ```kotlin
 val customTheme = remember {
     makeTheme(this)
 }
-InAppChatContext(theme) {
+BotStacksChatContext(theme) {
     // App Content
 }
 ```

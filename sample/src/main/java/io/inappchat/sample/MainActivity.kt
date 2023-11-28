@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,8 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.inappchat.sdk.ui.InAppChatContext
-import io.inappchat.sdk.ui.InAppChatRoutes
+import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.BotStacksChatRoutes
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             MaterialTheme {
-                InAppChatContext {
+                BotStacksChatContext {
                     NavHost(navController = navController, startDestination = "splash") {
                         val openChat = {
                             navController.navigate("chats")
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                                 navController.navigate("login")
                             }
                         }
-                        InAppChatRoutes(
+                        BotStacksChatRoutes(
                             navController = navController,
                             navGraphBuilder = this,
                             onLogout = {

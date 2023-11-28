@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.Manifest
 import android.util.Log
@@ -21,9 +21,7 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -38,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -50,12 +47,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.messaging.FirebaseMessaging
-import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.ui.IAC.colors
-import io.inappchat.sdk.ui.IAC.theme
-import io.inappchat.sdk.ui.views.Space
-import io.inappchat.sdk.ui.views.TextInput
-import io.inappchat.sdk.utils.launch
+import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.views.Space
+import ai.botstacks.sdk.ui.views.TextInput
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -77,7 +73,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
         if (it) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 it.result?.let {
-                    InAppChat.registerFCMToken(it)
+                    BotStacksChat.registerFCMToken(it)
                 }
             }.addOnFailureListener {
                 Timber.tag("Login").e(it.stackTraceToString())
@@ -98,9 +94,9 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
         if (canLogin) {
             Log.v("InAppChat-Sample", "Login Click")
             scope.launch {
-                InAppChat.shared.login(email, password)
+                BotStacksChat.shared.login(email, password)
                 Log.v("InAppChat-Sample", "Finish login")
-                if (InAppChat.shared.isUserLoggedIn) {
+                if (BotStacksChat.shared.isUserLoggedIn) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
@@ -174,7 +170,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
 
                 ElevatedButton(
                     onClick = login,
-                    enabled = !InAppChat.shared.loggingIn && canLogin,
+                    enabled = !BotStacksChat.shared.loggingIn && canLogin,
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.elevatedButtonColors(

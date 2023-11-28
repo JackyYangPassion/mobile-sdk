@@ -1,4 +1,4 @@
-package io.inappchat.sample
+package ai.botstacks.sample
 
 import android.Manifest
 import android.util.Log
@@ -45,13 +45,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.messaging.FirebaseMessaging
-import io.inappchat.sdk.InAppChat
-import io.inappchat.sdk.state.Upload
-import io.inappchat.sdk.ui.IAC
-import io.inappchat.sdk.ui.views.AssetPicker
-import io.inappchat.sdk.ui.views.Avatar
-import io.inappchat.sdk.ui.views.Space
-import io.inappchat.sdk.ui.views.TextInput
+import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.state.Upload
+import ai.botstacks.sdk.ui.IAC
+import ai.botstacks.sdk.ui.views.AssetPicker
+import ai.botstacks.sdk.ui.views.Avatar
+import ai.botstacks.sdk.ui.views.Space
+import ai.botstacks.sdk.ui.views.TextInput
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -68,7 +68,7 @@ fun Register(openChat: () -> Unit, login: () -> Unit) {
         if (it) {
             FirebaseMessaging.getInstance().token.addOnCompleteListener {
                 it.result?.let {
-                    InAppChat.registerFCMToken(it)
+                    BotStacksChat.registerFCMToken(it)
                 }
             }.addOnFailureListener {
                 Timber.tag("Login").e(it.stackTraceToString())
@@ -92,13 +92,13 @@ fun Register(openChat: () -> Unit, login: () -> Unit) {
         if (canLogin) {
             Log.v("InAppChat-Sample", "Login Click")
             scope.launch {
-                InAppChat.shared.register(
+                BotStacksChat.shared.register(
                     email = email,
                     password = password,
                     displayName = username,
                     profilePicture = profilePicture?.url
                 )
-                if (InAppChat.shared.isUserLoggedIn) {
+                if (BotStacksChat.shared.isUserLoggedIn) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
@@ -205,7 +205,7 @@ fun Register(openChat: () -> Unit, login: () -> Unit) {
 
                 ElevatedButton(
                     onClick = register,
-                    enabled = !InAppChat.shared.loggingIn && canLogin,
+                    enabled = !BotStacksChat.shared.loggingIn && canLogin,
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.elevatedButtonColors(
