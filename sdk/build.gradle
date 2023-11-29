@@ -13,12 +13,16 @@ plugins {
     id("com.apollographql.apollo3") version "4.0.0-alpha.2"
 }
 
-def libraryVersion = '1.0.1'
+def libraryVersion = '1.0.0'
 
 
 android {
     namespace 'ai.botstacks.sdk'
     compileSdk 34
+
+    packagingOptions {
+        exclude("META-INF/io.netty.versions.properties")
+    }
 
     defaultConfig {
         minSdk 26
@@ -151,7 +155,7 @@ afterEvaluate {
             release(MavenPublication) {
                 // The coordinates of the library, being set from variables that
                 // we'll set up later
-                groupId 'io.inappchat'
+                groupId 'ai.botstacks'
                 artifactId 'sdk'
                 version libraryVersion
 
