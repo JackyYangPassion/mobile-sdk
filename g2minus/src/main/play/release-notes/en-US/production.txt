@@ -1,2 +1,0 @@
-- Crypto Wallet Login Feature is added
-- Fixed the Bugs

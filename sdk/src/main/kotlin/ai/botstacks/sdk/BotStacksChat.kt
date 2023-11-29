@@ -90,47 +90,6 @@ class BotStacksChat private constructor() {
         }
     }
 
-    suspend fun login(
-        email: String,
-        password: String
-    ) {
-        if (loggingIn) return
-        loggingIn = true
-        bg {
-            try {
-                API.login(email = email, password = password)
-                isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
-            } catch (ex: Throwable) {
-                Monitoring.error(ex)
-            }
-        }
-        loggingIn = false
-    }
-
-    suspend fun register(
-        email: String,
-        password: String,
-        displayName: String,
-        profilePicture: String? = null
-    ) {
-        if (loggingIn) return
-        loggingIn = true
-        bg {
-            try {
-                API.register(
-                    email = email,
-                    password = password,
-                    displayName = displayName,
-                    picture = profilePicture
-                )
-                isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
-            } catch (ex: Throwable) {
-                Monitoring.error(ex)
-            }
-        }
-        loggingIn = false
-    }
-
     var loggingIn by mutableStateOf(false)
     suspend fun login(
         accessToken: String? = null,

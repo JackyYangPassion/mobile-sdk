@@ -94,7 +94,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
         if (canLogin) {
             Log.v("InAppChat-Sample", "Login Click")
             scope.launch {
-                BotStacksChat.shared.login(email, password)
+                BotStacksChat.shared.login()
                 Log.v("InAppChat-Sample", "Finish login")
                 if (BotStacksChat.shared.isUserLoggedIn) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
