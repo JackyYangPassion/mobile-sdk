@@ -1,27 +1,28 @@
 ![Maven Central](https://img.shields.io/maven-central/v/io.inappchat/sdk) ![GitHub issues](https://img.shields.io/github/issues/inappchat/android-example)
 
-![IAC Android](https://github.com/ShadowArcanist/IACAndroid/assets/106978117/c52d5c77-b368-49a0-847c-c18f812fd130)
+![BotStacks Android](https://github.com/BotStacks/android-sdk/assets/106978117/b3a09579-49e9-44e3-a054-cf8c290d01b8)
 
-# In-AppChat Android SDK
+
+# BotStacks Android SDK
 
 > Delightful chat for your Android apps
 
-Try the demo, download [InAppChat Android](https://play.google.com/store/apps/details?id=ai.botstacks.sample)
+Try the demo, download [BotStacks Android](https://play.google.com/store/apps/details?id=ai.botstacks.sample)
 
 &nbsp;
 
 # 📃 Table of Contents
 
-- [Overview](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-overview)
-- [Installation](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-installation)
-- [Getting Started](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-getting-started)
-- [Theming](https://github.com/ShadowArcanist/IACAndroid/blob/main/README.md#-theming)
+- [Overview](https://github.com/BotStacks/android-sdk#-overview)
+- [Installation](https://github.com/BotStacks/android-sdk#-installation)
+- [Getting Started](https://github.com/BotStacks/android-sdk#-getting-started)
+- [Theming](https://github.com/BotStacks/android-sdk#-theming)
 
 &nbsp;
 
 # ✨ Overview
 
-This SDK integrates a fully serviced chat experience on the [InAppChat](https://inappchat.io) platform.
+This SDK integrates a fully serviced chat experience on the [BotStacks](https://botstacks.ai) platform.
 
 &nbsp;
 
@@ -56,7 +57,7 @@ dependencies {
 
 # 🚀 Getting Started
 
-The minimum it takes to add InAppChat is four lines of code.
+The minimum it takes to add BotStacks is four lines of code.
 This repo is also an example app using the Android SDK.
 
 Feel free to clone it and view the source.
@@ -65,7 +66,7 @@ Feel free to clone it and view the source.
 
 ### Step 1: Initialize the SDK
 
-In your Application class, call InAppChat.setup with your API key. Create an account at [InAppChat.io](https://inappchat.io) to get your own API key.
+In your Application class, call InAppChat.setup with your API key. Create an account at [BotStacks.ai](https://BotStacks.ai) to get your own API key.
 
 If you don't have an Application class, [create one](https://guides.codepath.com/android/Understanding-the-Android-Application-Class).
 
@@ -77,9 +78,9 @@ InAppChat.setup(apiKey)
 
 ## Step 2: Render the UI
 
-The InAppChat UI Kit uses Jetpack Compose.
+The BotStacks UI Kit uses Jetpack Compose.
 You can add it to any `NavHost` by rendering inside an `BotStacksChatContext` and adding the `BotStacksChatRoutes`.
-Navigate to InAppChat by calling `navController.navigate("chats")`
+Navigate to BotStacks by calling `navController.navigate("chats")`
 
 ```kotlin
 BotStacksChatContext {
@@ -104,7 +105,7 @@ BotStacksChatContext {
 
 ## Step 3: Push Notifications (Firebase Cloud Messaging)
 
-For push notifications via FCM, just pass your push token to InAppChat
+For push notifications via FCM, just pass your push token to BotStacks
 
 ```kotlin
 InAppChat.registerFCMToken(it)
@@ -124,7 +125,7 @@ Giphy.configure(this, getString(R.string.giphy))
 
 # 🖍 Theming
 
-You can theme your InAppChat UI kit by passing in a theme to `BotStacksChatContext`. The theme supports fonts, colors and things like bubble border radius and image sizes. Provide a `Theme` to InAppChatUI
+You can theme your BotStacks UI kit by passing in a theme to `BotStacksChatContext`. The theme supports fonts, colors and things like bubble border radius and image sizes. Provide a `Theme` to BotStacksUI
 
 ```kotlin
 val customTheme = remember {
@@ -212,4 +213,4 @@ If you don't understand something in the documentation, you are experiencing pro
 
 ---
 
-**All Content Copyright © 2023 Rip Bull Networks**
+**All Content Copyright © 2023 BotStacks**
