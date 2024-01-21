@@ -26,10 +26,18 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("../playstore")
-            storePassword project.property("store.password")
-            keyAlias project.property('key.alias')
-            keyPassword project.property("key.password")
+            File keyFile = file("../playstore")
+            if (keyFile.exists()) {
+                def storePass = project.properties["store.password"] ?: ""
+                def alias = project.properties['key.alias'] ?: ""
+                def keyPass = project.properties['key.password'] ?: ""
+                if (!storePass.isEmpty() && !alias.isEmpty() && !keyPass.isEmpty()) {
+                    storeFile keyFile
+                    storePassword project.property("store.password")
+                    keyAlias project.property('key.alias')
+                    keyPassword project.property("key.password")
+                }
+            }
         }
     }
 
