@@ -100,7 +100,7 @@ class BotStacksChat private constructor() {
     ) {
         if (loggingIn) return
         loggingIn = true
-        try {
+        runCatching {
             API.login(
                 accessToken = accessToken,
                 userId = userId,
@@ -108,11 +108,13 @@ class BotStacksChat private constructor() {
                 displayName = displayName,
                 picture = picture
             )
+        }.onSuccess {
             isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
-        } catch (err: Error) {
+            loggingIn = false
+        }.onFailure { err ->
             Monitoring.error(err)
+            loggingIn = false
         }
-        loggingIn = false
     }
 
     suspend fun nftLogin(
