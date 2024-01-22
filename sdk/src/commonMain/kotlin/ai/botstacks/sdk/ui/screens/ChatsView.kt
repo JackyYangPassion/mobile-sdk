@@ -12,6 +12,7 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.IAC.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.*
 
@@ -33,7 +34,7 @@ fun ChatsView(
     val cta = when (list) {
         BotStacksChatStore.List.dms -> CTA(icon = null, text = "Explore Channels", to = openAllChannels)
         else -> CTA(
-            ai.botstacks.sdk.R.drawable.paper_plane_tilt_fill,
+            Drawables.PaperPlaneTiltFilled,
             "Send a Message",
             openContacts
         )

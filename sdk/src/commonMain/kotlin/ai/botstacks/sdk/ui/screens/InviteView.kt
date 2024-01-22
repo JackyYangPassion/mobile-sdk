@@ -23,6 +23,7 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
@@ -53,7 +54,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(id = ai.botstacks.sdk.R.drawable.check),
+                        painter = Drawables.Check,
                         contentDescription = "Check mark",
                         tint = colors.background,
                         modifier = Modifier.size(14.dp)
@@ -73,7 +74,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                     .clickable { back() }, contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(id = ai.botstacks.sdk.R.drawable.caret_left),
+                    painter = Drawables.CaretLeft,
                     contentDescription = "back",
                     tint = colors.background,
                     modifier = Modifier.size(22.dp)

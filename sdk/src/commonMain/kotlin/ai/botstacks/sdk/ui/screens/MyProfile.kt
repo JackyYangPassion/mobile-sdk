@@ -26,6 +26,7 @@ import ai.botstacks.sdk.type.UpdateProfileInput
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.Monitoring
@@ -73,14 +74,14 @@ fun MyProfile(
                 )
             }
         }
-        SimpleRow(icon = R.drawable.user_fill, text = "Profile", onClick = openProfile)
-        SimpleRow(icon = R.drawable.star_fill, text = "Favorites", onClick = openFavorites)
+        SimpleRow(icon = Drawables.UserFilled, text = "Profile", onClick = openProfile)
+        SimpleRow(icon = Drawables.StarFilled, text = "Favorites", onClick = openFavorites)
         SimpleRow(
-            icon = R.drawable.bell_simple_fill,
+            icon = Drawables.BellSimpleFilled,
             text = "Manage Notifications",
             onClick = openNotificationSettings
         )
-        SimpleRow(icon = R.drawable.door_fill, text = "Logout") {
+        SimpleRow(icon = Drawables.DoorFilled, text = "Logout") {
             logoutDialogue = true
         }
         GrowSpacer()

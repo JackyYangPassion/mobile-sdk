@@ -20,6 +20,7 @@ import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.timeAgo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -65,7 +66,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (!chat.isUnread)
                     Image(
-                        painter = painterResource(id = R.drawable.check_circle_fill),
+                        painter = Drawables.CheckCircleFilled,
                         contentDescription = "message read",
                         modifier = Modifier.size(12.dp),
                         colorFilter = ColorFilter.tint(colors.primary)

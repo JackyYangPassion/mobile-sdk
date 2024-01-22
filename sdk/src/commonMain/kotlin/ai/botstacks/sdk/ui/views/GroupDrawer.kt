@@ -33,6 +33,7 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
 import kotlinx.coroutines.launch
@@ -60,7 +61,7 @@ fun ChatDrawerHeader(chat: Chat) {
             Text(text = "All Members", iac = fonts.headline, color = colors.text)
             Space(14f)
             Image(
-                painter = painterResource(id = R.drawable.users_three_fill),
+                painter = Drawables.UsersThreeFilled,
                 contentDescription = "member count",
                 colorFilter = ColorFilter.tint(colors.caption),
                 modifier = Modifier.size(16)

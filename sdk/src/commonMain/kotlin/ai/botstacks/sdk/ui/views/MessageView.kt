@@ -26,6 +26,7 @@ import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.IAC.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
@@ -105,7 +106,7 @@ fun Favorite(favorite: Boolean) {
     if (favorite) {
         Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center) {
             Icon(
-                painter = painterResource(id = ai.botstacks.sdk.R.drawable.star_fill),
+                painter = Drawables.StarFilled,
                 contentDescription = "favorite",
                 tint = colors.primary,
                 modifier = Modifier.size(20),

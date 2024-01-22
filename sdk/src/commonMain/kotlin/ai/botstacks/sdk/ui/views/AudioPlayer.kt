@@ -33,6 +33,7 @@ import ai.botstacks.sdk.R
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
 import kotlinx.coroutines.delay
@@ -102,12 +103,10 @@ fun AudioPlayer(
                 .size(44)
                 .background(colors.primary, CircleShape)) {
             Icon(
-                painter = painterResource(
-                    ift(
-                        playing,
-                        R.drawable.pause_fill,
-                        R.drawable.play_fill
-                    )
+                painter = ift(
+                    playing,
+                    Drawables.PlayFilled,
+                    Drawables.PauseFilled
                 ),
                 contentDescription = "play audio",
                 tint = Color.White,

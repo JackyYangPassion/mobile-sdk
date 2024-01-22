@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Identifiable> IACList(
+    modifier: Modifier = Modifier,
     items: List<T> = listOf(),
     invert: Boolean = false,
     header: @Composable Fn? = null,
@@ -39,7 +40,6 @@ fun <T : Identifiable> IACList(
     topInset: Dp = 0.dp,
     bottomInset: Dp = 0.dp,
     scrollToTop: String? = null,
-    modifier: Modifier = Modifier,
     hasMore: Boolean = false,
     loadMore: (() -> Unit)? = null,
     refresh: (() -> Unit)? = null,
@@ -108,7 +108,6 @@ fun <T : Identifiable> IACList(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Identifiable> PagerList(
     pager: Pager<T>,
@@ -129,6 +128,7 @@ fun <T : Identifiable> PagerList(
         pager.loadMoreIfEmpty()
     })
     IACList(
+        modifier,
         array,
         invert,
         header,
@@ -138,7 +138,6 @@ fun <T : Identifiable> PagerList(
         topInset,
         bottomInset,
         scrollToTop,
-        modifier,
         pager.hasMore,
         pager::loadMore,
         pager::refresh,
