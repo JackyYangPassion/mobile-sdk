@@ -46,8 +46,8 @@ fun TextInput(
             .defaultMinSize(minHeight = 44.dp)
             .background(IAC.colors.softBackground, RoundedCornerShape(22.dp))
             .clip(RoundedCornerShape(22.dp))
-            .padding(12.dp)
             .clickable { focusRequester.requestFocus() }
+            .padding(12.dp),
     ) {
         Box(modifier = Modifier.weight(1f)) {
 
