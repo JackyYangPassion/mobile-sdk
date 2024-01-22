@@ -21,9 +21,16 @@ okhttp3 = "4.12.0"
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.8.2" }
 androidx-core = { module = "androidx.core:core-ktx", version = "1.12.0" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version = "1.0.1" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version = "2.7.0" }
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3" }
 androidx-navigation-compose = { module = 'androidx.navigation:navigation-compose', version = "2.7.6" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version = "1.1.5" }
+androidx-test-compose-ui = { module = "androidx.compose.ui:ui-test-junit4", version = "1.5.4" }
+androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version = "3.5.1" }
+
+androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version = "2.9.0" }
 
 android-colorx = { module = "me.jorgecastillo:androidcolorx", version = "0.2.0" }
 compose-permissions = { module = "com.google.accompanist:accompanist-permissions", version = "0.29.2-rc" }
@@ -53,6 +60,8 @@ giphy = { module = "com.giphy.sdk:ui", version = "2.3.8" }
 
 google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 google-play-services-location = { module = "com.google.android.gms:play-services-location", version = "21.0.1" }
+
+junit = { module = "junit:junit", version = "4.13.2" }
 
 moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshi" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
@@ -84,3 +93,4 @@ openai-generator = { id = "org.openapi.generator", version = "6.3.0" }
 gradle-nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0-rc-1" }
 apollo3 = { id = "com.apollographql.apollo3", version.ref = "apollo3" }
 sentry = { id = "io.sentry.android.gradle", version = "3.6.0" }
+github-triplet-play = { id = "com.github.triplet.play", version = "3.8.4" }

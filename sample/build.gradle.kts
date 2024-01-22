@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose)
     id("com.google.gms.google-services")
-    id("com.github.triplet.play") version "3.8.4"
+    alias(libs.plugins.github.triplet.play)
 }
 
 kotlin {
@@ -12,35 +12,32 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(project(":sdk"))
-                implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
-                implementation("com.google.firebase:firebase-analytics-ktx")
-                implementation("com.giphy.sdk:ui:2.3.8")
 
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.androidx.core)
+                implementation(libs.androidx.core.splashscreen)
+                implementation(libs.androidx.lifecycle.runtime)
+                implementation(libs.androidx.navigation.compose)
+                implementation(libs.androidx.work.runtime)
 
-                implementation("androidx.core:core-ktx:1.10.1")
-                implementation("androidx.navigation:navigation-compose:2.7.1")
+                implementation(firebaseLibs.firebaseAnalyticsKtx)
+                implementation(firebaseLibs.firebaseMessagingKtx)
 
-                implementation("androidx.core:core-ktx:1.10.1")
-                implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-                implementation("androidx.activity:activity-compose:1.7.2")
-                implementation("androidx.core:core-ktx:1.10.1")
-                implementation("androidx.work:work-runtime-ktx:2.8.1")
-                implementation("com.google.firebase:firebase-messaging-ktx:23.2.1")
-                implementation("androidx.core:core-splashscreen:1.0.1")
+                implementation(libs.giphy)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation("junit:junit:4.13.2")
+                implementation(libs.junit)
             }
         }
 
         val androidUnitTest by getting {
             dependencies {
-                implementation("androidx.test.ext:junit:1.1.5")
-                implementation("androidx.test.espresso:espresso-core:3.5.1")
-                implementation("androidx.compose.ui:ui-test-junit4:1.5.0")
+                implementation(libs.androidx.test.compose.ui)
+                implementation(libs.androidx.test.espresso)
+                implementation(libs.androidx.test.junit)
             }
         }
     }
