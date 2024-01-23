@@ -52,8 +52,12 @@ import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.theme
 import ai.botstacks.sdk.ui.views.Space
 import ai.botstacks.sdk.ui.views.TextInput
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$".toRegex()
 fun isValidEmail(email: String): Boolean {
@@ -67,21 +71,21 @@ fun isValidEmail(email: String): Boolean {
 )
 @Composable
 fun Login(openChat: () -> Unit, register: () -> Unit) {
+    val scope = rememberCoroutineScope()
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) {
-        if (it) {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener {
-                it.result?.let {
+    ) { granted ->
+        if (granted) {
+            scope.launch {
+                val result = FirebaseMessaging.getInstance().token()
+                result.getOrNull()?.let {
                     BotStacksChat.registerFCMToken(it)
                 }
-            }.addOnFailureListener {
-                Timber.tag("Login").e(it.stackTraceToString())
             }
         }
         openChat()
     }
-    val scope = rememberCoroutineScope()
+
     val terms = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
     BackHandler(enabled = true) {
         scope.launch { terms.hide() }
@@ -234,6 +238,20 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                 }
             }
         }
+    }
+}
+
+private suspend fun FirebaseMessaging.token(): Result<String?> = suspendCancellableCoroutine { cont ->
+    runCatching {
+        FirebaseMessaging.getInstance().token.continueWith<String?> { null }
+            .addOnCompleteListener {
+                it.result?.let {
+                    cont.resume(Result.success(it))
+                }
+            }.addOnFailureListener {
+                Timber.tag("Login").e(it.stackTraceToString())
+                cont.resume(Result.success(null))
+            }
     }
 }
 

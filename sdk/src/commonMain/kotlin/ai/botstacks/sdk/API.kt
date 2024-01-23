@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.security.MessageDigest
@@ -126,7 +127,9 @@ object API {
                         for (err in it) {
                             println("Got error " + err.message)
                             if (err.message == "login required") {
-                                onLogout()
+                                withContext(Dispatchers.Main) {
+                                    onLogout()
+                                }
                             }
                         }
                     }
