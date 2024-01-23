@@ -20,7 +20,9 @@ import androidx.compose.ui.res.painterResource
 import dev.jorgecastillo.androidcolorx.library.asHsl
 import ai.botstacks.sdk.R
 import ai.botstacks.sdk.ui.IAC
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.utils.ift
 import java.lang.Float.max
 import java.lang.Float.min
 
@@ -53,7 +55,7 @@ fun ChatPlaceholder(modifier: Modifier? = null) {
             .size(50)
     ) {
         Icon(
-            painter = painterResource(id = IAC.theme.assets.chat ?: R.drawable.users_three_fill),
+            painter =  IAC.theme.assets.chat?.let { painterResource(id = it) } ?: Drawables.UsersThreeFilled,
             contentDescription = "Chat icon",
             modifier = Modifier.fillMaxSize(0.5f)
         )

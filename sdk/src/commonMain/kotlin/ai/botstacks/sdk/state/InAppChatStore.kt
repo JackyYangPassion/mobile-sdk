@@ -9,6 +9,7 @@ import ai.botstacks.sdk.API
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.utils.Monitoring
+import android.util.Log
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -40,6 +41,7 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
             null
         )
     ) { _, _, newValue ->
+        Log.d("iac", "user newV=$newValue")
         BotStacksChat.shared.prefs.edit().putString("user-id", newValue).apply()
     }
 
@@ -54,7 +56,7 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
     suspend fun loadAsync() {
         currentUserID ?: return
         val user = API.me()
-        print("user id ${user.id}")
+        Log.d("iac", "user id ${user.id}")
         User.current = user
         val fcmToken = this.fcmToken
         if (fcmToken != null) {
@@ -93,13 +95,13 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
         when (list) {
             List.dms -> {
                 val it = dms.sumOf { it.unreadCount }
-                println("Dms unread count $it")
+                Log.d("iac", "Dms unread count $it")
                 it
             }
 
             List.groups -> {
                 val it = groups.sumOf { it.unreadCount }
-                print("groups unread count $it")
+                Log.d("iac", "groups unread count $it")
                 it
             }
         }

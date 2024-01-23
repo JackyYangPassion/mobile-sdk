@@ -49,6 +49,7 @@ import ai.botstacks.sdk.state.*
 import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.ui.IAC
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -98,37 +99,49 @@ fun MediaActionSheet(
                 Column {
                     Space(8f)
                     ActionItem(
-                        icon = R.drawable.image_square,
+                        icon = Drawables.ImageSquare,
                         text = "Upload Photo",
                         divider = false
                     ) {
                         media = Media.pickPhoto
                     }
-                    ActionItem(icon = R.drawable.camera, text = "Take Photo", divider = true) {
+                    ActionItem(
+                        icon = Drawables.Camera,
+                        text = "Take Photo",
+                        divider = true
+                    ) {
                         media = Media.recordPhoto
                     }
                     ActionItem(
-                        icon = R.drawable.file_video,
+                        icon = Drawables.FileVideo,
                         text = "Upload Video",
                         divider = false
                     ) {
                         media = Media.pickVideo
                     }
                     ActionItem(
-                        icon = R.drawable.video_camera,
+                        icon = Drawables.VideoCamera,
                         text = "Video Camera",
                         divider = true
                     ) {
                         media = Media.recordVideo
                     }
-                    ActionItem(icon = R.drawable.gif, text = "Send a GIF", divider = true) {
+                    ActionItem(
+                        icon = Drawables.Gif,
+                        text = "Send a GIF",
+                        divider = true
+                    ) {
                         media = Media.gif
                     }
-                    ActionItem(icon = R.drawable.map_pin, text = "Send Location", divider = true) {
+                    ActionItem(
+                        icon = Drawables.MapPin,
+                        text = "Send Location",
+                        divider = true
+                    ) {
                         media = Media.location
                     }
                     ActionItem(
-                        icon = R.drawable.address_book,
+                        icon = Drawables.AddressBook,
                         text = "Share Contact",
                         divider = true
                     ) {

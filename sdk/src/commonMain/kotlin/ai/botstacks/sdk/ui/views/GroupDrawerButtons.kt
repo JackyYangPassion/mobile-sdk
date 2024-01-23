@@ -26,6 +26,7 @@ import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.IAC.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
 
 
@@ -58,7 +59,7 @@ fun ChatDrawerButtons(
                         openEdit(chat)
                     }) {
                     Image(
-                        painter = painterResource(id = ai.botstacks.sdk.R.drawable.gear_fill),
+                        painter = Drawables.GearFilled,
                         contentDescription = "settings",
                         colorFilter = ColorFilter.tint(colors.border),
                         modifier = Modifier.size(24.dp)
@@ -75,7 +76,7 @@ fun ChatDrawerButtons(
                     openInvite(chat)
                 }) {
                 Image(
-                    painter = painterResource(id = ai.botstacks.sdk.R.drawable.archive_box_fill),
+                    painter = Drawables.ArchiveBoxFilled,
                     contentDescription = "settings",
                     colorFilter = ColorFilter.tint(colors.border),
                     modifier = Modifier.size(24.dp)
@@ -91,7 +92,7 @@ fun ChatDrawerButtons(
                     dialog.value = true
                 }) {
                 Image(
-                    painter = painterResource(id = ai.botstacks.sdk.R.drawable.trash_fill),
+                    painter = Drawables.TrashFilled,
                     contentDescription = "settings",
                     colorFilter = ColorFilter.tint(colors.border),
                     modifier = Modifier.size(24.dp)

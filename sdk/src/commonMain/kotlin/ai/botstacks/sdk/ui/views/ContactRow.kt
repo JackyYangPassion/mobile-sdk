@@ -24,6 +24,7 @@ import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genU
@@ -55,7 +56,7 @@ fun ContactRow(
                 )
 //                if (user.haveContact) {
                 Image(
-                    painter = painterResource(id = R.drawable.address_book_fill),
+                    painter = Drawables.AddressBookFilled,
                     contentDescription = "contact",
                     modifier = Modifier.size(18),
                     colorFilter = ColorFilter.tint(Color(0xFF488AC7))

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ai.botstacks.sdk.R
 import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 
 @Composable
@@ -42,7 +43,7 @@ fun Avatar(url: String?, size: Double = 35.0, chat: Boolean = false) {
                 ChatPlaceholder(modifier = Modifier.fillMaxSize())
             } else {
                 Image(
-                    painter = painterResource(id = R.drawable.user_fill),
+                    painter = Drawables.UserFilled,
                     contentDescription = "user profile picture",
                     contentScale = ContentScale.Inside,
                     modifier = Modifier.size((18.0 * size / 35.0).dp),

@@ -27,6 +27,7 @@ import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
 import nl.coffeeit.aroma.emojipicker.presentation.ui.emoji.EmojiBottomSheet
@@ -87,7 +88,7 @@ fun EmojiBar(
               .clickable { keyboard = true }
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.plus),
+                painter = Drawables.Plus,
                 contentDescription = "more reactions",
                 tint = colors.text,
                 modifier = Modifier.size(

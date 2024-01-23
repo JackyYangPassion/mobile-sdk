@@ -19,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.resources.Drawables
+import androidx.compose.ui.graphics.painter.Painter
 
 @Composable
 fun SimpleRow(
@@ -28,16 +30,33 @@ fun SimpleRow(
     destructive: Boolean = false,
     onClick: () -> Unit
 ) {
+    SimpleRow(
+        icon = painterResource(id = icon),
+        text = text,
+        iconPrimary = iconPrimary,
+        destructive = destructive,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun SimpleRow(
+    icon: Painter,
+    text: String,
+    iconPrimary: Boolean = false,
+    destructive: Boolean = false,
+    onClick: () -> Unit
+) {
     Column {
         Row(
             modifier = Modifier
-              .padding(16.dp)
-              .clickable(onClick = onClick)
-              .height(75.dp), horizontalArrangement = Arrangement.spacedBy(22.dp),
+                .padding(16.dp)
+                .clickable(onClick = onClick)
+                .height(75.dp), horizontalArrangement = Arrangement.spacedBy(22.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = icon),
+                painter = icon,
                 contentDescription = "icon",
                 modifier = Modifier.size(40),
                 colorFilter = ColorFilter.tint(if (destructive) colors.destructive else if (iconPrimary) colors.primary else colors.text)
@@ -49,12 +68,12 @@ fun SimpleRow(
             )
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(id = ai.botstacks.sdk.R.drawable.caret_left),
+                painter = Drawables.CaretLeft,
                 contentDescription = "more",
                 colorFilter = ColorFilter.tint(if (destructive) colors.destructive else colors.caption),
                 modifier = Modifier
-                  .size(16.dp)
-                  .rotate(180f)
+                    .size(16.dp)
+                    .rotate(180f)
             )
         }
         Divider(color = colors.softBackground)

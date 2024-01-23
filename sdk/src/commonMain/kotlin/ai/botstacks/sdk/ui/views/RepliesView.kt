@@ -39,8 +39,8 @@ fun RepliesView(
                 iac = fonts.body,
                 color = colors.caption
             )
-            for (message in message.replies.items) {
-                MessageView(message = message, onPressUser = onPressUser, onLongPress = {})
+            for (msg in message.replies.items) {
+                MessageView(message = msg, onPressUser = onPressUser, onLongPress = {})
             }
             Space(24f)
         }

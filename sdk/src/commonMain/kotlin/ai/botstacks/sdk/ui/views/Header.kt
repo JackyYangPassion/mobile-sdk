@@ -22,6 +22,7 @@ import ai.botstacks.sdk.R
 import ai.botstacks.sdk.ui.IAC
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
@@ -53,7 +54,7 @@ fun Header(
         true
       ) {
         Icon(
-          painterResource(id = R.drawable.caret_left),
+          painter = Drawables.CaretLeft,
           contentDescription = "back",
           modifier = Modifier.fillMaxSize(1.0f),
           tint = colors.text,
@@ -70,7 +71,7 @@ fun Header(
     if (search != null) {
       HeaderButton(onClick = search) {
         Icon(
-          painter = painterResource(id = R.drawable.magnifying_glass),
+          painter = Drawables.MagnifyingGlass,
           contentDescription = "Menu",
           tint = IAC.colors.text,
           modifier = Modifier.size(20.dp)
@@ -83,7 +84,7 @@ fun Header(
         add,
       ) {
         Icon(
-          painter = painterResource(id = R.drawable.plus),
+          painter = Drawables.Plus,
           contentDescription = "Add",
           tint = IAC.colors.text,
           modifier = Modifier.size(20.dp)
@@ -94,7 +95,7 @@ fun Header(
     if (menu != null) {
       HeaderButton(onClick = menu) {
         Icon(
-          painter = painterResource(id = R.drawable.dots_three_vertical_fill),
+          painter = Drawables.MenuOverflow,
           contentDescription = "Menu",
           tint = IAC.colors.text,
           modifier = Modifier.size(20.dp)
@@ -105,7 +106,7 @@ fun Header(
     if (compose != null) {
       HeaderButton(onClick = compose) {
         Icon(
-          painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
+          painter = Drawables.PaperPlaneTiltFilled,
           contentDescription = "Menu",
           tint = colors.text,
           modifier = Modifier.size(20.dp)

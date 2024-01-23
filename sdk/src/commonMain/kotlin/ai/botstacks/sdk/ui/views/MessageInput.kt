@@ -24,6 +24,7 @@ import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
@@ -42,7 +43,7 @@ fun MessageInput(
     }
     val keyboardController = LocalSoftwareKeyboardController.current
     val onSend = {
-        if (!text.isBlank()) {
+        if (text.isNotBlank()) {
             chat.send(replyingTo?.id, text)
             keyboardController?.hide()
             text = ""
@@ -61,21 +62,21 @@ fun MessageInput(
             ) {
                 IconButton(onClick = onMedia, modifier = Modifier.size(20.dp)) {
                     Icon(
-                        painter = painterResource(id = R.drawable.paperclip_fill),
+                        painter = Drawables.PaperclipFilled,
                         contentDescription = "send attachment",
                         modifier = Modifier.size(20.dp),
                         tint = colors.caption
                     )
                 }
             }
-            if (!text.isNullOrBlank()) {
+            if (text.isNotBlank()) {
                 Space(8f)
                 IconButton(
                     onClick = onSend,
                     modifier = Modifier.circle(44.dp, colors.softBackground)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.paper_plane_tilt_fill),
+                        painter = Drawables.PaperPlaneTiltFilled,
                         contentDescription = "send message",
                         modifier = Modifier.size(22.dp),
                         tint = colors.primary
