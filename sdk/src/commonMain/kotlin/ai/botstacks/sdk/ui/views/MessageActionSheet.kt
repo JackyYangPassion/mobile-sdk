@@ -15,6 +15,7 @@ import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genChatextMessage
@@ -60,7 +61,7 @@ fun MessageActionSheet(
             )
             ActionItem(
                 text = "Reply in Chat",
-                icon = ai.botstacks.sdk.R.drawable.chat_dots
+                icon = Drawables.ChatDots,
             ) {
                 message?.let(onReply)
                 hide()
@@ -68,7 +69,7 @@ fun MessageActionSheet(
 
             ActionItem(
                 text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
-                icon = ai.botstacks.sdk.R.drawable.star_fill
+                icon = Drawables.StarFilled,
             )
             {
                 message?.toggleFavorite()
@@ -77,7 +78,7 @@ fun MessageActionSheet(
 
             ActionItem(
                 text = "Copy message text",
-                icon = ai.botstacks.sdk.R.drawable.copy,
+                icon = Drawables.Copy,
             ) {
                 copy()
             }

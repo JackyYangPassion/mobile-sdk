@@ -26,7 +26,7 @@ import androidx.media3.ui.PlayerView
 
 @Composable
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
-fun VideoPlayer(uri: Uri, modifier: Modifier = Modifier.clipToBounds()) {
+fun VideoPlayer(uri: Uri, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     val exoPlayer = remember {
@@ -59,7 +59,7 @@ fun VideoPlayer(uri: Uri, modifier: Modifier = Modifier.clipToBounds()) {
                     layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
                     clipToOutline = true
                 }
-            }, modifier = modifier)
+            }, modifier = modifier.clipToBounds())
     ) {
         onDispose { exoPlayer.release() }
     }

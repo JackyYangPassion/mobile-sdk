@@ -20,6 +20,7 @@ import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.*
 
@@ -58,7 +59,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
             if (!user.isCurrent) {
                 Divider(color = colors.softBackground)
                 SimpleRow(
-                        icon = R.drawable.paper_plane_tilt_fill,
+                        icon = Drawables.PaperPlaneTiltFilled,
                         text = "Send a Chat",
                         iconPrimary = true
                 ) {
@@ -89,7 +90,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
             Divider(color = colors.caption)
             if (!user.isCurrent) {
                 SimpleRow(
-                        icon = if (user.blocked) R.drawable.lock_simple_open_fill else R.drawable.lock_fill,
+                        icon = if (user.blocked) Drawables.LockSimpleOpenFilled else Drawables.LockFilled,
                         text = if (user.blocked) "Unblock ${user.username}" else "Block ${user.username}",
                         iconPrimary = user.blocked,
                         destructive = !user.blocked

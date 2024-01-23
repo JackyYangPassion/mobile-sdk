@@ -24,13 +24,39 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.Badge
+import androidx.compose.ui.graphics.painter.Painter
 
-enum class Tab(val route: String, @DrawableRes val icon: Int) {
-    home("chats", R.drawable.chat_text_fill),
-    channels("channels", R.drawable.television_fill),
-    contacts("contacts", R.drawable.address_book_fill),
-    settings("settings", R.drawable.user_circle_fill)
+sealed interface Tab {
+    val route: String
+    val icon: Painter
+        @Composable get() = Drawables.Empty
+
+    data object Home: Tab {
+        override val route: String = "chats"
+        override val icon: Painter
+        @Composable get() = Drawables.ChatTextFilled
+    }
+    data object Channels: Tab {
+        override val route: String = "channels"
+        override val icon: Painter
+            @Composable get() = Drawables.TelevisionFilled
+    }
+    data object Contacts: Tab {
+        override val route: String = "contacts"
+        override val icon: Painter
+            @Composable get() = Drawables.AddressBookFilled
+    }
+    data object Settings: Tab {
+        override val route: String = "settings"
+        override val icon: Painter
+            @Composable get() = Drawables.UserCircleFilled
+    }
+
+    companion object {
+        val entries: List<Tab> = listOf(Home, Channels, Contacts, Settings)
+    }
 }
 
 @Composable
@@ -44,7 +70,7 @@ fun Tabs(
     openFavorites: () -> Unit,
     openNotificationSettings: () -> Unit,
 ) {
-    var selectedTab by remember { mutableStateOf(Tab.home) }
+    var selectedTab by remember { mutableStateOf<Tab>(Tab.Home) }
     var scrollToTop by remember {
         mutableStateOf(0)
     }
@@ -57,29 +83,29 @@ fun Tabs(
     Column(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.weight(1.0f)) {
             when (selectedTab) {
-                Tab.home -> ChatsView(
+                Tab.Home -> ChatsView(
                     openChat = openChat,
                     openReplies = openReplies,
-                    openAllChannels = { openTab(Tab.channels) },
-                    openContacts = { openTab(Tab.contacts) },
+                    openAllChannels = { openTab(Tab.Channels) },
+                    openContacts = { openTab(Tab.Contacts) },
                     openSearch = openSearch,
                     openCompose = openCompose,
                     openProfile = openProfile,
                     scrollToTop = scrollToTop
                 )
 
-                Tab.channels -> ChannelsView(
+                Tab.Channels -> ChannelsView(
                     scrollToTop = scrollToTop,
                     search = openSearch,
                     openCreateChat = openCreateChat,
                     openChat = openChat,
                 )
 
-                Tab.contacts -> ContactsView(
+                Tab.Contacts -> ContactsView(
                     scrollToTop = scrollToTop, openProfile = openProfile
                 )
 
-                Tab.settings -> MyProfile(
+                Tab.Settings -> MyProfile(
                     openProfile = { openProfile(User.current!!) },
                     openNotificationSettings = openNotificationSettings,
                     openFavorites = openFavorites
@@ -89,7 +115,7 @@ fun Tabs(
         Row(modifier = Modifier
             .height(57.dp)
             .background(colors.softBackground)) {
-            for (tab in Tab.values()) {
+            for (tab in Tab.entries) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -97,10 +123,10 @@ fun Tabs(
                         .clickable { openTab(tab) },
                     contentAlignment = Alignment.Center
                 ) {
-                    if (tab == Tab.home) {
+                    if (tab == Tab.Home) {
                         Box(contentAlignment = Alignment.TopEnd) {
                             Icon(
-                                painter = painterResource(id = tab.icon),
+                                painter = tab.icon,
                                 contentDescription = tab.route,
                                 tint = if (selectedTab == tab) colors.primary else colors.caption,
                                 modifier = Modifier.size(45.dp)
@@ -112,7 +138,7 @@ fun Tabs(
                         }
                     } else {
                         Icon(
-                            painter = painterResource(id = tab.icon),
+                            painter = tab.icon,
                             contentDescription = tab.route,
                             tint = if (selectedTab == tab) colors.primary else colors.caption,
                             modifier = Modifier.size(45.dp)

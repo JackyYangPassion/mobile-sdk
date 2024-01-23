@@ -22,7 +22,7 @@ fun Modifier.radius(size: Float) = clip(RoundedCornerShape(size.dp))
 fun Modifier.radius(size: Int) = clip(RoundedCornerShape(size.dp))
 fun Modifier.radius(size: Dp) = clip(RoundedCornerShape(size))
 fun Modifier.circle(size: Dp, color: Color = Color.Transparent) =
-    size(size)
+    this.size(size)
         .radius(size / 2)
         .background(color)
 

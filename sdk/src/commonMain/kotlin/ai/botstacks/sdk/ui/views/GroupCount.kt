@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.R
 import ai.botstacks.sdk.ui.IAC.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 
@@ -28,7 +29,7 @@ class CountProvider : PreviewParameterProvider<Int> {
 fun ChatCount(count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
-            painter = painterResource(id = R.drawable.users_fill),
+            painter = Drawables.UsersFilled,
             contentDescription = "members",
             modifier = Modifier.size(16.dp),
             tint = theme.colors.caption

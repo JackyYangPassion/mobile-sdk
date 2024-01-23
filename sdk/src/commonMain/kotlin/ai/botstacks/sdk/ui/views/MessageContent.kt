@@ -36,6 +36,7 @@ import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genFileMessage
 import ai.botstacks.sdk.utils.genImageMessage
@@ -92,7 +93,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                         )
 
                         AttachmentType.file -> Image(
-                            painter = painterResource(id = R.drawable.file_arrow_down_fill),
+                            painter = Drawables.FileArrowDownFilled,
                             contentDescription = "File",
                             colorFilter = ColorFilter.tint(
                                 ift(

@@ -34,6 +34,7 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.op
@@ -132,7 +133,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             contentScale = ContentScale.Crop
                         )
                     } ?: Image(
-                        painter = painterResource(id = R.drawable.plus_circle_fill),
+                        painter = Drawables.PlusCircleFilled,
                         contentDescription = "Add chat image",
                         colorFilter = ColorFilter.tint(colors.softBackground),
                         modifier = Modifier.size(95.dp)

@@ -34,6 +34,7 @@ import ai.botstacks.sdk.ui.IAC
 import ai.botstacks.sdk.ui.IAC.colors
 import ai.botstacks.sdk.ui.IAC.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genG
@@ -84,7 +85,7 @@ fun InvitesHeader(chat: Chat) {
                 .requiredSize(30.dp)
                 .size(30.dp), contentAlignment = Alignment.Center) {
                 Icon(
-                    painter = painterResource(id = R.drawable.x),
+                    painter = Drawables.X,
                     contentDescription = "Dismiss Invites",
                     modifier = Modifier.size(16),
                     tint = Color.White
@@ -174,7 +175,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                                     .border(0.dp, Color.Transparent, CircleShape)
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.plus),
+                                    painter = Drawables.Plus,
                                     contentDescription = "Join chat",
                                     modifier = Modifier.fillMaxSize(0.67f),
                                     tint = Color.White

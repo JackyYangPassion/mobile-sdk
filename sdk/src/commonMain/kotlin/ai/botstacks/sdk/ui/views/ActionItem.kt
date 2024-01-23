@@ -19,45 +19,51 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.R
 import ai.botstacks.sdk.ui.IAC
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
+import androidx.compose.ui.graphics.painter.Painter
+
+@Composable
+fun ActionItem(text: String, @DrawableRes icon: Int, divider: Boolean = false, action: () -> Unit) {
+    ActionItem(text, painterResource(id = icon), divider, action)
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ActionItem(text: String, @DrawableRes icon: Int, divider: Boolean = false, action: () -> Unit) {
-  Column {
-
-    ListItem(
-      text = {
-        Text(
-          text = text,
-          iac = IAC.fonts.headline,
-          color = IAC.colors.text
+fun ActionItem(text: String, icon: Painter, divider: Boolean = false, action: () -> Unit) {
+    Column {
+        ListItem(
+            text = {
+                Text(
+                    text = text,
+                    iac = IAC.fonts.headline,
+                    color = IAC.colors.text
+                )
+            },
+            icon = {
+                Icon(
+                    painter = icon,
+                    contentDescription = text,
+                    tint = IAC.colors.text,
+                    modifier = Modifier.size(25.dp)
+                )
+            },
+            modifier = Modifier.clickable {
+                action()
+            }
         )
-      },
-      icon = {
-        Icon(
-          painter = painterResource(id = icon),
-          contentDescription = text,
-          tint = IAC.colors.text,
-          modifier = androidx.compose.ui.Modifier.size(25.dp)
-        )
-      },
-      modifier = Modifier.clickable {
-        action()
-      }
-    )
-    if (divider) Divider(color = IAC.colors.caption)
-  }
+        if (divider) Divider(color = IAC.colors.caption)
+    }
 }
 
 @IPreviews
 @Composable
 fun ActionItemPreview() {
-  BotStacksChatContext {
-    Column {
-      ActionItem(text = "Item", icon = R.drawable.address_book_fill) {
-        
-      }
+    BotStacksChatContext {
+        Column {
+            ActionItem(text = "Item", icon = Drawables.AddressBookFilled) {
+
+            }
+        }
     }
-  }
 }
