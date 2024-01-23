@@ -20,12 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -70,10 +68,10 @@ fun EmojiBar(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                  .circle(40.dp, colors.softBackground)
+                  .circle(40.dp, colorScheme.softBackground)
                   .border(
                     2.dp,
-                    ift(current == emoji, colors.primary, Color.Transparent),
+                    ift(current == emoji, colorScheme.primary, Color.Transparent),
                     CircleShape
                   )
                   .clickable { onEmoji(emoji) }
@@ -84,13 +82,13 @@ fun EmojiBar(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-              .circle(40.dp, colors.softBackground)
+              .circle(40.dp, colorScheme.softBackground)
               .clickable { keyboard = true }
         ) {
             Icon(
                 painter = Drawables.Plus,
                 contentDescription = "more reactions",
-                tint = colors.text,
+                tint = colorScheme.text,
                 modifier = Modifier.size(
                     20
                 )

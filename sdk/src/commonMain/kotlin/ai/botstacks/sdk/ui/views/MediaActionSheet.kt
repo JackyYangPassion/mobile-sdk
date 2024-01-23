@@ -41,13 +41,12 @@ import com.google.accompanist.permissions.*
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.actions.imageAttachment
 import ai.botstacks.sdk.actions.send
 import ai.botstacks.sdk.extensions.contains
 import ai.botstacks.sdk.state.*
 import ai.botstacks.sdk.type.AttachmentInput
-import ai.botstacks.sdk.ui.IAC
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
@@ -91,9 +90,9 @@ fun MediaActionSheet(
 
     ModalBottomSheetLayout(
         sheetState = state,
-        sheetBackgroundColor = IAC.colors.background,
-        sheetContentColor = IAC.colors.text,
-        scrimColor = IAC.colors.caption,
+        sheetBackgroundColor = BotStacks.colorScheme.background,
+        sheetContentColor = BotStacks.colorScheme.text,
+        scrimColor = BotStacks.colorScheme.caption,
         sheetContent = {
             Box {
                 Column {
@@ -202,7 +201,7 @@ fun MediaActionSheetPreview() {
             inReplyTo = null
         ) {
             Button(onClick = { ctx.launch { open.show() } }) {
-                Text(text = "Open Sheet", iac = IAC.fonts.headline)
+                Text(text = "Open Sheet", iac = BotStacks.fonts.headline)
             }
         }
     }

@@ -4,7 +4,6 @@
 
 package ai.botstacks.sdk.ui.screens
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,14 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.Badge
 import androidx.compose.ui.graphics.painter.Painter
@@ -114,7 +111,7 @@ fun Tabs(
         }
         Row(modifier = Modifier
             .height(57.dp)
-            .background(colors.softBackground)) {
+            .background(colorScheme.softBackground)) {
             for (tab in Tab.entries) {
                 Box(
                     modifier = Modifier
@@ -128,7 +125,7 @@ fun Tabs(
                             Icon(
                                 painter = tab.icon,
                                 contentDescription = tab.route,
-                                tint = if (selectedTab == tab) colors.primary else colors.caption,
+                                tint = if (selectedTab == tab) colorScheme.primary else colorScheme.caption,
                                 modifier = Modifier.size(45.dp)
                             )
                             val count = BotStacksChatStore.current.totalCount
@@ -140,7 +137,7 @@ fun Tabs(
                         Icon(
                             painter = tab.icon,
                             contentDescription = tab.route,
-                            tint = if (selectedTab == tab) colors.primary else colors.caption,
+                            tint = if (selectedTab == tab) colorScheme.primary else colorScheme.caption,
                             modifier = Modifier.size(45.dp)
                         )
                     }

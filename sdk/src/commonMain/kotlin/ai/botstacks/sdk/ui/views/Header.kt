@@ -15,12 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
-import ai.botstacks.sdk.ui.IAC
-import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.Fn
@@ -44,7 +42,7 @@ fun Header(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
       .fillMaxWidth()
-      .background(colors.softBackground)
+      .background(colorScheme.softBackground)
       .padding(start = 16.dp, end = 8.dp)
       .height(HeaderHeight)
   ) {
@@ -57,14 +55,14 @@ fun Header(
           painter = Drawables.CaretLeft,
           contentDescription = "back",
           modifier = Modifier.fillMaxSize(1.0f),
-          tint = colors.text,
+          tint = colorScheme.text,
         )
       }
     icon?.invoke()
     Text(
       text = title.annotated(),
-      iac = IAC.fonts.title.copy(weight = FontWeight.Bold),
-      color = colors.text,
+      iac = BotStacks.fonts.title.copy(weight = FontWeight.Bold),
+      color = colorScheme.text,
       maxLines = 1
     )
     Spacer(modifier = Modifier.weight(1.0f))
@@ -73,7 +71,7 @@ fun Header(
         Icon(
           painter = Drawables.MagnifyingGlass,
           contentDescription = "Menu",
-          tint = IAC.colors.text,
+          tint = BotStacks.colorScheme.text,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -86,7 +84,7 @@ fun Header(
         Icon(
           painter = Drawables.Plus,
           contentDescription = "Add",
-          tint = IAC.colors.text,
+          tint = BotStacks.colorScheme.text,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -97,7 +95,7 @@ fun Header(
         Icon(
           painter = Drawables.MenuOverflow,
           contentDescription = "Menu",
-          tint = IAC.colors.text,
+          tint = BotStacks.colorScheme.text,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -108,7 +106,7 @@ fun Header(
         Icon(
           painter = Drawables.PaperPlaneTiltFilled,
           contentDescription = "Menu",
-          tint = colors.text,
+          tint = colorScheme.text,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -126,7 +124,7 @@ fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn
       .padding(0.dp)
       .size(30.dp)
       .background(
-        if (transparent) Color.Transparent else colors.softBackground,
+        if (transparent) Color.Transparent else colorScheme.softBackground,
         CircleShape
       )
       .clickable(onClick = onClick)

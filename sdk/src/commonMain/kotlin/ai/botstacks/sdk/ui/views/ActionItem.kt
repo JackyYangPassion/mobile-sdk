@@ -16,8 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
-import ai.botstacks.sdk.ui.IAC
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -36,15 +35,15 @@ fun ActionItem(text: String, icon: Painter, divider: Boolean = false, action: ()
             text = {
                 Text(
                     text = text,
-                    iac = IAC.fonts.headline,
-                    color = IAC.colors.text
+                    iac = BotStacks.fonts.headline,
+                    color = BotStacks.colorScheme.text
                 )
             },
             icon = {
                 Icon(
                     painter = icon,
                     contentDescription = text,
-                    tint = IAC.colors.text,
+                    tint = BotStacks.colorScheme.text,
                     modifier = Modifier.size(25.dp)
                 )
             },
@@ -52,7 +51,7 @@ fun ActionItem(text: String, icon: Painter, divider: Boolean = false, action: ()
                 action()
             }
         )
-        if (divider) Divider(color = IAC.colors.caption)
+        if (divider) Divider(color = BotStacks.colorScheme.caption)
     }
 }
 

@@ -14,14 +14,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.actions.invite
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
@@ -50,13 +49,13 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                 .clickable { if (!isSelected) selected.add(it) else selected.remove(it) }) {
                 Box(
                     modifier =
-                    Modifier.circle(25.dp, if (isSelected) colors.primary else colors.caption),
+                    Modifier.circle(25.dp, if (isSelected) colorScheme.primary else colorScheme.caption),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = Drawables.Check,
                         contentDescription = "Check mark",
-                        tint = colors.background,
+                        tint = colorScheme.background,
                         modifier = Modifier.size(14.dp)
                     )
                 }
@@ -70,13 +69,13 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
         ) {
             Box(
                 modifier = Modifier
-                    .circle(50.dp, colors.caption)
+                    .circle(50.dp, colorScheme.caption)
                     .clickable { back() }, contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = Drawables.CaretLeft,
                     contentDescription = "back",
-                    tint = colors.background,
+                    tint = colorScheme.background,
                     modifier = Modifier.size(22.dp)
                 )
             }
@@ -86,7 +85,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                     .height(50.dp)
                     .weight(1f)
                     .background(
-                        if (selected.isNotEmpty()) colors.primary else colors.caption,
+                        if (selected.isNotEmpty()) colorScheme.primary else colorScheme.caption,
                         RoundedCornerShape(25.dp)
                     )
                     .clickable {
@@ -99,7 +98,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                             }
                         }
                     }) {
-                Text(text = "Invite Friends", iac = fonts.headline, color = colors.background)
+                Text(text = "Invite Friends", iac = fonts.headline, color = colorScheme.background)
             }
         }
     }

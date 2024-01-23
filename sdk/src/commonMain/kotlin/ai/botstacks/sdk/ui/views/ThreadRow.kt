@@ -14,12 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.timeAgo
 import kotlinx.datetime.Clock
@@ -46,18 +44,18 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(60.dp)
-                .background(colors.softBackground, CircleShape)
+                .background(colorScheme.softBackground, CircleShape)
                 .border(
                     2.dp,
-                    if (chat.isUnread) colors.unread else colors.softBackground,
+                    if (chat.isUnread) colorScheme.unread else colorScheme.softBackground,
                     CircleShape
                 )
         ) {
-            Avatar(url = chat.displayImage, 46.0)
+            Avatar(url = chat.displayImage)
         }
         Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start = 14.dp)) {
             Row {
-                Text(text = chat.displayName, iac = fonts.title3, color = colors.text, maxLines = 1)
+                Text(text = chat.displayName, iac = fonts.title3, color = colorScheme.text, maxLines = 1)
                 Space()
                 if (chat.isGroup) {
                     PrivacyPill(chat._private)
@@ -69,13 +67,13 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
                         painter = Drawables.CheckCircleFilled,
                         contentDescription = "message read",
                         modifier = Modifier.size(12.dp),
-                        colorFilter = ColorFilter.tint(colors.primary)
+                        colorFilter = ColorFilter.tint(colorScheme.primary)
                     )
                 Text(
                     text = chat.latest?.summary ?: "No messages yet",
                     iac = fonts.body,
                     maxLines = 2,
-                    color = if (chat.isUnread) colors.text else colors.caption,
+                    color = if (chat.isUnread) colorScheme.text else colorScheme.caption,
                     modifier = Modifier.fillMaxWidth(0.7f)
                 )
             }
@@ -88,7 +86,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
         Column(horizontalAlignment = Alignment.End) {
             chat.latest?.let {
                 Text(
-                    text = tsString(it.createdAt), iac = fonts.body, color = colors.caption
+                    text = tsString(it.createdAt), iac = fonts.body, color = colorScheme.caption
                 )
             }
             if (chat.isUnread) {

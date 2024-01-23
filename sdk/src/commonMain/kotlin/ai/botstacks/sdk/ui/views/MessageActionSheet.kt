@@ -12,8 +12,8 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import ai.botstacks.sdk.actions.react
 import ai.botstacks.sdk.actions.toggleFavorite
 import ai.botstacks.sdk.state.Message
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -47,9 +47,9 @@ fun MessageActionSheet(
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = state,
-        sheetBackgroundColor = colors.background,
-        sheetContentColor = colors.text,
-        scrimColor = colors.caption,
+        sheetBackgroundColor = colorScheme.background,
+        sheetContentColor = colorScheme.text,
+        scrimColor = colorScheme.caption,
         sheetContent = {
             Space(8f)
             EmojiBar(

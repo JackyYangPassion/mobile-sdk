@@ -17,14 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.actions.delete
 import ai.botstacks.sdk.actions.leave
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
@@ -47,7 +46,7 @@ fun ChatDrawerButtons(
             horizontalArrangement = Arrangement.spacedBy(3.dp),
             modifier = Modifier
                 .height(60.dp)
-                .background(colors.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
+                .background(colorScheme.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
                 .padding(8.dp, 0.dp)
         ) {
             if (chat.isAdmin) {
@@ -61,10 +60,10 @@ fun ChatDrawerButtons(
                     Image(
                         painter = Drawables.GearFilled,
                         contentDescription = "settings",
-                        colorFilter = ColorFilter.tint(colors.border),
+                        colorFilter = ColorFilter.tint(colorScheme.border),
                         modifier = Modifier.size(24.dp)
                     )
-                    Text(text = "Edit", iac = theme.fonts.mini, color = colors.border)
+                    Text(text = "Edit", iac = theme.fonts.mini, color = colorScheme.border)
                 }
                 Space()
             }
@@ -78,10 +77,10 @@ fun ChatDrawerButtons(
                 Image(
                     painter = Drawables.ArchiveBoxFilled,
                     contentDescription = "settings",
-                    colorFilter = ColorFilter.tint(colors.border),
+                    colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)
                 )
-                Text(text = "Invite", iac = theme.fonts.mini, color = colors.border)
+                Text(text = "Invite", iac = theme.fonts.mini, color = colorScheme.border)
             }
             Space()
             Column(
@@ -94,10 +93,10 @@ fun ChatDrawerButtons(
                 Image(
                     painter = Drawables.TrashFilled,
                     contentDescription = "settings",
-                    colorFilter = ColorFilter.tint(colors.border),
+                    colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)
                 )
-                Text(text = "Leave", iac = theme.fonts.mini, color = colors.border)
+                Text(text = "Leave", iac = theme.fonts.mini, color = colorScheme.border)
             }
         }
     }
@@ -147,7 +146,7 @@ fun ChatDrawerButtons(
                     Text(
                         ift(chat.isAdmin, "Delete", "Leave"),
                         fonts.headline,
-                        color = colors.destructive
+                        color = colorScheme.destructive
                     )
                 }
             },

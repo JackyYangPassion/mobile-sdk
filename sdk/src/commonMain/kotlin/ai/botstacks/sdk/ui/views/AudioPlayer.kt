@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -29,10 +28,9 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import ai.botstacks.sdk.R
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
@@ -101,7 +99,7 @@ fun AudioPlayer(
                     if (exoPlayer.isPlaying) exoPlayer.pause() else exoPlayer.play()
                 }
                 .size(44)
-                .background(colors.primary, CircleShape)) {
+                .background(colorScheme.primary, CircleShape)) {
             Icon(
                 painter = ift(
                     playing,
@@ -115,7 +113,7 @@ fun AudioPlayer(
         }
 
         Space()
-        Text(text = msToString(current), iac = fonts.body, color = colors.bubbleText)
+        Text(text = msToString(current), iac = fonts.body, color = colorScheme.bubbleText)
         Space()
         Slider(
             value = current.toFloat() / 1000.0f,
@@ -130,14 +128,14 @@ fun AudioPlayer(
             valueRange = 0f..(total.toFloat() / 1000.0f),
             steps = 1,
             colors = SliderDefaults.colors(
-                thumbColor = colors.primary,
-                activeTickColor = colors.primary,
-                activeTrackColor = colors.primary
+                thumbColor = colorScheme.primary,
+                activeTickColor = colorScheme.primary,
+                activeTrackColor = colorScheme.primary
             ),
             modifier = Modifier.width(theme.videoPreviewSize.width.dp)
         )
         Space()
-        Text(text = msToString(total), iac = fonts.body, color = colors.bubbleText)
+        Text(text = msToString(total), iac = fonts.body, color = colorScheme.bubbleText)
     }
 
     if (playing) {

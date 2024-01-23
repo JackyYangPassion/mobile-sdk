@@ -17,22 +17,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.actions.dismissInvites
 import ai.botstacks.sdk.actions.join
 import ai.botstacks.sdk.actions.leave
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.usernames
-import ai.botstacks.sdk.ui.IAC
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -45,9 +43,9 @@ fun chatInvitesText(chat: Chat) =
         pushStyle(
             SpanStyle(
                 color = Color.White,
-                fontSize = IAC.fonts.body.size,
+                fontSize = BotStacks.fonts.body.size,
                 fontWeight = FontWeight.Bold,
-                fontFamily = IAC.fonts.body.family
+                fontFamily = BotStacks.fonts.body.family
             )
         )
         append(chat.invites.usernames())
@@ -76,7 +74,7 @@ fun InvitesHeader(chat: Chat) {
         ) {
             Text(
                 chatInvitesText(chat = chat),
-                IAC.fonts.body,
+                BotStacks.fonts.body,
                 color = Color.White,
                 modifier = Modifier.weight(1f)
             )
@@ -136,7 +134,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                         Text(
                             chat.displayName.annotated(),
                             theme.fonts.title3,
-                            color = colors.text,
+                            color = colorScheme.text,
                             maxLines = 1,
                             softWrap = false,
                             overflow = TextOverflow.Ellipsis,
@@ -148,7 +146,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                     Text(
                         text = (chat.description ?: "").annotated(),
                         iac = theme.fonts.body,
-                        color = colors.caption,
+                        color = colorScheme.caption,
                         maxLines = 2
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -162,7 +160,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                                     .padding(0.dp)
                                     .size(32.dp)
                                     .background(
-                                        if (chat.isMember) colors.softBackground else colors.primary,
+                                        if (chat.isMember) colorScheme.softBackground else colorScheme.primary,
                                         CircleShape
                                     )
                                     .clickable(onClick = {

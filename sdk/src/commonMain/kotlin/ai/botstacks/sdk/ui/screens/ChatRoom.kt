@@ -18,8 +18,8 @@ import ai.botstacks.sdk.actions.markRead
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
@@ -81,18 +81,18 @@ fun ChatChat(
                 Column(modifier = Modifier.fillMaxSize()) {
                     Header(title = "", icon = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Avatar(chat.displayImage, 35.0, chat != null)
+                            Avatar(
+                                type = AvatarType.Channel(listOf(chat.displayImage)),
+                            )
                             Column {
                                 Text(
                                     text = chat.displayName,
                                     iac = fonts.title2,
-                                    color = colors.text,
+                                    color = colorScheme.text,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
-                                chat.let {
-                                    ChatCount(count = it.members.size)
-                                }
+                                ChatCount(count = chat.members.size)
                             }
                         }
                     }, back = back, menu = { ctx.launch { menu.show() } })

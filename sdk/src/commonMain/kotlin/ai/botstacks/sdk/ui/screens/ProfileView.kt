@@ -13,12 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.actions.block
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
@@ -38,26 +37,26 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
         ) {
-            Avatar(url = user.avatar, 130.0)
+            Avatar(url = user.avatar,  size = AvatarSize.Large,)
             Space()
-            Text(text = user.displayNameFb, iac = fonts.headline, color = colors.text)
+            Text(text = user.displayNameFb, iac = fonts.headline, color = colorScheme.text)
             Box(
                     modifier = Modifier
                             .padding(12.dp, 5.dp)
                             .radius(30.dp)
-                            .background(colors.softBackground),
+                            .background(colorScheme.softBackground),
                     contentAlignment = Alignment.Center
             ) {
                 Text(
                         text = if (user.status == OnlineStatus.Online) "Online" else user.lastSeen?.timeAgo()
                                 ?: "",
                         iac = fonts.body,
-                        color = if (user.status == OnlineStatus.Online) colors.primary else colors.caption
+                        color = if (user.status == OnlineStatus.Online) colorScheme.primary else colorScheme.caption
                 )
             }
 
             if (!user.isCurrent) {
-                Divider(color = colors.softBackground)
+                Divider(color = colorScheme.softBackground)
                 SimpleRow(
                         icon = Drawables.PaperPlaneTiltFilled,
                         text = "Send a Chat",
@@ -87,7 +86,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
 ////                }
 //            }
             Space(24f)
-            Divider(color = colors.caption)
+            Divider(color = colorScheme.caption)
             if (!user.isCurrent) {
                 SimpleRow(
                         icon = if (user.blocked) Drawables.LockSimpleOpenFilled else Drawables.LockFilled,

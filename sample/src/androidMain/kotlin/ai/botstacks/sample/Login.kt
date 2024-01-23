@@ -48,8 +48,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.messaging.FirebaseMessaging
 import ai.botstacks.sdk.BotStacksChat
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.views.Space
 import ai.botstacks.sdk.ui.views.TextInput
 import kotlinx.coroutines.launch
@@ -174,7 +174,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = ButtonDefaults.elevatedButtonColors(
-                        containerColor = colors.primary,
+                        containerColor = colorScheme.primary,
                         contentColor = Color.White
                     ),
                 ) {

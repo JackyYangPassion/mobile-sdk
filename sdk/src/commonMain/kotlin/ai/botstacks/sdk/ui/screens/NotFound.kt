@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.Header
 import ai.botstacks.sdk.ui.views.Text
@@ -27,7 +27,7 @@ fun NotFound(what: String = "Page", back: () -> Unit) {
             Text(
                 text = "The page you were looking for could not be found",
                 iac = fonts.title2,
-                color = colors.text
+                color = colorScheme.text
             )
         }
     }

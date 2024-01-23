@@ -23,7 +23,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.ui.IAC
+import ai.botstacks.sdk.ui.BotStacks
 
 @Composable
 fun TextInput(
@@ -44,7 +44,7 @@ fun TextInput(
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = 44.dp)
-            .background(IAC.colors.softBackground, RoundedCornerShape(22.dp))
+            .background(BotStacks.colorScheme.softBackground, RoundedCornerShape(22.dp))
             .clip(RoundedCornerShape(22.dp))
             .clickable { focusRequester.requestFocus() }
             .padding(12.dp),
@@ -55,10 +55,10 @@ fun TextInput(
                 value = text,
                 onValueChange = onChange,
                 textStyle = TextStyle.Default.copy(
-                    color = IAC.colors.text,
-                    fontFamily = IAC.fonts.body.family,
-                    fontSize = IAC.fonts.body.size,
-                    fontWeight = IAC.fonts.body.weight
+                    color = BotStacks.colorScheme.text,
+                    fontFamily = BotStacks.fonts.body.family,
+                    fontSize = BotStacks.fonts.body.size,
+                    fontWeight = BotStacks.fonts.body.weight
                 ),
                 minLines = minLines,
                 maxLines = maxLines,
@@ -69,7 +69,7 @@ fun TextInput(
                 visualTransformation = visualTransformation
             )
             if (text.isBlank()) {
-                Text(text = placeholder, iac = IAC.fonts.body, color = IAC.colors.caption)
+                Text(text = placeholder, iac = BotStacks.fonts.body, color = BotStacks.colorScheme.caption)
             }
         }
         right()

@@ -14,15 +14,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -44,7 +42,7 @@ fun ContactRow(
             )
             .height(84.dp)
     ) {
-        Avatar(url = user.avatar, size = 60.0)
+        Avatar(url = user.avatar)
         Space(8f)
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -52,7 +50,7 @@ fun ContactRow(
                     text = user.username.annotated(),
                     iac = fonts.title3,
                     maxLines = 1,
-                    color = colors.text
+                    color = colorScheme.text
                 )
 //                if (user.haveContact) {
                 Image(
@@ -68,8 +66,8 @@ fun ContactRow(
                 iac = fonts.body,
                 color = ift(
                     user.status == OnlineStatus.Online,
-                    colors.primary,
-                    colors.caption
+                    colorScheme.primary,
+                    colorScheme.caption
                 )
             )
         }

@@ -5,9 +5,9 @@
 package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.theme.EmptyScreenConfig
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.Image
@@ -54,7 +54,7 @@ fun EmptyListView(
           text = it,
           iac = fonts.title2.copy(weight = FontWeight.Normal),
           textAlign = TextAlign.Center,
-          color = colors.text
+          color = colorScheme.text
         )
       }
       Spacer(modifier = Modifier.weight(1f))
@@ -66,7 +66,7 @@ fun EmptyListView(
           Row(
             modifier = Modifier
               .height(60.dp)
-              .border(2.dp, colors.text, RoundedCornerShape(30.dp)),
+              .border(2.dp, colorScheme.text, RoundedCornerShape(30.dp)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
           ) {
@@ -76,10 +76,10 @@ fun EmptyListView(
                 painter = it,
                 contentDescription = "call to action",
                 modifier = Modifier.size(32.dp),
-                colorFilter = ColorFilter.tint(colors.text)
+                colorFilter = ColorFilter.tint(colorScheme.text)
               )
             }
-            Text(text = it.text.uppercase(), iac = fonts.headline, color = colors.text)
+            Text(text = it.text.uppercase(), iac = fonts.headline, color = colorScheme.text)
             Spacer(modifier = Modifier.weight(1f))
           }
         }

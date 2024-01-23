@@ -25,7 +25,7 @@ import ai.botstacks.sdk.state.Identifiable
 import ai.botstacks.sdk.state.Pager
 import ai.botstacks.sdk.state.SendingMessage
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.fonts
 
 
 @Composable

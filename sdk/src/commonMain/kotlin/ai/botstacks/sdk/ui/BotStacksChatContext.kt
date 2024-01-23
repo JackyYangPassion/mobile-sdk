@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.ui
 
+import ai.botstacks.sdk.ui.theme.BotStacksColorPalette
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
@@ -21,11 +22,11 @@ import ai.botstacks.sdk.ui.theme.Colors
 import ai.botstacks.sdk.ui.theme.Fonts
 import ai.botstacks.sdk.ui.theme.Theme
 
-val IACTheme = staticCompositionLocalOf { Theme() }
+val BotStacksTheme = staticCompositionLocalOf { Theme() }
 
 @Composable
 fun BotStacksChatContext(
-    theme: Theme = IACTheme.current,
+    theme: Theme = BotStacksTheme.current,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -50,28 +51,33 @@ fun BotStacksChatContext(
     })
 
     CompositionLocalProvider(
-        IACTheme provides rememberedTheme.with(darkTheme),
+        BotStacksTheme provides rememberedTheme.with(darkTheme),
     ) {
         content()
     }
 }
 
-object IAC {
+object BotStacks {
     /**
      * Retrieves the current [Theme] at the call site's position in the hierarchy.
      */
     val theme: Theme
         @Composable
         @ReadOnlyComposable
-        get() = IACTheme.current
+        get() = BotStacksTheme.current
 
     /**
      * Retrieves the current [Colors] at the call site's position in the hierarchy.
      */
-    val colors: Colors
+    val colorScheme: Colors
         @Composable
         @ReadOnlyComposable
         get() = theme.colors
+
+    val colors: BotStacksColorPalette
+        @Composable
+        @ReadOnlyComposable
+        get() = theme.colorPalette
 
     /**
      * Retrieves the current [Fonts] at the call site's position in the hierarchy.

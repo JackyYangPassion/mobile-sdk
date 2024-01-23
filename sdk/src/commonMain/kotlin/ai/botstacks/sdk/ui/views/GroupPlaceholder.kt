@@ -18,11 +18,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import dev.jorgecastillo.androidcolorx.library.asHsl
-import ai.botstacks.sdk.R
-import ai.botstacks.sdk.ui.IAC
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
-import ai.botstacks.sdk.utils.ift
 import java.lang.Float.max
 import java.lang.Float.min
 
@@ -44,8 +42,8 @@ fun ChatPlaceholder(modifier: Modifier? = null) {
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        IAC.colors.primary.adjustedHsl(-25),
-                        IAC.colors.primary.adjustedHsl(25)
+                        BotStacks.colorScheme.primary.adjustedHsl(-25),
+                        BotStacks.colorScheme.primary.adjustedHsl(25)
                     ),
                     start = Offset.Zero,
                     end = Offset.Infinite,
@@ -55,7 +53,7 @@ fun ChatPlaceholder(modifier: Modifier? = null) {
             .size(50)
     ) {
         Icon(
-            painter =  IAC.theme.assets.chat?.let { painterResource(id = it) } ?: Drawables.UsersThreeFilled,
+            painter =  BotStacks.theme.assets.chat?.let { painterResource(id = it) } ?: Drawables.UsersThreeFilled,
             contentDescription = "Chat icon",
             modifier = Modifier.fillMaxSize(0.5f)
         )
