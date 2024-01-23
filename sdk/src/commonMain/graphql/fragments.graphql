@@ -75,7 +75,7 @@ fragment FUser on User {
   image
   is_bot
   status
-  app_role
+  userRole: role
   devices {
     ...FDevice
   }
