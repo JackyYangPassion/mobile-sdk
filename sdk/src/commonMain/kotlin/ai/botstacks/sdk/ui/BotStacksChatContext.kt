@@ -21,6 +21,11 @@ import coil.decode.ImageDecoderDecoder
 import ai.botstacks.sdk.ui.theme.Colors
 import ai.botstacks.sdk.ui.theme.Fonts
 import ai.botstacks.sdk.ui.theme.Theme
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Shapes
+import androidx.compose.ui.Modifier
 
 val BotStacksTheme = staticCompositionLocalOf { Theme() }
 
@@ -53,7 +58,13 @@ fun BotStacksChatContext(
     CompositionLocalProvider(
         BotStacksTheme provides rememberedTheme.with(darkTheme),
     ) {
-        content()
+        Box(
+            modifier = Modifier
+                .background(theme.colors.background)
+                .fillMaxSize()
+        ) {
+            content()
+        }
     }
 }
 
@@ -87,4 +98,8 @@ object BotStacks {
         @ReadOnlyComposable
         get() = theme.fonts
 
+    val shapes: Shapes
+        @Composable
+        @ReadOnlyComposable
+        get() = theme.shapes
 }

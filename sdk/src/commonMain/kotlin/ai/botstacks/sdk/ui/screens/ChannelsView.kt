@@ -39,11 +39,14 @@ fun ChannelsView(
                     cta = CTA(icon = null, text = "Create A Channel", to = openCreateChat)
                 )
             }) { chat ->
-            ChannelRow(chat = chat, onClick = {
-                if (!chat._private || it.isMember) {
-                    openChat(it)
+            SimpleChannelRow(
+                modifier = Modifier.fillMaxSize(),
+                chat = chat
+            ) {
+                if (!chat._private || chat.isMember) {
+                    openChat(chat)
                 }
-            })
+            }
         }
         Header(title = "All Channels", add = openCreateChat)
     }

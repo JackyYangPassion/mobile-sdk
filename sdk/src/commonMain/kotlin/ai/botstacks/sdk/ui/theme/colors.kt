@@ -4,6 +4,7 @@ package ai.botstacks.sdk.ui.theme
  * Copyright (c) 2023.
  */
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 
@@ -20,15 +21,19 @@ data class Colors(
     val timestamp: Color = if (light) Color(0xFF71869C) else Color(0x4DE3E3E3),
     val primary: Color = Color(0xff0091ff),
     val button: Color = if (light) Color(0xFFF0F0F0) else Color(0xFF2B2B2B),
-    val background: Color = if (light) Color(0xFFFFFFFF) else Color(0xFF171717),
+    val background: Color = if (light) LightPalette._900 else DarkPalette._900,
     val destructive: Color = Color(0xFFC74848),
     val softBackground: Color = if (light) Color(0xFFD4D4D4) else Color(0xFF2B2B2B),
     val caption: Color = if (light) Color(0x502C2C2C) else Color(0x50E3E3E3),
     val unread: Color = Color(0xFFC74848),
     val _public: Color = Color(0xFF4B48C7),
     val _private: Color = Color(0xFF488AC7),
-    val border: Color = if (light) Color(0xFF1B1B1B) else Color(0xFFE3E3E3)
+    val border: Color = if (light) Color(0xFF1B1B1B) else Color(0xFFE3E3E3),
+    val ripple: Color = if (light) BotStacksColorPalette.Primary._900 else BotStacksColorPalette.Dark._600
 )
+
+val Colors.primaryText: Color
+    @Composable get() = if (light) BotStacksColorPalette.Dark._900 else BotStacksColorPalette.Light._600
 
 
 object BotStacksColorPalette {
@@ -97,5 +102,5 @@ data object LightPalette : ColorPalette {
     val _600 = Color(0xFFEFEFF0)
     val _700 = Color(0xFFF4F4F5)
     val _800 = Color(0xFFFAFAFA)
-    val _900 = Color.White
+    val _900 = Color(0xFFFFFFFF)
 }
