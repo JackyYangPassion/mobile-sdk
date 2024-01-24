@@ -24,12 +24,12 @@ fun Badge(
 ) {
     if (count > 0) {
         val text = when {
-            count in 1..98 -> "$count"
+            count in 1..99 -> "$count"
             else -> "99+"
         }
 
         val contentPadding = when {
-            count in 1 .. 98 -> PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+            count in 1 .. 99 -> PaddingValues(horizontal = 8.dp, vertical = 4.dp)
             else -> PaddingValues(horizontal = 10.dp, vertical = 4.dp)
         }
         Box(
