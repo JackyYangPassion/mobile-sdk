@@ -24,14 +24,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -47,27 +45,27 @@ fun ChatDrawerHeader(chat: Chat) {
             modifier = Modifier.padding(64.dp, 24.dp, 64.dp, 24.dp)
         ) {
             Space(24f)
-            Avatar(url = chat.displayImage, size = 70.0, chat = true)
+            Avatar(url = chat.displayImage, size = AvatarSize.Large, chat = true)
             Space(12f)
-            Text(chat.displayName, fonts.title2, color = colors.text)
-            Text(chat.displayDescription ?: "", fonts.body, color = colors.caption)
+            Text(chat.displayName, fonts.title2, color = colorScheme.text)
+            Text(chat.displayDescription ?: "", fonts.body, color = colorScheme.caption)
             Space(26f)
-            Divider(color = colors.text.copy(alpha = 0.1f))
+            Divider(color = colorScheme.text.copy(alpha = 0.1f))
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 16.dp)
         ) {
-            Text(text = "All Members", iac = fonts.headline, color = colors.text)
+            Text(text = "All Members", iac = fonts.headline, color = colorScheme.text)
             Space(14f)
             Image(
                 painter = Drawables.UsersThreeFilled,
                 contentDescription = "member count",
-                colorFilter = ColorFilter.tint(colors.caption),
+                colorFilter = ColorFilter.tint(colorScheme.caption),
                 modifier = Modifier.size(16)
             )
             Space()
-            Text(chat.members.size.toString(), fonts.caption, color = colors.caption)
+            Text(chat.members.size.toString(), fonts.caption, color = colorScheme.caption)
         }
     }
 }
@@ -85,9 +83,9 @@ fun ChatDrawer(
     ModalBottomSheetLayout(
         sheetState = state,
         modifier = Modifier.fillMaxSize(),
-        sheetBackgroundColor = colors.background,
-        sheetContentColor = colors.text,
-        scrimColor = colors.caption,
+        sheetBackgroundColor = colorScheme.background,
+        sheetContentColor = colorScheme.text,
+        scrimColor = colorScheme.caption,
         sheetContent = {
             Box(contentAlignment = Alignment.BottomCenter) {
                 Column {
@@ -103,7 +101,7 @@ fun ChatDrawer(
                                 Text(
                                     text = name.uppercase(),
                                     iac = fonts.caption.copy(weight = FontWeight.Bold),
-                                    color = colors.caption,
+                                    color = colorScheme.caption,
                                     modifier = Modifier.padding(top = 24.dp, start = 16.dp)
                                 )
                             }
@@ -143,7 +141,7 @@ fun ChatDrawerPreview() {
             ClickableText(
                 text = "hello",
                 iac = fonts.body,
-                color = colors.text,
+                color = colorScheme.text,
                 onClick = { coroutineContext.launch { open.show() } })
         }
     }

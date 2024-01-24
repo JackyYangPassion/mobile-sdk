@@ -16,15 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.actions.react
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
@@ -95,7 +94,7 @@ fun ReplyCount(count: Int) {
         Text(
             text = "$count replies",
             iac = fonts.body,
-            color = colors.primary,
+            color = colorScheme.primary,
             modifier = Modifier.padding(4.dp)
         )
     }
@@ -108,7 +107,7 @@ fun Favorite(favorite: Boolean) {
             Icon(
                 painter = Drawables.StarFilled,
                 contentDescription = "favorite",
-                tint = colors.primary,
+                tint = colorScheme.primary,
                 modifier = Modifier.size(20),
             )
         }
@@ -118,7 +117,7 @@ fun Favorite(favorite: Boolean) {
 @Composable
 fun Spinner(loading: Boolean) {
     if (loading) {
-        CircularProgressIndicator(color = colors.primary, modifier = Modifier.size(20))
+        CircularProgressIndicator(color = colorScheme.primary, modifier = Modifier.size(20))
     }
 }
 
@@ -126,7 +125,7 @@ fun Spinner(loading: Boolean) {
 fun Avvy(url: String?, onClick: Fn) {
     Pressable(onClick = onClick) {
         println("User avatar $url")
-        Avatar(url)
+        Avatar(url = url)
     }
 }
 
@@ -142,13 +141,13 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
                     }",
                     onClick = { msg.react(reaction.first) },
                     iac = fonts.body,
-                    color = colors.text,
+                    color = colorScheme.text,
                     modifier = Modifier
                         .radius(36.dp)
-                        .background(colors.bubble)
+                        .background(colorScheme.bubble)
                         .border(
                             2.dp,
-                            if (msg.currentReaction == reaction.first) colors.primary else Color.Transparent,
+                            if (msg.currentReaction == reaction.first) colorScheme.primary else Color.Transparent,
                             RoundedCornerShape(36.dp)
                         )
                         .padding(theme.bubblePadding)
@@ -181,12 +180,12 @@ fun MessageTop(msg: Message) {
         Text(
             text = msg.user.username,
             iac = fonts.username,
-            color = ift(msg.user.isCurrent, colors.senderUsername, colors.username),
+            color = ift(msg.user.isCurrent, colorScheme.senderUsername, colorScheme.username),
             modifier = Modifier
                 .requiredSizeIn(maxWidth = 120.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = msg.createdAt.timeAgo(), iac = fonts.timestamp, color = colors.timestamp)
+        Text(text = msg.createdAt.timeAgo(), iac = fonts.timestamp, color = colorScheme.timestamp)
     }
 }

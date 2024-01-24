@@ -27,12 +27,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ai.botstacks.sdk.API
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.actions.update
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Upload
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
@@ -129,13 +128,13 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                         AsyncImage(
                             model = it,
                             contentDescription = "chat avatar",
-                            modifier = Modifier.circle(116.dp, colors.softBackground),
+                            modifier = Modifier.circle(116.dp, colorScheme.softBackground),
                             contentScale = ContentScale.Crop
                         )
                     } ?: Image(
                         painter = Drawables.PlusCircleFilled,
                         contentDescription = "Add chat image",
-                        colorFilter = ColorFilter.tint(colors.softBackground),
+                        colorFilter = ColorFilter.tint(colorScheme.softBackground),
                         modifier = Modifier.size(95.dp)
                     )
                 }
@@ -146,11 +145,11 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             modifier = Modifier
                                 .padding(8.dp, 0.dp)
                         ) {
-                            Text(text = "Channel Name", iac = fonts.headline, color = colors.text)
+                            Text(text = "Channel Name", iac = fonts.headline, color = colorScheme.text)
                             Text(
                                 text = "${state.name.length}/25",
                                 iac = fonts.headline,
-                                color = colors.caption
+                                color = colorScheme.caption
                             )
                         }
                         Space()
@@ -165,7 +164,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 }
                             },
                             modifier = Modifier
-                                .border(1.dp, colors.border, CircleShape)
+                                .border(1.dp, colorScheme.border, CircleShape)
                                 .clickable { nameFocus.requestFocus() },
                             focusRequester = nameFocus,
                             keyboardActions = KeyboardActions(onNext = { descriptionFocus.captureFocus() }),
@@ -181,12 +180,12 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             Text(
                                 text = "Channel Description (Optional)",
                                 iac = fonts.headline,
-                                color = colors.text
+                                color = colorScheme.text
                             )
                             Text(
                                 text = "${state.description?.length ?: "0"}/100",
                                 iac = fonts.headline,
-                                color = colors.caption
+                                color = colorScheme.caption
                             )
                         }
                         Space()
@@ -197,7 +196,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 state.description = if (it.length > 100) it.slice(0..100) else it
                             },
                             modifier = Modifier
-                                .border(1.dp, colors.border, RoundedCornerShape(22.dp))
+                                .border(1.dp, colorScheme.border, RoundedCornerShape(22.dp))
                                 .clickable { descriptionFocus.requestFocus() },
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                             keyboardActions = KeyboardActions(onNext = { keyboardController?.hide() }),
@@ -209,7 +208,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                         Text(
                             text = "Privacy Settings",
                             iac = fonts.headline,
-                            color = colors.text,
+                            color = colorScheme.text,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                         Space()
@@ -217,15 +216,15 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             modifier = Modifier
                                 .height(50.dp)
                                 .fillMaxWidth()
-                                .background(colors.softBackground, RoundedCornerShape(25.dp))
-                                .border(1.dp, colors.border, RoundedCornerShape(25.dp))
+                                .background(colorScheme.softBackground, RoundedCornerShape(25.dp))
+                                .border(1.dp, colorScheme.border, RoundedCornerShape(25.dp))
                         ) {
                             Box(
                                 modifier = Modifier
                                     .height(50.dp)
                                     .weight(1f)
                                     .background(
-                                        if (state._private) Color.Transparent else colors.primary,
+                                        if (state._private) Color.Transparent else colorScheme.primary,
                                         RoundedCornerShape(25.dp)
                                     )
                                     .clickable {
@@ -239,7 +238,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 Text(
                                     text = "Public",
                                     iac = fonts.title3,
-                                    color = if (state._private) colors.text else colors.background
+                                    color = if (state._private) colorScheme.text else colorScheme.background
                                 )
                             }
                             Box(
@@ -247,7 +246,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                     .height(50.dp)
                                     .weight(1f)
                                     .background(
-                                        if (!state._private) Color.Transparent else colors.primary,
+                                        if (!state._private) Color.Transparent else colorScheme.primary,
                                         RoundedCornerShape(25.dp)
                                     )
                                     .clickable {
@@ -260,7 +259,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 Text(
                                     text = "Private",
                                     iac = fonts.title3,
-                                    color = if (!state._private) colors.text else colors.background
+                                    color = if (!state._private) colorScheme.text else colorScheme.background
                                 )
                             }
                         }
@@ -269,7 +268,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             text = if (state._private) "Private channels will not be seen by anyone unless they are\n" +
                                     "invited to join the channel." else "Public channels will be viewed by all and available for everyone to join.",
                             iac = fonts.caption,
-                            color = colors.text
+                            color = colorScheme.text
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f, true))
@@ -279,7 +278,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 .clickable { }
                                 .height(50.dp)
                                 .background(
-                                    if (canSubmit) colors.primary else colors.softBackground,
+                                    if (canSubmit) colorScheme.primary else colorScheme.softBackground,
                                     RoundedCornerShape(25.dp)
                                 ),
                             contentAlignment = Alignment.Center
@@ -288,7 +287,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 if (state.chat.updating == true) {
                                     Spinner()
                                 }
-                                Text(text = "Save", iac = fonts.headline, color = colors.text)
+                                Text(text = "Save", iac = fonts.headline, color = colorScheme.text)
                             }
                         }
                     } else {
@@ -302,13 +301,13 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 },
                                 modifier = Modifier.circle(
                                     50.dp,
-                                    if (canSubmit) colors.primary else colors.softBackground
+                                    if (canSubmit) colorScheme.primary else colorScheme.softBackground
                                 )
                             ) {
                                 Icon(
                                     painter = painterResource(id = androidx.media3.ui.R.drawable.exo_ic_chevron_right),
                                     contentDescription = "Create chat",
-                                    tint = colors.text,
+                                    tint = colorScheme.text,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }

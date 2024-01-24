@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.utils.IPreviews
 
@@ -43,14 +43,14 @@ private fun Tab(
                 Text(
                     tab.label,
                     fonts.title2.copy(weight = FontWeight.Bold),
-                    color = if (selected) colors.primary else colors.caption,
+                    color = if (selected) colorScheme.primary else colorScheme.caption,
                 )
                 Badge(count = unreadCount, modifier = Modifier.offset(10.dp, -5.dp))
             }
             if (selected) {
                 Spacer(
                     modifier = Modifier
-                        .background(colors.primary, CircleShape)
+                        .background(colorScheme.primary, CircleShape)
                         .height(4.dp)
                         .fillMaxWidth()
                 )

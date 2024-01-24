@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.resources.Drawables
 import androidx.compose.ui.graphics.painter.Painter
 
@@ -59,23 +59,23 @@ fun SimpleRow(
                 painter = icon,
                 contentDescription = "icon",
                 modifier = Modifier.size(40),
-                colorFilter = ColorFilter.tint(if (destructive) colors.destructive else if (iconPrimary) colors.primary else colors.text)
+                colorFilter = ColorFilter.tint(if (destructive) colorScheme.destructive else if (iconPrimary) colorScheme.primary else colorScheme.text)
             )
             Text(
                 text = text,
                 iac = fonts.title3.copy(weight = FontWeight.Bold),
-                color = if (destructive) colors.destructive else colors.text
+                color = if (destructive) colorScheme.destructive else colorScheme.text
             )
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = Drawables.CaretLeft,
                 contentDescription = "more",
-                colorFilter = ColorFilter.tint(if (destructive) colors.destructive else colors.caption),
+                colorFilter = ColorFilter.tint(if (destructive) colorScheme.destructive else colorScheme.caption),
                 modifier = Modifier
                     .size(16.dp)
                     .rotate(180f)
             )
         }
-        Divider(color = colors.softBackground)
+        Divider(color = colorScheme.softBackground)
     }
 }

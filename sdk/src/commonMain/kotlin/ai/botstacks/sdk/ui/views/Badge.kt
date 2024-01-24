@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ai.botstacks.sdk.ui.IAC
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.utils.IPreviews
 
 
@@ -20,7 +20,7 @@ fun Badge(count: Int, modifier: Modifier = Modifier) {
     Box(
       modifier = modifier
           .size(18.dp)
-        .background(color = IAC.colors.unread, shape = CircleShape),
+        .background(color = BotStacks.colorScheme.unread, shape = CircleShape),
       contentAlignment = Alignment.Center
     ) {
       androidx.compose.material3.Text(

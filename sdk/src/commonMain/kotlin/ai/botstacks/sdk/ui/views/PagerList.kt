@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.Identifiable
 import ai.botstacks.sdk.state.Pager
-import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.utils.Fn
 import kotlinx.coroutines.launch
 
@@ -87,7 +87,7 @@ fun <T : Identifiable> IACList(
                 items(items, key = { item -> item.id }) { item ->
                     Column(Modifier.padding(0.dp)) {
                         content(item)
-                        if (divider) Divider(color = colors.caption)
+                        if (divider) Divider(color = colorScheme.caption)
                     }
                 }
             }

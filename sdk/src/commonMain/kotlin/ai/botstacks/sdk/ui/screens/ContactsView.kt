@@ -22,9 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.views.ContactRow
 import ai.botstacks.sdk.ui.views.Header
 import ai.botstacks.sdk.ui.views.PagerList
@@ -73,7 +73,7 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
                             )
                             Row(modifier = Modifier
                                 .radius(13.dp)
-                                .background(colors.background)
+                                .background(colorScheme.background)
                                 .clickable {
                                     permissionLauncher.launch(Manifest.permission.READ_CONTACTS)
                                 }
@@ -82,7 +82,7 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
                                 Text(
                                     text = "Sync",
                                     iac = fonts.body.copy(weight = FontWeight.Bold),
-                                    color = colors.text
+                                    color = colorScheme.text
                                 )
                             }
                         }

@@ -12,13 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.utils.IPreviews
 
 @Composable
 fun Spinner() {
-    CircularProgressIndicator(color = colors.primary)
+    CircularProgressIndicator(color = colorScheme.primary)
 }
 
 @Composable
@@ -28,7 +28,7 @@ fun SpinnerList() {
           .padding(64.dp)
           .fillMaxSize(), contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(color = colors.primary)
+        CircularProgressIndicator(color = colorScheme.primary)
     }
 }
 

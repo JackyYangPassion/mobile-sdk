@@ -21,20 +21,18 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.yazantarifi.compose.library.MarkdownConfig
 import com.yazantarifi.compose.library.MarkdownViewComposable
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.location
 import ai.botstacks.sdk.state.markdown
 import ai.botstacks.sdk.state.vcard
 import ai.botstacks.sdk.type.AttachmentType
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -51,8 +49,8 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
             .background(
                 ift(
                     message.user.isCurrent,
-                    colors.senderBubble,
-                    colors.bubble
+                    colorScheme.senderBubble,
+                    colorScheme.bubble
                 ),
                 RoundedCornerShape(theme.bubbleRadius.dp)
             )

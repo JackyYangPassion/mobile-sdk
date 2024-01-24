@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.ui.IAC
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.ift
@@ -24,7 +24,7 @@ fun PrivacyPill(_private: Boolean = false) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .background(
-                ift(!_private, IAC.theme.colors._private, IAC.theme.colors._public),
+                ift(!_private, BotStacks.theme.colors._private, BotStacks.theme.colors._public),
                 RoundedCornerShape(8.dp)
             )
             .padding(6.dp, 1.dp)

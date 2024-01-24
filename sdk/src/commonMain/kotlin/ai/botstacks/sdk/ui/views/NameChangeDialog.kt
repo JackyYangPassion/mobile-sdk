@@ -27,7 +27,7 @@ import com.apollographql.apollo3.api.Optional
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.UpdateProfileInput
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.bg
 import kotlinx.coroutines.launch

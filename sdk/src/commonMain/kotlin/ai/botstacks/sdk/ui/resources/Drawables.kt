@@ -100,6 +100,10 @@ object Drawables {
         @Composable get() = resourceForName("users_fill")
     val UsersThreeFilled: Painter
         @Composable get() = resourceForName("users_three_fill")
+    val UserOutlined: Painter
+        @Composable get() = resourceForName("user_outlined")
+    val UsersOutlined: Painter
+        @Composable get() = resourceForName("users_outlined")
     val VideoCamera: Painter
         @Composable get() = resourceForName("video_camera")
     val X: Painter

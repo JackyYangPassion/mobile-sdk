@@ -16,13 +16,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.actions.send
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.ui.IAC.colors
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.Fn
@@ -65,7 +63,7 @@ fun MessageInput(
                         painter = Drawables.PaperclipFilled,
                         contentDescription = "send attachment",
                         modifier = Modifier.size(20.dp),
-                        tint = colors.caption
+                        tint = colorScheme.caption
                     )
                 }
             }
@@ -73,13 +71,13 @@ fun MessageInput(
                 Space(8f)
                 IconButton(
                     onClick = onSend,
-                    modifier = Modifier.circle(44.dp, colors.softBackground)
+                    modifier = Modifier.circle(44.dp, colorScheme.softBackground)
                 ) {
                     Icon(
                         painter = Drawables.PaperPlaneTiltFilled,
                         contentDescription = "send message",
                         modifier = Modifier.size(22.dp),
-                        tint = colors.primary
+                        tint = colorScheme.primary
                     )
                 }
             }

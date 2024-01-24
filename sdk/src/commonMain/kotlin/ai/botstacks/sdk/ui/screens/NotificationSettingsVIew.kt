@@ -16,8 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.type.NotificationSetting
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.GrowSpacer
 import ai.botstacks.sdk.ui.views.Header
@@ -32,12 +32,12 @@ fun Option(name: String, selected: Boolean, onClick: () -> Unit) {
             .height(64.dp)
             .padding(16.dp)
     ) {
-        Text(name, iac = fonts.headline, color = colors.text)
+        Text(name, iac = fonts.headline, color = colorScheme.text)
         GrowSpacer()
         RadioButton(
             selected = selected,
             onClick = onClick,
-            colors = RadioButtonDefaults.colors(selectedColor = colors.primary)
+            colors = RadioButtonDefaults.colors(selectedColor = colorScheme.primary)
         )
     }
 }
@@ -48,7 +48,7 @@ fun NotificationSettingsView(back: () -> Unit) {
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
         Header(title = "Manage Notifications", back = back)
         Row(modifier = Modifier.padding(start = 16.dp)) {
-            Text(text = "Notification Status", iac = fonts.body, color = colors.text)
+            Text(text = "Notification Status", iac = fonts.body, color = colorScheme.text)
         }
         Space(20f)
         Option(
@@ -79,12 +79,12 @@ fun NotificationSettingsView(back: () -> Unit) {
                 modifier = Modifier
                     .clickable { back() }
                     .height(60.dp)
-                    .background(colors.primary, RoundedCornerShape(30.dp))
+                    .background(colorScheme.primary, RoundedCornerShape(30.dp))
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
             ) {
-                Text(text = "Update".uppercase(), iac = fonts.headline, color = colors.background)
+                Text(text = "Update".uppercase(), iac = fonts.headline, color = colorScheme.background)
             }
         }
     }

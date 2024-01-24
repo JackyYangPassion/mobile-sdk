@@ -10,7 +10,7 @@ import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.IAC.theme
+import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*

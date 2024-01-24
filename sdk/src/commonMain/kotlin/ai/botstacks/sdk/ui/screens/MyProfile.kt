@@ -19,12 +19,11 @@ import androidx.compose.ui.unit.dp
 import com.apollographql.apollo3.api.Optional
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.BotStacksChat
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.UpdateProfileInput
-import ai.botstacks.sdk.ui.IAC.colors
-import ai.botstacks.sdk.ui.IAC.fonts
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
@@ -59,7 +58,10 @@ fun MyProfile(
             modifier = Modifier.fillMaxWidth()
         ) {
             Box(modifier = Modifier.clickable { showImage = true }) {
-                Avatar(url = upload?.uri?.toString() ?: User.current?.avatar, 130.0)
+                Avatar(
+                    url = upload?.uri?.toString() ?: User.current?.avatar,
+                    size = AvatarSize.Large,
+                )
             }
             Space()
             Box(modifier = Modifier
@@ -68,7 +70,7 @@ fun MyProfile(
                 Text(
                     text = User.current?.username ?: "",
                     iac = fonts.title2,
-                    color = colors.text,
+                    color = colorScheme.text,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.widthIn(max = 150.dp)
                 )
@@ -98,7 +100,7 @@ fun MyProfile(
                             .weight(1f)
                             .fillMaxHeight()
                             .clickable { logoutDialogue = false }) {
-                        Text(text = "No", iac = fonts.headline, color = colors.text)
+                        Text(text = "No", iac = fonts.headline, color = colorScheme.text)
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -111,7 +113,7 @@ fun MyProfile(
                                 BotStacksChat.logout()
                             }
                     ) {
-                        Text(text = "Log out", iac = fonts.headline, color = colors.primary)
+                        Text(text = "Log out", iac = fonts.headline, color = colorScheme.primary)
                     }
                 }
             },
@@ -119,10 +121,10 @@ fun MyProfile(
                 Text(
                     text = "Are you sure you want to logout?",
                     iac = fonts.headline,
-                    color = colors.text
+                    color = colorScheme.text
                 )
             },
-            backgroundColor = colors.background
+            backgroundColor = colorScheme.background
         )
     }
     if (showImage) {

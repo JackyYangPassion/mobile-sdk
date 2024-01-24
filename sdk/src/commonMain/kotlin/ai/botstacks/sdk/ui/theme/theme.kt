@@ -37,6 +37,10 @@ class Theme {
         get() = if (isDark) dark else light
 
     @Stable
+    val colorPalette: BotStacksColorPalette
+        get() = BotStacksColorPalette
+
+    @Stable
     fun markdownConfig(sender: Boolean) = MarkdownConfig(
         isLinksClickable = true,
         isImagesClickable = false,
