@@ -91,8 +91,7 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
             },
         ) {
             UserRow(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                modifier = Modifier.fillMaxWidth(),
                 user = it
             ) {
                 openProfile(it)

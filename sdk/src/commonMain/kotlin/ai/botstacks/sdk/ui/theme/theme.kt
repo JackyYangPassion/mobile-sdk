@@ -57,8 +57,7 @@ internal fun Theme(
     ) {
         Box(
             modifier = Modifier
-                .background(colorScheme.colors(isDark).background)
-                .fillMaxSize()
+                .background(colorScheme.colors(isDark).background),
         ) {
             CompositionLocalProvider(LocalContentColor provides colorScheme.colors(isDark).text) {
                 content()

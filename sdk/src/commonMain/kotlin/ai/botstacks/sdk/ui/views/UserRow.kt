@@ -6,6 +6,7 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.theme.FullAlphaRipple
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
+import ai.botstacks.sdk.ui.views.internal.RippleBehindContentBox
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,18 +49,9 @@ fun UserRow(
     displayName: String,
     onClick: () -> Unit,
 ) {
-    CompositionLocalProvider(LocalRippleTheme provides FullAlphaRipple) {
+    RippleBehindContentBox(modifier = modifier, onClick = onClick) {
         Row(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .clip(BotStacks.shapes.medium)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(color = LocalBotStacksColorScheme.current.ripple),
-                    onClick = onClick
-                )
-                .padding(horizontal = 10.dp, vertical = 10.dp)
-                .then(modifier),
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
