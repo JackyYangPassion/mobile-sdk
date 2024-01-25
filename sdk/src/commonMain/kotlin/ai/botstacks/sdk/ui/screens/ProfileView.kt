@@ -39,7 +39,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
         ) {
             Avatar(url = user.avatar,  size = AvatarSize.Large,)
             Space()
-            Text(text = user.displayNameFb, iac = fonts.headline, color = colorScheme.text)
+            Text(text = user.displayNameFb, fontStyle = fonts.body2, color = colorScheme.text)
             Box(
                     modifier = Modifier
                             .padding(12.dp, 5.dp)
@@ -50,7 +50,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
                 Text(
                         text = if (user.status == OnlineStatus.Online) "Online" else user.lastSeen?.timeAgo()
                                 ?: "",
-                        iac = fonts.body,
+                        fontStyle = fonts.body1,
                         color = if (user.status == OnlineStatus.Online) colorScheme.primary else colorScheme.caption
                 )
             }

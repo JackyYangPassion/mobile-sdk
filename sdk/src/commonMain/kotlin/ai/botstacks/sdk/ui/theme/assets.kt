@@ -8,6 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
 import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.BotStacksChatStore
+import androidx.compose.runtime.staticCompositionLocalOf
 
 @Stable
 data class EmptyScreenConfig(@DrawableRes val image: Int? = null, val caption: String? = null)
@@ -37,3 +38,5 @@ data class Assets(
         BotStacksChatStore.List.groups -> emptyChannels
     }
 }
+
+internal val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }

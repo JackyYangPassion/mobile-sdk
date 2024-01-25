@@ -22,13 +22,13 @@ import ai.botstacks.sdk.actions.react
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MessageView(
     message: Message,
@@ -40,7 +40,7 @@ fun MessageView(
         return
     }
     val current = message.user.isCurrent
-    val align = if (current) theme.senderAlignment else theme.messageAlignment
+    val align = if (current) dimens.senderAlignment else dimens.messageAlignment
 
     Column(
         horizontalAlignment = align,
@@ -93,7 +93,7 @@ fun ReplyCount(count: Int) {
     if (count > 0) {
         Text(
             text = "$count replies",
-            iac = fonts.body,
+            fontStyle = fonts.body1,
             color = colorScheme.primary,
             modifier = Modifier.padding(4.dp)
         )
@@ -140,7 +140,7 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
                             .size
                     }",
                     onClick = { msg.react(reaction.first) },
-                    iac = fonts.body,
+                    iac = fonts.body1,
                     color = colorScheme.text,
                     modifier = Modifier
                         .radius(36.dp)
@@ -150,7 +150,7 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
                             if (msg.currentReaction == reaction.first) colorScheme.primary else Color.Transparent,
                             RoundedCornerShape(36.dp)
                         )
-                        .padding(theme.bubblePadding)
+                        .padding(dimens.bubblePadding)
                 )
             }
         }
@@ -162,8 +162,8 @@ fun Content(msg: Message, modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = ift(
             msg.user.isCurrent,
-            theme.senderAlignment,
-            theme.messageAlignment
+            dimens.senderAlignment,
+            dimens.messageAlignment
         ), verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
     ) {
@@ -179,13 +179,13 @@ fun MessageTop(msg: Message) {
     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = msg.user.username,
-            iac = fonts.username,
+            fontStyle = fonts.body1,
             color = ift(msg.user.isCurrent, colorScheme.senderUsername, colorScheme.username),
             modifier = Modifier
                 .requiredSizeIn(maxWidth = 120.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = msg.createdAt.timeAgo(), iac = fonts.timestamp, color = colorScheme.timestamp)
+        Text(text = msg.createdAt.timeAgo(), fontStyle = fonts.caption2, color = colorScheme.timestamp)
     }
 }

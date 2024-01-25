@@ -41,7 +41,7 @@ fun MessageList(
         modifier = modifier,
         scrollToTop = chat.sending.firstOrNull()?.id ?: chat.items.firstOrNull()?.id,
         invert = true,
-        empty = { Text(text = "No messages yet.", iac = fonts.title3) }) {
+        empty = { Text(text = "No messages yet.", fontStyle = fonts.h3) }) {
         if (it is SendingMessage) {
             SendingMessageView(message = it)
         } else if (it is Message) {
@@ -91,7 +91,7 @@ fun SendingMessageView(message: SendingMessage) {
         if (message.failed) {
             Text(
                 text = "The message failed to send. Tap to retry.",
-                iac = fonts.body,
+                fontStyle = fonts.body1,
                 color = Color.Red
             )
         }

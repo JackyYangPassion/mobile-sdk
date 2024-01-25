@@ -4,8 +4,8 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.BotStacksTheme
-import ai.botstacks.sdk.ui.theme.primaryText
+import ai.botstacks.sdk.ui.theme.FullAlphaRipple
+import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -48,13 +48,16 @@ fun UserRow(
     displayName: String,
     onClick: () -> Unit,
 ) {
-    CompositionLocalProvider(LocalRippleTheme provides BotStacks.theme.ripple) {
+    CompositionLocalProvider(LocalRippleTheme provides FullAlphaRipple) {
         Row(
             modifier = Modifier
-                .background(BotStacks.colorScheme.background)
                 .padding(horizontal = 10.dp)
                 .clip(BotStacks.shapes.medium)
-                .clickable { onClick() }
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(color = LocalBotStacksColorScheme.current.ripple),
+                    onClick = onClick
+                )
                 .padding(horizontal = 10.dp, vertical = 10.dp)
                 .then(modifier),
             verticalAlignment = Alignment.CenterVertically,
@@ -63,8 +66,8 @@ fun UserRow(
             Avatar(type = AvatarType.User(url, onlineStatus))
             Text(
                 text = displayName,
-                iac = BotStacks.fonts.body,
-                color = BotStacks.colorScheme.primaryText
+                fontStyle = BotStacks.fonts.body1,
+                color = BotStacks.colorScheme.text
             )
         }
     }

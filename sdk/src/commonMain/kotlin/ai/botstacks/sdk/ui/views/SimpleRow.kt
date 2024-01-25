@@ -63,7 +63,7 @@ fun SimpleRow(
             )
             Text(
                 text = text,
-                iac = fonts.title3.copy(weight = FontWeight.Bold),
+                fontStyle = fonts.h3.copy(weight = FontWeight.Bold),
                 color = if (destructive) colorScheme.destructive else colorScheme.text
             )
             Spacer(modifier = Modifier.weight(1f))

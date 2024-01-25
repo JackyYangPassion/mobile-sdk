@@ -10,7 +10,7 @@ import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.BotStacks.theme
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.ui.views.*
@@ -46,7 +46,7 @@ fun ChatsView(
         }
     }
     val empty = @Composable {
-        EmptyListView(config = theme.assets.list(list), cta = cta)
+        EmptyListView(config = BotStacks.assets.list(list), cta = cta)
     }
 //        PagerList(
 //            pager = Chats.current.messages,

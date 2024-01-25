@@ -3,48 +3,33 @@ package ai.botstacks.sdk.ui.theme
  * Copyright (c) 2023.
  */
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.ripple.RippleAlpha
-import androidx.compose.material.ripple.RippleTheme
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.geometry.Size
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.yazantarifi.compose.library.MarkdownConfig
 
-@Stable
-class Theme {
-    var fonts by mutableStateOf(Fonts())
-    var light: Colors by mutableStateOf(Colors(true))
-    var dark: Colors by mutableStateOf(Colors(false))
-    var imagePreviewSize by mutableStateOf(Size(width = 178f, height = 152f))
-    var videoPreviewSize by mutableStateOf(Size(width = 178f, height = 152f))
-    var messageAlignment by mutableStateOf(Alignment.Start)
-    var senderAlignment by mutableStateOf(Alignment.End)
-    var bubbleRadius by mutableStateOf(7.5f)
-    var bubblePadding by mutableStateOf(PaddingValues(6.dp))
-    var assets by mutableStateOf(Assets())
-    var isDark by mutableStateOf(false)
-
-    @Stable
-    val colors: Colors
-        get() = if (isDark) dark else light
-
-    @Stable
-    val colorPalette: BotStacksColorPalette
-        get() = BotStacksColorPalette
-
-    val shapes: Shapes
-        get() = ai.botstacks.sdk.ui.theme.shapes
-
-    val ripple: RippleTheme
-        get() = BotStacksRippleTheme(colors.ripple, isDark)
+@Composable
+internal fun Theme(
+    assets: Assets,
+    isDark: Boolean,
+    colorScheme: DayNightColorScheme,
+    dimens: Dimens,
+    fonts: Fonts,
+    shapes: Shapes,
+    content: @Composable () -> Unit,
+) {
+    val _colorsScheme = remember(isDark, colorScheme) {
+        colorScheme.colors(isDark)
+    }
 
     @Stable
     fun markdownConfig(sender: Boolean) = MarkdownConfig(
@@ -53,33 +38,33 @@ class Theme {
         isScrollEnabled = false,
         colors = HashMap<String, Color>().apply {
             this[MarkdownConfig.CHECKBOX_COLOR] = Color.Black
-            this[MarkdownConfig.LINKS_COLOR] = colors.primary
-            this[MarkdownConfig.TEXT_COLOR] = if (sender) colors.senderText else colors.bubbleText
-            this[MarkdownConfig.HASH_TEXT_COLOR] = colors.primary
+            this[MarkdownConfig.LINKS_COLOR] = _colorsScheme.primary
+            this[MarkdownConfig.TEXT_COLOR] = if (sender) _colorsScheme.senderText else _colorsScheme.bubbleText
+            this[MarkdownConfig.HASH_TEXT_COLOR] = _colorsScheme.primary
             this[MarkdownConfig.CODE_BACKGROUND_COLOR] = Color.Gray
             this[MarkdownConfig.CODE_BLOCK_TEXT_COLOR] = Color.White
         }
     )
 
-    @Stable
-    val inverted: Colors
-        get() = if (isDark) light else dark
-
-    @Stable
-    fun with(dark: Boolean): Theme {
-        this.isDark = dark
-        return this
-    }
-
-    fun fromOtherTheme(it: Theme) {
-        this.light = it.light
-        this.dark = it.dark
-        this.imagePreviewSize = it.imagePreviewSize
-        this.videoPreviewSize = it.videoPreviewSize
-        this.messageAlignment = it.messageAlignment
-        this.senderAlignment = it.senderAlignment
-        this.bubbleRadius = it.bubbleRadius
-        this.bubblePadding = it.bubblePadding
-        this.assets = it.assets
+    CompositionLocalProvider(
+        LocalBotStacksAssets provides assets,
+        LocalBotStacksDayNightColorScheme provides colorScheme,
+        LocalBotStacksColorScheme provides _colorsScheme,
+        LocalBotStacksDimens provides dimens,
+        LocalBotStacksFonts provides fonts,
+        LocalBotStacksMarkdownConfig provides { sender -> markdownConfig(sender) },
+        LocalBotStacksShapes provides shapes,
+    ) {
+        Box(
+            modifier = Modifier
+                .background(colorScheme.colors(isDark).background)
+                .fillMaxSize()
+        ) {
+            CompositionLocalProvider(LocalContentColor provides colorScheme.colors(isDark).text) {
+                content()
+            }
+        }
     }
 }
+
+internal val LocalBotStacksMarkdownConfig = staticCompositionLocalOf { { sender: Boolean -> MarkdownConfig() } }

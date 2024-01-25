@@ -69,7 +69,7 @@ fun MyProfile(
                 .clickable { editUsername = true }) {
                 Text(
                     text = User.current?.username ?: "",
-                    iac = fonts.title2,
+                    fontStyle = fonts.h2,
                     color = colorScheme.text,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.widthIn(max = 150.dp)
@@ -100,7 +100,7 @@ fun MyProfile(
                             .weight(1f)
                             .fillMaxHeight()
                             .clickable { logoutDialogue = false }) {
-                        Text(text = "No", iac = fonts.headline, color = colorScheme.text)
+                        Text(text = "No", fontStyle = fonts.button2, color = colorScheme.text)
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -113,14 +113,14 @@ fun MyProfile(
                                 BotStacksChat.logout()
                             }
                     ) {
-                        Text(text = "Log out", iac = fonts.headline, color = colorScheme.primary)
+                        Text(text = "Log out", fontStyle = fonts.button2, color = colorScheme.primary)
                     }
                 }
             },
             title = {
                 Text(
                     text = "Are you sure you want to logout?",
-                    iac = fonts.headline,
+                    fontStyle = fonts.body2,
                     color = colorScheme.text
                 )
             },

@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.ui.views
 
+import ai.botstacks.sdk.ui.BotStacks
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -13,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -30,13 +30,13 @@ fun ChatCount(count: Int) {
             painter = Drawables.UsersFilled,
             contentDescription = "members",
             modifier = Modifier.size(16.dp),
-            tint = theme.colors.caption
+            tint = BotStacks.colorScheme.caption
         )
         Space()
         Text(
             text = count.toString().annotated(),
-            iac = theme.fonts.caption,
-            color = theme.colors.caption
+            iac = BotStacks.fonts.caption1,
+            color = BotStacks.colorScheme.caption
         )
     }
 }

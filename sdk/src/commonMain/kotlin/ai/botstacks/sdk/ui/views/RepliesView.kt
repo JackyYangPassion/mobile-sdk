@@ -33,10 +33,10 @@ fun RepliesView(
                 .padding(16.dp, 12.dp, 0.dp, 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = "#${message.chat.name ?: ""}", iac = fonts.title3, color = colorScheme.text)
+            Text(text = "#${message.chat.name ?: ""}", fontStyle = fonts.h3, color = colorScheme.text)
             Text(
                 text = message.chat.members.map { it.user }.usernames(),
-                iac = fonts.body,
+                fontStyle = fonts.body1,
                 color = colorScheme.caption
             )
             for (msg in message.replies.items) {

@@ -87,7 +87,7 @@ fun ChatChat(
                             Column {
                                 Text(
                                     text = chat.displayName,
-                                    iac = fonts.title2,
+                                    fontStyle = fonts.h2,
                                     color = colorScheme.text,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis

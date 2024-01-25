@@ -56,7 +56,7 @@ fun Text(
 @Composable
 fun Text(
     text: String,
-    iac: FontStyle,
+    fontStyle: FontStyle,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     letterSpacing: TextUnit = TextUnit.Unspecified,
@@ -73,9 +73,9 @@ fun Text(
         text,
         modifier = modifier,
         color = color,
-        fontSize = iac.size,
-        fontWeight = iac.weight,
-        fontFamily = iac.family,
+        fontSize = fontStyle.size,
+        fontWeight = fontStyle.weight,
+        fontFamily = fontStyle.family,
         letterSpacing = letterSpacing,
         textDecoration = textDecoration,
         textAlign = textAlign,

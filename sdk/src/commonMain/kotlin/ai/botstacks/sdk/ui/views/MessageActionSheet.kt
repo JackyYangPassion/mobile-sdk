@@ -96,7 +96,7 @@ fun MessageActionSheetPreview() {
         }
         MessageActionSheet(message = message, hide = {}, onReply = {}) {
             Button(onClick = { message = genChatextMessage() }) {
-                Text(text = "Open Sheet", iac = fonts.headline)
+                Text(text = "Open Sheet", fontStyle = fonts.body2)
             }
         }
     }

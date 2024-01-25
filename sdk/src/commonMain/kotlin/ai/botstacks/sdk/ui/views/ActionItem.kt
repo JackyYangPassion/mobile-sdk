@@ -35,7 +35,7 @@ fun ActionItem(text: String, icon: Painter, divider: Boolean = false, action: ()
             text = {
                 Text(
                     text = text,
-                    iac = BotStacks.fonts.headline,
+                    fontStyle = BotStacks.fonts.body2,
                     color = BotStacks.colorScheme.text
                 )
             },

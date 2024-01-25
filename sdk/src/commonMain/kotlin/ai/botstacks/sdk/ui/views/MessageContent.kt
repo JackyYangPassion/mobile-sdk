@@ -32,9 +32,10 @@ import ai.botstacks.sdk.state.markdown
 import ai.botstacks.sdk.state.vcard
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
-import ai.botstacks.sdk.ui.BotStacks.theme
+import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.theme.LocalBotStacksMarkdownConfig
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genFileMessage
 import ai.botstacks.sdk.utils.genImageMessage
@@ -52,7 +53,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                     colorScheme.senderBubble,
                     colorScheme.bubble
                 ),
-                RoundedCornerShape(theme.bubbleRadius.dp)
+                RoundedCornerShape(dimens.bubbleRadius.dp)
             )
             .clipToBounds()
     ) {
@@ -70,10 +71,10 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
                                 .width(
-                                    theme.imagePreviewSize.width.dp,
+                                    dimens.imagePreviewSize.width.dp,
                                 )
                                 .height(
-                                    theme.imagePreviewSize.height.dp
+                                    dimens.imagePreviewSize.height.dp
                                 )
                                 .clip(RoundedCornerShape(15.dp))
                         )
@@ -81,8 +82,8 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                         AttachmentType.video -> VideoPlayer(
                             uri = attachment.url.toUri(),
                             modifier = Modifier
-                                .width(theme.videoPreviewSize.width.dp)
-                                .height(theme.videoPreviewSize.height.dp)
+                                .width(dimens.videoPreviewSize.width.dp)
+                                .height(dimens.videoPreviewSize.height.dp)
                                 .clip(RoundedCornerShape(15.dp))
                         )
 
@@ -96,19 +97,19 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                             colorFilter = ColorFilter.tint(
                                 ift(
                                     message.user.isCurrent,
-                                    theme.colors.senderText,
-                                    theme.colors.bubbleText
+                                    colorScheme.senderText,
+                                    colorScheme.bubbleText
                                 )
                             ),
                             modifier = Modifier.size(64)
                         )
 
                         AttachmentType.location, AttachmentType.vcard -> MarkdownViewComposable(
-                            modifier = Modifier.padding(theme.bubblePadding),
+                            modifier = Modifier.padding(dimens.bubblePadding),
                             content = attachment.location()?.markdown ?: attachment.vcard()
                                 ?.markdown()
                             ?: "No content",
-                            config = theme.markdownConfig(message.user.isCurrent),
+                            config = LocalBotStacksMarkdownConfig.current(message.user.isCurrent),
                             onLinkClickListener = { link, type ->
                                 when (type) {
                                     MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked
@@ -119,18 +120,18 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                             }
                         )
 
-                        else -> null
+                        else -> {}
                     }
                 }
             }
         }
         val ct = message.markdown
-        if (!ct.isNullOrEmpty()) {
+        if (ct.isNotEmpty()) {
             MarkdownViewComposable(
                 modifier = Modifier
-                    .padding(theme.bubblePadding),
+                    .padding(dimens.bubblePadding),
                 content = ct,
-                config = theme.markdownConfig(message.user.isCurrent)
+                config = LocalBotStacksMarkdownConfig.current(message.user.isCurrent),
             ) { link, type ->
                 when (type) {
                     MarkdownConfig.IMAGE_TYPE -> {} // Image Clicked

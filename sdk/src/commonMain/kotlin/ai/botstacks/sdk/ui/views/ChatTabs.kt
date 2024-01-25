@@ -42,7 +42,7 @@ private fun Tab(
             Box(contentAlignment = Alignment.TopEnd) {
                 Text(
                     tab.label,
-                    fonts.title2.copy(weight = FontWeight.Bold),
+                    fonts.h2.copy(weight = FontWeight.Bold),
                     color = if (selected) colorScheme.primary else colorScheme.caption,
                 )
                 Badge(count = unreadCount, modifier = Modifier.offset(10.dp, -5.dp))

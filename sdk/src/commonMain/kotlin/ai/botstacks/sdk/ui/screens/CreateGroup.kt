@@ -145,10 +145,10 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             modifier = Modifier
                                 .padding(8.dp, 0.dp)
                         ) {
-                            Text(text = "Channel Name", iac = fonts.headline, color = colorScheme.text)
+                            Text(text = "Channel Name", fontStyle = fonts.body2, color = colorScheme.text)
                             Text(
                                 text = "${state.name.length}/25",
-                                iac = fonts.headline,
+                                fontStyle = fonts.body2,
                                 color = colorScheme.caption
                             )
                         }
@@ -179,12 +179,12 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                         ) {
                             Text(
                                 text = "Channel Description (Optional)",
-                                iac = fonts.headline,
+                                fontStyle = fonts.body2,
                                 color = colorScheme.text
                             )
                             Text(
                                 text = "${state.description?.length ?: "0"}/100",
-                                iac = fonts.headline,
+                                fontStyle = fonts.body2,
                                 color = colorScheme.caption
                             )
                         }
@@ -207,7 +207,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                     Column {
                         Text(
                             text = "Privacy Settings",
-                            iac = fonts.headline,
+                            fontStyle = fonts.body2,
                             color = colorScheme.text,
                             modifier = Modifier.padding(start = 8.dp)
                         )
@@ -237,7 +237,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             ) {
                                 Text(
                                     text = "Public",
-                                    iac = fonts.title3,
+                                    fontStyle = fonts.h3,
                                     color = if (state._private) colorScheme.text else colorScheme.background
                                 )
                             }
@@ -258,7 +258,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             ) {
                                 Text(
                                     text = "Private",
-                                    iac = fonts.title3,
+                                    fontStyle = fonts.h3,
                                     color = if (!state._private) colorScheme.text else colorScheme.background
                                 )
                             }
@@ -267,7 +267,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                         Text(
                             text = if (state._private) "Private channels will not be seen by anyone unless they are\n" +
                                     "invited to join the channel." else "Public channels will be viewed by all and available for everyone to join.",
-                            iac = fonts.caption,
+                            fontStyle = fonts.caption1,
                             color = colorScheme.text
                         )
                     }
@@ -287,7 +287,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 if (state.chat.updating == true) {
                                     Spinner()
                                 }
-                                Text(text = "Save", iac = fonts.headline, color = colorScheme.text)
+                                Text(text = "Save", fontStyle = fonts.body2, color = colorScheme.text)
                             }
                         }
                     } else {
