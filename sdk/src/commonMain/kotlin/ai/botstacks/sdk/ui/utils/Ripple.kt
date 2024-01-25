@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.ui.theme
+package ai.botstacks.sdk.ui.utils
 
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme

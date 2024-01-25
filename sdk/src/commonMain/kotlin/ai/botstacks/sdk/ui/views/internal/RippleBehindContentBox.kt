@@ -1,7 +1,7 @@
 package ai.botstacks.sdk.ui.views.internal
 
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.theme.FullAlphaRipple
+import ai.botstacks.sdk.ui.utils.FullAlphaRipple
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
