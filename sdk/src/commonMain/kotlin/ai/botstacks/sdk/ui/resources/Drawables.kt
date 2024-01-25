@@ -51,7 +51,7 @@ object Drawables {
     val FileVideo: Painter
         @Composable get() = resourceForName("file_video")
     val GearFilled: Painter
-        @Composable get() = resourceForName("gear_filled")
+        @Composable get() = resourceForName("gear_fill")
     val Gif: Painter
         @Composable get() = resourceForName("gif")
     val ImageSquare: Painter

@@ -4,6 +4,10 @@ package ai.botstacks.sdk.ui.theme
  */
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,10 +17,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.yazantarifi.compose.library.MarkdownConfig
-
-
-val preview = true
-val darkMode = false
 
 @Stable
 class Theme {
@@ -39,6 +39,12 @@ class Theme {
     @Stable
     val colorPalette: BotStacksColorPalette
         get() = BotStacksColorPalette
+
+    val shapes: Shapes
+        get() = ai.botstacks.sdk.ui.theme.shapes
+
+    val ripple: RippleTheme
+        get() = BotStacksRippleTheme(colors.ripple, isDark)
 
     @Stable
     fun markdownConfig(sender: Boolean) = MarkdownConfig(

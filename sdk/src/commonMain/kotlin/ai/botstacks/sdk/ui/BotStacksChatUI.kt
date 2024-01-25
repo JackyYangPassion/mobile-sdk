@@ -148,5 +148,6 @@ fun BotStacksChatRoutes(
             SearchView(back)
         }
     }
+
     routes.invoke(navGraphBuilder)
 }

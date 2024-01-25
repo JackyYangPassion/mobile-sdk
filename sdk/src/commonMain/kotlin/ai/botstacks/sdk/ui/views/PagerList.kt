@@ -39,6 +39,8 @@ fun <T : Identifiable> IACList(
     divider: Boolean = false,
     topInset: Dp = 0.dp,
     bottomInset: Dp = 0.dp,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     scrollToTop: String? = null,
     hasMore: Boolean = false,
     loadMore: (() -> Unit)? = null,
@@ -81,7 +83,9 @@ fun <T : Identifiable> IACList(
                 contentPadding = PaddingValues(top = topInset, bottom = bottomInset),
                 state = listState,
                 reverseLayout = invert,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = verticalArrangement,
+                horizontalAlignment = horizontalAlignment,
             ) {
                 header?.let { item { it() } }
                 items(items, key = { item -> item.id }) { item ->
@@ -111,6 +115,7 @@ fun <T : Identifiable> IACList(
 @Composable
 fun <T : Identifiable> PagerList(
     pager: Pager<T>,
+    modifier: Modifier = Modifier,
     prefix: List<T> = listOf(),
     invert: Boolean = false,
     header: @Composable Fn? = null,
@@ -119,8 +124,9 @@ fun <T : Identifiable> PagerList(
     divider: Boolean = false,
     topInset: Dp = 0.dp,
     bottomInset: Dp = 0.dp,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     scrollToTop: String? = null,
-    modifier: Modifier = Modifier,
     content: @Composable LazyItemScope.(T) -> Unit
 ) {
     val array = prefix + pager.items
@@ -128,20 +134,22 @@ fun <T : Identifiable> PagerList(
         pager.loadMoreIfEmpty()
     })
     IACList(
-        modifier,
-        array,
-        invert,
-        header,
-        footer,
-        empty,
-        divider,
-        topInset,
-        bottomInset,
-        scrollToTop,
-        pager.hasMore,
-        pager::loadMore,
-        pager::refresh,
-        pager.refreshing,
-        content
+        modifier = modifier,
+        items = array,
+        invert = invert,
+        header = header,
+        footer = footer,
+        empty = empty,
+        divider = divider,
+        topInset = topInset,
+        bottomInset = bottomInset,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        scrollToTop = scrollToTop,
+        hasMore = pager.hasMore,
+        loadMore = pager::loadMore,
+        refresh = pager::refresh,
+        refreshing = pager.refreshing,
+        content = content
     )
 }

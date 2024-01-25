@@ -29,7 +29,9 @@ import ai.botstacks.sdk.ui.views.ContactRow
 import ai.botstacks.sdk.ui.views.Header
 import ai.botstacks.sdk.ui.views.PagerList
 import ai.botstacks.sdk.ui.views.Text
+import ai.botstacks.sdk.ui.views.UserRow
 import ai.botstacks.sdk.ui.views.radius
+import androidx.compose.foundation.layout.fillMaxWidth
 
 @Composable
 fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
@@ -88,8 +90,15 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
                         }
                     }
                 }
-            }) {
-            ContactRow(user = it, modifier = Modifier.clickable { openProfile(it) })
+            },
+        ) {
+            UserRow(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                user = it
+            ) {
+                openProfile(it)
+            }
         }
     }
     LaunchedEffect(key1 = scrollToTop, block = {
