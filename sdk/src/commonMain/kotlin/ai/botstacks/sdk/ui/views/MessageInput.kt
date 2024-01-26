@@ -22,13 +22,15 @@ import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalResourceApi::class)
 @Composable
 fun MessageInput(
     chat: Chat,
@@ -60,7 +62,7 @@ fun MessageInput(
             ) {
                 IconButton(onClick = onMedia, modifier = Modifier.size(20.dp)) {
                     Icon(
-                        painter = Drawables.PaperclipFilled,
+                        painter = painterResource(Res.Drawables.Filled.Paperclip),
                         contentDescription = "send attachment",
                         modifier = Modifier.size(20.dp),
                         tint = colorScheme.caption
@@ -71,10 +73,10 @@ fun MessageInput(
                 Space(8f)
                 IconButton(
                     onClick = onSend,
-                    modifier = Modifier.circle(44.dp, colorScheme.softBackground)
+                    modifier = Modifier.circle(44.dp, colorScheme.chatInput)
                 ) {
                     Icon(
-                        painter = Drawables.PaperPlaneTiltFilled,
+                        painter = painterResource(Res.Drawables.Filled.PaperPlaneTilt),
                         contentDescription = "send message",
                         modifier = Modifier.size(22.dp),
                         tint = colorScheme.primary

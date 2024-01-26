@@ -4,8 +4,8 @@ android-minSdk = "26"
 agp = "8.4.0-alpha04"
 kotlin = "1.9.21"
 ksp-plugin = "1.9.21-1.0.15"
-compose-plugin = "1.5.11"
-compose-compiler = "1.5.4"
+compose-plugin = "1.6.0-beta01"
+compose-compiler = "1.5.7"
 contacts = "0.2.4"
 moshi = "1.14.0"
 mqtt = "1.2.5"
@@ -33,7 +33,7 @@ androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", vers
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version = "2.9.0" }
 
 android-colorx = { module = "me.jorgecastillo:androidcolorx", version = "0.2.0" }
-compose-permissions = { module = "com.google.accompanist:accompanist-permissions", version = "0.29.2-rc" }
+compose-permissions = { module = "com.google.accompanist:accompanist-permissions", version = "0.32.0" }
 compose-markdown = { module = "com.yazantarifi:markdown-compose", version = "1.0.2" }
 
 apache-commons-text = { module = "org.apache.commons:commons-text", version = "1.10.0" }

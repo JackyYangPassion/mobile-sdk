@@ -24,10 +24,13 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.*
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatDrawerButtons(
     chat: Chat,
@@ -45,7 +48,7 @@ fun ChatDrawerButtons(
             horizontalArrangement = Arrangement.spacedBy(3.dp),
             modifier = Modifier
                 .height(60.dp)
-                .background(colorScheme.softBackground.copy(0.3f), RoundedCornerShape(16.dp))
+                .background(colorScheme.surface.copy(0.3f), RoundedCornerShape(16.dp))
                 .padding(8.dp, 0.dp)
         ) {
             if (chat.isAdmin) {
@@ -57,7 +60,7 @@ fun ChatDrawerButtons(
                         openEdit(chat)
                     }) {
                     Image(
-                        painter = Drawables.GearFilled,
+                        painter = painterResource(Res.Drawables.Filled.Gear),
                         contentDescription = "settings",
                         colorFilter = ColorFilter.tint(colorScheme.border),
                         modifier = Modifier.size(24.dp)
@@ -74,7 +77,7 @@ fun ChatDrawerButtons(
                     openInvite(chat)
                 }) {
                 Image(
-                    painter = Drawables.ArchiveBoxFilled,
+                    painterResource(Res.Drawables.Filled.ArchiveBox),
                     contentDescription = "settings",
                     colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)
@@ -90,7 +93,7 @@ fun ChatDrawerButtons(
                     dialog.value = true
                 }) {
                 Image(
-                    painter = Drawables.TrashFilled,
+                    painter = painterResource(Res.Drawables.Filled.Trash),
                     contentDescription = "settings",
                     colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)
@@ -145,7 +148,7 @@ fun ChatDrawerButtons(
                     Text(
                         ift(chat.isAdmin, "Delete", "Leave"),
                         fonts.body2,
-                        color = colorScheme.destructive
+                        color = colorScheme.error
                     )
                 }
             },

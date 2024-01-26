@@ -57,19 +57,19 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
                             modifier =
                             Modifier
                                 .radius(15.dp)
-                                .background(colorScheme.softBackground)
+                                .background(colorScheme.header)
                                 .padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                             Text(
                                 text = "Find your friends",
                                 fontStyle = fonts.h3,
-                                color = colorScheme.text
+                                color = colorScheme.onHeader
                             )
                             Text(
                                 "Sync your contacts to easily find people you know. Your contacts will only be to help you connect with friends.",
                                 fontStyle = fonts.body1.copy(weight = FontWeight.Bold),
-                                color = colorScheme.text
+                                color = colorScheme.onHeader
                             )
                             Row(modifier = Modifier
                                 .radius(13.dp)
@@ -82,7 +82,7 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
                                 Text(
                                     text = "Sync",
                                     fontStyle = fonts.body1.copy(weight = FontWeight.Bold),
-                                    color = colorScheme.text
+                                    color = colorScheme.onHeader
                                 )
                             }
                         }

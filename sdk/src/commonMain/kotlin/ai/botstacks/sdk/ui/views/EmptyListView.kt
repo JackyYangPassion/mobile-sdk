@@ -45,8 +45,8 @@ fun EmptyListView(
   Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
     Column(modifier = Modifier.padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
       Spacer(modifier = Modifier.weight(1f))
-      config.image?.let {
-        Image(painter = painterResource(id = it), contentDescription = "empty list")
+      config.image()?.let {
+        Image(painter = it, contentDescription = "empty list")
       }
       Space(8f)
       config.caption?.let {
@@ -54,7 +54,7 @@ fun EmptyListView(
           text = it,
           fontStyle = fonts.h2.copy(weight = FontWeight.Normal),
           textAlign = TextAlign.Center,
-          color = colorScheme.text
+          color = colorScheme.onBackground
         )
       }
       Spacer(modifier = Modifier.weight(1f))
@@ -66,7 +66,7 @@ fun EmptyListView(
           Row(
             modifier = Modifier
               .height(60.dp)
-              .border(2.dp, colorScheme.text, RoundedCornerShape(30.dp)),
+              .border(2.dp, colorScheme.onBackground, RoundedCornerShape(30.dp)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
           ) {
@@ -76,10 +76,10 @@ fun EmptyListView(
                 painter = it,
                 contentDescription = "call to action",
                 modifier = Modifier.size(32.dp),
-                colorFilter = ColorFilter.tint(colorScheme.text)
+                colorFilter = ColorFilter.tint(colorScheme.onBackground)
               )
             }
-            Text(text = it.text.uppercase(), fontStyle = fonts.h2, color = colorScheme.text)
+            Text(text = it.text.uppercase(), fontStyle = fonts.h2, color = colorScheme.onBackground)
             Spacer(modifier = Modifier.weight(1f))
           }
         }

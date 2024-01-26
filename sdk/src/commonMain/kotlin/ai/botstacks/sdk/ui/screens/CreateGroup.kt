@@ -33,10 +33,12 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.op
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 @Stable
 data class CreateChatState(val chat: Chat? = null) {
@@ -92,7 +94,7 @@ data class CreateChatState(val chat: Chat? = null) {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalResourceApi::class)
 @Composable
 fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
     val back = {
@@ -103,9 +105,12 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
     val nameFocus = remember { FocusRequester() }
     val descriptionFocus = remember { FocusRequester() }
     val scrollState = rememberScrollState()
-    var canSubmit =
-        state.name.length >= 3 && state.name.length <= 25 && (state.description?.length
-            ?: 0) <= 100
+    val canSubmit by remember(state.name, state.description) {
+        derivedStateOf {
+            state.name.length in 3..25 && (state.description?.length ?: 0) <= 100
+        }
+    }
+
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(modifier = Modifier.fillMaxHeight()) {
         Header(title = "Create Channel", back = back)
@@ -128,13 +133,13 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                         AsyncImage(
                             model = it,
                             contentDescription = "chat avatar",
-                            modifier = Modifier.circle(116.dp, colorScheme.softBackground),
+                            modifier = Modifier.circle(116.dp, colorScheme.onSurface),
                             contentScale = ContentScale.Crop
                         )
                     } ?: Image(
-                        painter = Drawables.PlusCircleFilled,
+                        painter = painterResource(Res.Drawables.Filled.PlusCircle),
                         contentDescription = "Add chat image",
-                        colorFilter = ColorFilter.tint(colorScheme.softBackground),
+                        colorFilter = ColorFilter.tint(colorScheme.onSurface),
                         modifier = Modifier.size(95.dp)
                     )
                 }
@@ -145,7 +150,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             modifier = Modifier
                                 .padding(8.dp, 0.dp)
                         ) {
-                            Text(text = "Channel Name", fontStyle = fonts.body2, color = colorScheme.text)
+                            Text(text = "Channel Name", fontStyle = fonts.body2, color = colorScheme.onBackground)
                             Text(
                                 text = "${state.name.length}/25",
                                 fontStyle = fonts.body2,
@@ -180,7 +185,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             Text(
                                 text = "Channel Description (Optional)",
                                 fontStyle = fonts.body2,
-                                color = colorScheme.text
+                                color = colorScheme.onBackground
                             )
                             Text(
                                 text = "${state.description?.length ?: "0"}/100",
@@ -208,7 +213,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                         Text(
                             text = "Privacy Settings",
                             fontStyle = fonts.body2,
-                            color = colorScheme.text,
+                            color = colorScheme.onBackground,
                             modifier = Modifier.padding(start = 8.dp)
                         )
                         Space()
@@ -216,7 +221,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             modifier = Modifier
                                 .height(50.dp)
                                 .fillMaxWidth()
-                                .background(colorScheme.softBackground, RoundedCornerShape(25.dp))
+                                .background(colorScheme.surface, RoundedCornerShape(25.dp))
                                 .border(1.dp, colorScheme.border, RoundedCornerShape(25.dp))
                         ) {
                             Box(
@@ -238,7 +243,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 Text(
                                     text = "Public",
                                     fontStyle = fonts.h3,
-                                    color = if (state._private) colorScheme.text else colorScheme.background
+                                    color = if (state._private) colorScheme.onBackground else colorScheme.background
                                 )
                             }
                             Box(
@@ -259,7 +264,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 Text(
                                     text = "Private",
                                     fontStyle = fonts.h3,
-                                    color = if (!state._private) colorScheme.text else colorScheme.background
+                                    color = if (!state._private) colorScheme.onBackground else colorScheme.background
                                 )
                             }
                         }
@@ -268,7 +273,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             text = if (state._private) "Private channels will not be seen by anyone unless they are\n" +
                                     "invited to join the channel." else "Public channels will be viewed by all and available for everyone to join.",
                             fontStyle = fonts.caption1,
-                            color = colorScheme.text
+                            color = colorScheme.onBackground
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f, true))
@@ -278,16 +283,16 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 .clickable { }
                                 .height(50.dp)
                                 .background(
-                                    if (canSubmit) colorScheme.primary else colorScheme.softBackground,
+                                    if (canSubmit) colorScheme.primary else colorScheme.surface,
                                     RoundedCornerShape(25.dp)
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                if (state.chat.updating == true) {
+                                if (state.chat.updating) {
                                     Spinner()
                                 }
-                                Text(text = "Save", fontStyle = fonts.body2, color = colorScheme.text)
+                                Text(text = "Save", fontStyle = fonts.body2, color = colorScheme.onSurface)
                             }
                         }
                     } else {
@@ -301,13 +306,13 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 },
                                 modifier = Modifier.circle(
                                     50.dp,
-                                    if (canSubmit) colorScheme.primary else colorScheme.softBackground
+                                    if (canSubmit) colorScheme.primary else colorScheme.surface
                                 )
                             ) {
                                 Icon(
                                     painter = painterResource(id = androidx.media3.ui.R.drawable.exo_ic_chevron_right),
                                     contentDescription = "Create chat",
-                                    tint = colorScheme.text,
+                                    tint = colorScheme.onSurface,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }

@@ -12,10 +12,13 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.*
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatsView(
     scrollToTop: Int = 0,
@@ -34,7 +37,7 @@ fun ChatsView(
     val cta = when (list) {
         BotStacksChatStore.List.dms -> CTA(icon = null, text = "Explore Channels", to = openAllChannels)
         else -> CTA(
-            Drawables.PaperPlaneTiltFilled,
+            painterResource(Res.Drawables.Filled.PaperPlaneTilt),
             "Send a Message",
             openContacts
         )

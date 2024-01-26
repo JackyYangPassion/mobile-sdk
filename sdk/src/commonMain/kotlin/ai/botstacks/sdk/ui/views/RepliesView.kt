@@ -33,7 +33,7 @@ fun RepliesView(
                 .padding(16.dp, 12.dp, 0.dp, 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text(text = "#${message.chat.name ?: ""}", fontStyle = fonts.h3, color = colorScheme.text)
+            Text(text = "#${message.chat.name ?: ""}", fontStyle = fonts.h3, color = colorScheme.onBackground)
             Text(
                 text = message.chat.members.map { it.user }.usernames(),
                 fontStyle = fonts.body1,
@@ -46,7 +46,7 @@ fun RepliesView(
         }
         Spacer(
             modifier = Modifier
-                .background(colorScheme.bubble.copy(alpha = 0.5f))
+                .background(colorScheme.border.copy(alpha = 0.5f))
                 .height(20.dp)
                 .fillMaxWidth()
         )

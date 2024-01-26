@@ -53,6 +53,7 @@ kotlin {
         androidMain {
             dependsOn(commonMain.get())
             dependencies {
+                implementation(compose.preview)
                 implementation(libs.retrofit2)
                 implementation(libs.retrofit2.converter.moshi)
                 implementation(libs.retrofit2.converter.scalars)
@@ -96,7 +97,6 @@ kotlin {
                 implementation(libs.square.okhttp3.logging)
 
                 implementation(libs.ok2curl)
-//                implementation("com.google.android.material:material:1.9.0")
             }
         }
     }

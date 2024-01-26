@@ -2,6 +2,8 @@
  * Copyright (c) 2023.
  */
 
+@file:kotlin.OptIn(ExperimentalResourceApi::class)
+
 package ai.botstacks.sdk.ui.views
 
 import androidx.compose.foundation.background
@@ -31,17 +33,21 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 class AudioUrlProvider(override val values: Sequence<String> = sequenceOf("https://file-examples.com/storage/fe0358100863d05afed02d2/2017/11/file_example_MP3_5MG.mp3")) :
     PreviewParameterProvider<String>
 
 @IPreviews
 @Composable
-@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+@OptIn(UnstableApi::class)
 fun AudioPlayer(
     @PreviewParameter(AudioUrlProvider::class) url: String
 ) {
@@ -103,8 +109,8 @@ fun AudioPlayer(
             Icon(
                 painter = ift(
                     playing,
-                    Drawables.PlayFilled,
-                    Drawables.PauseFilled
+                    painterResource(Res.Drawables.Filled.Play),
+                    painterResource(Res.Drawables.Filled.Pause),
                 ),
                 contentDescription = "play audio",
                 tint = Color.White,
@@ -113,7 +119,7 @@ fun AudioPlayer(
         }
 
         Space()
-        Text(text = msToString(current), fontStyle = fonts.body1, color = colorScheme.bubbleText)
+        Text(text = msToString(current), fontStyle = fonts.body1, color = colorScheme.onMessage)
         Space()
         Slider(
             value = current.toFloat() / 1000.0f,
@@ -135,7 +141,7 @@ fun AudioPlayer(
             modifier = Modifier.width(dimens.videoPreviewSize.width.dp)
         )
         Space()
-        Text(text = msToString(total), fontStyle = fonts.body1, color = colorScheme.bubbleText)
+        Text(text = msToString(total), fontStyle = fonts.body1, color = colorScheme.onMessage)
     }
 
     if (playing) {

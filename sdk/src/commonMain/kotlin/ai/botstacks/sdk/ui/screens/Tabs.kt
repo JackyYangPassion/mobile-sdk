@@ -21,34 +21,38 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.views.Badge
 import androidx.compose.ui.graphics.painter.Painter
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 sealed interface Tab {
     val route: String
     val icon: Painter
-        @Composable get() = Drawables.Empty
+        @Composable get() = painterResource(Res.Drawables.Empty)
 
     data object Home: Tab {
         override val route: String = "chats"
+
         override val icon: Painter
-        @Composable get() = Drawables.ChatTextFilled
+        @Composable get() = painterResource(Res.Drawables.Filled.ChatText)
     }
     data object Channels: Tab {
         override val route: String = "channels"
         override val icon: Painter
-            @Composable get() = Drawables.TelevisionFilled
+            @Composable get() = painterResource(Res.Drawables.Filled.Television)
     }
     data object Contacts: Tab {
         override val route: String = "contacts"
         override val icon: Painter
-            @Composable get() = Drawables.AddressBookFilled
+            @Composable get() = painterResource(Res.Drawables.Filled.AddressBook)
     }
     data object Settings: Tab {
         override val route: String = "settings"
         override val icon: Painter
-            @Composable get() = Drawables.UserCircleFilled
+            @Composable get() = painterResource(Res.Drawables.Filled.UserCircle)
     }
 
     companion object {
@@ -110,7 +114,7 @@ fun Tabs(
             }
         }
         Row(modifier = Modifier
-            .background(colorScheme.softBackground)
+            .background(colorScheme.surface)
             .windowInsetsPadding(WindowInsets.navigationBars)
             .height(57.dp)
         ) {

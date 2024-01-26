@@ -22,13 +22,16 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
 import ai.botstacks.sdk.utils.genU
 import ai.botstacks.sdk.utils.random
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
     val selected = remember {
@@ -53,7 +56,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = Drawables.Check,
+                        painter = painterResource(Res.Drawables.Outlined.Check),
                         contentDescription = "Check mark",
                         tint = colorScheme.background,
                         modifier = Modifier.size(14.dp)
@@ -73,7 +76,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                     .clickable { back() }, contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = Drawables.CaretLeft,
+                    painter = painterResource(Res.Drawables.Outlined.CaretLeft),
                     contentDescription = "back",
                     tint = colorScheme.background,
                     modifier = Modifier.size(22.dp)

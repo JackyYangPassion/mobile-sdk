@@ -48,10 +48,12 @@ import ai.botstacks.sdk.state.*
 import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 
 enum class Media {
@@ -66,7 +68,7 @@ enum class Media {
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalResourceApi::class)
 fun MediaActionSheet(
     state: ModalBottomSheetState,
     chat: Chat,
@@ -91,56 +93,56 @@ fun MediaActionSheet(
     ModalBottomSheetLayout(
         sheetState = state,
         sheetBackgroundColor = BotStacks.colorScheme.background,
-        sheetContentColor = BotStacks.colorScheme.text,
+        sheetContentColor = BotStacks.colorScheme.onBackground,
         scrimColor = BotStacks.colorScheme.caption,
         sheetContent = {
             Box {
                 Column {
                     Space(8f)
                     ActionItem(
-                        icon = Drawables.ImageSquare,
+                        icon = painterResource(Res.Drawables.Outlined.ImageSquare),
                         text = "Upload Photo",
                         divider = false
                     ) {
                         media = Media.pickPhoto
                     }
                     ActionItem(
-                        icon = Drawables.Camera,
+                        icon = painterResource(Res.Drawables.Outlined.Camera),
                         text = "Take Photo",
                         divider = true
                     ) {
                         media = Media.recordPhoto
                     }
                     ActionItem(
-                        icon = Drawables.FileVideo,
+                        icon = painterResource(Res.Drawables.Outlined.FileVideo),
                         text = "Upload Video",
                         divider = false
                     ) {
                         media = Media.pickVideo
                     }
                     ActionItem(
-                        icon = Drawables.VideoCamera,
+                        icon = painterResource(Res.Drawables.Outlined.VideoCamera),
                         text = "Video Camera",
                         divider = true
                     ) {
                         media = Media.recordVideo
                     }
                     ActionItem(
-                        icon = Drawables.Gif,
+                        icon = painterResource(Res.Drawables.Outlined.Gif),
                         text = "Send a GIF",
                         divider = true
                     ) {
                         media = Media.gif
                     }
                     ActionItem(
-                        icon = Drawables.MapPin,
+                        icon = painterResource(Res.Drawables.Outlined.MapPin),
                         text = "Send Location",
                         divider = true
                     ) {
                         media = Media.location
                     }
                     ActionItem(
-                        icon = Drawables.AddressBook,
+                        icon = painterResource(Res.Drawables.Outlined.AddressBook),
                         text = "Share Contact",
                         divider = true
                     ) {

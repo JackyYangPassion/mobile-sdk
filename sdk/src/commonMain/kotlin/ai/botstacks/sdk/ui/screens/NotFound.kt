@@ -20,14 +20,14 @@ import ai.botstacks.sdk.utils.IPreviews
 @Composable
 fun NotFound(what: String = "Page", back: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Header(title = "$what", back = back)
+        Header(title = what, back = back)
         Column(
             modifier = Modifier.padding(32.dp)
         ) {
             Text(
                 text = "The page you were looking for could not be found",
                 fontStyle = fonts.h2,
-                color = colorScheme.text
+                color = colorScheme.onBackground
             )
         }
     }

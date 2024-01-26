@@ -25,14 +25,17 @@ import ai.botstacks.sdk.type.UpdateProfileInput
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.genCurrentUser
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MyProfile(
     openProfile: () -> Unit,
@@ -70,20 +73,20 @@ fun MyProfile(
                 Text(
                     text = User.current?.username ?: "",
                     fontStyle = fonts.h2,
-                    color = colorScheme.text,
+                    color = colorScheme.onBackground,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.widthIn(max = 150.dp)
                 )
             }
         }
-        SimpleRow(icon = Drawables.UserFilled, text = "Profile", onClick = openProfile)
-        SimpleRow(icon = Drawables.StarFilled, text = "Favorites", onClick = openFavorites)
+        SimpleRow(icon = Res.Drawables.Filled.User, text = "Profile", onClick = openProfile)
+        SimpleRow(icon = Res.Drawables.Filled.Star, text = "Favorites", onClick = openFavorites)
         SimpleRow(
-            icon = Drawables.BellSimpleFilled,
+            painterResource(Res.Drawables.Filled.BellSimple),
             text = "Manage Notifications",
             onClick = openNotificationSettings
         )
-        SimpleRow(icon = Drawables.DoorFilled, text = "Logout") {
+        SimpleRow(icon = Res.Drawables.Filled.User, text = "Logout") {
             logoutDialogue = true
         }
         GrowSpacer()
@@ -100,7 +103,7 @@ fun MyProfile(
                             .weight(1f)
                             .fillMaxHeight()
                             .clickable { logoutDialogue = false }) {
-                        Text(text = "No", fontStyle = fonts.button2, color = colorScheme.text)
+                        Text(text = "No", fontStyle = fonts.button2, color = colorScheme.onBackground)
                     }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -121,7 +124,7 @@ fun MyProfile(
                 Text(
                     text = "Are you sure you want to logout?",
                     fontStyle = fonts.body2,
-                    color = colorScheme.text
+                    color = colorScheme.onBackground
                 )
             },
             backgroundColor = colorScheme.background

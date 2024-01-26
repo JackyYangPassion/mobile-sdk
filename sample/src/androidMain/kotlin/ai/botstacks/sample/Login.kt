@@ -219,7 +219,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         }
                         Text(
                             annotatedString,
-                            color = colorScheme.text,
+                            color = colorScheme.onBackground,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -248,7 +248,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         }
                         Text(
                             annotatedString,
-                            color = colorScheme.text,
+                            color = colorScheme.onBackground,
                             textAlign = TextAlign.Center
                         )
                     }

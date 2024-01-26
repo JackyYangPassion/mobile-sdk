@@ -22,12 +22,15 @@ import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genU
 import ai.botstacks.sdk.utils.ift
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ContactRow(
     user: User,
@@ -50,11 +53,11 @@ fun ContactRow(
                     text = user.username.annotated(),
                     iac = fonts.h3,
                     maxLines = 1,
-                    color = colorScheme.text
+                    color = colorScheme.onBackground
                 )
 //                if (user.haveContact) {
                 Image(
-                    painter = Drawables.AddressBookFilled,
+                    painterResource(Res.Drawables.Filled.AddressBook),
                     contentDescription = "contact",
                     modifier = Modifier.size(18),
                     colorFilter = ColorFilter.tint(Color(0xFF488AC7))

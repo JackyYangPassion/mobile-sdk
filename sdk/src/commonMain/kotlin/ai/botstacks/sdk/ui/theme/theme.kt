@@ -39,7 +39,7 @@ internal fun Theme(
         colors = HashMap<String, Color>().apply {
             this[MarkdownConfig.CHECKBOX_COLOR] = Color.Black
             this[MarkdownConfig.LINKS_COLOR] = _colorsScheme.primary
-            this[MarkdownConfig.TEXT_COLOR] = if (sender) _colorsScheme.senderText else _colorsScheme.bubbleText
+            this[MarkdownConfig.TEXT_COLOR] = if (sender) _colorsScheme.onPrimary else _colorsScheme.onMessage
             this[MarkdownConfig.HASH_TEXT_COLOR] = _colorsScheme.primary
             this[MarkdownConfig.CODE_BACKGROUND_COLOR] = Color.Gray
             this[MarkdownConfig.CODE_BLOCK_TEXT_COLOR] = Color.White
@@ -59,7 +59,7 @@ internal fun Theme(
             modifier = Modifier
                 .background(colorScheme.colors(isDark).background),
         ) {
-            CompositionLocalProvider(LocalContentColor provides colorScheme.colors(isDark).text) {
+            CompositionLocalProvider(LocalContentColor provides colorScheme.colors(isDark).onBackground) {
                 content()
             }
         }

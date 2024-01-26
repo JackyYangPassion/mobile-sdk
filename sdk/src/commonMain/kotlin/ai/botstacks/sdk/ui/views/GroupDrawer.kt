@@ -31,12 +31,15 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatDrawerHeader(chat: Chat) {
     Column {
@@ -47,19 +50,19 @@ fun ChatDrawerHeader(chat: Chat) {
             Space(24f)
             Avatar(url = chat.displayImage, size = AvatarSize.Large, chat = true)
             Space(12f)
-            Text(chat.displayName, fonts.h2, color = colorScheme.text)
+            Text(chat.displayName, fonts.h2, color = colorScheme.onBackground)
             Text(chat.displayDescription ?: "", fonts.body1, color = colorScheme.caption)
             Space(26f)
-            Divider(color = colorScheme.text.copy(alpha = 0.1f))
+            Divider(color = colorScheme.onBackground.copy(alpha = 0.1f))
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 16.dp)
         ) {
-            Text(text = "All Members", fontStyle = fonts.body2, color = colorScheme.text)
+            Text(text = "All Members", fontStyle = fonts.body2, color = colorScheme.onBackground)
             Space(14f)
             Image(
-                painter = Drawables.UsersThreeFilled,
+                painter = painterResource(Res.Drawables.Filled.UsersThree),
                 contentDescription = "member count",
                 colorFilter = ColorFilter.tint(colorScheme.caption),
                 modifier = Modifier.size(16)
@@ -84,7 +87,7 @@ fun ChatDrawer(
         sheetState = state,
         modifier = Modifier.fillMaxSize(),
         sheetBackgroundColor = colorScheme.background,
-        sheetContentColor = colorScheme.text,
+        sheetContentColor = colorScheme.onBackground,
         scrimColor = colorScheme.caption,
         sheetContent = {
             Box(contentAlignment = Alignment.BottomCenter) {
@@ -141,7 +144,7 @@ fun ChatDrawerPreview() {
             ClickableText(
                 text = "hello",
                 iac = fonts.body1,
-                color = colorScheme.text,
+                color = colorScheme.onBackground,
                 onClick = { coroutineContext.launch { open.show() } })
         }
     }

@@ -25,10 +25,12 @@ import androidx.compose.ui.unit.sp
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
 import nl.coffeeit.aroma.emojipicker.presentation.ui.emoji.EmojiBottomSheet
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
@@ -40,6 +42,7 @@ fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun EmojiBar(
     current: String? = null,
@@ -68,13 +71,13 @@ fun EmojiBar(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                  .circle(40.dp, colorScheme.softBackground)
-                  .border(
-                    2.dp,
-                    ift(current == emoji, colorScheme.primary, Color.Transparent),
-                    CircleShape
-                  )
-                  .clickable { onEmoji(emoji) }
+                    .circle(40.dp, colorScheme.surface)
+                    .border(
+                        2.dp,
+                        ift(current == emoji, colorScheme.primary, Color.Transparent),
+                        CircleShape
+                    )
+                    .clickable { onEmoji(emoji) }
             ) {
                 androidx.compose.material3.Text(text = emoji, fontSize = 18.sp)
             }
@@ -82,13 +85,13 @@ fun EmojiBar(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-              .circle(40.dp, colorScheme.softBackground)
-              .clickable { keyboard = true }
+                .circle(40.dp, colorScheme.surface)
+                .clickable { keyboard = true }
         ) {
             Icon(
-                painter = Drawables.Plus,
+                painter = painterResource(Res.Drawables.Outlined.Plus),
                 contentDescription = "more reactions",
-                tint = colorScheme.text,
+                tint = colorScheme.onBackground,
                 modifier = Modifier.size(
                     20
                 )

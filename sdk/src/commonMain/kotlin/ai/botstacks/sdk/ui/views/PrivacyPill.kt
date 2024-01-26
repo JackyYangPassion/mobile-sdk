@@ -24,7 +24,7 @@ fun PrivacyPill(_private: Boolean = false) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .background(
-                ift(!_private, BotStacks.colorScheme._private, BotStacks.colorScheme._public),
+                ift(!_private, BotStacks.colorScheme.surface, BotStacks.colorScheme.header),
                 RoundedCornerShape(8.dp)
             )
             .padding(6.dp, 1.dp)
