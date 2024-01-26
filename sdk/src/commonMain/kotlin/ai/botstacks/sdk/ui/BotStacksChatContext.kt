@@ -6,18 +6,9 @@ package ai.botstacks.sdk.ui
 
 import ai.botstacks.sdk.ui.theme.Assets
 import ai.botstacks.sdk.ui.theme.BotStacksColorPalette
-import android.os.Build
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.ui.platform.LocalContext
-import coil.Coil
-import coil.ImageLoader
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
 import ai.botstacks.sdk.ui.theme.Colors
 import ai.botstacks.sdk.ui.theme.DayNightColorScheme
-import ai.botstacks.sdk.ui.theme.Dimens
+import ai.botstacks.sdk.ui.theme.Dimensions
 import ai.botstacks.sdk.ui.theme.Fonts
 import ai.botstacks.sdk.ui.theme.LocalBotStacksAssets
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
@@ -27,9 +18,17 @@ import ai.botstacks.sdk.ui.theme.LocalBotStacksShapes
 import ai.botstacks.sdk.ui.theme.Theme
 import ai.botstacks.sdk.ui.theme.darkColors
 import ai.botstacks.sdk.ui.theme.lightColors
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.platform.LocalContext
+import coil.Coil
+import coil.ImageLoader
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import ai.botstacks.sdk.ui.theme.fonts as defaultFonts
 
 
@@ -38,7 +37,6 @@ fun BotStacksChatContext(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     lightColorScheme: Colors = lightColors(),
     darkColorScheme: Colors = darkColors(),
-    dimens: Dimens = BotStacks.dimens,
     shapes: Shapes = BotStacks.shapes,
     assets: Assets = BotStacks.assets,
     fonts: Fonts? = null,
@@ -70,7 +68,6 @@ fun BotStacksChatContext(
         assets = assets,
         isDark = useDarkTheme,
         colorScheme = DayNightColorScheme(lightColorScheme, darkColorScheme),
-        dimens = dimens,
         fonts = appFonts,
         shapes = shapes,
     ) {
@@ -97,7 +94,7 @@ object BotStacks {
         @ReadOnlyComposable
         get() = BotStacksColorPalette
 
-    val dimens: Dimens
+    val dimens: Dimensions
         @Composable
         @ReadOnlyComposable
         get() = LocalBotStacksDimens.current

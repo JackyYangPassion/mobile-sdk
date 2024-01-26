@@ -31,6 +31,7 @@ import ai.botstacks.sdk.state.location
 import ai.botstacks.sdk.state.markdown
 import ai.botstacks.sdk.state.vcard
 import ai.botstacks.sdk.type.AttachmentType
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
@@ -55,7 +56,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                     colorScheme.primary,
                     colorScheme.message
                 ),
-                RoundedCornerShape(dimens.bubbleRadius.dp)
+                BotStacks.shapes.small,
             )
             .clipToBounds()
     ) {
@@ -72,12 +73,8 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                             contentDescription = "shared image",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier
-                                .width(
-                                    dimens.imagePreviewSize.width.dp,
-                                )
-                                .height(
-                                    dimens.imagePreviewSize.height.dp
-                                )
+                                .width(dimens.imagePreviewSize.width.dp,)
+                                .height(dimens.imagePreviewSize.height.dp)
                                 .clip(RoundedCornerShape(15.dp))
                         )
 
@@ -107,7 +104,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                         )
 
                         AttachmentType.location, AttachmentType.vcard -> MarkdownViewComposable(
-                            modifier = Modifier.padding(dimens.bubblePadding),
+                            modifier = Modifier.padding(dimens.grid.x2),
                             content = attachment.location()?.markdown ?: attachment.vcard()
                                 ?.markdown()
                             ?: "No content",
@@ -131,7 +128,7 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
         if (ct.isNotEmpty()) {
             MarkdownViewComposable(
                 modifier = Modifier
-                    .padding(dimens.bubblePadding),
+                    .padding(dimens.grid.x2),
                 content = ct,
                 config = LocalBotStacksMarkdownConfig.current(message.user.isCurrent),
             ) { link, type ->

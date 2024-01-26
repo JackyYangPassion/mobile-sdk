@@ -35,6 +35,7 @@ androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version = "
 android-colorx = { module = "me.jorgecastillo:androidcolorx", version = "0.2.0" }
 compose-permissions = { module = "com.google.accompanist:accompanist-permissions", version = "0.32.0" }
 compose-markdown = { module = "com.yazantarifi:markdown-compose", version = "1.0.2" }
+compose-windowSizeClass = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version = "0.3.1" }
 
 apache-commons-text = { module = "org.apache.commons:commons-text", version = "1.10.0" }
 

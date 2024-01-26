@@ -42,7 +42,7 @@ fun MessageView(
         return
     }
     val current = message.user.isCurrent
-    val align = if (current) dimens.senderAlignment else dimens.messageAlignment
+    val align = if (current) Alignment.End else Alignment.Start
 
     Column(
         horizontalAlignment = align,
@@ -153,7 +153,7 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
                             if (msg.currentReaction == reaction.first) colorScheme.primary else Color.Transparent,
                             RoundedCornerShape(36.dp)
                         )
-                        .padding(dimens.bubblePadding)
+                        .padding(dimens.grid.x2)
                 )
             }
         }
@@ -162,12 +162,9 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
 
 @Composable
 fun Content(msg: Message, modifier: Modifier = Modifier) {
+    val align = if (msg.user.isCurrent) Alignment.End else Alignment.Start
     Column(
-        horizontalAlignment = ift(
-            msg.user.isCurrent,
-            dimens.senderAlignment,
-            dimens.messageAlignment
-        ), verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = align, verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
     ) {
         MessageTop(msg)

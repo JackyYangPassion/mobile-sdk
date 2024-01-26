@@ -7,6 +7,7 @@ package ai.botstacks.sdk.ui.views
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks.colors
+import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.Image
@@ -155,7 +156,7 @@ fun Avatar(
                         contentDescription = "channel profile picture",
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(12.dp)
+                            .padding(dimens.grid.x3)
                             .clip(CircleShape)
                             .align(Alignment.Center),
                         colorFilter = ColorFilter.tint(colors.Dark._900)
@@ -194,7 +195,7 @@ fun Avatar(
                         contentDescription = "user profile picture",
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(12.dp)
+                            .padding(dimens.grid.x3)
                             .clip(CircleShape)
                             .align(Alignment.Center),
                         colorFilter = ColorFilter.tint(colors.Dark._900)

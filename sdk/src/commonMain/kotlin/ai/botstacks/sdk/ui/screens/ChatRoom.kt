@@ -19,6 +19,7 @@ import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.*
@@ -105,7 +106,7 @@ fun ChatChat(
                         onLongPress = { messageForAction = it }
                     )
                     MessageInput(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                        modifier = Modifier.padding(dimens.grid.x4),
                         chat = chat,
                         replyingTo = message,
                         onMedia = { ctx.launch { media.show() } }
