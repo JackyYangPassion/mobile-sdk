@@ -4,63 +4,103 @@
 
 package ai.botstacks.sdk.ui.views
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.actions.send
-import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
+import ai.botstacks.sdk.state.Message
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text2.input.clearText
+import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalResourceApi::class)
+@OptIn(
+    ExperimentalResourceApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun MessageInput(
+    modifier: Modifier = Modifier,
     chat: Chat,
     replyingTo: Message? = null,
-    focusRequester: FocusRequester = remember { FocusRequester() },
-    onMedia: Fn
+    onMedia: Fn,
+    focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    var text by remember {
-        mutableStateOf("")
-    }
+    val composeScope = rememberCoroutineScope()
+    val state = rememberTextFieldState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val onSend = {
-        if (text.isNotBlank()) {
-            chat.send(replyingTo?.id, text)
+        if (state.text.isNotBlank()) {
+            chat.send(replyingTo?.id, state.text.toString())
             keyboardController?.hide()
-            text = ""
+            state.clearText()
         }
     }
 
-    Column(modifier = Modifier.padding(start = 16.dp, end = 32.dp, top = 8.dp, bottom = 16.dp)) {
-        Row {
-            TextInput(
-                text = text,
-                onChange = { text = it },
-                focusRequester = focusRequester,
-                modifier = Modifier.weight(1f),
-                keyboardActions = KeyboardActions(onDone = { onSend() }),
-                placeholder = "Send a message"
-            ) {
-                IconButton(onClick = onMedia, modifier = Modifier.size(20.dp)) {
+    Row(
+        modifier = modifier
+            .clickable { keyboardController?.show() }
+            .imePadding(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        TextInput(
+            state = state,
+            modifier = Modifier
+                .background(colorScheme.chatInput, BotStacks.shapes.medium)
+                .padding(12.dp)
+                .weight(1f)
+                .focusRequester(focusRequester),
+            color = colorScheme.onChatInput,
+            keyboardActions = KeyboardActions(onDone = { onSend() }),
+            placeholder = "Message...",
+            leadingIcon = {
+                IconButton(
+                    onClick = {
+                        keyboardController?.hide()
+                        composeScope.launch {
+                            delay(300)
+                            onMedia()
+                        }
+                    },
+                    modifier = Modifier.size(20.dp)
+                ) {
                     Icon(
                         painter = painterResource(Res.Drawables.Filled.Paperclip),
                         contentDescription = "send attachment",
@@ -68,20 +108,33 @@ fun MessageInput(
                         tint = colorScheme.caption
                     )
                 }
-            }
-            if (text.isNotBlank()) {
-                Space(8f)
-                IconButton(
-                    onClick = onSend,
-                    modifier = Modifier.circle(44.dp, colorScheme.chatInput)
-                ) {
-                    Icon(
-                        painter = painterResource(Res.Drawables.Filled.PaperPlaneTilt),
-                        contentDescription = "send message",
-                        modifier = Modifier.size(22.dp),
-                        tint = colorScheme.primary
-                    )
-                }
+            },
+        )
+        val canSend by remember {
+            derivedStateOf { state.text.isNotBlank() }
+        }
+
+        Pressable(enabled = canSend, shape = CircleShape, onClick = onSend) {
+            val color by animateColorAsState(
+                targetValue = if (canSend) colorScheme.primary else colorScheme.surface,
+                label = "send button bg color"
+            )
+            val contentColor by animateColorAsState(
+                targetValue = if (canSend) colorScheme.onPrimary else colorScheme.onSurfaceVariant,
+                label = "send button content color"
+            )
+            Box(
+                modifier = Modifier
+                    .background(color, CircleShape)
+                    .padding(12.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = painterResource(Res.Drawables.Filled.PaperPlaneTilt),
+                    contentDescription = "send message",
+                    modifier = Modifier.requiredIconSize(),
+                    tint = contentColor
+                )
             }
         }
     }
@@ -91,9 +144,7 @@ fun MessageInput(
 @Composable
 fun MessageInputPreview() {
     BotStacksChatContext {
-        MessageInput(chat = genChat(), null) {
-
-        }
+        MessageInput(chat = genChat(), replyingTo = null, onMedia = {})
     }
 
 }

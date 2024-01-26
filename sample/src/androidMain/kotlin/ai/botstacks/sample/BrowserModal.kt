@@ -21,10 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import ai.botstacks.sdk.ui.views.TextInput
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.text2.input.rememberTextFieldState
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BrowserModal(url: String, onClose: () -> Unit) {
+    val state = rememberTextFieldState(initialText = url)
     Column(modifier = Modifier.fillMaxHeight()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -32,7 +36,7 @@ fun BrowserModal(url: String, onClose: () -> Unit) {
                 .height(44.dp)
                 .padding(12.dp)
         ) {
-            TextInput(text = url, enabled = false, onChange = {}, modifier = Modifier.weight(1f))
+            TextInput(modifier = Modifier.weight(1f), state = state, enabled = false)
             Box(
                 modifier = Modifier
                     .height(44.dp)
