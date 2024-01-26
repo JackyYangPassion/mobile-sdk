@@ -113,7 +113,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(modifier = Modifier.fillMaxHeight()) {
-        Header(title = "Create Channel", back = back)
+        Header(title = "Create Channel", onBackClick = back)
         Column(
             modifier = Modifier
                 .padding(16.dp, 0.dp)

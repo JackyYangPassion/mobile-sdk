@@ -52,7 +52,7 @@ fun ChannelsView(
                 }
             }
         }
-        Header(title = "All Channels", add = openCreateChat)
+        Header(title = "All Channels", onAdd = openCreateChat)
     }
 }
 

@@ -79,7 +79,7 @@ fun ChatChat(
                 back = back
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Header(title = "", icon = {
+                    Header(icon = {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Avatar(
                                 type = AvatarType.Channel(listOf(chat.displayImage)),
@@ -95,7 +95,7 @@ fun ChatChat(
                                 ChatCount(count = chat.members.size)
                             }
                         }
-                    }, back = back, menu = { ctx.launch { menu.show() } })
+                    }, onBackClick = back, onMenuClick = { ctx.launch { menu.show() } })
                     MessageList(
                         chat = chat,
                         modifier = Modifier.weight(1f),

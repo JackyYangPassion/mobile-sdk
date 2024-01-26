@@ -33,7 +33,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
                     .verticalScroll(scrollState)
                     .fillMaxSize(1f)
     ) {
-        Header(title = user.username, icon = { Avatar(url = user.avatar) }, back = back)
+        Header(title = user.username, icon = { Avatar(url = user.avatar) }, onBackClick = back)
         Space(16f)
         Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

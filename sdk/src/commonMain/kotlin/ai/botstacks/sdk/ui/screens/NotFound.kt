@@ -20,7 +20,7 @@ import ai.botstacks.sdk.utils.IPreviews
 @Composable
 fun NotFound(what: String = "Page", back: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Header(title = what, back = back)
+        Header(title = what, onBackClick = back)
         Column(
             modifier = Modifier.padding(32.dp)
         ) {

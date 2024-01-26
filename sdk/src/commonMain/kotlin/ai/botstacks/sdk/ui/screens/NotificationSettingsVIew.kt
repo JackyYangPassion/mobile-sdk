@@ -46,7 +46,7 @@ fun Option(name: String, selected: Boolean, onClick: () -> Unit) {
 fun NotificationSettingsView(back: () -> Unit) {
     val settings = BotStacksChatStore.current.settings
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
-        Header(title = "Manage Notifications", back = back)
+        Header(title = "Manage Notifications", onBackClick = back)
         Row(modifier = Modifier.padding(start = 16.dp)) {
             Text(text = "Notification Status", fontStyle = fonts.body1, color = colorScheme.onBackground)
         }

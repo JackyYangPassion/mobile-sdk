@@ -29,7 +29,7 @@ fun FavoritesView(
         BotStacksChatStore.current.favorites.loadMoreIfEmpty()
     })
     Column {
-        Header(title = "Favorite Messages", back = back)
+        Header(title = "Favorite Messages", onBackClick = back)
         PagerList(pager = BotStacksChatStore.current.favorites, scrollToTop = scrollToTop.toString()) {
             MessageView(message = it, onPressUser = openProfile, onLongPress = {}, onClick = {
                 openReplies(it)
