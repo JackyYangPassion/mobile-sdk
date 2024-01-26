@@ -44,7 +44,7 @@ internal object Res {
         density.map {
             ResourceItem(
                 setOf(it),
-                "${it.path}/$name"
+                "${it.path}/$name.png"
             )
         }.toSet() + setOf(
             ResourceItem(
