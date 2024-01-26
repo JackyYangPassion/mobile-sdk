@@ -26,6 +26,7 @@ import ai.botstacks.sdk.utils.annotated
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -186,6 +187,7 @@ fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn
                 if (transparent) Color.Transparent else colorScheme.header,
                 CircleShape
             )
+            .clip(CircleShape)
             .clickable(onClick = onClick)
             .border(0.dp, Color.Transparent, CircleShape)
     ) {

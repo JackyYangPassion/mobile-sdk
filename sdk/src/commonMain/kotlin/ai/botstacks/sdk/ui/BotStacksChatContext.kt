@@ -74,9 +74,7 @@ fun BotStacksChatContext(
         fonts = appFonts,
         shapes = shapes,
     ) {
-        MaterialTheme {
-            content()
-        }
+        content()
     }
 }
 
