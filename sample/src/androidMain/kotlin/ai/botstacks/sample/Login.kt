@@ -113,7 +113,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
     CompositionLocalProvider(LocalBotStacksColorScheme provides LocalBotStacksDayNightColorScheme.current.night) {
         ModalBottomSheetLayout(
             sheetContent = {
-                BrowserModal(url = "https://inappchat.io/terms-of-services") {
+                BrowserModal(url = "https://botstacks.ai/terms-of-service") {
                     scope.launch { terms.hide() }
                 }
             }, sheetState = terms
