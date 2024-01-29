@@ -23,7 +23,6 @@ import ai.botstacks.sdk.actions.leave
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.*
@@ -63,7 +62,7 @@ fun ChatDrawerButtons(
                         colorFilter = ColorFilter.tint(colorScheme.border),
                         modifier = Modifier.size(24.dp)
                     )
-                    Text(text = "Edit", iac = theme.fonts.mini, color = colorScheme.border)
+                    Text(text = "Edit", fontStyle = fonts.caption2, color = colorScheme.border)
                 }
                 Space()
             }
@@ -80,7 +79,7 @@ fun ChatDrawerButtons(
                     colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)
                 )
-                Text(text = "Invite", iac = theme.fonts.mini, color = colorScheme.border)
+                Text(text = "Invite", fontStyle = fonts.caption2, color = colorScheme.border)
             }
             Space()
             Column(
@@ -96,7 +95,7 @@ fun ChatDrawerButtons(
                     colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)
                 )
-                Text(text = "Leave", iac = theme.fonts.mini, color = colorScheme.border)
+                Text(text = "Leave", fontStyle = fonts.caption2, color = colorScheme.border)
             }
         }
     }
@@ -112,7 +111,7 @@ fun ChatDrawerButtons(
             title = {
                 Text(
                     text = ift(chat.isAdmin, "Delete ${chat.name}", "Leave ${chat.name}"),
-                    iac = fonts.title2
+                    fontStyle = fonts.h2
                 )
             },
             text = {
@@ -123,7 +122,7 @@ fun ChatDrawerButtons(
                             "delete",
                             "leave"
                         )
-                    } this channel?", fonts.body
+                    } this channel?", fonts.body2
                 )
             },
             confirmButton = {
@@ -145,7 +144,7 @@ fun ChatDrawerButtons(
                     }) {
                     Text(
                         ift(chat.isAdmin, "Delete", "Leave"),
-                        fonts.headline,
+                        fonts.body2,
                         color = colorScheme.destructive
                     )
                 }
@@ -156,7 +155,7 @@ fun ChatDrawerButtons(
                     onClick = {
                         dialog.value = false
                     }) {
-                    Text("Cancel", fonts.body)
+                    Text("Cancel", fonts.body2)
                 }
             }
         )

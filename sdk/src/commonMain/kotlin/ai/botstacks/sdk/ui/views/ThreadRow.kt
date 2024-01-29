@@ -55,7 +55,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
         }
         Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start = 14.dp)) {
             Row {
-                Text(text = chat.displayName, iac = fonts.title3, color = colorScheme.text, maxLines = 1)
+                Text(text = chat.displayName, fontStyle = fonts.h3, color = colorScheme.text, maxLines = 1)
                 Space()
                 if (chat.isGroup) {
                     PrivacyPill(chat._private)
@@ -71,7 +71,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
                     )
                 Text(
                     text = chat.latest?.summary ?: "No messages yet",
-                    iac = fonts.body,
+                    fontStyle = fonts.body1,
                     maxLines = 2,
                     color = if (chat.isUnread) colorScheme.text else colorScheme.caption,
                     modifier = Modifier.fillMaxWidth(0.7f)
@@ -86,7 +86,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
         Column(horizontalAlignment = Alignment.End) {
             chat.latest?.let {
                 Text(
-                    text = tsString(it.createdAt), iac = fonts.body, color = colorScheme.caption
+                    text = tsString(it.createdAt), fontStyle = fonts.body1, color = colorScheme.caption
                 )
             }
             if (chat.isUnread) {

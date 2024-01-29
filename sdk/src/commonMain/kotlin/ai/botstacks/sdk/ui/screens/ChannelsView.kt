@@ -12,13 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.ui.BotStacks.theme
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
 import ai.botstacks.sdk.utils.random
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 
 @Composable
 fun ChannelsView(
@@ -29,13 +32,14 @@ fun ChannelsView(
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         PagerList(
+            modifier = Modifier.windowInsetsPadding(WindowInsets.statusBars),
             pager = BotStacksChatStore.current.network,
             topInset = HeaderHeight,
             bottomInset = 0.dp,
             scrollToTop = scrollToTop.toString(),
             empty = {
                 EmptyListView(
-                    config = theme.assets.emptyAllChannels,
+                    config = BotStacks.assets.emptyAllChannels,
                     cta = CTA(icon = null, text = "Create A Channel", to = openCreateChat)
                 )
             }) { chat ->

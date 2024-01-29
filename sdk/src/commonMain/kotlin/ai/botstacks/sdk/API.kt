@@ -64,8 +64,8 @@ fun String.sha256(): String {
 }
 
 object Server {
-    val host = BuildConfig.HOST
-    val ssl = BuildConfig.SSL
+    val host = SdkConfig.HOST
+    val ssl = SdkConfig.SSL
     val http = "http${if (ssl) "s" else ""}://${host}"
     val ws = "ws${if (ssl) "s" else ""}://${host}"
 }

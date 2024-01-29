@@ -48,7 +48,7 @@ fun ContactRow(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = user.username.annotated(),
-                    iac = fonts.title3,
+                    iac = fonts.h3,
                     maxLines = 1,
                     color = colorScheme.text
                 )
@@ -63,7 +63,7 @@ fun ContactRow(
             }
             Text(
                 text = user.status.rawValue.capitalize(Locale.current).annotated(),
-                iac = fonts.body,
+                iac = fonts.body1,
                 color = ift(
                     user.status == OnlineStatus.Online,
                     colorScheme.primary,

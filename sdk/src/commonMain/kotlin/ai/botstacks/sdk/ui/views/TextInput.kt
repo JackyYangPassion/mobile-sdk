@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks
@@ -54,12 +53,8 @@ fun TextInput(
             BasicTextField(
                 value = text,
                 onValueChange = onChange,
-                textStyle = TextStyle.Default.copy(
-                    color = BotStacks.colorScheme.text,
-                    fontFamily = BotStacks.fonts.body.family,
-                    fontSize = BotStacks.fonts.body.size,
-                    fontWeight = BotStacks.fonts.body.weight
-                ),
+                textStyle = BotStacks.fonts.body1.asTextStyle().copy(
+                    color = BotStacks.colorScheme.text,),
                 minLines = minLines,
                 maxLines = maxLines,
                 modifier = inputModifier.focusRequester(focusRequester),
@@ -69,7 +64,7 @@ fun TextInput(
                 visualTransformation = visualTransformation
             )
             if (text.isBlank()) {
-                Text(text = placeholder, iac = BotStacks.fonts.body, color = BotStacks.colorScheme.caption)
+                Text(text = placeholder, fontStyle = BotStacks.fonts.body1, color = BotStacks.colorScheme.caption)
             }
         }
         right()

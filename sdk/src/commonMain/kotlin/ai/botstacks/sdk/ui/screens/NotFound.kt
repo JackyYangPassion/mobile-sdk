@@ -26,7 +26,7 @@ fun NotFound(what: String = "Page", back: () -> Unit) {
         ) {
             Text(
                 text = "The page you were looking for could not be found",
-                iac = fonts.title2,
+                fontStyle = fonts.h2,
                 color = colorScheme.text
             )
         }

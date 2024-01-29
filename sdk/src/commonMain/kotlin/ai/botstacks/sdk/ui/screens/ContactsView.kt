@@ -24,8 +24,6 @@ import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacks.theme
-import ai.botstacks.sdk.ui.views.ContactRow
 import ai.botstacks.sdk.ui.views.Header
 import ai.botstacks.sdk.ui.views.PagerList
 import ai.botstacks.sdk.ui.views.Text
@@ -59,19 +57,19 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
                             modifier =
                             Modifier
                                 .radius(15.dp)
-                                .background(theme.inverted.softBackground)
+                                .background(colorScheme.softBackground)
                                 .padding(16.dp),
                             verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                             Text(
                                 text = "Find your friends",
-                                iac = fonts.title3,
-                                color = theme.inverted.text
+                                fontStyle = fonts.h3,
+                                color = colorScheme.text
                             )
                             Text(
                                 "Sync your contacts to easily find people you know. Your contacts will only be to help you connect with friends.",
-                                iac = fonts.body.copy(weight = FontWeight.Bold),
-                                color = theme.inverted.text
+                                fontStyle = fonts.body1.copy(weight = FontWeight.Bold),
+                                color = colorScheme.text
                             )
                             Row(modifier = Modifier
                                 .radius(13.dp)
@@ -83,7 +81,7 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
                             ) {
                                 Text(
                                     text = "Sync",
-                                    iac = fonts.body.copy(weight = FontWeight.Bold),
+                                    fontStyle = fonts.body1.copy(weight = FontWeight.Bold),
                                     color = colorScheme.text
                                 )
                             }
@@ -93,8 +91,7 @@ fun ContactsView(scrollToTop: Int, openProfile: (User) -> Unit) {
             },
         ) {
             UserRow(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 20.dp),
+                modifier = Modifier.fillMaxWidth(),
                 user = it
             ) {
                 openProfile(it)

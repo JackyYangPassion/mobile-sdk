@@ -110,8 +110,10 @@ fun Tabs(
             }
         }
         Row(modifier = Modifier
+            .background(colorScheme.softBackground)
+            .windowInsetsPadding(WindowInsets.navigationBars)
             .height(57.dp)
-            .background(colorScheme.softBackground)) {
+        ) {
             for (tab in Tab.entries) {
                 Box(
                     modifier = Modifier

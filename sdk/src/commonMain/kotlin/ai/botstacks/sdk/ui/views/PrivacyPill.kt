@@ -24,7 +24,7 @@ fun PrivacyPill(_private: Boolean = false) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .background(
-                ift(!_private, BotStacks.theme.colors._private, BotStacks.theme.colors._public),
+                ift(!_private, BotStacks.colorScheme._private, BotStacks.colorScheme._public),
                 RoundedCornerShape(8.dp)
             )
             .padding(6.dp, 1.dp)
@@ -32,7 +32,7 @@ fun PrivacyPill(_private: Boolean = false) {
     ) {
         Text(
             (if (_private) "Private" else "Public").uppercase().annotated(),
-            fonts.mini,
+            fonts.caption2,
             color = Color.White,
         )
     }

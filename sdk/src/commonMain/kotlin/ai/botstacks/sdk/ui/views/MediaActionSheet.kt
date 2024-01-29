@@ -201,7 +201,7 @@ fun MediaActionSheetPreview() {
             inReplyTo = null
         ) {
             Button(onClick = { ctx.launch { open.show() } }) {
-                Text(text = "Open Sheet", iac = BotStacks.fonts.headline)
+                Text(text = "Open Sheet", fontStyle = BotStacks.fonts.body2)
             }
         }
     }

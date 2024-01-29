@@ -30,7 +30,6 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.usernames
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
-import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
@@ -43,9 +42,9 @@ fun chatInvitesText(chat: Chat) =
         pushStyle(
             SpanStyle(
                 color = Color.White,
-                fontSize = BotStacks.fonts.body.size,
+                fontSize = BotStacks.fonts.body1.size,
                 fontWeight = FontWeight.Bold,
-                fontFamily = BotStacks.fonts.body.family
+                fontFamily = BotStacks.fonts.body1.family
             )
         )
         append(chat.invites.usernames())
@@ -74,7 +73,7 @@ fun InvitesHeader(chat: Chat) {
         ) {
             Text(
                 chatInvitesText(chat = chat),
-                BotStacks.fonts.body,
+                BotStacks.fonts.body1,
                 color = Color.White,
                 modifier = Modifier.weight(1f)
             )
@@ -101,7 +100,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
         Column(
             modifier = Modifier
                 .radius(15)
-                .background(theme.colors.bubble)
+                .background(colorScheme.bubble)
                 .fillMaxWidth()
         ) {
             InvitesHeader(chat = chat)
@@ -133,7 +132,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                         val screenWidth = configuration.screenWidthDp
                         Text(
                             chat.displayName.annotated(),
-                            theme.fonts.title3,
+                            BotStacks.fonts.h3,
                             color = colorScheme.text,
                             maxLines = 1,
                             softWrap = false,
@@ -145,7 +144,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                     }
                     Text(
                         text = (chat.description ?: "").annotated(),
-                        iac = theme.fonts.body,
+                        iac = BotStacks.fonts.body1,
                         color = colorScheme.caption,
                         maxLines = 2
                     )

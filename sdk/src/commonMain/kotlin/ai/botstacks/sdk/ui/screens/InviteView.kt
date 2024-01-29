@@ -98,7 +98,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                             }
                         }
                     }) {
-                Text(text = "Invite Friends", iac = fonts.headline, color = colorScheme.background)
+                Text(text = "Invite Friends", fontStyle = fonts.body2, color = colorScheme.background)
             }
         }
     }

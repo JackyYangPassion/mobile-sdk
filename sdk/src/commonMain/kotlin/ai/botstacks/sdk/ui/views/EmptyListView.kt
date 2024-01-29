@@ -4,10 +4,10 @@
 
 package ai.botstacks.sdk.ui.views
 
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.theme.EmptyScreenConfig
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.Image
@@ -52,7 +52,7 @@ fun EmptyListView(
       config.caption?.let {
         Text(
           text = it,
-          iac = fonts.title2.copy(weight = FontWeight.Normal),
+          fontStyle = fonts.h2.copy(weight = FontWeight.Normal),
           textAlign = TextAlign.Center,
           color = colorScheme.text
         )
@@ -79,7 +79,7 @@ fun EmptyListView(
                 colorFilter = ColorFilter.tint(colorScheme.text)
               )
             }
-            Text(text = it.text.uppercase(), iac = fonts.headline, color = colorScheme.text)
+            Text(text = it.text.uppercase(), fontStyle = fonts.h2, color = colorScheme.text)
             Spacer(modifier = Modifier.weight(1f))
           }
         }
@@ -92,6 +92,6 @@ fun EmptyListView(
 @Composable
 fun EmptyListViewPreview() {
   BotStacksChatContext {
-    EmptyListView(config = theme.assets.emptyAllChannels, cta = CTA(null, "Create a Channel", {}))
+    EmptyListView(config = BotStacks.assets.emptyAllChannels, cta = CTA(null, "Create a Channel", {}))
   }
 }

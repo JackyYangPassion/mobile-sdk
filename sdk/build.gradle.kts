@@ -1,5 +1,8 @@
 import com.android.SdkConstants.FN_LOCAL_PROPERTIES
 import com.android.build.gradle.internal.cxx.logging.infoln
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.util.Properties
@@ -9,10 +12,10 @@ plugins {
 //    kotlin("native.cocoapods")
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose)
-    kotlin("kapt")
     alias(libs.plugins.sentry)
     alias(libs.plugins.apollo3)
     alias(libs.plugins.kotlin.serialization)
+    id("com.codingfeline.buildkonfig")
     id("maven-publish")
     id("signing")
 }
@@ -23,6 +26,8 @@ val libraryVersion = "1.0.0"
 kotlin {
     applyDefaultHierarchyTemplate()
     androidTarget()
+
+    withSourcesJar(publish = false)
 
     sourceSets {
         commonMain {
@@ -46,6 +51,7 @@ kotlin {
         }
 
         androidMain {
+            dependsOn(commonMain.get())
             dependencies {
                 implementation(libs.retrofit2)
                 implementation(libs.retrofit2.converter.moshi)
@@ -138,21 +144,6 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            buildConfigField("String", "ENV", "\"production\"")
-            buildConfigField("String", "HOST", "\"chat.botstacks.ai\"")
-            buildConfigField("boolean", "SSL", "true")
-        }
-        getByName("debug") {
-            buildConfigField("String", "ENV", "\"production\"")
-            buildConfigField("String", "HOST", "\"chat.botstacks.ai\"")
-            buildConfigField("boolean", "SSL", "true")
-        }
-    }
-
     kotlin {
         jvmToolchain(17)
     }
@@ -197,6 +188,25 @@ publishing {
     }
 }
 
+buildkonfig {
+    packageName = "ai.botstacks.sdk"
+    objectName = "SdkConfig"
+
+    defaultConfigs {
+        buildConfigField(BOOLEAN, "DEBUG", "true")
+        buildConfigField(STRING, "ENV", "production")
+        buildConfigField(STRING, "HOST", "chat.botstacks.ai")
+        buildConfigField(BOOLEAN, "SSL", "true")
+    }
+
+    defaultConfigs("release") {
+        buildConfigField(BOOLEAN, "DEBUG", "false")
+        buildConfigField(STRING, "ENV", "production")
+        buildConfigField(STRING, "HOST", "chat.botstacks.ai")
+        buildConfigField(BOOLEAN, "SSL", "true")
+    }
+}
+
 println("CHECK SIGNING")
 if (rootProject.hasProperty("signing.keyId")) {
     println("Set Up Signing")
@@ -227,7 +237,7 @@ apollo {
  * Retrieve the project local properties if they are available.
  * If there is no local properties file then an empty set of properties is returned.
  */
-fun gradleLocalProperties(projectRootDir : File) : Properties {
+fun gradleLocalProperties(projectRootDir: File): Properties {
     val properties = Properties()
     val localProperties = File(projectRootDir, FN_LOCAL_PROPERTIES)
     if (localProperties.isFile) {

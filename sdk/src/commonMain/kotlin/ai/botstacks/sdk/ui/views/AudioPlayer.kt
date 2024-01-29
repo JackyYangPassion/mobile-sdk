@@ -29,8 +29,8 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacks.theme
 import ai.botstacks.sdk.ui.resources.Drawables
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
@@ -113,7 +113,7 @@ fun AudioPlayer(
         }
 
         Space()
-        Text(text = msToString(current), iac = fonts.body, color = colorScheme.bubbleText)
+        Text(text = msToString(current), fontStyle = fonts.body1, color = colorScheme.bubbleText)
         Space()
         Slider(
             value = current.toFloat() / 1000.0f,
@@ -132,10 +132,10 @@ fun AudioPlayer(
                 activeTickColor = colorScheme.primary,
                 activeTrackColor = colorScheme.primary
             ),
-            modifier = Modifier.width(theme.videoPreviewSize.width.dp)
+            modifier = Modifier.width(dimens.videoPreviewSize.width.dp)
         )
         Space()
-        Text(text = msToString(total), iac = fonts.body, color = colorScheme.bubbleText)
+        Text(text = msToString(total), fontStyle = fonts.body1, color = colorScheme.bubbleText)
     }
 
     if (playing) {

@@ -47,8 +47,8 @@ fun ChatDrawerHeader(chat: Chat) {
             Space(24f)
             Avatar(url = chat.displayImage, size = AvatarSize.Large, chat = true)
             Space(12f)
-            Text(chat.displayName, fonts.title2, color = colorScheme.text)
-            Text(chat.displayDescription ?: "", fonts.body, color = colorScheme.caption)
+            Text(chat.displayName, fonts.h2, color = colorScheme.text)
+            Text(chat.displayDescription ?: "", fonts.body1, color = colorScheme.caption)
             Space(26f)
             Divider(color = colorScheme.text.copy(alpha = 0.1f))
         }
@@ -56,7 +56,7 @@ fun ChatDrawerHeader(chat: Chat) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 16.dp)
         ) {
-            Text(text = "All Members", iac = fonts.headline, color = colorScheme.text)
+            Text(text = "All Members", fontStyle = fonts.body2, color = colorScheme.text)
             Space(14f)
             Image(
                 painter = Drawables.UsersThreeFilled,
@@ -65,7 +65,7 @@ fun ChatDrawerHeader(chat: Chat) {
                 modifier = Modifier.size(16)
             )
             Space()
-            Text(chat.members.size.toString(), fonts.caption, color = colorScheme.caption)
+            Text(chat.members.size.toString(), fonts.caption1, color = colorScheme.caption)
         }
     }
 }
@@ -100,7 +100,7 @@ fun ChatDrawer(
                             stickyHeader {
                                 Text(
                                     text = name.uppercase(),
-                                    iac = fonts.caption.copy(weight = FontWeight.Bold),
+                                    fontStyle = fonts.caption1.copy(weight = FontWeight.Bold),
                                     color = colorScheme.caption,
                                     modifier = Modifier.padding(top = 24.dp, start = 16.dp)
                                 )
@@ -140,7 +140,7 @@ fun ChatDrawerPreview() {
         ChatDrawer(chat = genG(), open, {}, {}, {}, {}, {}) {
             ClickableText(
                 text = "hello",
-                iac = fonts.body,
+                iac = fonts.body1,
                 color = colorScheme.text,
                 onClick = { coroutineContext.launch { open.show() } })
         }

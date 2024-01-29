@@ -41,8 +41,9 @@ fun Header(
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
-      .fillMaxWidth()
       .background(colorScheme.softBackground)
+      .fillMaxWidth()
+      .windowInsetsPadding(WindowInsets.statusBars)
       .padding(start = 16.dp, end = 8.dp)
       .height(HeaderHeight)
   ) {
@@ -61,7 +62,7 @@ fun Header(
     icon?.invoke()
     Text(
       text = title.annotated(),
-      iac = BotStacks.fonts.title.copy(weight = FontWeight.Bold),
+      iac = BotStacks.fonts.h1.copy(weight = FontWeight.Bold),
       color = colorScheme.text,
       maxLines = 1
     )

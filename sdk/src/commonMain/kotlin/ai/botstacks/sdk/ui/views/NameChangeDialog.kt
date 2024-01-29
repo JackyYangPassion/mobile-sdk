@@ -87,7 +87,7 @@ fun NameChangeDialog(
                 }
                 Text(
                     text = title,
-                    fonts.headline,
+                    fonts.h2,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
@@ -103,7 +103,7 @@ fun NameChangeDialog(
                         text = it.trim()
                     },
                     label = {
-                        Text(text = textHint, fonts.body)
+                        Text(text = textHint, fonts.body2)
                     },
                     modifier = Modifier
                         .padding(top = 16.dp)
@@ -119,7 +119,7 @@ fun NameChangeDialog(
                         .weight(1f)
                         .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 24.dp)
                 ) {
-                    Text(text = "Cancel", fonts.body)
+                    Text(text = "Cancel", fonts.body2)
                 }
                 Button(
                     modifier = Modifier
@@ -127,7 +127,7 @@ fun NameChangeDialog(
                         .padding(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 24.dp),
                     onClick = {
                         submit()
-                    }) { Text(text = "Submit", fonts.body) }
+                    }) { Text(text = "Submit", fonts.body2) }
             }
         }
     )
