@@ -24,6 +24,8 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -100,14 +102,14 @@ fun ChatChat(
                         chat = chat,
                         modifier = Modifier.weight(1f),
                         onPressUser = { openProfile(it) },
-                        onLongPress = { messageForAction = it })
+                        onLongPress = { messageForAction = it }
+                    )
                     MessageInput(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                         chat = chat,
                         replyingTo = message,
-                        focusRequester = focusRequester
-                    ) {
-                        ctx.launch { media.show() }
-                    }
+                        onMedia = { ctx.launch { media.show() } }
+                    )
                 }
             }
         }

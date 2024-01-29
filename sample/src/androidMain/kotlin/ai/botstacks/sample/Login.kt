@@ -6,11 +6,13 @@ import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksDayNightColorScheme
 import ai.botstacks.sdk.ui.views.Space
 import ai.botstacks.sdk.ui.views.TextInput
+import ai.botstacks.sdk.ui.views.TextInputDefaults
 import android.Manifest
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +27,8 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
@@ -70,7 +74,7 @@ fun isValidEmail(email: String): Boolean {
 
 @OptIn(
     ExperimentalComposeUiApi::class,
-    ExperimentalMaterialApi::class
+    ExperimentalMaterialApi::class, ExperimentalFoundationApi::class
 )
 @Composable
 fun Login(openChat: () -> Unit, register: () -> Unit) {
@@ -93,10 +97,10 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
     BackHandler(enabled = true) {
         scope.launch { terms.hide() }
     }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email= rememberTextFieldState()
+    var password = rememberTextFieldState()
     val passwordFocus = remember { FocusRequester() }
-    val canLogin = isValidEmail(email) && password.length > 4
+    val canLogin = isValidEmail(email.text.toString()) && password.text.length > 4
     val login = {
         if (canLogin) {
             Log.v("InAppChat-Sample", "Login Click")
@@ -132,12 +136,13 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                     Space(60f)
                     val autofillEmail =
                         AutoFillRequestHandler(autofillTypes = listOf(AutofillType.EmailAddress),
-                            onFill = {
-                                email = it
-                            }
+                            onFill = { email.setTextAndPlaceCursorAtEnd(it) }
                         )
                     TextInput(
-                        text = email,
+                        modifier = Modifier
+                            .connectNode(handler = autofillEmail)
+                            .defaultFocusChangeAutoFill(handler = autofillEmail),
+                        state = email,
                         placeholder = "Email",
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
@@ -145,22 +150,17 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         ),
                         keyboardActions = KeyboardActions(onNext = { passwordFocus.captureFocus() }),
                         maxLines = 1,
-                        onChange = {
-                            email = it
-                        },
-                        inputModifier = Modifier
-                            .connectNode(handler = autofillEmail)
-                            .defaultFocusChangeAutoFill(handler = autofillEmail)
                     )
                     Space(12f)
                     val autofillPassword =
                         AutoFillRequestHandler(autofillTypes = listOf(AutofillType.Password),
-                            onFill = {
-                                email = it
-                            }
+                            onFill = { email.setTextAndPlaceCursorAtEnd(it) }
                         )
                     TextInput(
-                        text = password,
+                        modifier = Modifier
+                            .connectNode(autofillPassword)
+                            .defaultFocusChangeAutoFill(autofillPassword),
+                        state = password,
                         placeholder = "Password",
                         maxLines = 1,
                         keyboardOptions = KeyboardOptions(
@@ -170,14 +170,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         keyboardActions = KeyboardActions(onGo = {
                             login()
                         }),
-                        visualTransformation = PasswordVisualTransformation(),
-                        onChange = {
-                            password = it
-                        },
-                        inputModifier = Modifier
-                            .connectNode(autofillPassword)
-                            .defaultFocusChangeAutoFill(autofillPassword),
-                        focusRequester = passwordFocus
+                        codepointTransformation = TextInputDefaults.PasswordMask,
                     )
 
                     ElevatedButton(

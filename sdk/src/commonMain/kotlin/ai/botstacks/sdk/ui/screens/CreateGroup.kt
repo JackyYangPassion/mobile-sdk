@@ -37,15 +37,21 @@ import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.op
+import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalFoundationApi::class)
 @Stable
 data class CreateChatState(val chat: Chat? = null) {
     var upload by mutableStateOf<Upload?>(null)
     var image: String? = chat?.image
-    var name by mutableStateOf<String>(chat?.name ?: "")
-    var description by mutableStateOf<String?>(chat?.description ?: "")
+
+    @OptIn(ExperimentalFoundationApi::class)
+    val name = TextFieldState(chat?.name.orEmpty())
+    var description = TextFieldState(chat?.description.orEmpty())
     var _private by mutableStateOf(chat?._private ?: false)
 
     init {
@@ -60,7 +66,7 @@ data class CreateChatState(val chat: Chat? = null) {
         if (chat != null) {
             op({
                 val img = upload?.await()
-                chat.update(name, description, img, _private) {
+                chat.update(name.text.toString(), description.text.toString(), img, _private) {
                     back()
                 }
             })
@@ -70,8 +76,8 @@ data class CreateChatState(val chat: Chat? = null) {
                 val img = upload?.await()
                 val chat =
                     API.createChat(
-                        name,
-                        description = description,
+                        name.text.toString(),
+                        description = description.text.toString(),
                         _private = _private,
                         image = img
                     )
@@ -94,7 +100,10 @@ data class CreateChatState(val chat: Chat? = null) {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalResourceApi::class)
+@OptIn(
+    ExperimentalResourceApi::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
     val back = {
@@ -105,15 +114,21 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
     val nameFocus = remember { FocusRequester() }
     val descriptionFocus = remember { FocusRequester() }
     val scrollState = rememberScrollState()
-    val canSubmit by remember(state.name, state.description) {
+    val canSubmit by remember(state.name.text, state.description) {
         derivedStateOf {
-            state.name.length in 3..25 && (state.description?.length ?: 0) <= 100
+            state.name.text.length in 3..25 && (state.description.text?.length ?: 0) <= 100
         }
     }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(modifier = Modifier.fillMaxHeight()) {
-        Header(title = "Create Channel", onBackClick = back)
+        Header(
+            title = "Create Channel",
+            onBackClick = back,
+            endAction = {
+                HeaderDefaults.NextAction { }
+            }
+        )
         Column(
             modifier = Modifier
                 .padding(16.dp, 0.dp)
@@ -150,28 +165,34 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                             modifier = Modifier
                                 .padding(8.dp, 0.dp)
                         ) {
-                            Text(text = "Channel Name", fontStyle = fonts.body2, color = colorScheme.onBackground)
                             Text(
-                                text = "${state.name.length}/25",
+                                text = "Channel Name",
+                                fontStyle = fonts.body2,
+                                color = colorScheme.onBackground
+                            )
+                            Text(
+                                text = "${state.name.text.length}/25",
                                 fontStyle = fonts.body2,
                                 color = colorScheme.caption
                             )
                         }
                         Space()
                         TextInput(
-                            text = state.name,
+                            state = state.name,
                             placeholder = "Showcase what your channel is all about",
-                            onChange = {
-                                if (it.endsWith("\n")) {
+                            onStateChanged = {
+                                if (state.name.text.endsWith("\n")) {
                                     descriptionFocus.captureFocus()
                                 } else {
-                                    state.name = if (it.length > 25) it.slice(0..25) else it
+                                    val text =
+                                        if (state.name.text.length > 25) state.name.text.slice(0..25) else state.name.text
+                                    state.name.setTextAndPlaceCursorAtEnd(text.toString())
+
                                 }
                             },
                             modifier = Modifier
                                 .border(1.dp, colorScheme.border, CircleShape)
                                 .clickable { nameFocus.requestFocus() },
-                            focusRequester = nameFocus,
                             keyboardActions = KeyboardActions(onNext = { descriptionFocus.captureFocus() }),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                         )
@@ -188,24 +209,27 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 color = colorScheme.onBackground
                             )
                             Text(
-                                text = "${state.description?.length ?: "0"}/100",
+                                text = "${state.description.text.length}/100",
                                 fontStyle = fonts.body2,
                                 color = colorScheme.caption
                             )
                         }
                         Space()
                         TextInput(
-                            text = state.description ?: "",
+                            state = state.description,
                             placeholder = "Showcase what your channel is all about",
-                            onChange = {
-                                state.description = if (it.length > 100) it.slice(0..100) else it
+                            onStateChanged = {
+                                val text =
+                                    if (state.description.text.length > 100) state.description.text.slice(
+                                        0..100
+                                    ) else state.description.text
+                                state.description.setTextAndPlaceCursorAtEnd(text.toString())
                             },
                             modifier = Modifier
                                 .border(1.dp, colorScheme.border, RoundedCornerShape(22.dp))
                                 .clickable { descriptionFocus.requestFocus() },
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                             keyboardActions = KeyboardActions(onNext = { keyboardController?.hide() }),
-                            focusRequester = descriptionFocus,
                             minLines = 4,
                         )
                     }
@@ -292,7 +316,11 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 if (state.chat.updating) {
                                     Spinner()
                                 }
-                                Text(text = "Save", fontStyle = fonts.body2, color = colorScheme.onSurface)
+                                Text(
+                                    text = "Save",
+                                    fontStyle = fonts.body2,
+                                    color = colorScheme.onSurface
+                                )
                             }
                         }
                     } else {
