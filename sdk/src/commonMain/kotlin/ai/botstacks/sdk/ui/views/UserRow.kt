@@ -4,9 +4,9 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.views.internal.RippleBehindContentBox
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,19 +40,19 @@ fun UserRow(
     displayName: String,
     onClick: () -> Unit,
 ) {
-    RippleBehindContentBox(modifier = modifier, onClick = onClick) {
-        Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Avatar(type = AvatarType.User(url, onlineStatus))
-            Text(
-                text = displayName,
-                fontStyle = BotStacks.fonts.body1,
-                color = BotStacks.colorScheme.onBackground
-            )
-        }
+    Row(
+        modifier = modifier
+            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Avatar(type = AvatarType.User(url, onlineStatus))
+        Text(
+            text = displayName,
+            fontStyle = BotStacks.fonts.body1,
+            color = BotStacks.colorScheme.onBackground
+        )
     }
 }
 

@@ -39,7 +39,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
     }
 
     Column {
-        Header(title = "Invite to ${chat.name}", back = back)
+        Header(title = "Invite to ${chat.name}", onBackClick = back)
         PagerList(
             pager = BotStacksChatStore.current.contacts,
             divider = true,

@@ -3,10 +3,13 @@ package ai.botstacks.sdk.ui.theme
  * Copyright (c) 2023.
  */
 
+import ai.botstacks.sdk.ui.utils.FullAlphaRipple
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -46,6 +49,7 @@ internal fun Theme(
         }
     )
 
+
     CompositionLocalProvider(
         LocalBotStacksAssets provides assets,
         LocalBotStacksDayNightColorScheme provides colorScheme,
@@ -55,12 +59,18 @@ internal fun Theme(
         LocalBotStacksMarkdownConfig provides { sender -> markdownConfig(sender) },
         LocalBotStacksShapes provides shapes,
     ) {
-        Box(
-            modifier = Modifier
-                .background(colorScheme.colors(isDark).background),
-        ) {
-            CompositionLocalProvider(LocalContentColor provides colorScheme.colors(isDark).onBackground) {
-                content()
+        MaterialTheme {
+            CompositionLocalProvider(
+                LocalRippleTheme provides FullAlphaRipple
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(colorScheme.colors(isDark).background),
+                ) {
+                    CompositionLocalProvider(LocalContentColor provides colorScheme.colors(isDark).onBackground) {
+                        content()
+                    }
+                }
             }
         }
     }

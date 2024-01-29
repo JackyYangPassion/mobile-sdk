@@ -3,9 +3,9 @@ package ai.botstacks.sdk.ui.views
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.views.internal.RippleBehindContentBox
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,19 +37,19 @@ fun SimpleChannelRow(
     name: String,
     onClick: () -> Unit,
 ) {
-    RippleBehindContentBox(modifier = modifier, onClick = onClick) {
-        Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Avatar(type = AvatarType.Channel(imageUrls))
-            Text(
-                text = name,
-                fontStyle = BotStacks.fonts.body1,
-                color = BotStacks.colorScheme.onBackground
-            )
-        }
+    Row(
+        modifier = modifier
+            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Avatar(type = AvatarType.Channel(imageUrls))
+        Text(
+            text = name,
+            fontStyle = BotStacks.fonts.body1,
+            color = BotStacks.colorScheme.onBackground
+        )
     }
 }
 

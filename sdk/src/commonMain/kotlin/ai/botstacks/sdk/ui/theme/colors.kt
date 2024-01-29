@@ -157,7 +157,7 @@ fun lightColors(
     onSuccess: Color = BotStacksColorPalette.Dark._400,
     error: Color = BotStacksColorPalette.Red._800,
     onError: Color = Color(0xFF202023),
-    ripple: Color = BotStacksColorPalette.Primary._200,
+    ripple: Color = BotStacksColorPalette.Dark._100,
 ) = Colors(
     isDark = false,
     primary = primary,
@@ -200,7 +200,7 @@ fun darkColors(
     onSuccess: Color = BotStacksColorPalette.Dark._400,
     error: Color = BotStacksColorPalette.Red._700,
     onError: Color = Color(0xFF29292D),
-    ripple: Color = BotStacksColorPalette.Dark._600,
+    ripple: Color = BotStacksColorPalette.Light._500,
 ) = Colors(
     isDark = true,
     primary = primary,
