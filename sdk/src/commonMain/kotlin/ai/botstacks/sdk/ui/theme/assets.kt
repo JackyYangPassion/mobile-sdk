@@ -8,28 +8,38 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
 import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.BotStacksChatStore
+import ai.botstacks.sdk.ui.resources.Res
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.painter.Painter
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 @Stable
-data class EmptyScreenConfig(@DrawableRes val image: Int? = null, val caption: String? = null)
+data class EmptyScreenConfig(
+    val image: @Composable () -> Painter? = { null },
+    val caption: String? = null
+)
 
+@OptIn(ExperimentalResourceApi::class)
 @Stable
 data class Assets(
     @DrawableRes val chat: Int? = null,
     val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_chats,
+        { painterResource(Res.Drawables.EmptyChats) },
         "Your friends are waiting for you"
     ),
     val emptyChannels: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_channels,
+        { painterResource(Res.Drawables.EmptyChannels) },
         "No channels yet. Go join one"
     ),
     val emptyChats: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_chats,
+        { painterResource(Res.Drawables.EmptyChats) },
         "You haven't added any chats yet"
     ),
     val emptyAllChannels: EmptyScreenConfig = EmptyScreenConfig(
-        R.drawable.empty_all_channels,
+        { painterResource(Res.Drawables.EmptyChannels) },
         "No channels around here yet. Make one"
     )
 ) {

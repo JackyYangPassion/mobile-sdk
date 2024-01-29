@@ -31,194 +31,195 @@ data class DayNightColorScheme(
 @Stable
 class Colors(
     isDark: Boolean,
-    bubble: Color,
-    bubbleText: Color,
-    senderBubble: Color,
-    senderText: Color,
-    senderUsername: Color,
-    text: Color,
-    username: Color,
-    timestamp: Color,
     primary: Color,
-    button: Color,
+    onPrimary: Color,
+    header: Color,
+    onHeader: Color,
     background: Color,
-    destructive: Color,
-    softBackground: Color,
-    caption: Color,
-    unread: Color,
-    _public: Color,
-    _private: Color,
+    onBackground: Color,
+    surface: Color,
+    onSurface: Color,
     border: Color,
+    message: Color,
+    onMessage: Color,
+    chatInput: Color,
+    onChatInput: Color,
+    caption: Color,
+    success: Color,
+    onSuccess: Color,
+    error: Color,
+    onError: Color,
     ripple: Color,
 ) {
     var isDark by mutableStateOf(isDark, structuralEqualityPolicy())
         internal set
-    var bubble by mutableStateOf(bubble, structuralEqualityPolicy())
-        internal set
-    var bubbleText by mutableStateOf(bubbleText, structuralEqualityPolicy())
-        internal set
-    var senderBubble by mutableStateOf(senderBubble, structuralEqualityPolicy())
-        internal set
-    var senderText by mutableStateOf(senderText, structuralEqualityPolicy())
-        internal set
-    var senderUsername by mutableStateOf(senderUsername, structuralEqualityPolicy())
-        internal set
-    var text by mutableStateOf(text, structuralEqualityPolicy())
-        internal set
-    var username by mutableStateOf(username, structuralEqualityPolicy())
-        internal set
-    var timestamp by mutableStateOf(timestamp, structuralEqualityPolicy())
-        internal set
     var primary by mutableStateOf(primary, structuralEqualityPolicy())
         internal set
-    var button by mutableStateOf(button, structuralEqualityPolicy())
+    var onPrimary by mutableStateOf(onPrimary, structuralEqualityPolicy())
+        internal set
+    var header by mutableStateOf(header, structuralEqualityPolicy())
+        internal set
+    var onHeader by mutableStateOf(onHeader, structuralEqualityPolicy())
         internal set
     var background by mutableStateOf(background, structuralEqualityPolicy())
         internal set
-    var destructive by mutableStateOf(destructive, structuralEqualityPolicy())
+    var onBackground by mutableStateOf(onBackground, structuralEqualityPolicy())
         internal set
-    var softBackground by mutableStateOf(softBackground, structuralEqualityPolicy())
+    var surface by mutableStateOf(surface, structuralEqualityPolicy())
         internal set
-    var caption by mutableStateOf(caption, structuralEqualityPolicy())
-        internal set
-    var unread by mutableStateOf(unread, structuralEqualityPolicy())
-        internal set
-    var _public by mutableStateOf(_public, structuralEqualityPolicy())
-        internal set
-    var _private by mutableStateOf(_private, structuralEqualityPolicy())
+    var onSurface by mutableStateOf(onSurface, structuralEqualityPolicy())
         internal set
     var border by mutableStateOf(border, structuralEqualityPolicy())
         internal set
+    var message by mutableStateOf(message, structuralEqualityPolicy())
+        internal set
+    var onMessage by mutableStateOf(onMessage, structuralEqualityPolicy())
+        internal set
+    var chatInput by mutableStateOf(chatInput, structuralEqualityPolicy())
+        internal set
+    var onChatInput by mutableStateOf(onChatInput, structuralEqualityPolicy())
+        internal set
+    var caption by mutableStateOf(caption, structuralEqualityPolicy())
+        internal set
+    var success by mutableStateOf(success, structuralEqualityPolicy())
+        internal set
+    var onSuccess by mutableStateOf(onSuccess, structuralEqualityPolicy())
+        internal set
+    var error by mutableStateOf(error, structuralEqualityPolicy())
+        internal set
+    var onError by mutableStateOf(onError, structuralEqualityPolicy())
+        internal set
+
     var ripple by mutableStateOf(ripple, structuralEqualityPolicy())
         internal set
 
     /** Returns a copy of this ColorScheme, optionally overriding some of the values. */
     fun copy(
-        bubble: Color = this.bubble,
-        bubbleText: Color = this.bubbleText,
-        senderBubble: Color = this.senderBubble,
-        senderText: Color = this.senderText,
-        senderUsername: Color = this.senderUsername,
-        text: Color = this.text,
-        username: Color = this.username,
-        timestamp: Color = this.timestamp,
-        primary: Color = this.primary,
-        button: Color = this.button,
-        background: Color = this.background,
-        destructive: Color = this.destructive,
-        softBackground: Color = this.softBackground,
-        caption: Color = this.caption,
-        unread: Color = this.unread,
-        _public: Color = this._public,
-        _private: Color = this._private,
-        border: Color = this.border,
-        ripple: Color = this.ripple,
+        primary: Color,
+        onPrimary: Color,
+        header: Color,
+        onHeader: Color,
+        background: Color,
+        onBackground: Color,
+        surface: Color,
+        onSurface: Color,
+        border: Color,
+        caption: Color,
+        message: Color,
+        onMessage: Color,
+        chatInput: Color,
+        onChatInput: Color,
+        success: Color,
+        onSuccess: Color,
+        error: Color,
+        onError: Color,
+        ripple: Color,
     ): Colors = Colors(
         isDark = this.isDark,
-        bubble = bubble,
-        bubbleText = bubbleText,
-        senderBubble = senderBubble,
-        senderText = senderText,
-        senderUsername = senderUsername,
-        text = text,
-        username = username,
-        timestamp = timestamp,
-        primary = primary,
-        button = button,
-        background = background,
-        destructive = destructive,
-        softBackground = softBackground,
-        caption = caption,
-        unread = unread,
-        _public = _public,
-        _private = _private,
-        border = border,
-        ripple = ripple
+        primary = this.primary,
+        onPrimary = this.onPrimary,
+        header = this.header,
+        onHeader = this.onHeader,
+        background = this.background,
+        onBackground = this.onBackground,
+        surface = this.surface,
+        onSurface = this.onSurface,
+        border = this.border,
+        message = this.message,
+        onMessage = this.onMessage,
+        chatInput = this.chatInput,
+        onChatInput = this.onChatInput,
+        caption = this.caption,
+        success = this.success,
+        onSuccess = this.onSuccess,
+        error = this.error,
+        onError = this.onError,
+        ripple = this.ripple,
     )
 }
 
 fun lightColors(
-    bubble: Color = Color(0xFFF0F0F0),
-    bubbleText: Color = Color(0xFF1C1C1C),
-    senderBubble: Color = Color(0xFFE5ECFF),
-    senderText: Color = Color(0xFF202127), // Color(hex: 0xE3E3E3)
-    senderUsername: Color = Color(0xFF000000),
-    text: Color = BotStacksColorPalette.Dark._900,
-    username: Color = Color(0xFF2D3237),
-    timestamp: Color = Color(0xFF71869C),
-    primary: Color = Color(0xff0091ff),
-    button: Color = Color(0xFFF0F0F0),
-    background: Color = LightPalette._900,
-    destructive: Color = Color(0xFFC74848),
-    softBackground: Color = Color(0xFFD4D4D4),
-    caption: Color = Color(0x502C2C2C),
-    unread: Color = Color(0xFFC74848),
-    _public: Color = Color(0xFF4B48C7),
-    _private: Color = Color(0xFF488AC7),
-    border: Color = Color(0xFF1B1B1B),
+    primary: Color = BotStacksColorPalette.Primary._800,
+    onPrimary: Color = BotStacksColorPalette.Light._900,
+    header: Color = BotStacksColorPalette.Primary._100,
+    onHeader: Color = BotStacksColorPalette.Dark._900,
+    background: Color = BotStacksColorPalette.Light._900,
+    onBackground: Color = BotStacksColorPalette.Dark._600,
+    surface: Color = BotStacksColorPalette.Light._500,
+    onSurface: Color = BotStacksColorPalette.Dark._900,
+    border: Color = BotStacksColorPalette.Light._500,
+    message: Color = BotStacksColorPalette.Light._700,
+    onMessage: Color = BotStacksColorPalette.Dark._900,
+    chatInput: Color = BotStacksColorPalette.Light._600,
+    onChatInput: Color = BotStacksColorPalette.Dark._100,
+    caption: Color = BotStacksColorPalette.Dark._100,
+    success: Color = BotStacksColorPalette.Green._800,
+    onSuccess: Color = BotStacksColorPalette.Dark._400,
+    error: Color = BotStacksColorPalette.Red._800,
+    onError: Color = Color(0xFF202023),
     ripple: Color = BotStacksColorPalette.Primary._200,
 ) = Colors(
     isDark = false,
-    bubble = bubble,
-    bubbleText = bubbleText,
-    senderBubble = senderBubble,
-    senderText = senderText,
-    senderUsername = senderUsername,
-    text = text,
-    username = username,
-    timestamp = timestamp,
     primary = primary,
-    button = button,
+    onPrimary = onPrimary,
+    header = header,
+    onHeader = onHeader,
     background = background,
-    destructive = destructive,
-    softBackground = softBackground,
-    caption = caption,
-    unread = unread,
-    _public = _public,
-    _private = _private,
+    onBackground = onBackground,
+    surface = surface,
+    onSurface = onSurface,
     border = border,
+    message = message,
+    onMessage = onMessage,
+    chatInput = chatInput,
+    onChatInput = onChatInput,
+    caption = caption,
+    success = success,
+    onSuccess = onSuccess,
+    error = error,
+    onError = onError,
     ripple = ripple
 )
 
 fun darkColors(
-    bubble: Color = Color(0xFF2B2B2B),
-    bubbleText: Color = Color(0xFFE3E3E3),
-    senderBubble: Color = Color(0xFFE5ECFF),
-    senderText: Color = Color(0xFF202127), // Color(hex: 0xE3E3E3)
-    senderUsername: Color = Color(0xFFFFFFFF),
-    text: Color = BotStacksColorPalette.Light._600,
-    username: Color = Color(0xFFE3E3E3),
-    timestamp: Color = Color(0x4DE3E3E3),
-    primary: Color = Color(0xff0091ff),
-    button: Color = Color(0xFF2B2B2B),
-    background: Color = DarkPalette._900,
-    destructive: Color = Color(0xFFC74848),
-    softBackground: Color = Color(0xFF2B2B2B),
-    caption: Color = Color(0x50E3E3E3),
-    unread: Color = Color(0xFFC74848),
-    _public: Color = Color(0xFF4B48C7),
-    _private: Color = Color(0xFF488AC7),
-    border: Color = Color(0xFFE3E3E3),
-    ripple: Color = BotStacksColorPalette.Dark._600
+    primary: Color = BotStacksColorPalette.Primary._700,
+    onPrimary: Color = BotStacksColorPalette.Light._900,
+    header: Color = BotStacksColorPalette.Dark._900,
+    onHeader: Color = BotStacksColorPalette.Light._900,
+    background: Color = BotStacksColorPalette.Dark._800,
+    onBackground: Color = BotStacksColorPalette.Light._600,
+    surface: Color = BotStacksColorPalette.Dark._700,
+    onSurface: Color = BotStacksColorPalette.Light._900,
+    border: Color = BotStacksColorPalette.Dark._400,
+    message: Color = BotStacksColorPalette.Dark._500,
+    onMessage: Color = BotStacksColorPalette.Light._900,
+    chatInput: Color = BotStacksColorPalette.Dark._500,
+    onChatInput: Color = BotStacksColorPalette.Dark._100,
+    caption: Color = BotStacksColorPalette.Dark._100,
+    success: Color = BotStacksColorPalette.Green._700,
+    onSuccess: Color = BotStacksColorPalette.Dark._400,
+    error: Color = BotStacksColorPalette.Red._700,
+    onError: Color = Color(0xFF29292D),
+    ripple: Color = BotStacksColorPalette.Dark._600,
 ) = Colors(
     isDark = true,
-    bubble = bubble,
-    bubbleText = bubbleText,
-    senderBubble = senderBubble,
-    senderText = senderText,
-    senderUsername = senderUsername,
-    text = text,
-    username = username,
-    timestamp = timestamp,
     primary = primary,
-    button = button,
+    onPrimary = onPrimary,
+    header = header,
+    onHeader = onHeader,
     background = background,
-    destructive = destructive,
-    softBackground = softBackground,
-    caption = caption,
-    unread = unread,
-    _public = _public,
-    _private = _private,
+    onBackground = onBackground,
+    surface = surface,
+    onSurface = onSurface,
     border = border,
+    message = message,
+    onMessage = onMessage,
+    chatInput = chatInput,
+    onChatInput = onChatInput,
+    caption = caption,
+    success = success,
+    onSuccess = onSuccess,
+    error = error,
+    onError = onError,
     ripple = ripple
 )

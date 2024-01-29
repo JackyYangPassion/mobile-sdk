@@ -47,7 +47,7 @@ fun SimpleChannelRow(
             Text(
                 text = name,
                 fontStyle = BotStacks.fonts.body1,
-                color = BotStacks.colorScheme.text
+                color = BotStacks.colorScheme.onBackground
             )
         }
     }

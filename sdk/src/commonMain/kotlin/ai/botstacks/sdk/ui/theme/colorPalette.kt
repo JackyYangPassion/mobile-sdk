@@ -4,9 +4,9 @@ import androidx.compose.ui.graphics.Color
 
 object BotStacksColorPalette {
     val Primary = BluePalette
-    val Success = GreenPalette
-    val Error = RedPalette
-    val Warning = YellowPalette
+    val Green = GreenPalette
+    val Red = RedPalette
+    val Yellow = YellowPalette
     val Dark = DarkPalette
     val Light = LightPalette
 }

@@ -15,19 +15,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 class CountProvider : PreviewParameterProvider<Int> {
     override val values: Sequence<Int> = sequenceOf(1, 4, 10, 301, 2931)
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatCount(count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
-            painter = Drawables.UsersFilled,
+            painter = painterResource(Res.Drawables.Filled.Users),
             contentDescription = "members",
             modifier = Modifier.size(16.dp),
             tint = BotStacks.colorScheme.caption

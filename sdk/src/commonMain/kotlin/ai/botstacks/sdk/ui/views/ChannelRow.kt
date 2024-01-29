@@ -31,10 +31,12 @@ import ai.botstacks.sdk.state.usernames
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genG
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun chatInvitesText(chat: Chat) =
@@ -52,6 +54,7 @@ fun chatInvitesText(chat: Chat) =
         append(" invited you to join!")
     }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun InvitesHeader(chat: Chat) {
     if (chat.invites.isNotEmpty()) {
@@ -82,7 +85,7 @@ fun InvitesHeader(chat: Chat) {
                 .requiredSize(30.dp)
                 .size(30.dp), contentAlignment = Alignment.Center) {
                 Icon(
-                    painter = Drawables.X,
+                    painter = painterResource(Res.Drawables.Outlined.Close),
                     contentDescription = "Dismiss Invites",
                     modifier = Modifier.size(16),
                     tint = Color.White
@@ -92,6 +95,7 @@ fun InvitesHeader(chat: Chat) {
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
     Column(modifier = Modifier
@@ -100,7 +104,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
         Column(
             modifier = Modifier
                 .radius(15)
-                .background(colorScheme.bubble)
+                .background(colorScheme.surface)
                 .fillMaxWidth()
         ) {
             InvitesHeader(chat = chat)
@@ -133,7 +137,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                         Text(
                             chat.displayName.annotated(),
                             BotStacks.fonts.h3,
-                            color = colorScheme.text,
+                            color = colorScheme.onBackground,
                             maxLines = 1,
                             softWrap = false,
                             overflow = TextOverflow.Ellipsis,
@@ -159,7 +163,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                                     .padding(0.dp)
                                     .size(32.dp)
                                     .background(
-                                        if (chat.isMember) colorScheme.softBackground else colorScheme.primary,
+                                        if (chat.isMember) colorScheme.surface else colorScheme.primary,
                                         CircleShape
                                     )
                                     .clickable(onClick = {
@@ -172,7 +176,7 @@ fun ChannelRow(chat: Chat, onClick: (Chat) -> Unit) {
                                     .border(0.dp, Color.Transparent, CircleShape)
                             ) {
                                 Icon(
-                                    painter = Drawables.Plus,
+                                    painter = painterResource(Res.Drawables.Outlined.Plus),
                                     contentDescription = "Join chat",
                                     modifier = Modifier.fillMaxSize(0.67f),
                                     tint = Color.White

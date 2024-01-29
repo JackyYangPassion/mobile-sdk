@@ -34,15 +34,17 @@ import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.theme.LocalBotStacksMarkdownConfig
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genFileMessage
 import ai.botstacks.sdk.utils.genImageMessage
 import ai.botstacks.sdk.utils.genChatextMessage
 import ai.botstacks.sdk.utils.ift
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalResourceApi::class)
 @Composable
 fun MessageContent(message: Message, modifier: Modifier = Modifier) {
     Column(
@@ -50,8 +52,8 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
             .background(
                 ift(
                     message.user.isCurrent,
-                    colorScheme.senderBubble,
-                    colorScheme.bubble
+                    colorScheme.primary,
+                    colorScheme.message
                 ),
                 RoundedCornerShape(dimens.bubbleRadius.dp)
             )
@@ -92,13 +94,13 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                         )
 
                         AttachmentType.file -> Image(
-                            painter = Drawables.FileArrowDownFilled,
+                            painter = painterResource(Res.Drawables.Filled.FileArrowDown),
                             contentDescription = "File",
                             colorFilter = ColorFilter.tint(
                                 ift(
                                     message.user.isCurrent,
-                                    colorScheme.senderText,
-                                    colorScheme.bubbleText
+                                    colorScheme.onPrimary,
+                                    colorScheme.onMessage
                                 )
                             ),
                             modifier = Modifier.size(64)

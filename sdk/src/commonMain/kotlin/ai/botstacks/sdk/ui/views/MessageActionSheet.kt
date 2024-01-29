@@ -15,13 +15,14 @@ import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genChatextMessage
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalResourceApi::class)
 fun MessageActionSheet(
     message: Message?,
     onReply: (Message) -> Unit,
@@ -48,7 +49,7 @@ fun MessageActionSheet(
         modifier = Modifier.fillMaxSize(),
         sheetState = state,
         sheetBackgroundColor = colorScheme.background,
-        sheetContentColor = colorScheme.text,
+        sheetContentColor = colorScheme.onBackground,
         scrimColor = colorScheme.caption,
         sheetContent = {
             Space(8f)
@@ -61,7 +62,7 @@ fun MessageActionSheet(
             )
             ActionItem(
                 text = "Reply in Chat",
-                icon = Drawables.ChatDots,
+                icon = Res.Drawables.Outlined.ChatDots,
             ) {
                 message?.let(onReply)
                 hide()
@@ -69,7 +70,7 @@ fun MessageActionSheet(
 
             ActionItem(
                 text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
-                icon = Drawables.StarFilled,
+                icon = Res.Drawables.Filled.Star,
             )
             {
                 message?.toggleFavorite()
@@ -78,7 +79,7 @@ fun MessageActionSheet(
 
             ActionItem(
                 text = "Copy message text",
-                icon = Drawables.Copy,
+                icon = Res.Drawables.Outlined.Copy,
             ) {
                 copy()
             }

@@ -43,7 +43,7 @@ data class FontStyle(
     @Composable
     fun asTextStyle(): TextStyle {
         return TextStyle(
-            color = BotStacks.colorScheme.text,
+            color = BotStacks.colorScheme.onBackground,
             fontFamily = family,
             fontSize = size,
             fontWeight = weight

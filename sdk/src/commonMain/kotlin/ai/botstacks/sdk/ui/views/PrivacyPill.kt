@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
@@ -24,7 +25,7 @@ fun PrivacyPill(_private: Boolean = false) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .background(
-                ift(!_private, BotStacks.colorScheme._private, BotStacks.colorScheme._public),
+                ift(!_private, colorScheme.surface, colorScheme.header),
                 RoundedCornerShape(8.dp)
             )
             .padding(6.dp, 1.dp)
@@ -33,7 +34,7 @@ fun PrivacyPill(_private: Boolean = false) {
         Text(
             (if (_private) "Private" else "Public").uppercase().annotated(),
             fonts.caption2,
-            color = Color.White,
+            color = ift(!_private, colorScheme.onSurface, colorScheme.onHeader),
         )
     }
 }

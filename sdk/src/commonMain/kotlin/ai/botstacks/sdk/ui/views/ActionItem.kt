@@ -18,13 +18,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.ui.graphics.painter.Painter
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ActionItem(text: String, @DrawableRes icon: Int, divider: Boolean = false, action: () -> Unit) {
     ActionItem(text, painterResource(id = icon), divider, action)
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun ActionItem(text: String, icon: DrawableResource, divider: Boolean = false, action: () -> Unit) {
+    ActionItem(text, painterResource(icon), divider, action)
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -36,14 +45,14 @@ fun ActionItem(text: String, icon: Painter, divider: Boolean = false, action: ()
                 Text(
                     text = text,
                     fontStyle = BotStacks.fonts.body2,
-                    color = BotStacks.colorScheme.text
+                    color = BotStacks.colorScheme.onBackground
                 )
             },
             icon = {
                 Icon(
                     painter = icon,
                     contentDescription = text,
-                    tint = BotStacks.colorScheme.text,
+                    tint = BotStacks.colorScheme.onBackground,
                     modifier = Modifier.size(25.dp)
                 )
             },
@@ -55,12 +64,13 @@ fun ActionItem(text: String, icon: Painter, divider: Boolean = false, action: ()
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @IPreviews
 @Composable
 fun ActionItemPreview() {
     BotStacksChatContext {
         Column {
-            ActionItem(text = "Item", icon = Drawables.AddressBookFilled) {
+            ActionItem(text = "Item", icon = Res.Drawables.Filled.AddressBook) {
 
             }
         }

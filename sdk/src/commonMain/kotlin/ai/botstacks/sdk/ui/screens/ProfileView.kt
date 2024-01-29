@@ -19,10 +19,12 @@ import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.*
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
     val scrollState = rememberScrollState()
@@ -39,12 +41,12 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
         ) {
             Avatar(url = user.avatar,  size = AvatarSize.Large,)
             Space()
-            Text(text = user.displayNameFb, fontStyle = fonts.body2, color = colorScheme.text)
+            Text(text = user.displayNameFb, fontStyle = fonts.body2, color = colorScheme.onBackground)
             Box(
                     modifier = Modifier
                             .padding(12.dp, 5.dp)
                             .radius(30.dp)
-                            .background(colorScheme.softBackground),
+                            .background(colorScheme.surface),
                     contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -56,9 +58,9 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
             }
 
             if (!user.isCurrent) {
-                Divider(color = colorScheme.softBackground)
+                Divider(color = colorScheme.border)
                 SimpleRow(
-                        icon = Drawables.PaperPlaneTiltFilled,
+                        icon = Res.Drawables.Filled.PaperPlaneTilt,
                         text = "Send a Chat",
                         iconPrimary = true
                 ) {
@@ -89,7 +91,7 @@ fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
             Divider(color = colorScheme.caption)
             if (!user.isCurrent) {
                 SimpleRow(
-                        icon = if (user.blocked) Drawables.LockSimpleOpenFilled else Drawables.LockFilled,
+                        icon = if (user.blocked) Res.Drawables.Filled.LockSimpleOpen else Res.Drawables.Filled.Lock,
                         text = if (user.blocked) "Unblock ${user.username}" else "Block ${user.username}",
                         iconPrimary = user.blocked,
                         destructive = !user.blocked

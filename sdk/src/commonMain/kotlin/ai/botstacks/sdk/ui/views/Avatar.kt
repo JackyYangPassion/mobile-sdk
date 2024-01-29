@@ -7,11 +7,12 @@ package ai.botstacks.sdk.ui.views
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks.colors
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 
 
@@ -44,6 +47,10 @@ sealed interface AvatarSize {
 
     data object Large : AvatarSize {
         override val value: Dp = 100.dp
+    }
+
+    data class Custom(val dp: Dp): AvatarSize {
+        override val value: Dp = dp
     }
 }
 
@@ -101,13 +108,14 @@ fun Avatar(
     Avatar(type = type, size = size, modifier = modifier)
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
     size: AvatarSize = AvatarDefaults.Size,
     type: AvatarType,
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = modifier
             .size(size.value)
             .background(color = colors.Light._100, shape = CircleShape),
@@ -143,7 +151,7 @@ fun Avatar(
                     }
                 } else {
                     Image(
-                        painter = Drawables.UsersOutlined,
+                        painter = painterResource(Res.Drawables.Outlined.User),
                         contentDescription = "channel profile picture",
                         modifier = Modifier
                             .fillMaxSize()
@@ -182,7 +190,7 @@ fun Avatar(
                     )
                 } else {
                     Image(
-                        painter = Drawables.UserOutlined,
+                        painter = painterResource(Res.Drawables.Outlined.User),
                         contentDescription = "user profile picture",
                         modifier = Modifier
                             .fillMaxSize()

@@ -32,7 +32,7 @@ fun Option(name: String, selected: Boolean, onClick: () -> Unit) {
             .height(64.dp)
             .padding(16.dp)
     ) {
-        Text(name, fontStyle = fonts.body2, color = colorScheme.text)
+        Text(name, fontStyle = fonts.body2, color = colorScheme.onBackground)
         GrowSpacer()
         RadioButton(
             selected = selected,
@@ -48,7 +48,7 @@ fun NotificationSettingsView(back: () -> Unit) {
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
         Header(title = "Manage Notifications", back = back)
         Row(modifier = Modifier.padding(start = 16.dp)) {
-            Text(text = "Notification Status", fontStyle = fonts.body1, color = colorScheme.text)
+            Text(text = "Notification Status", fontStyle = fonts.body1, color = colorScheme.onBackground)
         }
         Space(20f)
         Option(

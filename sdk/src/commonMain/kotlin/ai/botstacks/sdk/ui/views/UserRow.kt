@@ -50,7 +50,7 @@ fun UserRow(
             Text(
                 text = displayName,
                 fontStyle = BotStacks.fonts.body1,
-                color = BotStacks.colorScheme.text
+                color = BotStacks.colorScheme.onBackground
             )
         }
     }

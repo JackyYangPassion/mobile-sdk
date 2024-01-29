@@ -19,8 +19,10 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import dev.jorgecastillo.androidcolorx.library.asHsl
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import java.lang.Float.max
 import java.lang.Float.min
 
@@ -35,10 +37,11 @@ fun Color.adjustedHsl(by: Int): Color {
     return Color.hsl(h2, hsl.saturation, hsl.lightness)
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ChatPlaceholder(modifier: Modifier? = null) {
+fun ChatPlaceholder(modifier: Modifier = Modifier) {
     Box(
-        contentAlignment = Alignment.Center, modifier = (modifier ?: Modifier)
+        contentAlignment = Alignment.Center, modifier = modifier
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
@@ -53,7 +56,7 @@ fun ChatPlaceholder(modifier: Modifier? = null) {
             .size(50)
     ) {
         Icon(
-            painter =  BotStacks.assets.chat?.let { painterResource(id = it) } ?: Drawables.UsersThreeFilled,
+            painter =  BotStacks.assets.chat?.let { painterResource(id = it) } ?: painterResource(Res.Drawables.Filled.UsersThree),
             contentDescription = "Chat icon",
             modifier = Modifier.fillMaxSize(0.5f)
         )

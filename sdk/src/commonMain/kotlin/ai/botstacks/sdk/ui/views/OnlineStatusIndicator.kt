@@ -25,8 +25,8 @@ fun OnlineStatusIndicator(
                 when (status) {
                     OnlineStatus.Away -> BotStacks.colors.Dark._100
                     OnlineStatus.DND -> BotStacks.colorScheme.background
-                    OnlineStatus.Offline -> BotStacks.colors.Error._500
-                    OnlineStatus.Online -> BotStacks.colors.Success._800
+                    OnlineStatus.Offline -> BotStacks.colors.Red._500
+                    OnlineStatus.Online -> BotStacks.colors.Green._800
                     OnlineStatus.UNKNOWN__ -> BotStacks.colorScheme.background
                 }, CircleShape
             ).then(modifier)

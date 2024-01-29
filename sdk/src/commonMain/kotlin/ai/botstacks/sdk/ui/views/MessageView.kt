@@ -25,8 +25,10 @@ import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.*
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -100,12 +102,13 @@ fun ReplyCount(count: Int) {
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun Favorite(favorite: Boolean) {
     if (favorite) {
         Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center) {
             Icon(
-                painter = Drawables.StarFilled,
+                painter = painterResource(Res.Drawables.Filled.Star),
                 contentDescription = "favorite",
                 tint = colorScheme.primary,
                 modifier = Modifier.size(20),
@@ -141,10 +144,10 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
                     }",
                     onClick = { msg.react(reaction.first) },
                     iac = fonts.body1,
-                    color = colorScheme.text,
+                    color = colorScheme.onBackground,
                     modifier = Modifier
                         .radius(36.dp)
-                        .background(colorScheme.bubble)
+                        .background(Color.Transparent)
                         .border(
                             2.dp,
                             if (msg.currentReaction == reaction.first) colorScheme.primary else Color.Transparent,
@@ -180,12 +183,12 @@ fun MessageTop(msg: Message) {
         Text(
             text = msg.user.username,
             fontStyle = fonts.body1,
-            color = ift(msg.user.isCurrent, colorScheme.senderUsername, colorScheme.username),
+            color = ift(msg.user.isCurrent, colorScheme.primary, colorScheme.onMessage),
             modifier = Modifier
                 .requiredSizeIn(maxWidth = 120.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = msg.createdAt.timeAgo(), fontStyle = fonts.caption2, color = colorScheme.timestamp)
+        Text(text = msg.createdAt.timeAgo(), fontStyle = fonts.caption2, color = colorScheme.caption)
     }
 }

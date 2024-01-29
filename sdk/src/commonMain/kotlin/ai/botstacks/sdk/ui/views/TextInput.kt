@@ -43,7 +43,7 @@ fun TextInput(
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = 44.dp)
-            .background(BotStacks.colorScheme.softBackground, RoundedCornerShape(22.dp))
+            .background(BotStacks.colorScheme.chatInput, RoundedCornerShape(22.dp))
             .clip(RoundedCornerShape(22.dp))
             .clickable { focusRequester.requestFocus() }
             .padding(12.dp),
@@ -54,7 +54,7 @@ fun TextInput(
                 value = text,
                 onValueChange = onChange,
                 textStyle = BotStacks.fonts.body1.asTextStyle().copy(
-                    color = BotStacks.colorScheme.text,),
+                    color = BotStacks.colorScheme.onBackground,),
                 minLines = minLines,
                 maxLines = maxLines,
                 modifier = inputModifier.focusRequester(focusRequester),
@@ -64,7 +64,7 @@ fun TextInput(
                 visualTransformation = visualTransformation
             )
             if (text.isBlank()) {
-                Text(text = placeholder, fontStyle = BotStacks.fonts.body1, color = BotStacks.colorScheme.caption)
+                Text(text = placeholder, fontStyle = BotStacks.fonts.body1, color = BotStacks.colorScheme.onChatInput)
             }
         }
         right()

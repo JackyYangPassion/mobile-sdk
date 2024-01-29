@@ -20,13 +20,16 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 val HeaderHeight = 50.dp
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun Header(
   title: String,
@@ -41,38 +44,35 @@ fun Header(
   Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
-      .background(colorScheme.softBackground)
-      .fillMaxWidth()
-      .windowInsetsPadding(WindowInsets.statusBars)
-      .padding(start = 16.dp, end = 8.dp)
-      .height(HeaderHeight)
+        .background(colorScheme.header)
+        .fillMaxWidth()
+        .windowInsetsPadding(WindowInsets.statusBars)
+        .padding(start = 16.dp, end = 8.dp)
+        .height(HeaderHeight)
   ) {
     if (back != null)
-      HeaderButton(
-        back,
-        true
-      ) {
+      HeaderButton(back) {
         Icon(
-          painter = Drawables.CaretLeft,
+            painter = painterResource(Res.Drawables.Outlined.CaretLeft),
           contentDescription = "back",
           modifier = Modifier.fillMaxSize(1.0f),
-          tint = colorScheme.text,
+          tint = colorScheme.onHeader,
         )
       }
     icon?.invoke()
     Text(
       text = title.annotated(),
       iac = BotStacks.fonts.h1.copy(weight = FontWeight.Bold),
-      color = colorScheme.text,
+      color = colorScheme.onHeader,
       maxLines = 1
     )
     Spacer(modifier = Modifier.weight(1.0f))
     if (search != null) {
       HeaderButton(onClick = search) {
         Icon(
-          painter = Drawables.MagnifyingGlass,
+            painter = painterResource(Res.Drawables.Outlined.MagnifyingGlass),
           contentDescription = "Menu",
-          tint = BotStacks.colorScheme.text,
+          tint = BotStacks.colorScheme.onHeader,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -83,9 +83,9 @@ fun Header(
         add,
       ) {
         Icon(
-          painter = Drawables.Plus,
+        painter = painterResource(Res.Drawables.Outlined.Plus),
           contentDescription = "Add",
-          tint = BotStacks.colorScheme.text,
+          tint = BotStacks.colorScheme.onHeader,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -94,9 +94,9 @@ fun Header(
     if (menu != null) {
       HeaderButton(onClick = menu) {
         Icon(
-          painter = Drawables.MenuOverflow,
+            painter = painterResource(Res.Drawables.Outlined.MenuOverflow),
           contentDescription = "Menu",
-          tint = BotStacks.colorScheme.text,
+          tint = BotStacks.colorScheme.onHeader,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -105,9 +105,9 @@ fun Header(
     if (compose != null) {
       HeaderButton(onClick = compose) {
         Icon(
-          painter = Drawables.PaperPlaneTiltFilled,
+            painter = painterResource(Res.Drawables.Filled.PaperPlaneTilt),
           contentDescription = "Menu",
-          tint = colorScheme.text,
+          tint = colorScheme.onHeader,
           modifier = Modifier.size(20.dp)
         )
       }
@@ -118,18 +118,18 @@ fun Header(
 }
 
 @Composable
-fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn) {
+private fun HeaderButton(onClick: Fn, icon: @Composable Fn) {
   Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
-      .padding(0.dp)
-      .size(30.dp)
-      .background(
-        if (transparent) Color.Transparent else colorScheme.softBackground,
-        CircleShape
-      )
-      .clickable(onClick = onClick)
-      .border(0.dp, Color.Transparent, CircleShape)
+        .padding(0.dp)
+        .size(30.dp)
+        .background(
+            Color.Transparent,
+            CircleShape
+        )
+        .clickable(onClick = onClick)
+        .border(0.dp, Color.Transparent, CircleShape)
   ) {
     icon()
   }

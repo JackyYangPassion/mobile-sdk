@@ -88,7 +88,7 @@ fun ChatChat(
                                 Text(
                                     text = chat.displayName,
                                     fontStyle = fonts.h2,
-                                    color = colorScheme.text,
+                                    color = colorScheme.onBackground,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )

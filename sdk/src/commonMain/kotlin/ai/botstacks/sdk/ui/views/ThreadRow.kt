@@ -18,19 +18,22 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.resources.Drawables
+import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.timeAgo
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
     Row(
@@ -44,10 +47,10 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(60.dp)
-                .background(colorScheme.softBackground, CircleShape)
+                .background(colorScheme.surface, CircleShape)
                 .border(
                     2.dp,
-                    if (chat.isUnread) colorScheme.unread else colorScheme.softBackground,
+                    if (chat.isUnread) colorScheme.primary else colorScheme.surface,
                     CircleShape
                 )
         ) {
@@ -55,7 +58,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
         }
         Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start = 14.dp)) {
             Row {
-                Text(text = chat.displayName, fontStyle = fonts.h3, color = colorScheme.text, maxLines = 1)
+                Text(text = chat.displayName, fontStyle = fonts.h3, color = colorScheme.onBackground, maxLines = 1)
                 Space()
                 if (chat.isGroup) {
                     PrivacyPill(chat._private)
@@ -64,7 +67,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (!chat.isUnread)
                     Image(
-                        painter = Drawables.CheckCircleFilled,
+                        painter = painterResource(Res.Drawables.Filled.CheckCircle),
                         contentDescription = "message read",
                         modifier = Modifier.size(12.dp),
                         colorFilter = ColorFilter.tint(colorScheme.primary)
@@ -73,7 +76,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
                     text = chat.latest?.summary ?: "No messages yet",
                     fontStyle = fonts.body1,
                     maxLines = 2,
-                    color = if (chat.isUnread) colorScheme.text else colorScheme.caption,
+                    color = if (chat.isUnread) colorScheme.onBackground else colorScheme.caption,
                     modifier = Modifier.fillMaxWidth(0.7f)
                 )
             }
