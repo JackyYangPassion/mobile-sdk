@@ -74,6 +74,7 @@ kotlin {
 
                 implementation(libs.compose.markdown)
                 implementation(libs.compose.permissions)
+                implementation(libs.compose.windowSizeClass)
 
                 implementation(libs.hive.mqtt.client)
                 implementation(libs.sentry)

@@ -29,8 +29,8 @@ fun Badge(
         }
 
         val contentPadding = when {
-            count in 1 .. 99 -> PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-            else -> PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+            count in 1 .. 99 -> PaddingValues(horizontal = BotStacks.dimens.grid.x2, vertical = BotStacks.dimens.grid.x1)
+            else -> PaddingValues(horizontal = BotStacks.dimens.grid.x3, vertical = BotStacks.dimens.grid.x1)
         }
         Box(
             modifier = modifier
