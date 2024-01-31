@@ -114,7 +114,10 @@ internal fun Theme(
         LocalBotStacksMarkdownConfig provides { sender -> markdownConfig(sender) },
         LocalBotStacksShapes provides shapes,
     ) {
-        MaterialTheme {
+        MaterialTheme(
+            colorScheme = _colorsScheme.asMaterialColorScheme(),
+            shapes = shapes,
+        ) {
             CompositionLocalProvider(
                 LocalRippleTheme provides FullAlphaRipple
             ) {

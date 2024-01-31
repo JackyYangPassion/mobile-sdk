@@ -21,11 +21,11 @@ import ai.botstacks.sdk.utils.IPreviews
 
 @Composable
 private fun Tab(
-    tab: BotStacksChatStore.List,
+    tab: BotStacksChatStore.ChatList,
     selected: Boolean,
     unreadCount: Int,
     modifier: Modifier = Modifier,
-    onPress: (BotStacksChatStore.List) -> Unit
+    onPress: (BotStacksChatStore.ChatList) -> Unit
 ) {
     Row(
         modifier = modifier.clickable { onPress(tab) },
@@ -60,9 +60,9 @@ private fun Tab(
 }
 
 @Composable
-fun ChatTabs(list: BotStacksChatStore.List, onSelect: (BotStacksChatStore.List) -> Unit) {
+fun ChatTabs(list: BotStacksChatStore.ChatList, onSelect: (BotStacksChatStore.ChatList) -> Unit) {
     Row(modifier = Modifier.height(44.dp)) {
-        for (tab in BotStacksChatStore.List.values()) {
+        for (tab in BotStacksChatStore.ChatList.values()) {
             Tab(
                 tab = tab,
                 selected = list == tab,
@@ -79,8 +79,8 @@ fun ChatTabs(list: BotStacksChatStore.List, onSelect: (BotStacksChatStore.List) 
 fun ChatTabsPreview() {
     BotStacksChatContext {
         Column {
-            ChatTabs(list = BotStacksChatStore.List.dms, onSelect = {})
-            ChatTabs(list = BotStacksChatStore.List.groups, onSelect = {})
+            ChatTabs(list = BotStacksChatStore.ChatList.dms, onSelect = {})
+            ChatTabs(list = BotStacksChatStore.ChatList.groups, onSelect = {})
         }
     }
 }

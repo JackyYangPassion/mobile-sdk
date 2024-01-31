@@ -18,21 +18,25 @@ class Settings {
     var notifications by mutableStateOf(NotificationSetting.all)
     var availabilityStatus by mutableStateOf(OnlineStatus.Online)
     var blocked = mutableStateListOf<String>()
+    var muted = mutableStateListOf<String>()
     val lastUsedReactions = mutableStateListOf<String>()
 
     fun init() {
-        notifications = BotStacksChat.shared.prefs.getString("iac-notifications", null)
+        notifications = BotStacksChat.shared.prefs.getString("notifications", null)
             ?.let { NotificationSetting.valueOf(it) }
             ?: NotificationSetting.all
-        availabilityStatus = BotStacksChat.shared.prefs.getString("iac-availabilityStatus", null)
+        availabilityStatus = BotStacksChat.shared.prefs.getString("availability", null)
             ?.let { OnlineStatus.valueOf(it) }
             ?: OnlineStatus.Online
         blocked =
-            BotStacksChat.shared.prefs.getStringSet("iac-blocked", mutableSetOf())?.toMutableStateList()
+            BotStacksChat.shared.prefs.getStringSet("blocked", mutableSetOf())?.toMutableStateList()
+                ?: mutableStateListOf()
+        muted =
+            BotStacksChat.shared.prefs.getStringSet("muted", mutableSetOf())?.toMutableStateList()
                 ?: mutableStateListOf()
         lastUsedReactions.clear()
         lastUsedReactions.addAll(
-            BotStacksChat.shared.prefs.getString("iac-reactions", "😀,🤟,❤️,🔥,🤣")!!.split(",")
+            BotStacksChat.shared.prefs.getString("reactions", "😀,🤟,❤️,🔥,🤣")!!.split(",")
         )
     }
 
@@ -60,6 +64,18 @@ class Settings {
         } else {
             this.blocked.remove(uid)
             BotStacksChat.shared.prefs.edit().putStringSet("blocked", this.blocked.toSet())
+        }
+    }
+
+    fun setMuted(uid: String, muted: Boolean) {
+        if (muted) {
+            if (!this.muted.contains(uid)) {
+                this.muted.add(uid)
+                BotStacksChat.shared.prefs.edit().putStringSet("muted", this.muted.toSet())
+            }
+        } else {
+            this.muted.remove(uid)
+            BotStacksChat.shared.prefs.edit().putStringSet("muted", this.muted.toSet())
         }
     }
 

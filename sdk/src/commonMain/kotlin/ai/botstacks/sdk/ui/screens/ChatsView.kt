@@ -2,70 +2,120 @@
  * Copyright (c) 2023.
  */
 
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package ai.botstacks.sdk.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
 import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Res
+import ai.botstacks.sdk.ui.components.AlertActionStyle
+import ai.botstacks.sdk.ui.components.BotStacksAlertDialog
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.*
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.text2.input.forEachTextValue
+import androidx.compose.material.AlertDialog
+import com.mohamedrejeb.calf.ui.dialog.AdaptiveAlertDialog
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatsView(
     scrollToTop: Int = 0,
     openChat: (Chat) -> Unit,
-    openReplies: (Message) -> Unit,
-    openAllChannels: () -> Unit,
-    openContacts: () -> Unit,
-    openSearch: () -> Unit,
     openCompose: () -> Unit,
-    openProfile: (User) -> Unit
+    editProfile: () -> Unit,
+    openFavorites: () -> Unit,
+    onConfirmedLogout: () -> Unit,
 ) {
-    var list by remember {
-        mutableStateOf(BotStacksChatStore.List.groups)
+    var logoutRequested by remember {
+        mutableStateOf(false)
     }
 
-    val cta = when (list) {
-        BotStacksChatStore.List.dms -> CTA(icon = null, text = "Explore Channels", to = openAllChannels)
-        else -> CTA(
-            painterResource(Res.Drawables.Filled.PaperPlaneTilt),
-            "Send a Message",
-            openContacts
-        )
+    var searchQuery by remember {
+        mutableStateOf("")
     }
+
+    val headerState = rememberHeaderState(
+        isSearchVisible = true,
+    )
+
     val header = @Composable {
         Column {
-            Header(title = "Chats")
-            ChatTabs(list = list, onSelect = { list = it })
+            Header(
+                icon = { HeaderDefaults.Logo() },
+                state = headerState,
+                onCompose = {},
+                onBackClick = {
+                    headerState.searchActive = false
+                }.takeIf { headerState.searchActive },
+                menu = {
+                    label(onClick = openFavorites) {
+                        Text(text = "Favorite Messages", fontStyle = BotStacks.fonts.button2)
+                    }
+                    label(onClick = editProfile) {
+                        Text(text = "Edit Profile", fontStyle = BotStacks.fonts.button2)
+                    }
+                    label(onClick = { logoutRequested = true }) {
+                        Text(
+                            text = "Logout",
+                            fontStyle = BotStacks.fonts.button2,
+                            color = BotStacks.colorScheme.error
+                        )
+                    }
+                }
+            )
         }
     }
-    val empty = @Composable {
-        EmptyListView(config = BotStacks.assets.list(list), cta = cta)
+
+    AnimatedVisibility(logoutRequested) {
+        BotStacksAlertDialog(
+            title = "Log out",
+            message = "Are you sure you want to log out?",
+            buttons = {
+                button(
+                    onClick = { logoutRequested = false },
+                    title = "Cancel",
+                    style = AlertActionStyle.Cancel
+                )
+                button(
+                    onClick = {
+                        logoutRequested = false
+                        onConfirmedLogout()
+                    },
+                    title = "Log out",
+                    style = AlertActionStyle.Destructive
+                )
+            },
+            onDismissRequest = { logoutRequested = false }
+        )
     }
-//        PagerList(
-//            pager = Chats.current.messages,
-//            header = header,
-//            scrollToTop = scrollToTop.toString(),
-//            empty = empty,
-//            divider = true
-//        ) {
-//            RepliesView(message = it, onPress = openReplies, onPressUser = openProfile)
-//        }
-    val items =
-        if (list == BotStacksChatStore.List.dms) BotStacksChatStore.current.dms else BotStacksChatStore.current.groups
+
+
+    LaunchedEffect(Unit) {
+        headerState.searchQuery.forEachTextValue {
+            searchQuery = it.toString()
+        }
+    }
+
+
+    val items = BotStacksChatStore.current.chats
+        .filter { chat ->
+            if (searchQuery.isEmpty()) return@filter true
+            else chat.items.any {
+                it.msg.lowercase()
+                    .contains(searchQuery.lowercase()) || it.user.displayNameFb.lowercase()
+                    .contains(searchQuery.lowercase())
+            } || chat.name.orEmpty().lowercase().contains(searchQuery.lowercase())
+        }
+
     IACList(
         items = items,
         header = header,
-        empty = empty,
+        empty = @Composable { },
         scrollToTop = scrollToTop.toString(),
         divider = true
     ) {
@@ -79,12 +129,10 @@ fun EmptyUserChatsViewPreview() {
     BotStacksChatContext {
         ChatsView(
             openChat = {},
-            openReplies = {},
-            openAllChannels = { /*TODO*/ },
-            openContacts = { /*TODO*/ },
-            openSearch = { /*TODO*/ },
             openCompose = { /*TODO*/ },
-            openProfile = {}
+            editProfile = {},
+            openFavorites = {},
+            onConfirmedLogout = {}
         )
     }
 }
@@ -98,12 +146,10 @@ fun ChatsViewPreview() {
     BotStacksChatContext {
         ChatsView(
             openChat = {},
-            openReplies = {},
-            openAllChannels = { /*TODO*/ },
-            openContacts = { /*TODO*/ },
-            openSearch = { /*TODO*/ },
             openCompose = { /*TODO*/ },
-            openProfile = {}
+            editProfile = {},
+            openFavorites = {},
+            onConfirmedLogout = {}
         )
     }
 }

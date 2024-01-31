@@ -26,8 +26,9 @@ data class User(
     var blocked by mutableStateOf(false)
     var haveContact: Boolean by mutableStateOf(false)
     var description by mutableStateOf<String?>(null)
+    var muted by mutableStateOf(false)
 
-    constructor(user: FUser, blocked: Boolean = false, haveContact: Boolean = false) : this(
+    constructor(user: FUser, blocked: Boolean = false, haveContact: Boolean = false, muted: Boolean = false) : this(
         user.id
     ) {
         this.username = user.username
@@ -38,6 +39,7 @@ data class User(
         this.status = user.status
         this.blocked = blocked
         this.haveContact = haveContact
+        this.muted = muted
     }
 
     init {
@@ -50,6 +52,7 @@ data class User(
         lastSeen = user.last_seen
         status = user.status
         description = user.description
+        muted = user.is_muted ?: false
     }
 
     val path: String get() = "user/$id"
@@ -57,6 +60,8 @@ data class User(
 
     @Stable
     val haveChatWith: Boolean get() = BotStacksChatStore.current.dms.contains { it.friend?.id == id }
+
+    val channelsInCommon: List<Chat> get() = BotStacksChatStore.current.groups.filter { it.friend?.id == id }
 
     @Stable
     val displayNameFb: String
@@ -66,6 +71,7 @@ data class User(
     val isCurrent: Boolean get() = current?.id == id
 
     var blocking by mutableStateOf(false)
+    var togglingMute by mutableStateOf(false)
 
 //    val sharedMedia by lazy { UserSharedMedia(this) }
 

@@ -462,6 +462,9 @@ object API {
         else
             client.mutation(UnblockMutation(id)).execute().data?.unblock
 
+    suspend fun mute(id: String, isMute: Boolean) =
+        if (isMute) client.mutation(MuteMutation(id)).execute().data?.mute
+        else client.mutation(UnmuteMutation(id)).execute().data?.unmute
 
     suspend fun updateProfile(input: UpdateProfileInput) = client.mutation(
         UpdateProfileMutation(

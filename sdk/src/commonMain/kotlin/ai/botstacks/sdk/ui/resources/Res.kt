@@ -59,6 +59,7 @@ internal object Res {
             val AddressBook = basicDrawable("address_book_fill")
             val ArchiveBox = basicDrawable("archive_box_fill")
             val BellSimple = basicDrawable("bell_simple_fill")
+            val Block = basicDrawable("block_fill")
             val ChatText = basicDrawable("chat_text_fill")
             val CheckCircle = basicDrawable("check_circle_fill")
             val Door = basicDrawable("door_fill")

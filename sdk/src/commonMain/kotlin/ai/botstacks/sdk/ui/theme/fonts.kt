@@ -15,6 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
@@ -38,7 +39,8 @@ internal val LocalBotStacksFonts = staticCompositionLocalOf {
 data class FontStyle(
     val size: TextUnit = 14.sp,
     val weight: FontWeight = FontWeight.Normal,
-    val family: FontFamily = FontFamily.Default
+    val family: FontFamily = FontFamily.Default,
+    val textAlign: TextAlign = TextAlign.Unspecified,
 ) {
     @Composable
     fun asTextStyle(): TextStyle {
@@ -46,7 +48,8 @@ data class FontStyle(
             color = BotStacks.colorScheme.onBackground,
             fontFamily = family,
             fontSize = size,
-            fontWeight = weight
+            fontWeight = weight,
+            textAlign = textAlign,
         )
     }
 }

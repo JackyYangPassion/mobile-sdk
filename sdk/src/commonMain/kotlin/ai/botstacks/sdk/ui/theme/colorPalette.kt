@@ -1,18 +1,21 @@
 package ai.botstacks.sdk.ui.theme
 
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-object BotStacksColorPalette {
-    val Primary = BluePalette
-    val Green = GreenPalette
-    val Red = RedPalette
-    val Yellow = YellowPalette
-    val Dark = DarkPalette
-    val Light = LightPalette
+internal object BotStacksColorPalette {
+    val primary = BluePalette
+    val green = GreenPalette
+    val red = RedPalette
+    val yellow = YellowPalette
+    val dark = DarkPalette
+    val light = LightPalette
 }
 
-sealed interface ColorPalette
-data object BluePalette : ColorPalette {
+internal val LocalBotStacksColorPalette = staticCompositionLocalOf { BotStacksColorPalette }
+
+internal sealed interface ColorPalette
+internal data object BluePalette : ColorPalette {
     val _100 = Color(0xFFF6F7FF)
     val _200 = Color(0xFFEBEDFF)
     val _300 = Color(0xFFD9DDFF)
@@ -24,7 +27,7 @@ data object BluePalette : ColorPalette {
     val _900 = Color(0xFF0E3FDF)
 }
 
-data object GreenPalette : ColorPalette {
+internal data object GreenPalette : ColorPalette {
     val _100 = Color(0xFFDBFDE9)
     val _200 = Color(0xFFECFEF3)
     val _300 = Color(0xFFDBFDE9)
@@ -36,7 +39,7 @@ data object GreenPalette : ColorPalette {
     val _900 = Color(0xFF0CC054)
 }
 
-data object RedPalette : ColorPalette {
+internal data object RedPalette : ColorPalette {
     val _100 = Color(0xFFFFDCD9)
     val _200 = Color(0xFFFFECEB)
     val _300 = Color(0xFFFFDCD9)
@@ -48,7 +51,7 @@ data object RedPalette : ColorPalette {
     val _900 = Color(0xFFDF1B0E)
 }
 
-data object YellowPalette : ColorPalette {
+internal data object YellowPalette : ColorPalette {
     val _100 = Color(0xFFFFFBEB)
     val _200 = Color(0xFFFFF5D1)
     val _300 = Color(0xFFFFF0BC)
@@ -60,7 +63,7 @@ data object YellowPalette : ColorPalette {
     val _900 = Color(0xFFAD8800)
 }
 
-data object DarkPalette : ColorPalette {
+internal data object DarkPalette : ColorPalette {
     val _100 = Color(0xFF87878C)
     val _200 = Color(0xFF71717A)
     val _300 = Color(0xFF62626A)
@@ -72,7 +75,7 @@ data object DarkPalette : ColorPalette {
     val _900 = Color(0xFF2B2B2F)
 }
 
-data object LightPalette : ColorPalette {
+internal data object LightPalette : ColorPalette {
     val _100 = Color(0xFFCFCFD3)
     val _200 = Color(0xFFD5D5D8)
     val _300 = Color(0xFFDADADD)

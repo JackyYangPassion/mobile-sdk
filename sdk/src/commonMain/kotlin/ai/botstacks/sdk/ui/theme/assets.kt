@@ -6,13 +6,11 @@ package ai.botstacks.sdk.ui.theme
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
-import ai.botstacks.sdk.R
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.ui.resources.Res
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.painter.Painter
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -43,9 +41,9 @@ data class Assets(
         "No channels around here yet. Make one"
     )
 ) {
-    fun list(list: BotStacksChatStore.List) = when (list) {
-        BotStacksChatStore.List.dms -> emptyChat
-        BotStacksChatStore.List.groups -> emptyChannels
+    fun list(list: BotStacksChatStore.ChatList) = when (list) {
+        BotStacksChatStore.ChatList.dms -> emptyChat
+        BotStacksChatStore.ChatList.groups -> emptyChannels
     }
 }
 

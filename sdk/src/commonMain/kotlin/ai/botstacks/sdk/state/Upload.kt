@@ -12,12 +12,16 @@ import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.bg
+import ai.botstacks.sdk.utils.contentType
 import ai.botstacks.sdk.utils.op
 import ai.botstacks.sdk.utils.uuid
+import androidx.core.net.toFile
+import com.mohamedrejeb.calf.io.KmpFile
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.Response
 import okhttp3.internal.closeQuietly
 import okio.BufferedSink
@@ -51,7 +55,9 @@ fun Uri.asRequestBody(): RequestBody {
 val uploadClient = OkHttpClient.Builder().build()
 
 @Stable
-data class Upload(val id: String = uuid(), val uri: Uri) {
+data class Upload(val id: String = uuid(), val file: KmpFile) {
+    constructor(id: String = uuid(), uri: Uri): this(id, uri.toFile())
+
     var uploading by mutableStateOf(false)
     var url by mutableStateOf<String?>(null)
     var error by mutableStateOf<Error?>(null)
@@ -80,7 +86,7 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
             var response: Response? = null
             try {
                 response = bg {
-                    val body = uri.asRequestBody()
+                    val body = file.asRequestBody()
                     val request = Request.Builder()
                         .url(Server.http + "/misc/upload/${UUID.randomUUID()}")
                         .addHeader("X-API-Key", BotStacksChat.shared.apiKey)
@@ -117,7 +123,7 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
     }
 
     fun attachmentType(): AttachmentType {
-        val mime = uri.contentType()?.type
+        val mime = file.contentType()
         if (mime != null) {
             if (mime.startsWith("image")) return AttachmentType.image
             if (mime.startsWith("video")) return AttachmentType.video
@@ -128,6 +134,6 @@ data class Upload(val id: String = uuid(), val uri: Uri) {
 
     fun attachment() = url?.let { AttachmentInput(url = it, type = attachmentType(), id = id) }
 
-    fun localAttachment() = AttachmentInput(url = uri.toString(), type = attachmentType(), id = id)
+    fun localAttachment() = AttachmentInput(url = file.path, type = attachmentType(), id = id)
 
 }

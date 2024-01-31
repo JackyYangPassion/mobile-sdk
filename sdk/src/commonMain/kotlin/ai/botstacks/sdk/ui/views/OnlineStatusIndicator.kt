@@ -2,6 +2,7 @@ package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -17,16 +18,18 @@ fun OnlineStatusIndicator(
     modifier: Modifier = Modifier,
     status: OnlineStatus
 ) {
+    val palette = LocalBotStacksColorPalette.current
+
     Box(
         modifier = Modifier.border(width = 2.dp, color = BotStacks.colorScheme.background, CircleShape)
             .padding(2.dp)
             .size(12.dp)
             .background(
                 when (status) {
-                    OnlineStatus.Away -> BotStacks.colors.Dark._100
+                    OnlineStatus.Away -> palette.dark._100
                     OnlineStatus.DND -> BotStacks.colorScheme.background
-                    OnlineStatus.Offline -> BotStacks.colors.Red._500
-                    OnlineStatus.Online -> BotStacks.colors.Green._800
+                    OnlineStatus.Offline -> palette.red._500
+                    OnlineStatus.Online -> palette.green._800
                     OnlineStatus.UNKNOWN__ -> BotStacks.colorScheme.background
                 }, CircleShape
             ).then(modifier)

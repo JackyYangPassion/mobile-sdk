@@ -29,6 +29,18 @@ kotlin {
 
     withSourcesJar(publish = false)
 
+    listOf(
+//        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "BotStacksSDK"
+            isStatic = true
+            export(libs.compose.adaptive.ui)
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -45,6 +57,14 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 api(compose.components.resources)
 
+                implementation(libs.compose.adaptive.ui)
+                implementation(libs.compose.adaptive.ui.filepicker)
+
+                implementation(libs.compose.windowSizeClass)
+
+                implementation(libs.apollo3.runtime)
+                implementation(libs.apollo3.adapters)
+
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.core)
             }
@@ -54,9 +74,6 @@ kotlin {
             dependsOn(commonMain.get())
             dependencies {
                 implementation(compose.preview)
-                implementation(libs.retrofit2)
-                implementation(libs.retrofit2.converter.moshi)
-                implementation(libs.retrofit2.converter.scalars)
                 implementation(libs.paho.mqtt.client)
                 implementation(libs.apache.commons.text)
                 implementation(libs.moshi.kotlin)
@@ -69,12 +86,9 @@ kotlin {
                 implementation(libs.androidx.navigation.compose)
 
                 implementation(libs.android.colorx)
-                implementation(libs.apollo3.runtime)
-                implementation(libs.apollo3.adapters)
 
                 implementation(libs.compose.markdown)
                 implementation(libs.compose.permissions)
-                implementation(libs.compose.windowSizeClass)
 
                 implementation(libs.hive.mqtt.client)
                 implementation(libs.sentry)

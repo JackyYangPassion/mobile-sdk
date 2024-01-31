@@ -4,6 +4,11 @@ package ai.botstacks.sdk.ui.theme
  * Copyright (c) 2023.
  */
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +56,7 @@ class Colors(
     error: Color,
     onError: Color,
     ripple: Color,
+    scrim: Color,
 ) {
     var isDark by mutableStateOf(isDark, structuralEqualityPolicy())
         internal set
@@ -96,6 +102,9 @@ class Colors(
     var ripple by mutableStateOf(ripple, structuralEqualityPolicy())
         internal set
 
+    var scrim by mutableStateOf(scrim, structuralEqualityPolicy())
+        internal set
+
     /** Returns a copy of this ColorScheme, optionally overriding some of the values. */
     fun copy(
         primary: Color = this.primary,
@@ -118,6 +127,7 @@ class Colors(
         error: Color = this.error,
         onError: Color = this.onError,
         ripple: Color = this.ripple,
+        scrim: Color = this.scrim,
     ): Colors = Colors(
         isDark = this.isDark,
         primary = primary,
@@ -140,30 +150,66 @@ class Colors(
         error = error,
         onError = onError,
         ripple = ripple,
+        scrim = scrim,
     )
+
+    fun asMaterialColorScheme(): ColorScheme {
+        return if (isDark) {
+            darkColorScheme(
+                primary = primary,
+                onPrimary = onPrimary,
+                background = background,
+                onBackground = onBackground,
+                primaryContainer = header,
+                onPrimaryContainer = onHeader,
+                surface = surface,
+                onSurface = onSurface,
+                outline = border,
+                error = error,
+                onError = onError,
+                scrim = scrim,
+            )
+        } else {
+            lightColorScheme(
+                primary = primary,
+                onPrimary = onPrimary,
+                background = background,
+                onBackground = onBackground,
+                primaryContainer = header,
+                onPrimaryContainer = onHeader,
+                surface = surface,
+                onSurface = onSurface,
+                outline = border,
+                error = error,
+                onError = onError,
+                scrim = scrim,
+            )
+        }
+    }
 }
 
 fun lightColors(
-    primary: Color = BotStacksColorPalette.Primary._800,
-    onPrimary: Color = BotStacksColorPalette.Light._900,
-    header: Color = BotStacksColorPalette.Primary._100,
-    onHeader: Color = BotStacksColorPalette.Dark._900,
-    background: Color = BotStacksColorPalette.Light._900,
-    onBackground: Color = BotStacksColorPalette.Dark._600,
-    surface: Color = BotStacksColorPalette.Light._500,
-    onSurface: Color = BotStacksColorPalette.Dark._900,
-    onSurfaceVariant: Color = BotStacksColorPalette.Light._100,
-    border: Color = BotStacksColorPalette.Light._500,
-    message: Color = BotStacksColorPalette.Light._700,
-    onMessage: Color = BotStacksColorPalette.Dark._900,
-    chatInput: Color = BotStacksColorPalette.Light._600,
-    onChatInput: Color = BotStacksColorPalette.Dark._900,
-    caption: Color = BotStacksColorPalette.Dark._100,
-    success: Color = BotStacksColorPalette.Green._800,
-    onSuccess: Color = BotStacksColorPalette.Dark._400,
-    error: Color = BotStacksColorPalette.Red._800,
-    onError: Color = Color(0xFF202023),
-    ripple: Color = BotStacksColorPalette.Dark._100,
+    primary: Color = BotStacksColorPalette.primary._800,
+    onPrimary: Color = BotStacksColorPalette.light._900,
+    header: Color = BotStacksColorPalette.primary._100,
+    onHeader: Color = BotStacksColorPalette.dark._900,
+    background: Color = BotStacksColorPalette.light._900,
+    onBackground: Color = BotStacksColorPalette.dark._600,
+    surface: Color = BotStacksColorPalette.light._500,
+    onSurface: Color = BotStacksColorPalette.dark._900,
+    onSurfaceVariant: Color = BotStacksColorPalette.light._100,
+    border: Color = BotStacksColorPalette.light._500,
+    message: Color = BotStacksColorPalette.light._700,
+    onMessage: Color = BotStacksColorPalette.dark._900,
+    chatInput: Color = BotStacksColorPalette.light._600,
+    onChatInput: Color = BotStacksColorPalette.dark._900,
+    caption: Color = BotStacksColorPalette.dark._100,
+    success: Color = BotStacksColorPalette.green._800,
+    onSuccess: Color = BotStacksColorPalette.dark._400,
+    error: Color = BotStacksColorPalette.red._800,
+    onError: Color = BotStacksColorPalette.light._900,
+    ripple: Color = BotStacksColorPalette.dark._100,
+    scrim: Color = Color(0x30313A3B)
 ) = Colors(
     isDark = false,
     primary = primary,
@@ -185,30 +231,32 @@ fun lightColors(
     onSuccess = onSuccess,
     error = error,
     onError = onError,
-    ripple = ripple
+    ripple = ripple,
+    scrim = scrim,
 )
 
 fun darkColors(
-    primary: Color = BotStacksColorPalette.Primary._700,
-    onPrimary: Color = BotStacksColorPalette.Light._900,
-    header: Color = BotStacksColorPalette.Dark._900,
-    onHeader: Color = BotStacksColorPalette.Light._900,
-    background: Color = BotStacksColorPalette.Dark._800,
-    onBackground: Color = BotStacksColorPalette.Light._600,
-    surface: Color = BotStacksColorPalette.Dark._700,
-    onSurface: Color = BotStacksColorPalette.Light._900,
-    onSurfaceVariant: Color = BotStacksColorPalette.Dark._100,
-    border: Color = BotStacksColorPalette.Dark._400,
-    message: Color = BotStacksColorPalette.Dark._500,
-    onMessage: Color = BotStacksColorPalette.Light._900,
-    chatInput: Color = BotStacksColorPalette.Dark._500,
-    onChatInput: Color = BotStacksColorPalette.Light._600,
-    caption: Color = BotStacksColorPalette.Dark._100,
-    success: Color = BotStacksColorPalette.Green._700,
-    onSuccess: Color = BotStacksColorPalette.Dark._400,
-    error: Color = BotStacksColorPalette.Red._700,
+    primary: Color = BotStacksColorPalette.primary._700,
+    onPrimary: Color = BotStacksColorPalette.light._900,
+    header: Color = BotStacksColorPalette.dark._900,
+    onHeader: Color = BotStacksColorPalette.light._900,
+    background: Color = BotStacksColorPalette.dark._800,
+    onBackground: Color = BotStacksColorPalette.light._600,
+    surface: Color = BotStacksColorPalette.dark._900,
+    onSurface: Color = BotStacksColorPalette.light._900,
+    onSurfaceVariant: Color = BotStacksColorPalette.dark._100,
+    border: Color = BotStacksColorPalette.dark._400,
+    message: Color = BotStacksColorPalette.dark._500,
+    onMessage: Color = BotStacksColorPalette.light._900,
+    chatInput: Color = BotStacksColorPalette.dark._500,
+    onChatInput: Color = BotStacksColorPalette.light._600,
+    caption: Color = BotStacksColorPalette.dark._100,
+    success: Color = BotStacksColorPalette.green._700,
+    onSuccess: Color = BotStacksColorPalette.dark._400,
+    error: Color = BotStacksColorPalette.red._700,
     onError: Color = Color(0xFF29292D),
-    ripple: Color = BotStacksColorPalette.Light._500,
+    ripple: Color = BotStacksColorPalette.light._500,
+    scrim: Color = Color(0x4B4D5866)
 ) = Colors(
     isDark = true,
     primary = primary,
@@ -230,5 +278,15 @@ fun darkColors(
     onSuccess = onSuccess,
     error = error,
     onError = onError,
-    ripple = ripple
+    ripple = ripple,
+    scrim = scrim,
 )
+
+@Composable
+fun dayNightColor(day: Color, night: Color) = if (isSystemInDarkTheme()) night else day
+
+val Colors.dialogCancelBackground: Color
+    @Composable get() {
+        val palette = LocalBotStacksColorPalette.current
+        return dayNightColor(palette.dark._900, palette.dark._400)
+    }
