@@ -23,7 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.yazantarifi.compose.library.MarkdownConfig
 import com.yazantarifi.compose.library.MarkdownViewComposable
 import ai.botstacks.sdk.state.Message

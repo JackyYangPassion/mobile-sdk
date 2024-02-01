@@ -16,7 +16,21 @@ import ai.botstacks.sdk.utils.contentType
 import ai.botstacks.sdk.utils.op
 import ai.botstacks.sdk.utils.uuid
 import androidx.core.net.toFile
+import com.benasher44.uuid.uuid4
 import com.mohamedrejeb.calf.io.KmpFile
+import com.mohamedrejeb.calf.io.path
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.headers
+import io.ktor.client.request.request
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.headersOf
+import io.ktor.http.set
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -33,30 +47,13 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-fun Uri.contentType() = BotStacksChat.shared.appContext.contentResolver.getType(this)
-    ?.toMediaTypeOrNull()
-
-fun Uri.asRequestBody(): RequestBody {
-    return object : RequestBody() {
-        override fun contentType() = this@asRequestBody.contentType()
 
 
-        override fun contentLength() = -1L
+val uploadClient = HttpClient()
 
-        override fun writeTo(sink: BufferedSink) {
-            BotStacksChat.shared.appContext.contentResolver.openInputStream(
-                this@asRequestBody
-            )?.source()?.let { sink.writeAll(it) }
-        }
-    }
-}
-
-
-val uploadClient = OkHttpClient.Builder().build()
 
 @Stable
 data class Upload(val id: String = uuid(), val file: KmpFile) {
-    constructor(id: String = uuid(), uri: Uri): this(id, uri.toFile())
 
     var uploading by mutableStateOf(false)
     var url by mutableStateOf<String?>(null)
@@ -83,30 +80,30 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
         uploading = true
         error = null
         op({
-            var response: Response? = null
+            var response: HttpResponse? = null
             try {
                 response = bg {
                     val body = file.asRequestBody()
-                    val request = Request.Builder()
-                        .url(Server.http + "/misc/upload/${UUID.randomUUID()}")
-                        .addHeader("X-API-Key", BotStacksChat.shared.apiKey)
-                        .addHeader("X-Device-ID", API.deviceId)
-                        .addHeader("Referer", BotStacksChat.shared.packageName)
-                        .post(body)
-                        .build()
-                    uploadClient.newCall(request).execute()
+                    uploadClient.request {
+                        url(Server.http + "/misc/upload/${uuid4()}")
+                        headers {
+                            set("X-API-Key", BotStacksChat.shared.apiKey)
+                            set("X-Device-ID", API.deviceId)
+                            set("Referer",  BotStacksChat.shared.appIdentifier)
+                        }
+                        setBody(body)
+                    }
                 }
-                if (!response.isSuccessful) {
-                    Monitoring.error("Upload response code: " + response.code + " Message: " + response.message)
+                if (response.status.value in 200..299) {
+                    url = response.body<JsonObject>().let { it["url"].toString() }
                 } else {
-                    url = response.body?.string()?.let { JSONObject(it).getString("url") }
+                    val message = response.body<ByteArray>().decodeToString()
+                    Monitoring.error("Upload response code: " + response.status.value + " Message: " + message)
                 }
             } catch (err: Error) {
                 println("Upload error")
                 Monitoring.error(err)
                 error = err
-            } finally {
-                response?.closeQuietly()
             }
             if (url == null && error == null) {
                 error = Error("Unknown error occurred")
@@ -134,6 +131,6 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
 
     fun attachment() = url?.let { AttachmentInput(url = it, type = attachmentType(), id = id) }
 
-    fun localAttachment() = AttachmentInput(url = file.path, type = attachmentType(), id = id)
+    fun localAttachment() = AttachmentInput(url = file.path.orEmpty(), type = attachmentType(), id = id)
 
 }

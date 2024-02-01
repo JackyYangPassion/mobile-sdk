@@ -29,11 +29,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
@@ -154,7 +155,7 @@ fun Avatar(
                             Column(modifier = Modifier.weight(1f)) {
                                 chunk.forEach { user ->
                                     AsyncImage(
-                                        model = ImageRequest.Builder(LocalContext.current)
+                                        model = ImageRequest.Builder(LocalPlatformContext.current)
                                             .data(user)
                                             .crossfade(true)
                                             .build(),
@@ -194,7 +195,7 @@ fun Avatar(
                 }
                 if (url != null) {
                     AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
+                        model = ImageRequest.Builder(LocalPlatformContext.current)
                             .data(url)
                             .crossfade(true)
                             .build(),

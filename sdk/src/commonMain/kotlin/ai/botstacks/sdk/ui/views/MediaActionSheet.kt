@@ -90,7 +90,7 @@ fun MediaActionSheet(
 
     val onFile = { uri: Uri ->
         op({
-            chat.send(inReplyTo?.id, upload = Upload(uri = uri))
+//            chat.send(inReplyTo?.id, upload = Upload(uri = uri))
         })
         hide()
     }
@@ -158,7 +158,7 @@ fun MediaActionSheet(
                     Media.pickPhoto, Media.pickVideo -> AssetPicker(
                         video = media == Media.pickVideo,
                         onUri = {
-                            onFile(it.toUri())
+
                         }) { hide() }
 
                     Media.recordPhoto, Media.recordVideo -> CameraPicker(
@@ -168,7 +168,7 @@ fun MediaActionSheet(
                         }) { hide() }
 
                     Media.gif -> GifPicker(onUri = {
-                        chat.send(inReplyTo?.id, attachments = listOf(it.toUri().imageAttachment()))
+//                        chat.send(inReplyTo?.id, attachments = listOf(it.toUri().imageAttachment()))
                         hide()
                     }) { hide() }
 

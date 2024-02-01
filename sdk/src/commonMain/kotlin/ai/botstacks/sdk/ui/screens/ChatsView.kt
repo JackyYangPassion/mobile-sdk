@@ -19,14 +19,12 @@ import ai.botstacks.sdk.utils.*
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.forEachTextValue
-import androidx.compose.material.AlertDialog
-import com.mohamedrejeb.calf.ui.dialog.AdaptiveAlertDialog
 
 @Composable
 fun ChatsView(
     scrollToTop: Int = 0,
     openChat: (Chat) -> Unit,
-    openCompose: () -> Unit,
+    onCreateChannel: () -> Unit,
     editProfile: () -> Unit,
     openFavorites: () -> Unit,
     onConfirmedLogout: () -> Unit,
@@ -129,7 +127,7 @@ fun EmptyUserChatsViewPreview() {
     BotStacksChatContext {
         ChatsView(
             openChat = {},
-            openCompose = { /*TODO*/ },
+            onCreateChannel = { /*TODO*/ },
             editProfile = {},
             openFavorites = {},
             onConfirmedLogout = {}
@@ -146,7 +144,7 @@ fun ChatsViewPreview() {
     BotStacksChatContext {
         ChatsView(
             openChat = {},
-            openCompose = { /*TODO*/ },
+            onCreateChannel = { /*TODO*/ },
             editProfile = {},
             openFavorites = {},
             onConfirmedLogout = {}

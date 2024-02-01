@@ -65,8 +65,25 @@ kotlin {
                 implementation(libs.apollo3.runtime)
                 implementation(libs.apollo3.adapters)
 
+                implementation(libs.coil3.compose)
+                implementation(libs.coil3.gif)
+
+                implementation(libs.coil3.network.ktor)
+
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.core)
+                implementation(libs.kotlinx.serialization.json)
+
+                implementation(libs.ktor.client.core)
+
+                implementation(libs.sentry)
+
+                implementation(libs.settings)
+
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.navigator.bottomsheet)
+                implementation(libs.voyager.navigator.tabs)
+                implementation(libs.voyager.transitions)
             }
         }
 
@@ -83,18 +100,15 @@ kotlin {
                 implementation(libs.androidx.core)
                 implementation(libs.androidx.media3.exoplayer)
                 implementation(libs.androidx.media3.ui)
-                implementation(libs.androidx.navigation.compose)
 
                 implementation(libs.android.colorx)
 
                 implementation(libs.compose.markdown)
                 implementation(libs.compose.permissions)
 
-                implementation(libs.hive.mqtt.client)
-                implementation(libs.sentry)
+                implementation(libs.ktor.client.okhttp)
 
-                implementation(libs.coil.compose)
-                implementation(libs.coil.gif)
+                implementation(libs.hive.mqtt.client)
 
                 implementation(libs.contacts.async)
                 implementation(libs.contacts.core)
@@ -108,10 +122,13 @@ kotlin {
 
                 implementation(firebaseLibs.firebaseMessagingKtx)
 
-                implementation(libs.square.okhttp3)
-                implementation(libs.square.okhttp3.logging)
-
                 implementation(libs.ok2curl)
+            }
+        }
+
+        iosMain {
+            dependencies {
+                implementation(libs.ktor.client.darwin)
             }
         }
     }

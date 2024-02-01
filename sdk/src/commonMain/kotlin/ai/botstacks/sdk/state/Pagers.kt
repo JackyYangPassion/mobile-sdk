@@ -29,17 +29,18 @@ data class ContactsPager(val list: String = "contacts") : Pager<User>() {
     var contacts = mutableStateListOf<String>()
 
     fun fetchContacts(): List<String> {
-        val contacts =
-            Contacts(BotStacksChat.shared.appContext).query()
-                .where { Phone.Number.isNotNullOrEmpty() or Phone.NormalizedNumber.isNotNullOrEmpty() }
-                .include {
-                    setOf(
-                        Phone.Number,
-                        Phone.NormalizedNumber
-                    )
-                }
-                .find()
-        return contacts.flatMap { it.phones().map { it.normalizedNumber ?: it.number ?: "" } }
+        return emptyList()
+//        val contacts =
+//            Contacts(BotStacksChat.shared.appContext).query()
+//                .where { Phone.Number.isNotNullOrEmpty() or Phone.NormalizedNumber.isNotNullOrEmpty() }
+//                .include {
+//                    setOf(
+//                        Phone.Number,
+//                        Phone.NormalizedNumber
+//                    )
+//                }
+//                .find()
+//        return contacts.flatMap { it.phones().map { it.normalizedNumber ?: it.number ?: "" } }
     }
 
     fun syncContacts() {

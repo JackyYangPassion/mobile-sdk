@@ -22,7 +22,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import ai.botstacks.sdk.actions.dismissInvites
 import ai.botstacks.sdk.actions.join
 import ai.botstacks.sdk.actions.leave

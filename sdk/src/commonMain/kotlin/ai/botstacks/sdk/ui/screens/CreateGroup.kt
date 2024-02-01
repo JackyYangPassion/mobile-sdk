@@ -21,10 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.actions.update
 import ai.botstacks.sdk.state.Chat
@@ -38,6 +36,11 @@ import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.op
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import coil3.compose.AsyncImage
+import com.mohamedrejeb.calf.io.path
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -142,7 +145,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
 
                 ) {
 
-                    (state.image ?: state.upload?.file?.path?.toString())?.let {
+                    (state.image ?: state.upload?.file?.path)?.let {
                         AsyncImage(
                             model = it,
                             contentDescription = "chat avatar",
@@ -336,7 +339,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
                                 )
                             ) {
                                 Icon(
-                                    painter = painterResource(id = androidx.media3.ui.R.drawable.exo_ic_chevron_right),
+                                    painter = rememberVectorPainter(Icons.Outlined.ChevronRight),
                                     contentDescription = "Create chat",
                                     tint = colorScheme.onSurface,
                                     modifier = Modifier.size(20.dp)
