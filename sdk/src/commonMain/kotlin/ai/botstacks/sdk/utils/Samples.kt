@@ -29,7 +29,7 @@ fun genCurrentUser() = User.current ?: genU().let {
     it
 }
 
-fun genU(addCommonChannels: Boolean = false): User {
+fun genU(): User {
     val u = User(uuid())
     u.username = faker.name().username()
     u.avatar = ift(Random.nextBoolean(), randomImage(), null)
@@ -43,9 +43,6 @@ fun genU(addCommonChannels: Boolean = false): User {
     )
     u.displayName = faker.funnyName().name()
 
-    if (addCommonChannels) {
-        u
-    }
     return u
 }
 
