@@ -21,8 +21,10 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
 @Composable
 fun SearchField(
-    modifier: Modifier = Modifier, state: TextFieldState,
-    onSearch: () -> Unit,
+    modifier: Modifier = Modifier,
+    state: TextFieldState,
+    showClear: Boolean = false,
+    onSearch: () -> Unit = { },
     onClear: () -> Unit = { }
 ) {
     BasicTextField2(
@@ -42,17 +44,19 @@ fun SearchField(
                         )
                     }
                 }
-                Pressable(
-                    onClick = {
-                        state.clearText()
-                        onClear()
+                if (showClear) {
+                    Pressable(
+                        onClick = {
+                            state.clearText()
+                            onClear()
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.requiredIconSize(),
+                            painter = painterResource(Res.Drawables.Outlined.Close),
+                            contentDescription = "close search"
+                        )
                     }
-                ) {
-                    Icon(
-                        modifier = Modifier.requiredIconSize(),
-                        painter = painterResource(Res.Drawables.Outlined.Close),
-                        contentDescription = "close search"
-                    )
                 }
             }
         }

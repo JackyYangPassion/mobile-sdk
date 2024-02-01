@@ -50,6 +50,11 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.*
+import com.mohamedrejeb.calf.io.KmpFile
+import com.mohamedrejeb.calf.io.readByteArray
+import com.mohamedrejeb.calf.picker.FilePickerFileType
+import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
+import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -153,7 +158,7 @@ fun MediaActionSheet(
                     Media.pickPhoto, Media.pickVideo -> AssetPicker(
                         video = media == Media.pickVideo,
                         onUri = {
-                            onFile(it)
+                            onFile(it.toUri())
                         }) { hide() }
 
                     Media.recordPhoto, Media.recordVideo -> CameraPicker(
@@ -210,16 +215,17 @@ fun MediaActionSheetPreview() {
 }
 
 @Composable
-fun AssetPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {
-            Log.v("IAC", "Got image Uri $it")
-            it?.let(onUri) ?: onCancel()
-        })
-    LaunchedEffect(key1 = true, block = {
-        launcher.launch(PickVisualMediaRequest(if (video) ActivityResultContracts.PickVisualMedia.VideoOnly else ActivityResultContracts.PickVisualMedia.ImageOnly))
-    })
+fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
+    val pickerLauncher = rememberFilePickerLauncher(
+        type = if (video) FilePickerFileType.Video else FilePickerFileType.Image,
+        selectionMode = FilePickerSelectionMode.Single,
+        onResult = { files -> files.firstOrNull() ?: onCancel() }
+    )
+
+    LaunchedEffect(video, onUri) {
+        pickerLauncher.launch()
+    }
+
 }
 
 @Composable

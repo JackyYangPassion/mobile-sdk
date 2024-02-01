@@ -89,11 +89,6 @@ object BotStacks {
         @ReadOnlyComposable
         get() = LocalBotStacksColorScheme.current
 
-    val colors: BotStacksColorPalette
-        @Composable
-        @ReadOnlyComposable
-        get() = BotStacksColorPalette
-
     val dimens: Dimensions
         @Composable
         @ReadOnlyComposable

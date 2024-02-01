@@ -4,102 +4,123 @@
 
 package ai.botstacks.sdk.ui.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.actions.block
+import ai.botstacks.sdk.API
+import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.OnlineStatus
-import ai.botstacks.sdk.ui.BotStacks.colorScheme
-import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.type.UpdateProfileInput
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Res
-import ai.botstacks.sdk.ui.views.*
-import ai.botstacks.sdk.utils.*
-import org.jetbrains.compose.resources.ExperimentalResourceApi
+import ai.botstacks.sdk.ui.views.EditProfileState
+import ai.botstacks.sdk.ui.views.EditProfileView
+import ai.botstacks.sdk.ui.views.Header
+import ai.botstacks.sdk.ui.views.HeaderDefaults
+import ai.botstacks.sdk.ui.components.ProgressOverlay
+import ai.botstacks.sdk.ui.views.UserDetailsView
+import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.utils.genImageMessage
+import ai.botstacks.sdk.utils.genU
+import ai.botstacks.sdk.utils.random
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import com.apollographql.apollo3.api.Optional
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ProfileView(user: User, back: () -> Unit, openChat: (User) -> Unit) {
-    val scrollState = rememberScrollState()
-    Column(
-            modifier = Modifier
-                    .verticalScroll(scrollState)
-                    .fillMaxSize(1f)
-    ) {
-        Header(title = user.username, icon = { Avatar(url = user.avatar) }, onBackClick = back)
-        Space(16f)
-        Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-        ) {
-            Avatar(url = user.avatar,  size = AvatarSize.Large,)
-            Space()
-            Text(text = user.displayNameFb, fontStyle = fonts.body2, color = colorScheme.onBackground)
-            Box(
-                    modifier = Modifier
-                            .padding(12.dp, 5.dp)
-                            .radius(30.dp)
-                            .background(colorScheme.surface),
-                    contentAlignment = Alignment.Center
-            ) {
-                Text(
-                        text = if (user.status == OnlineStatus.Online) "Online" else user.lastSeen?.timeAgo()
-                                ?: "",
-                        fontStyle = fonts.body1,
-                        color = if (user.status == OnlineStatus.Online) colorScheme.primary else colorScheme.caption
-                )
-            }
+fun ProfileView(
+    user: User,
+    onBackClicked: () -> Unit,
+) {
+    val isCurrentUser = remember(user) { user.isCurrent }
+    if (isCurrentUser) {
+        EditProfileScreen(user = user, onBackClicked = onBackClicked)
+    } else {
+        UserDetailsScreen(user = user, onBackClicked = onBackClicked)
+    }
+}
 
-            if (!user.isCurrent) {
-                Divider(color = colorScheme.border)
-                SimpleRow(
-                        icon = Res.Drawables.Filled.PaperPlaneTilt,
-                        text = "Send a Chat",
-                        iconPrimary = true
-                ) {
-                    openChat(user)
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun EditProfileScreen(
+    user: User,
+    onBackClicked: () -> Unit,
+) {
+    var saving by remember { mutableStateOf(false) }
+    val composeScope = rememberCoroutineScope()
+    val state = remember(user) { EditProfileState(user) }
+
+    LaunchedEffect(saving) {
+        if (saving) {
+            val uploadFile = state.selectedImage?.let { Upload(file = it) }
+            val url = uploadFile?.await()
+            runCatching {
+                API.updateProfile(
+                    UpdateProfileInput(
+                        username = Optional.present(state.textState.text.toString()),
+                        image = Optional.presentIfNotNull(url)
+                    )
+                )
+
+                User.current?.apply {
+                    if (url != null) {
+                        avatar = url
+                    }
+                    username = state.textState.text.toString()
                 }
+            }.onFailure {
+                saving = false
+            }.onSuccess {
+                saving = false
+                onBackClicked()
             }
-//            Row(
-//                    Modifier
-//                            .padding(top = 8.dp, start = 8.dp)
-//                            .fillMaxWidth()
-//            ) {
-//                Text("Shared Media", iac = fonts.body, color = colors.text)
-//            }
-//            val listState = rememberLazyListState()
-//            LazyRow(
-//                    state = listState, modifier = Modifier
-//                    .padding(start = 16.dp, top = 8.dp)
-//                    .fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-//            ) {
-////                itemsIndexed(
-////                        user.sharedMedia.items,
-////                        key = { index, item -> item.id }) { index, item ->
-////                    MessageContent(message = item)
-////                }
-//            }
-            Space(24f)
-            Divider(color = colorScheme.caption)
-            if (!user.isCurrent) {
-                SimpleRow(
-                        icon = if (user.blocked) Res.Drawables.Filled.LockSimpleOpen else Res.Drawables.Filled.Lock,
-                        text = if (user.blocked) "Unblock ${user.username}" else "Block ${user.username}",
-                        iconPrimary = user.blocked,
-                        destructive = !user.blocked
-                ) {
-                    user.block()
+        }
+    }
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
+            Header(
+                title = "Edit Profile",
+                onBackClicked = onBackClicked,
+                endAction = {
+                    HeaderDefaults.SaveAction {
+                        composeScope.launch {
+                            keyboardController?.hide()
+                            delay(300.milliseconds)
+                            saving = true
+                        }
+                    }
                 }
-            }
-            GrowSpacer()
+            )
+
+            EditProfileView(state = state)
+        }
+        ProgressOverlay(visible = saving, touchBlocking = true)
+    }
+}
+
+@Composable
+private fun UserDetailsScreen(user: User, onBackClicked: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
+            Header(
+                title = "User Details",
+                onBackClicked = onBackClicked,
+            )
+
+            UserDetailsView(user)
         }
     }
 }
@@ -111,6 +132,6 @@ fun ProfileViewPreview() {
     val ms = random(10, { genImageMessage(user = u) })
 //    u.sharedMedia.items.addAll(ms)
     BotStacksChatContext {
-        ProfileView(user = u, back = { /*TODO*/ }, openChat = {})
+        ProfileView(user = u, onBackClicked = { /*TODO*/ })
     }
 }

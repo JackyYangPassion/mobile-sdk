@@ -60,96 +60,92 @@ sealed interface Tab {
     }
 }
 
-@Composable
-fun Tabs(
-    openChat: (Chat) -> Unit,
-    openReplies: (Message) -> Unit,
-    openProfile: (User) -> Unit,
-    openCreateChat: () -> Unit,
-    openCompose: () -> Unit,
-    openSearch: () -> Unit,
-    openFavorites: () -> Unit,
-    openNotificationSettings: () -> Unit,
-) {
-    var selectedTab by remember { mutableStateOf<Tab>(Tab.Home) }
-    var scrollToTop by remember {
-        mutableStateOf(0)
-    }
-    val openTab = { tab: Tab ->
-        if (selectedTab == tab)
-            scrollToTop += 1
-        else
-            selectedTab = tab
-    }
-    Column(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.weight(1.0f)) {
-            when (selectedTab) {
-                Tab.Home -> ChatsView(
-                    openChat = openChat,
-                    openReplies = openReplies,
-                    openAllChannels = { openTab(Tab.Channels) },
-                    openContacts = { openTab(Tab.Contacts) },
-                    openSearch = openSearch,
-                    openCompose = openCompose,
-                    openProfile = openProfile,
-                    scrollToTop = scrollToTop
-                )
-
-                Tab.Channels -> ChannelsView(
-                    scrollToTop = scrollToTop,
-                    search = openSearch,
-                    openCreateChat = openCreateChat,
-                    openChat = openChat,
-                )
-
-                Tab.Contacts -> ContactsView(
-                    scrollToTop = scrollToTop, openProfile = openProfile
-                )
-
-                Tab.Settings -> MyProfile(
-                    openProfile = { openProfile(User.current!!) },
-                    openNotificationSettings = openNotificationSettings,
-                    openFavorites = openFavorites
-                )
-            }
-        }
-        Row(modifier = Modifier
-            .background(colorScheme.surface)
-            .windowInsetsPadding(WindowInsets.navigationBars)
-            .height(57.dp)
-        ) {
-            for (tab in Tab.entries) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clickable { openTab(tab) },
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (tab == Tab.Home) {
-                        Box(contentAlignment = Alignment.TopEnd) {
-                            Icon(
-                                painter = tab.icon,
-                                contentDescription = tab.route,
-                                tint = if (selectedTab == tab) colorScheme.primary else colorScheme.caption,
-                                modifier = Modifier.size(45.dp)
-                            )
-                            val count = BotStacksChatStore.current.totalCount
-                            if (count > 0) {
-                                Badge(count = count)
-                            }
-                        }
-                    } else {
-                        Icon(
-                            painter = tab.icon,
-                            contentDescription = tab.route,
-                            tint = if (selectedTab == tab) colorScheme.primary else colorScheme.caption,
-                            modifier = Modifier.size(45.dp)
-                        )
-                    }
-
-                }
-            }
-        }
-    }
-}
+//@Composable
+//fun Tabs(
+//    openChat: (Chat) -> Unit,
+//    openReplies: (Message) -> Unit,
+//    openProfile: (User) -> Unit,
+//    openCreateChat: () -> Unit,
+//    openCompose: () -> Unit,
+//    openSearch: () -> Unit,
+//    openFavorites: () -> Unit,
+//    openNotificationSettings: () -> Unit,
+//) {
+//    var selectedTab by remember { mutableStateOf<Tab>(Tab.Home) }
+//    var scrollToTop by remember {
+//        mutableStateOf(0)
+//    }
+//    val openTab = { tab: Tab ->
+//        if (selectedTab == tab)
+//            scrollToTop += 1
+//        else
+//            selectedTab = tab
+//    }
+//    Column(modifier = Modifier.fillMaxSize()) {
+//        Column(modifier = Modifier.weight(1.0f)) {
+//            when (selectedTab) {
+//                Tab.Home -> ChatsView(
+//                    openChat = openChat,
+//                    openCompose = openCompose,
+//                    openProfile = openProfile,
+//                    scrollToTop = scrollToTop
+//                )
+//
+//                Tab.Channels -> ChannelsView(
+//                    scrollToTop = scrollToTop,
+//                    search = openSearch,
+//                    openCreateChat = openCreateChat,
+//                    openChat = openChat,
+//                )
+//
+//                Tab.Contacts -> ContactsView(
+//                    scrollToTop = scrollToTop, openProfile = openProfile
+//                )
+//
+//                Tab.Settings -> MyProfile(
+//                    openProfile = { openProfile(User.current!!) },
+//                    openNotificationSettings = openNotificationSettings,
+//                    openFavorites = openFavorites
+//                )
+//            }
+//        }
+//        Row(modifier = Modifier
+//            .background(colorScheme.surface)
+//            .windowInsetsPadding(WindowInsets.navigationBars)
+//            .height(57.dp)
+//        ) {
+//            for (tab in Tab.entries) {
+//                Box(
+//                    modifier = Modifier
+//                        .weight(1f)
+//                        .fillMaxHeight()
+//                        .clickable { openTab(tab) },
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    if (tab == Tab.Home) {
+//                        Box(contentAlignment = Alignment.TopEnd) {
+//                            Icon(
+//                                painter = tab.icon,
+//                                contentDescription = tab.route,
+//                                tint = if (selectedTab == tab) colorScheme.primary else colorScheme.caption,
+//                                modifier = Modifier.size(45.dp)
+//                            )
+//                            val count = BotStacksChatStore.current.totalCount
+//                            if (count > 0) {
+//                                Badge(count = count)
+//                            }
+//                        }
+//                    } else {
+//                        Icon(
+//                            painter = tab.icon,
+//                            contentDescription = tab.route,
+//                            tint = if (selectedTab == tab) colorScheme.primary else colorScheme.caption,
+//                            modifier = Modifier.size(45.dp)
+//                        )
+//                    }
+//
+//                }
+//            }
+//        }
+//    }
+//}

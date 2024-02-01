@@ -6,15 +6,14 @@ package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
-import ai.botstacks.sdk.ui.BotStacks.colors
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.resources.Res
+import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
@@ -50,7 +50,7 @@ sealed interface AvatarSize {
         override val value: Dp = 100.dp
     }
 
-    data class Custom(val dp: Dp): AvatarSize {
+    data class Custom(val dp: Dp) : AvatarSize {
         override val value: Dp = dp
     }
 }
@@ -60,12 +60,23 @@ object AvatarDefaults {
 }
 
 sealed interface AvatarType {
+    val emptyState: Painter?
+        @Composable get() = null
     data class User(
-        val url: String?,
+        val url: Any?,
         val status: OnlineStatus = OnlineStatus.UNKNOWN__,
-    ) : AvatarType
+        val empty: Painter? = null,
+    ) : AvatarType {
+        @OptIn(ExperimentalResourceApi::class)
+        override val emptyState: Painter
+            @Composable get() = empty ?: painterResource(Res.Drawables.Outlined.User)
+    }
 
-    data class Channel(val urls: List<String?>) : AvatarType
+    data class Channel(val urls: List<String?>,  val empty: Painter? = null,) : AvatarType {
+        @OptIn(ExperimentalResourceApi::class)
+        override val emptyState: Painter
+            @Composable get() = empty ?: painterResource(Res.Drawables.Outlined.User)
+    }
 }
 
 /**
@@ -106,7 +117,11 @@ fun Avatar(
     } else {
         AvatarType.User(url, status)
     }
-    Avatar(type = type, size = size, modifier = modifier)
+    Avatar(
+        type = type,
+        size = size,
+        modifier = modifier
+    )
 }
 
 @OptIn(ExperimentalResourceApi::class)
@@ -116,10 +131,12 @@ fun Avatar(
     size: AvatarSize = AvatarDefaults.Size,
     type: AvatarType,
 ) {
+    val palette = LocalBotStacksColorPalette.current
+
     Box(
         modifier = modifier
             .size(size.value)
-            .background(color = colors.Light._100, shape = CircleShape),
+            .background(color = palette.light._100, shape = CircleShape),
     ) {
         when (type) {
             is AvatarType.Channel -> {
@@ -143,8 +160,7 @@ fun Avatar(
                                             .build(),
                                         contentDescription = "user profile picture",
                                         contentScale = ContentScale.Crop,
-                                        modifier = Modifier.weight(1f)
-
+                                        modifier = Modifier.weight(1f),
                                     )
                                 }
                             }
@@ -152,14 +168,14 @@ fun Avatar(
                     }
                 } else {
                     Image(
-                        painter = painterResource(Res.Drawables.Outlined.User),
+                        painter = type.emptyState,
                         contentDescription = "channel profile picture",
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(dimens.grid.x3)
+                            .padding(dimens.inset)
                             .clip(CircleShape)
                             .align(Alignment.Center),
-                        colorFilter = ColorFilter.tint(colors.Dark._900)
+                        colorFilter = ColorFilter.tint(palette.dark._900)
                     )
                 }
             }
@@ -191,14 +207,14 @@ fun Avatar(
                     )
                 } else {
                     Image(
-                        painter = painterResource(Res.Drawables.Outlined.User),
+                        painter = type.emptyState,
                         contentDescription = "user profile picture",
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(dimens.grid.x3)
                             .clip(CircleShape)
                             .align(Alignment.Center),
-                        colorFilter = ColorFilter.tint(colors.Dark._900)
+                        colorFilter = ColorFilter.tint(palette.dark._900)
                     )
                 }
 
@@ -239,13 +255,17 @@ fun AvatarPreview() {
             Avatar(type = AvatarType.User(url = url, status = OnlineStatus.Online))
             Avatar(type = AvatarType.User(url = url, status = OnlineStatus.Offline))
             Avatar(type = AvatarType.User(url = url, status = OnlineStatus.Away))
-            Avatar(type = AvatarType.Channel(
-                listOf("https://source.unsplash.com/featured/300x201",
+            Avatar(
+                type = AvatarType.Channel(
+                    listOf(
+                        "https://source.unsplash.com/featured/300x201",
 
-                    "https://source.unsplash.com/featured/300x202",
-                    "https://source.unsplash.com/featured/300x203",
-                    "https://source.unsplash.com/featured/300x205"
-                )))
+                        "https://source.unsplash.com/featured/300x202",
+                        "https://source.unsplash.com/featured/300x203",
+                        "https://source.unsplash.com/featured/300x205"
+                    )
+                )
+            )
         }
 
         Column(

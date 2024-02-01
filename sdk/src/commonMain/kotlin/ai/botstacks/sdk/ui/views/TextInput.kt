@@ -6,43 +6,41 @@ package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.theme.FontStyle
-import android.view.ViewTreeObserver
+import ai.botstacks.sdk.utils.ui.keyboardAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text2.BasicSecureTextField
 import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.CodepointTransformation
 import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.mask
+import androidx.compose.foundation.text2.input.TextObfuscationMode
 import androidx.compose.foundation.text2.input.textAsFlow
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-object TextInputDefaults {
-    @OptIn(ExperimentalFoundationApi::class)
-    val PasswordMask = CodepointTransformation.mask('•')
-}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TextInput(
@@ -55,14 +53,21 @@ fun TextInput(
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     fontStyle: FontStyle = BotStacks.fonts.body1,
+    textAlign: TextAlign = TextAlign.Unspecified,
     color: Color = BotStacks.colorScheme.onBackground,
-    codepointTransformation: CodepointTransformation? = null,
+    indicatorColor: Color = Color.Unspecified,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    leadingIcon: @Composable () -> Unit = { },
-    trailingIcon: @Composable () -> Unit = { },
+    leadingIcon: (@Composable () -> Unit)? = null,
+    trailingIcon: (@Composable () -> Unit)? = null,
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    val lineLimit = if (maxLines == 1) {
+        TextFieldLineLimits.SingleLine
+    } else {
+        TextFieldLineLimits.MultiLine(minHeightInLines = minLines, maxHeightInLines = maxLines)
+    }
+
     BasicTextField2(
         modifier = modifier,
         enabled = enabled,
@@ -70,15 +75,95 @@ fun TextInput(
         state = state,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        textStyle = fontStyle.asTextStyle().copy(color = color),
-        lineLimits = if (maxLines == 1) {
-            TextFieldLineLimits.SingleLine
-        } else {
-            TextFieldLineLimits.MultiLine(minHeightInLines = minLines, maxHeightInLines = maxLines)
+        textStyle = fontStyle.copy(textAlign = textAlign).asTextStyle().copy(color = color),
+        lineLimits = lineLimit,
+        decorator = { innerTextField ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                leadingIcon?.invoke()
+                Box(modifier = Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = when (textAlign) {
+                            TextAlign.End -> Alignment.End
+                            TextAlign.Center -> Alignment.CenterHorizontally
+                            else -> Alignment.Start
+                        }
+                    ) {
+                        innerTextField()
+                        if (indicatorColor.isSpecified) {
+                            Spacer(modifier = Modifier.height(BotStacks.dimens.staticGrid.x2))
+                            Divider(color = indicatorColor)
+                        }
+                    }
+                    if (state.text.isEmpty() && placeholder.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = placeholder,
+                            fontStyle = BotStacks.fonts.caption1,
+                            color = BotStacks.colorScheme.onChatInput,
+                            textAlign = textAlign
+                        )
+                    }
+                }
+                trailingIcon?.invoke()
+            }
         },
-        codepointTransformation = codepointTransformation,
+        scrollState = scrollState
+    )
+
+    LaunchedEffect(Unit) {
+        state.textAsFlow()
+            .onEach { onStateChanged() }
+            .launchIn(this)
+    }
+
+    val focusManager = LocalFocusManager.current
+    val keyboardState by keyboardAsState()
+    LaunchedEffect(keyboardState) {
+        if (!keyboardState) {
+            focusManager.clearFocus(true)
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun SecureTextField(
+    modifier: Modifier = Modifier,
+    placeholder: String = "",
+    state: TextFieldState,
+    onStateChanged: () -> Unit = { },
+    fontStyle: FontStyle = BotStacks.fonts.body1,
+    color: Color = BotStacks.colorScheme.onBackground,
+    textObfuscationMode: TextObfuscationMode = TextObfuscationMode.RevealLastTyped,
+    enabled: Boolean = true,
+    leadingIcon: @Composable () -> Unit = { },
+    trailingIcon: @Composable () -> Unit = { },
+    onSubmit: () -> Unit,
+    scrollState: ScrollState = rememberScrollState(),
+) {
+    BasicSecureTextField(
+        modifier = modifier,
+        enabled = enabled,
+        state = state,
+        textStyle = fontStyle.asTextStyle().copy(color = color),
+        textObfuscationMode = textObfuscationMode,
+        onSubmit = {
+            if (it == ImeAction.Go) {
+                onSubmit()
+                return@BasicSecureTextField true
+            }
+            false
+        },
         decorator = {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 leadingIcon()
                 Box(modifier = Modifier.weight(1f)) {
                     it()
@@ -109,20 +194,4 @@ fun TextInput(
             focusManager.clearFocus(true)
         }
     }
-}
-
-@Composable
-fun keyboardAsState(): State<Boolean> {
-    val keyboardState = remember { mutableStateOf(false) }
-    val view = LocalView.current
-    val viewTreeObserver = view.viewTreeObserver
-    DisposableEffect(viewTreeObserver) {
-        val listener = ViewTreeObserver.OnGlobalLayoutListener {
-            keyboardState.value = ViewCompat.getRootWindowInsets(view)
-                ?.isVisible(WindowInsetsCompat.Type.ime()) ?: true
-        }
-        viewTreeObserver.addOnGlobalLayoutListener(listener)
-        onDispose { viewTreeObserver.removeOnGlobalLayoutListener(listener) }
-    }
-    return keyboardState
 }

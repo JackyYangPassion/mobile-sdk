@@ -4,12 +4,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
@@ -44,4 +48,28 @@ fun Modifier.unboundedClickable(
         interactionSource = interaction,
         indication = rememberRipple(bounded = false, radius = rippleRadius),
     )
+}
+
+fun Modifier.disableInput(disabled: Boolean): Modifier {
+    return if (disabled) {
+        pointerInput(Unit) {
+            awaitPointerEventScope {
+                while (true) {
+                    awaitPointerEvent(pass = PointerEventPass.Initial)
+                        .changes
+                        .forEach(PointerInputChange::consume)
+                }
+            }
+        }
+    } else {
+        this
+    }
+}
+
+fun Modifier.addIf(condition: Boolean, other: @Composable () -> Modifier): Modifier = composed {
+    then(if (condition) other() else Modifier)
+}
+
+fun <T> Modifier.addIfNonNull(value: T?, other: @Composable (T) -> Modifier): Modifier = composed {
+    then(if (value != null) other(value) else Modifier)
 }

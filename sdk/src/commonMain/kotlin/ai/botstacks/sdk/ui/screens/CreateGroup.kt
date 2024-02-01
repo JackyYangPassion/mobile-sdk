@@ -14,7 +14,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -38,7 +37,6 @@ import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.op
 import androidx.compose.foundation.text2.input.TextFieldState
-import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -124,7 +122,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
     Column(modifier = Modifier.fillMaxHeight()) {
         Header(
             title = "Create Channel",
-            onBackClick = back,
+            onBackClicked = back,
             endAction = {
                 HeaderDefaults.NextAction { }
             }
@@ -144,7 +142,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
 
                 ) {
 
-                    (state.image ?: state.upload?.uri?.toString())?.let {
+                    (state.image ?: state.upload?.file?.path?.toString())?.let {
                         AsyncImage(
                             model = it,
                             contentDescription = "chat avatar",
@@ -354,7 +352,7 @@ fun CreateChat(chat: Chat?, openInvite: (Chat) -> Unit, _back: () -> Unit) {
         AssetPicker(video = false, onUri = {
             state.selectImage = false
             println("Got asset ur $it")
-            state.upload = Upload(uri = it)
+            state.upload = Upload(file = it)
         }) {
             state.selectImage = false
         }

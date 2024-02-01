@@ -14,6 +14,7 @@ import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.type.MemberRole
 import ai.botstacks.sdk.type.OnlineStatus
+import com.benasher44.uuid.uuid4
 import kotlinx.datetime.Clock
 import net.datafaker.Faker
 import kotlin.random.Random
@@ -41,7 +42,14 @@ fun genU(): User {
         null
     )
     u.displayName = faker.funnyName().name()
+
     return u
+}
+
+fun genMember(chatId: String = uuid()): Member {
+    val user = genU()
+    BotStacksChatStore.current.cache.users[user.id] = user
+    return Member(user.id, chatId, Clock.System.now(), MemberRole.Member)
 }
 
 fun reqU() {
@@ -170,6 +178,44 @@ fun genRepliesMessage() = genChatextMessage(chat = genG().id).apply {
     replyCount = replies.items.size
 }
 
+fun genCommonChannels(user: User) = listOf(
+    Chat(uuid4().toString(), ChatType.Group).apply {
+        name = "Hack Hub"
+        image = randomImage()
+        members.apply {
+            addAll(
+                listOf(genMember(id), genMember(id), genMember(id), genMember(id)),
+            )
+        }
+    },
+    Chat(uuid4().toString(), ChatType.Group).apply {
+        name = "Dev Artistry"
+        image = randomImage()
+        members.apply {
+            addAll(
+                listOf(genMember(id), genMember(id), genMember(id), genMember(id)),
+            )
+        }
+    },
+    Chat(uuid4().toString(), ChatType.Group).apply {
+        name = "Craft Studios"
+        image = randomImage()
+        members.apply {
+            addAll(
+                listOf(genMember(id), genMember(id), genMember(id), genMember(id)),
+            )
+        }
+    },
+    Chat(uuid4().toString(), ChatType.Group).apply {
+        name = "Canvas Design"
+        image = randomImage()
+        members.apply {
+            addAll(
+                listOf(genMember(id), genMember(id), genMember(id), genMember(id)),
+            )
+        }
+    }
+)
 
 fun genDM() =
     Chat(uuid(), ChatType.DirectMessage).apply {

@@ -25,8 +25,9 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
+import ai.botstacks.sdk.utils.genU
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -98,7 +99,7 @@ fun ChatChat(
                                 ChatCount(count = chat.members.size)
                             }
                         }
-                    }, onBackClick = back, onMenuClick = { ctx.launch { menu.show() } })
+                    }, onBackClick = back)
                     MessageList(
                         chat = chat,
                         modifier = Modifier.weight(1f),

@@ -4,7 +4,6 @@
 
 package ai.botstacks.sdk.ui
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -15,13 +14,18 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.screens.ChatRoute
+import ai.botstacks.sdk.ui.screens.ChatsView
 import ai.botstacks.sdk.ui.screens.CreateChat
 import ai.botstacks.sdk.ui.screens.FavoritesView
 import ai.botstacks.sdk.ui.screens.InviteView
 import ai.botstacks.sdk.ui.screens.NotificationSettingsView
 import ai.botstacks.sdk.ui.screens.ProfileView
-import ai.botstacks.sdk.ui.screens.SearchView
-import ai.botstacks.sdk.ui.screens.Tabs
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.runtime.Composable
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDeepLink
 
 fun BotStacksChatRoutes(
     navController: NavHostController,
@@ -41,37 +45,40 @@ fun BotStacksChatRoutes(
         navController.popBackStack()
         Unit
     }
-    val tabs = @Composable {
-        Tabs(
-            openChat = openChat,
-            openReplies = openReplies,
-            openProfile = { openProfile(it) },
-            openCompose = {},
-            openCreateChat = { navController.navigate("chats/new") },
-            openSearch = { navController.navigate("search") },
-            openFavorites = { navController.navigate("favorites") },
-            openNotificationSettings = { navController.navigate("settings/notifications") },
-        )
-    }
+//    val tabs = @Composable {
+//        Tabs(
+//            openChat = openChat,
+//            openReplies = openReplies,
+//            openProfile = { openProfile(it) },
+//            openCompose = {},
+//            openCreateChat = { navController.navigate("chats/new") },
+//            openSearch = { navController.navigate("search") },
+//            openFavorites = { navController.navigate("favorites") },
+//            openNotificationSettings = { navController.navigate("settings/notifications") },
+//        )
+//    }
     val routes: NavGraphBuilder.() -> Unit = {
         composable("chats") {
-            tabs()
+            ChatsView(
+                openChat = openChat,
+                openCompose = { },
+                editProfile = { User.current?.let(openProfile) },
+                openFavorites = { navController.navigate("favorites") },
+                onConfirmedLogout = { BotStacksChat.logout() }
+            )
         }
-        composable("channels") { tabs() }
-        composable("contacts") { tabs() }
-        composable("settings") { tabs() }
-        composable(
+        slideInOutComposable(
             "user/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
+            arguments = listOf(navArgument("id") { type = NavType.StringType }),
         ) {
             it.arguments?.getString("id")?.let { User.get(it) }?.let {
                 ProfileView(
                     user = it,
-                    back = back,
-                    openChat = { navController.navigate(it.chatPath) })
+                    onBackClicked = back,
+                )
             }
         }
-        composable(
+        slideInOutComposable(
             "user/{id}/chat",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
@@ -84,7 +91,7 @@ fun BotStacksChatRoutes(
                 back = back
             )
         }
-        composable(
+        slideInOutComposable(
             "chat/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
@@ -97,7 +104,7 @@ fun BotStacksChatRoutes(
                 back = back
             )
         }
-        composable(
+        slideInOutComposable(
             "chat/{id}/edit",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
@@ -107,7 +114,7 @@ fun BotStacksChatRoutes(
                 _back = back
             )
         }
-        composable(
+        slideInOutComposable(
             "chat/{id}/invite",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
@@ -117,7 +124,7 @@ fun BotStacksChatRoutes(
                 openChat = openChat
             )
         }
-        composable(
+        slideInOutComposable(
             "message/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) {
@@ -130,10 +137,10 @@ fun BotStacksChatRoutes(
                 back = back
             )
         }
-        composable("chats/new") {
+        slideInOutComposable("chats/new") {
             CreateChat(chat = null, openInvite = openInvite, _back = back)
         }
-        composable("favorites") {
+        slideInOutComposable("favorites") {
             FavoritesView(
                 back = back,
                 openReplies = openReplies,
@@ -144,10 +151,34 @@ fun BotStacksChatRoutes(
         composable("settings/notifications") {
             NotificationSettingsView(back)
         }
-        composable("search") {
-            SearchView(back)
-        }
     }
 
     routes.invoke(navGraphBuilder)
+}
+
+private fun NavGraphBuilder.slideInOutComposable(
+    route: String,
+    arguments: List<NamedNavArgument> = emptyList(),
+    deepLinks: List<NavDeepLink> = emptyList(),
+    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
+) {
+    composable(
+        route,
+        arguments = arguments,
+        deepLinks = deepLinks,
+        enterTransition = {
+            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start,)
+        },
+        exitTransition = {
+            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start)
+        },
+        popEnterTransition = {
+            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End)
+        },
+        popExitTransition = {
+            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End)
+        }
+    ) {
+       content(it)
+    }
 }

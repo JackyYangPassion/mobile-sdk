@@ -4,9 +4,9 @@ import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksDayNightColorScheme
+import ai.botstacks.sdk.ui.views.SecureTextField
 import ai.botstacks.sdk.ui.views.Space
 import ai.botstacks.sdk.ui.views.TextInput
-import ai.botstacks.sdk.ui.views.TextInputDefaults
 import android.Manifest
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text2.input.ImeActionHandler
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.ExperimentalMaterialApi
@@ -156,21 +157,13 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         AutoFillRequestHandler(autofillTypes = listOf(AutofillType.Password),
                             onFill = { email.setTextAndPlaceCursorAtEnd(it) }
                         )
-                    TextInput(
+                    SecureTextField(
                         modifier = Modifier
                             .connectNode(autofillPassword)
                             .defaultFocusChangeAutoFill(autofillPassword),
                         state = password,
                         placeholder = "Password",
-                        maxLines = 1,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Go
-                        ),
-                        keyboardActions = KeyboardActions(onGo = {
-                            login()
-                        }),
-                        codepointTransformation = TextInputDefaults.PasswordMask,
+                        onSubmit = login
                     )
 
                     ElevatedButton(

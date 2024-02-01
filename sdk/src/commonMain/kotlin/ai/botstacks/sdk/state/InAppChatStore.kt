@@ -4,13 +4,18 @@
 
 package ai.botstacks.sdk.state
 
-import androidx.compose.runtime.*
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.utils.Monitoring
 import android.util.Log
-import java.util.*
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import java.util.UUID
 import kotlin.properties.Delegates
 
 @Stable
@@ -24,12 +29,13 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
     val invites = mutableStateMapOf<String, MutableList<User>>()
     val cache = Caches()
     val memberships = mutableStateListOf<Member>()
-    val dms: kotlin.collections.List<Chat>
-        get() = memberships.filter { it.isMember && it.chat.kind == ChatType.DirectMessage }
+    val chats: List<Chat>
+        get() = memberships.filter { it.isMember }
             .map { it.chat }
-    val groups: kotlin.collections.List<Chat>
-        get() = memberships.filter { it.isMember && it.chat.kind == ChatType.Group }
-            .map { it.chat }
+    val dms: List<Chat>
+        get() = chats.filter { it.kind == ChatType.DirectMessage }
+    val groups: List<Chat>
+        get() = chats.filter { it.kind == ChatType.Group }
 
     var fcmToken: String? = null
 
@@ -75,12 +81,12 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
         }
     }
 
-    enum class List(val label: String) {
+    enum class ChatList(val label: String) {
         groups("Channels"),
         dms("Chat");
 
         companion object {
-            fun forRoute(r: String?): List {
+            fun forRoute(r: String?): ChatList {
                 if (r == null) return dms
                 when (r) {
                     "channels" -> groups
@@ -91,15 +97,15 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
         }
     }
 
-    fun count(list: List): Int =
+    fun count(list: ChatList): Int =
         when (list) {
-            List.dms -> {
+            ChatList.dms -> {
                 val it = dms.sumOf { it.unreadCount }
                 Log.d("iac", "Dms unread count $it")
                 it
             }
 
-            List.groups -> {
+            ChatList.groups -> {
                 val it = groups.sumOf { it.unreadCount }
                 Log.d("iac", "groups unread count $it")
                 it

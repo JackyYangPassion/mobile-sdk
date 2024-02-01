@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ fun Badge(
     count: Int,
     modifier: Modifier = Modifier
 ) {
+    val palette = LocalBotStacksColorPalette.current
     if (count > 0) {
         val text = when {
             count in 1..99 -> "$count"
@@ -34,7 +36,7 @@ fun Badge(
         }
         Box(
             modifier = modifier
-                .background(color = BotStacks.colors.Primary._800, shape = CircleShape)
+                .background(color = palette.primary._800, shape = CircleShape)
                 .padding(contentPadding),
         ) {
             androidx.compose.material3.Text(

@@ -79,6 +79,7 @@ fragment FUser on User {
   devices {
     ...FDevice
   }
+  is_muted
 }
 
 fragment FDevice on Device {

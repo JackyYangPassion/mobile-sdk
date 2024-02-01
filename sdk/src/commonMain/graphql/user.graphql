@@ -48,6 +48,14 @@ mutation Unblock($user: ID!) {
   unblock(user: $user)
 }
 
+mutation Mute($user: ID!) {
+  mute(user_id: $user)
+}
+
+mutation Unmute($user: ID!) {
+  unmute(user_id: $user)
+}
+
 mutation UpdateProfile($input: UpdateProfileInput!) {
   updateProfile(input: $input)
 }

@@ -2,6 +2,8 @@
  * Copyright (c) 2023.
  */
 
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+
 package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.type.OnlineStatus
@@ -21,14 +23,18 @@ import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Res
+import ai.botstacks.sdk.ui.components.ContextMenu
+import ai.botstacks.sdk.ui.components.ContextMenuScope
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -42,8 +48,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -55,7 +59,7 @@ object HeaderDefaults {
     fun Title(text: String) {
         Text(
             text = text.annotated(),
-            iac = BotStacks.fonts.body1.copy(weight = FontWeight.W600),
+            iac = BotStacks.fonts.h2,
             color = colorScheme.onBackground,
             maxLines = 1
         )
@@ -82,51 +86,98 @@ object HeaderDefaults {
         }
     }
 
+    @Composable
+    fun SaveAction(onClick: Fn) {
+        Pressable(onClick = onClick) {
+            Text(
+                text = "Save",
+                fontStyle = BotStacks.fonts.button1,
+                color = colorScheme.primary,
+            )
+        }
+    }
+
+    @Composable
+    fun MenuAction(onClick: Fn) {
+        HeaderButton(onClick = onClick) {
+            Icon(
+                Icons.Outlined.MoreVert,
+                contentDescription = "Menu",
+                tint = colorScheme.onBackground,
+                modifier = Modifier.requiredIconSize()
+            )
+        }
+    }
+
     val IconSize: Dp = 20.dp
 }
 
 internal fun Modifier.requiredIconSize() = this.size(HeaderDefaults.IconSize)
 
+class HeaderState @OptIn(ExperimentalFoundationApi::class) constructor(
+    val showSearch: Boolean = false,
+    val showSearchClear: Boolean = false,
+    isSearchActive: Boolean = false,
+    val searchQuery: TextFieldState = TextFieldState(),
+) {
+    var searchActive by mutableStateOf(isSearchActive)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun rememberHeaderState(
+    isSearchVisible: Boolean = false,
+    isSearchActive: Boolean = false,
+    showSearchClear: Boolean = false,
+    searchQuery: TextFieldState = rememberTextFieldState(),
+) = remember(isSearchVisible, showSearchClear) {
+    HeaderState(isSearchVisible, isSearchActive, showSearchClear, searchQuery)
+}
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Header(
     title: String,
     icon: @Composable Fn = { },
-    onSearch: ((String) -> Unit)? = null,
+    state: HeaderState = rememberHeaderState(),
+    onSearchClick: Fn? = null,
     onAdd: Fn? = null,
     onCompose: Fn? = null,
-    onBackClick: Fn? = null,
-    onMenuClick: Fn? = null,
+    onBackClicked: Fn? = null,
+    menu: (ContextMenuScope.() -> Unit)? = null,
     endAction: @Composable Fn = { },
 ) {
     Header(
-        title = {
-            HeaderDefaults.Title(text = title)
-        },
+        title = { HeaderDefaults.Title(text = title) },
         icon = icon,
-        onSearch = onSearch,
+        state = state,
+        onSearchClick = onSearchClick,
         onAdd = onAdd,
         onCompose = onCompose,
-        onBackClick = onBackClick,
-        onMenuClick = onMenuClick,
+        onBackClick = onBackClicked,
+        menu = menu,
         endAction = endAction,
     )
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun Header() {
     Header(icon = { HeaderDefaults.Logo() })
 }
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalAnimationApi::class
+)
 @Composable
 fun Header(
     title: @Composable Fn = { },
     icon: @Composable Fn = { },
-    onSearch: ((String) -> Unit)? = null,
+    state: HeaderState = rememberHeaderState(),
+    onSearchClick: Fn? = null,
     onAdd: Fn? = null,
     onCompose: Fn? = null,
     onBackClick: Fn? = null,
-    onMenuClick: Fn? = null,
+    menu: (ContextMenuScope.() -> Unit)? = null,
     endAction: @Composable Fn = { },
 ) {
     Row(
@@ -156,22 +207,21 @@ fun Header(
             }
         }
 
-        var searchActive by remember {
-            mutableStateOf(false)
-        }
-        val search = rememberTextFieldState()
-
         AnimatedContent(
             modifier = Modifier.weight(1f),
-            targetState = searchActive, label = ""
+            targetState = state.searchActive,
+            label = "",
+            transitionSpec = {
+                fadeIn() togetherWith  fadeOut()
+            }
         ) { active ->
             if (active) {
                 val focusRequester = remember { FocusRequester() }
                 SearchField(
                     modifier = Modifier.focusRequester(focusRequester),
-                    state = search,
-                    onSearch = { onSearch?.invoke(search.text.toString()) },
-                    onClear = { searchActive = false }
+                    state = state.searchQuery,
+                    showClear = state.showSearchClear,
+                    onClear = { }
                 )
 
                 LaunchedEffect(Unit) {
@@ -191,8 +241,8 @@ fun Header(
                         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
                     ) {
 
-                        if (onSearch != null) {
-                            HeaderButton(onClick = { searchActive = true }) {
+                        if (state.showSearch) {
+                            HeaderButton(onClick = onSearchClick?.let { { it.invoke() } } ?: { state.searchActive = true }) {
                                 Icon(
                                     painterResource(Res.Drawables.Outlined.MagnifyingGlass),
                                     contentDescription = "Search",
@@ -221,14 +271,23 @@ fun Header(
                                 )
                             }
                         }
-                        if (onMenuClick != null) {
-                            HeaderButton(onClick = onMenuClick) {
-                                Icon(
-                                    Icons.Outlined.MoreVert,
-                                    contentDescription = "Menu",
-                                    tint = colorScheme.onBackground,
-                                    modifier = Modifier.requiredIconSize()
-                                )
+                        if (menu != null) {
+                            var expanded by remember {
+                                mutableStateOf(false)
+                            }
+                            ContextMenu(
+                                visible = expanded,
+                                onDismissRequest = { expanded = false },
+                                menu = { menu(this) },
+                            ) {
+                                HeaderButton(onClick = { expanded = true }) {
+                                    Icon(
+                                        Icons.Outlined.MoreVert,
+                                        contentDescription = "Menu",
+                                        tint = colorScheme.onBackground,
+                                        modifier = Modifier.requiredIconSize()
+                                    )
+                                }
                             }
                         }
                     }
@@ -259,6 +318,7 @@ fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @IPreviews
 @Composable
 fun HeaderPreviews() {
@@ -271,13 +331,25 @@ fun HeaderPreviews() {
         ) {
             Header(
                 icon = { HeaderDefaults.Logo() },
-                onSearch = {},
+                state = rememberHeaderState(isSearchVisible = true),
                 onCompose = {},
-                onMenuClick = {}
+                menu = {
+                    label(onClick = {}) {
+                        Text(text = "Log out", fontStyle = fonts.body1, color = colorScheme.error)
+                    }
+                }
             )
-            Header(title = "Thread", onBackClick = {}, onMenuClick = {})
+            Header(
+                title = "Thread",
+                onBackClicked = {},
+                menu = {
+                    label(onClick = {}) {
+                        Text(text = "Log out", fontStyle = fonts.body1, color = colorScheme.error)
+                    }
+                }
+            )
             Header(title = "Create Channel",
-                onBackClick = {},
+                onBackClicked = {},
                 endAction = {
                     HeaderDefaults.NextAction {}
                 }
@@ -291,15 +363,19 @@ fun HeaderPreviews() {
                         status = OnlineStatus.Online
                     )
                 },
-                onBackClick = {},
+                onBackClicked = {},
                 title = "Albert Bell",
-                onMenuClick = {}
+                menu = {
+                    label(onClick = {}) {
+                        Text(text = "Log out", fontStyle = fonts.body1, color = colorScheme.error)
+                    }
+                }
             )
 
             Header(
-                onBackClick = {},
+                onBackClicked = {},
                 title = "Users",
-                onSearch = {}
+                state = rememberHeaderState(isSearchVisible = true)
             )
         }
     }
