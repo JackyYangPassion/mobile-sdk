@@ -9,6 +9,7 @@ import platform.CoreServices.kUTTagClassFilenameExtension
 import platform.CoreServices.kUTTagClassMIMEType
 import platform.Foundation.CFBridgingRelease
 import platform.Foundation.CFBridgingRetain
+import platform.Foundation.NSURLFileSizeKey
 import platform.Foundation.pathExtension
 
 @OptIn(ExperimentalForeignApi::class)
@@ -24,4 +25,12 @@ actual fun KmpFile.contentType(): String? {
         return mimeType
     }
     return "application/octet-stream"
+}
+
+@OptIn(ExperimentalForeignApi::class)
+actual fun KmpFile.size(): Long {
+    return runCatching {
+        val resources = resourceValuesForKeys(listOf(NSURLFileSizeKey), null)
+        resources?.get(NSURLFileSizeKey) as? Long
+    }.getOrNull() ?: -1L
 }

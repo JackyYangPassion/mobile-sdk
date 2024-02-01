@@ -88,9 +88,9 @@ fun MediaActionSheet(
         scope.launch { state.hide() }
     }
 
-    val onFile = { uri: Uri ->
+    val onFile = { file: KmpFile ->
         op({
-//            chat.send(inReplyTo?.id, upload = Upload(uri = uri))
+            chat.send(inReplyTo?.id, upload = Upload(file = file))
         })
         hide()
     }
@@ -158,13 +158,15 @@ fun MediaActionSheet(
                     Media.pickPhoto, Media.pickVideo -> AssetPicker(
                         video = media == Media.pickVideo,
                         onUri = {
-
+                            onFile(it)
+                            hide()
                         }) { hide() }
 
                     Media.recordPhoto, Media.recordVideo -> CameraPicker(
                         video = media == Media.recordVideo,
                         onUri = {
-                            onFile(it)
+//                            onFile(it)
+                            hide()
                         }) { hide() }
 
                     Media.gif -> GifPicker(onUri = {

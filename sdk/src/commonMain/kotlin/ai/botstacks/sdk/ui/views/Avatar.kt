@@ -63,6 +63,7 @@ object AvatarDefaults {
 sealed interface AvatarType {
     val emptyState: Painter?
         @Composable get() = null
+
     data class User(
         val url: Any?,
         val status: OnlineStatus = OnlineStatus.UNKNOWN__,
@@ -73,7 +74,7 @@ sealed interface AvatarType {
             @Composable get() = empty ?: painterResource(Res.Drawables.Outlined.User)
     }
 
-    data class Channel(val urls: List<String?>,  val empty: Painter? = null,) : AvatarType {
+    data class Channel(val urls: List<String?>, val empty: Painter? = null) : AvatarType {
         @OptIn(ExperimentalResourceApi::class)
         override val emptyState: Painter
             @Composable get() = empty ?: painterResource(Res.Drawables.Outlined.User)
@@ -199,6 +200,7 @@ fun Avatar(
                             .data(url)
                             .crossfade(true)
                             .build(),
+                        onError = { it.result.throwable.printStackTrace() },
                         contentDescription = "user profile picture",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

@@ -62,8 +62,8 @@ contacts-async = { module = "com.github.vestrel00.contacts-android:async", versi
 contacts-vcard = { module = "com.googlecode.ez-vcard:ez-vcard", version = "0.12.0" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-engine-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-engine-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
 datafaker = { module = "net.datafaker:datafaker", version = "1.8.0" }
 emoji-picker = { module = "nl.coffeeit.aroma:emojipicker", version = "1.0.6" }
@@ -92,6 +92,7 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigat
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-navigator-tabs = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 voyager-navigator-bottomsheet = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }

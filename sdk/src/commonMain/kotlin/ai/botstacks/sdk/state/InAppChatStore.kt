@@ -10,14 +10,12 @@ import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.log
 import ai.botstacks.sdk.utils.uuid
-import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import java.util.UUID
 import kotlin.properties.Delegates
 
 @Stable

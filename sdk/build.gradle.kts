@@ -106,7 +106,7 @@ kotlin {
                 implementation(libs.compose.markdown)
                 implementation(libs.compose.permissions)
 
-                implementation(libs.ktor.client.okhttp)
+                implementation(libs.ktor.engine.android)
 
                 implementation(libs.hive.mqtt.client)
 
@@ -128,7 +128,7 @@ kotlin {
 
         iosMain {
             dependencies {
-                implementation(libs.ktor.client.darwin)
+                implementation(libs.ktor.engine.darwin)
             }
         }
     }
