@@ -114,10 +114,8 @@ fun SettingsItem(
     Row(
         modifier = modifier
             .addIfNonNull(onClick) { Modifier.clickable { it() } }
-            .padding(
-                vertical = BotStacks.dimens.staticGrid.x4,
-                horizontal = BotStacks.dimens.staticGrid.x3
-            ),
+            .padding(vertical = BotStacks.dimens.staticGrid.x4,)
+            .padding(horizontal = BotStacks.dimens.inset),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         icon?.invoke()
@@ -175,7 +173,7 @@ fun SettingsSection(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.staticGrid.x2)
+        verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.staticGrid.x2),
     ) {
         val scope = SettingsSectionScopeImpl()
             .apply(content)

@@ -21,6 +21,12 @@ data class ChannelsPager(val list: String = "channels") : Pager<Chat>() {
     }
 }
 
+@Stable
+data class UsersPager(val list: String = "users") : Pager<User>() {
+    override suspend fun load(skip: Int, limit: Int): List<User> {
+        return API.getUsers(skip, limit)
+    }
+}
 
 @Stable
 data class ContactsPager(val list: String = "contacts") : Pager<User>() {
@@ -29,17 +35,18 @@ data class ContactsPager(val list: String = "contacts") : Pager<User>() {
     var contacts = mutableStateListOf<String>()
 
     fun fetchContacts(): List<String> {
-        val contacts =
-            Contacts(BotStacksChat.shared.appContext).query()
-                .where { Phone.Number.isNotNullOrEmpty() or Phone.NormalizedNumber.isNotNullOrEmpty() }
-                .include {
-                    setOf(
-                        Phone.Number,
-                        Phone.NormalizedNumber
-                    )
-                }
-                .find()
-        return contacts.flatMap { it.phones().map { it.normalizedNumber ?: it.number ?: "" } }
+        return emptyList()
+//        val contacts =
+//            Contacts(BotStacksChat.shared.appContext).query()
+//                .where { Phone.Number.isNotNullOrEmpty() or Phone.NormalizedNumber.isNotNullOrEmpty() }
+//                .include {
+//                    setOf(
+//                        Phone.Number,
+//                        Phone.NormalizedNumber
+//                    )
+//                }
+//                .find()
+//        return contacts.flatMap { it.phones().map { it.normalizedNumber ?: it.number ?: "" } }
     }
 
     fun syncContacts() {

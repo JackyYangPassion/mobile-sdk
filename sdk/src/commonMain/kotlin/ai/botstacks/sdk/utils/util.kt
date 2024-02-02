@@ -23,10 +23,11 @@ import ezvcard.property.Telephone
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.type.AttachmentType
+import com.benasher44.uuid.uuid4
 import java.util.*
 
-fun bundleUrl() = BotStacksChat.shared.appContext.packageName
-fun uuid() = UUID.randomUUID().toString()
+fun bundleUrl() = BotStacksChat.shared.appIdentifier
+fun uuid() = uuid4().toString()
 
 typealias Fn = () -> Unit
 
@@ -38,54 +39,55 @@ fun String.annotated() = AnnotatedString(this)
 
 
 fun contactUriToVCard(uri: Uri): VCard {
-    Log.v("IAC", "Contact URI $uri")
-    val result = Contacts(BotStacksChat.shared.appContext).query().where {
-        Contact.Id.equalToIgnoreCase(uri.lastPathSegment!!)
-    }.include {
-        listOf(
-                Phone.Number,
-                Phone.NormalizedNumber,
-                Phone.Type,
-                Email.Type,
-                Email.Address,
-                Name.DisplayName,
-                Name.FamilyName,
-                Name.GivenName,
-        )
-    }.find()
-    return result.map {
-        VCard().apply {
-            it.displayNamePrimary?.let {
-                addFormattedName(FormattedName(it))
-            }
-            it.displayNameAlt?.let {
-                addFormattedNameAlt(FormattedName(it))
-            }
-            it.nameList().forEach {
-                structuredName = StructuredName().apply {
-                    given = it.givenName
-                    family = it.familyName
-                    it.prefix?.let { prefixes.add(it) }
-                    it.suffix?.let { suffixes.add(it) }
-                }
-            }
-            it.phones().toList().forEach {
-                addTelephoneNumber(Telephone(it.normalizedNumber ?: it.number
-                ?: it.primaryValue).apply {
-                    it.type?.let {
-                        this.addParameter("type", it.name)
-                    }
-                })
-            }
-            it.emails().toList().map {
-                addEmail(Email(it.address ?: it.primaryValue).apply {
-                    it.type?.let {
-                        this.addParameter("type", it.name)
-                    }
-                })
-            }
-        }
-    }.first()
+    throw NotImplementedError()
+//    Log.v("IAC", "Contact URI $uri")
+//    val result = Contacts(BotStacksChat.shared.appContext).query().where {
+//        Contact.Id.equalToIgnoreCase(uri.lastPathSegment!!)
+//    }.include {
+//        listOf(
+//                Phone.Number,
+//                Phone.NormalizedNumber,
+//                Phone.Type,
+//                Email.Type,
+//                Email.Address,
+//                Name.DisplayName,
+//                Name.FamilyName,
+//                Name.GivenName,
+//        )
+//    }.find()
+//    return result.map {
+//        VCard().apply {
+//            it.displayNamePrimary?.let {
+//                addFormattedName(FormattedName(it))
+//            }
+//            it.displayNameAlt?.let {
+//                addFormattedNameAlt(FormattedName(it))
+//            }
+//            it.nameList().forEach {
+//                structuredName = StructuredName().apply {
+//                    given = it.givenName
+//                    family = it.familyName
+//                    it.prefix?.let { prefixes.add(it) }
+//                    it.suffix?.let { suffixes.add(it) }
+//                }
+//            }
+//            it.phones().toList().forEach {
+//                addTelephoneNumber(Telephone(it.normalizedNumber ?: it.number
+//                ?: it.primaryValue).apply {
+//                    it.type?.let {
+//                        this.addParameter("type", it.name)
+//                    }
+//                })
+//            }
+//            it.emails().toList().map {
+//                addEmail(Email(it.address ?: it.primaryValue).apply {
+//                    it.type?.let {
+//                        this.addParameter("type", it.name)
+//                    }
+//                })
+//            }
+//        }
+//    }.first()
 }
 
 fun VCard.attachment(): AttachmentInput {

@@ -22,35 +22,35 @@ class Settings {
     val lastUsedReactions = mutableStateListOf<String>()
 
     fun init() {
-        notifications = BotStacksChat.shared.prefs.getString("notifications", null)
+        notifications = BotStacksChat.shared.prefs.getStringOrNull("notifications")
             ?.let { NotificationSetting.valueOf(it) }
             ?: NotificationSetting.all
-        availabilityStatus = BotStacksChat.shared.prefs.getString("availability", null)
+        availabilityStatus = BotStacksChat.shared.prefs.getStringOrNull("availability")
             ?.let { OnlineStatus.valueOf(it) }
             ?: OnlineStatus.Online
         blocked =
-            BotStacksChat.shared.prefs.getStringSet("blocked", mutableSetOf())?.toMutableStateList()
-                ?: mutableStateListOf()
+            BotStacksChat.shared.prefs.getStringOrNull("blocked")
+                ?.split(", ")?.toSet()?.toMutableStateList() ?: mutableStateListOf()
         muted =
-            BotStacksChat.shared.prefs.getStringSet("muted", mutableSetOf())?.toMutableStateList()
-                ?: mutableStateListOf()
+            BotStacksChat.shared.prefs.getStringOrNull("muted")
+                ?.split(", ")?.toSet()?.toMutableStateList() ?: mutableStateListOf()
         lastUsedReactions.clear()
         lastUsedReactions.addAll(
-            BotStacksChat.shared.prefs.getString("reactions", "😀,🤟,❤️,🔥,🤣")!!.split(",")
+            BotStacksChat.shared.prefs.getString("reactions", "😀,🤟,❤️,🔥,🤣").split(",")
         )
     }
 
 
     fun setNotifications(setting: NotificationSetting, isSync: Boolean = false) {
         this.notifications = setting
-        BotStacksChat.shared.prefs.edit().putString("notifications", setting.rawValue).apply()
+        BotStacksChat.shared.prefs.putString("notifications", setting.rawValue)
         if (isSync) return
         launch { bg { API.updateNotifications(setting) } }
     }
 
     fun setAvailability(setting: OnlineStatus, isSync: Boolean = false) {
         this.availabilityStatus = setting
-        BotStacksChat.shared.prefs.edit().putString("availability", setting.rawValue).apply()
+        BotStacksChat.shared.prefs.putString("availability", setting.rawValue)
         if (isSync) return
         launch { bg { API.updateAvailability(setting) } }
     }
@@ -59,11 +59,11 @@ class Settings {
         if (blocked) {
             if (!this.blocked.contains(uid)) {
                 this.blocked.add(uid)
-                BotStacksChat.shared.prefs.edit().putStringSet("blocked", this.blocked.toSet())
+                BotStacksChat.shared.prefs.putString("blocked", this.blocked.toSet().joinToString())
             }
         } else {
             this.blocked.remove(uid)
-            BotStacksChat.shared.prefs.edit().putStringSet("blocked", this.blocked.toSet())
+            BotStacksChat.shared.prefs.putString("blocked", this.blocked.toSet().toString())
         }
     }
 
@@ -71,11 +71,11 @@ class Settings {
         if (muted) {
             if (!this.muted.contains(uid)) {
                 this.muted.add(uid)
-                BotStacksChat.shared.prefs.edit().putStringSet("muted", this.muted.toSet())
+                BotStacksChat.shared.prefs.putString("muted", this.muted.toSet().joinToString())
             }
         } else {
             this.muted.remove(uid)
-            BotStacksChat.shared.prefs.edit().putStringSet("muted", this.muted.toSet())
+            BotStacksChat.shared.prefs.putString("muted", this.muted.toSet().joinToString())
         }
     }
 
@@ -87,7 +87,6 @@ class Settings {
         if (lastUsedReactions.size > 5) {
             lastUsedReactions.removeRange(5, lastUsedReactions.size - 1)
         }
-        BotStacksChat.shared.prefs.edit().putString("reactions", lastUsedReactions.joinToString { "," })
-            .apply()
+        BotStacksChat.shared.prefs.putString("reactions", lastUsedReactions.joinToString())
     }
 }

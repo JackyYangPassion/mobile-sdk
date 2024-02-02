@@ -4,7 +4,6 @@
 
 package ai.botstacks.sdk
 
-import android.util.Log
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloRequest
 import com.apollographql.apollo3.api.ApolloResponse
@@ -12,12 +11,9 @@ import com.apollographql.apollo3.api.Operation
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.interceptor.ApolloInterceptor
 import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
-import com.apollographql.apollo3.network.http.DefaultHttpEngine
 import com.apollographql.apollo3.network.http.LoggingInterceptor
 import com.apollographql.apollo3.network.ws.GraphQLWsProtocol
 import com.apollographql.apollo3.network.ws.WebSocketNetworkTransport
-import com.moczul.ok2curl.CurlInterceptor
-import com.moczul.ok2curl.logger.Logger
 import ai.botstacks.sdk.fragment.FUser
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.BotStacksChatStore
@@ -42,26 +38,23 @@ import ai.botstacks.sdk.type.UpdateMessageInput
 import ai.botstacks.sdk.type.UpdateProfileInput
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.ift
+import ai.botstacks.sdk.utils.uuid
+import com.apollographql.apollo3.api.http.HttpRequest
+import com.apollographql.apollo3.api.http.HttpResponse
+import com.apollographql.apollo3.network.http.HttpInterceptor
+import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import java.security.MessageDigest
-import java.util.UUID
 import kotlin.properties.Delegates
 
-fun String.sha256(): String {
-    val bytes = this.toByteArray()
-    val md = MessageDigest.getInstance("SHA-256")
-    val digest = md.digest(bytes)
-    return digest.fold("", { str, it -> str + "%02x".format(it) })
-}
+
 
 object Server {
     val host = SdkConfig.HOST
@@ -74,7 +67,9 @@ object API {
     lateinit var deviceId: String
 
     var authToken: String? by Delegates.observable(null) { property, oldValue, newValue ->
-        BotStacksChat.shared.prefs.edit().putString("auth-token", newValue).apply()
+        if (newValue != null) {
+            BotStacksChat.shared.prefs.putString("auth-token", newValue)
+        }
         client.subscriptionNetworkTransport
     }
 
@@ -95,27 +90,21 @@ object API {
                 .serverUrl(Server.ws + "/graphql")
                 .build()
         )
-        .httpEngine(
-            DefaultHttpEngine(
-                OkHttpClient.Builder()
-                    .addInterceptor(Interceptor { chain ->
-                        val request = chain.request().newBuilder()
-                            .apply {
-                                authToken?.let { addHeader("Authorization", "Bearer $it") }
-                                addHeader("X-API-Key", BotStacksChat.shared.apiKey)
-                                addHeader("X-Device-ID", deviceId)
-                                addHeader("Referer", BotStacksChat.shared.packageName)
-                            }.build()
-                        chain.proceed(request)
-                    })
-                    .addInterceptor(CurlInterceptor(logger = object : Logger {
-                        override fun log(message: String) {
-                            Log.v("BotStacksChat", message)
-                        }
-                    }))
-                    .build()
-            )
-        )
+        .addHttpInterceptor(object : HttpInterceptor {
+            override suspend fun intercept(
+                request: HttpRequest,
+                chain: HttpInterceptorChain
+            ): HttpResponse {
+                return chain.proceed(
+                    request.newBuilder().apply {
+                        authToken?.let { addHeader("Authorization", "Bearer $it") }
+                        addHeader("X-API-Key", BotStacksChat.shared.apiKey)
+                        addHeader("X-Device-ID", API.deviceId)
+                        addHeader("Referer",  BotStacksChat.shared.appIdentifier)
+                    }.build()
+                )
+            }
+        })
         .addHttpInterceptor(LoggingInterceptor())
         .addInterceptor(object : ApolloInterceptor {
             override fun <D : Operation.Data> intercept(
@@ -141,14 +130,13 @@ object API {
 
 
     fun init() {
-        var deviceId = BotStacksChat.shared.prefs
-            .getString("device-id", null)
+        var deviceId = BotStacksChat.shared.prefs.getStringOrNull("device-id")
         if (deviceId == null) {
-            deviceId = UUID.randomUUID().toString()
-            BotStacksChat.shared.prefs.edit().putString("device-id", deviceId).apply()
+            deviceId = uuid()
+            BotStacksChat.shared.prefs.putString("device-id", deviceId)
         }
         this.deviceId = deviceId
-        this.authToken = BotStacksChat.shared.prefs.getString("auth-token", null)
+        this.authToken = BotStacksChat.shared.prefs.getStringOrNull("auth-token")
         if (authToken != null) {
             subscribe()
         }
@@ -213,7 +201,13 @@ object API {
                 invites = Optional.presentIfNotNull(invites)
             )
         )
-    ).execute().dataOrThrow().createGroup?.fChat?.let { Chat.get(it) }
+    ).execute().dataOrThrow().createGroup?.fChat?.let {
+        val chat = Chat.get(it)
+        chat.membership?.let { membership ->
+            BotStacksChatStore.current.memberships.add(membership)
+        }
+        chat
+    }
 
     suspend fun deleteChat(id: String) =
         client.mutation(DeleteGroupMutation(id)).execute().data?.deleteGroup
@@ -307,7 +301,8 @@ object API {
         }
     }
 
-    val subscriptionScope = CoroutineScope(Dispatchers.IO)
+    private val subscriptionScope = CoroutineScope(Dispatchers.IO)
+
     fun subscribe() {
         subscriptionScope.launch {
             client.subscription(CoreSubscription()).toFlow().collectLatest {

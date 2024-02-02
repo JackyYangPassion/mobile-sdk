@@ -38,4 +38,4 @@ plugins {
 
 rootProject.name = "botstackschat"
 include(":sdk")
-include(":sample")
+include(":sample-android")

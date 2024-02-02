@@ -32,8 +32,8 @@ fun genCurrentUser() = User.current ?: genU().let {
 fun genU(): User {
     val u = User(uuid())
     u.username = faker.name().username()
-    u.avatar = ift(Random.nextBoolean(), randomImage(), null)
-    u.status = OnlineStatus.values().random()
+    u.avatar = randomImage()
+    u.status = OnlineStatus.entries.toTypedArray().random()
     u.statusMessage = ift(Random.nextBoolean(), faker.lorem().sentence(), null)
     u.lastSeen = ift(
         Random.nextBoolean(),
@@ -82,7 +82,7 @@ fun genG(): Chat {
     g._private = Random.nextBoolean()
     val members = randomUsers().let { ift(it.isEmpty(), random(40, ::genU), it) }
         .map {
-            Member(it.id, g.id, Clock.System.now(), MemberRole.values().random())
+            Member(it.id, g.id, Clock.System.now(), MemberRole.entries.toTypedArray().random())
         }
     if (Random.nextBoolean())
         g.invites.addAll(randomAmount(members).map { it.user })
@@ -97,7 +97,7 @@ fun genA(
         AttachmentType.file
     ).random()
 ): FMessage.Attachment {
-    var url = when (kind) {
+    val url = when (kind) {
         AttachmentType.video ->
             "https://download.samplelib.com/mp4/sample-5s.mp4"
 
@@ -163,18 +163,18 @@ fun genChatextMessage(user: User = randomUser(), chat: String = genG().id) = Mes
     updateText(faker.lorem().paragraph())
     reactions.addAll(
         random(
-            4,
-            {
-                (faker.emoji().smiley() to randomAmount(randomUsers()).map { it.id }
-                    .toMutableStateList())
-            })
+            4
+        ) {
+            (faker.emoji().smiley() to randomAmount(randomUsers()).map { it.id }
+                .toMutableStateList())
+        }
     )
     currentReaction = reactions.firstOrNull()?.first
     replyCount = if (Random.nextBoolean()) Random.nextInt(20) else 0
 }
 
 fun genRepliesMessage() = genChatextMessage(chat = genG().id).apply {
-    replies.items.addAll(random(4, { genChatextMessage(chat = this.chatID) }))
+    replies.items.addAll(random(4) { genChatextMessage(chat = this.chatID) })
     replyCount = replies.items.size
 }
 

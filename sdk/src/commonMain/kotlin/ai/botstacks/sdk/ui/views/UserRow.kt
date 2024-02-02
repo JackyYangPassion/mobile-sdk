@@ -25,8 +25,7 @@ fun UserRow(
 ) {
     UserRow(
         modifier = modifier,
-        url = user.avatar,
-        onlineStatus = user.status,
+        avatar = { Avatar(type = AvatarType.User(user.avatar, user.status)) },
         displayName = user.displayNameFb,
         onClick = onClick
     )
@@ -36,18 +35,32 @@ fun UserRow(
 fun UserRow(
     modifier: Modifier = Modifier,
     url: String?,
-    onlineStatus: OnlineStatus = OnlineStatus.UNKNOWN__,
     displayName: String,
     onClick: () -> Unit,
 ) {
+    UserRow(
+        modifier = modifier,
+        avatar = { Avatar(type = AvatarType.User(url)) },
+        displayName = displayName,
+        onClick = onClick
+    )
+}
+
+@Composable
+fun UserRow(
+    modifier: Modifier = Modifier,
+    displayName: String,
+    avatar: @Composable () -> Unit,
+    onClick: () -> Unit,
+) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .clickable { onClick() }
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(vertical = 10.dp).then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Avatar(type = AvatarType.User(url, onlineStatus))
+        avatar()
         Text(
             text = displayName,
             fontStyle = BotStacks.fonts.body1,

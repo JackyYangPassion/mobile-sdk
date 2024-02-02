@@ -4,93 +4,27 @@
 
 package ai.botstacks.sdk
 
-import android.Manifest
-import android.content.Context
-import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.util.Log
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
-import coil.ImageLoader
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.async
-import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.op
 import ai.botstacks.sdk.utils.opbg
-import ai.botstacks.sdk.utils.retryIO
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.json.JSONObject
 
-@Stable
-class BotStacksChat private constructor() {
+abstract class BotStacksChat {
+    var loggingIn by mutableStateOf(false)
+    var loaded by mutableStateOf(false)
+    var isUserLoggedIn by mutableStateOf(false)
 
-    val TAG = "BotStacksChat"
-
-    lateinit var appContext: Context
-    lateinit var prefs: SharedPreferences
-    lateinit var apiKey: String
-    lateinit var imageLoader: ImageLoader
-    lateinit var packageName: String
+    abstract val prefs: Settings
 
     var onLogout: (() -> Unit)? = null
 
-    fun setup(appContext: Context, apiKey: String, delayLoad: Boolean = false) {
-        this.appContext = appContext
-        this.prefs = appContext.getSharedPreferences("botstackschat", Context.MODE_PRIVATE)
-        this.apiKey = apiKey
-        this.packageName = appContext.packageName
-        BotStacksChatStore.current.init()
-        BotStacksChatStore.current.contacts.requestContacts =
-            ContextCompat.checkSelfPermission(
-                appContext,
-                Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
-        Log.v(TAG, "BotStacksChat Setup")
-        if (!delayLoad) {
-            Log.v(TAG, "Launch load")
-            scope.launch {
-                Log.v(TAG, "Launching load in bg")
-                op({
-                    bg {
-                        load()
-                    }
-                }) {
 
-                }
-            }
-        }
-    }
-
-    val scope = CoroutineScope(Dispatchers.Main)
-
-    var loaded by mutableStateOf(false)
-    var isUserLoggedIn by mutableStateOf(false)
-    private var appMeta: JSONObject? = null
-    var config: JSONObject? = null
-
-    private var didStartLoading = false
-    suspend fun load() {
-        Log.v(TAG, "Start load")
-        if (!this::apiKey.isInitialized) {
-            throw Error("You must initialize BotStacksChat with BotStacksChat.init before calling load")
-        }
-        if (didStartLoading) throw Error("SDK Already initialized")
-        didStartLoading = true
-        retryIO {
-            BotStacksChatStore.current.loadAsync()
-            isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
-            loaded = true
-        }
-    }
-
-    var loggingIn by mutableStateOf(false)
     suspend fun login(
         accessToken: String? = null,
         userId: String,
@@ -146,7 +80,7 @@ class BotStacksChat private constructor() {
     }
 
     companion object {
-        val shared = BotStacksChat()
+        val shared = BotStacksChatPlatform()
 
         suspend fun load() {
             shared.load()
@@ -175,4 +109,12 @@ class BotStacksChat private constructor() {
             }
         }
     }
+}
+
+expect class BotStacksChatPlatform(): BotStacksChat {
+    val apiKey: String
+    val appIdentifier: String
+    val scope: CoroutineScope
+
+    suspend fun load()
 }

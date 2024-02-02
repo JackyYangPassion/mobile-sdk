@@ -1,14 +1,13 @@
 package ai.botstacks.sample
 
+import ai.botstacks.sdk.navigation.BotstacksNavigation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.BotStacksChatRoutes
 import androidx.activity.enableEdgeToEdge
 
 class MainActivity : ComponentActivity() {
@@ -19,25 +18,20 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             BotStacksChatContext {
                 NavHost(navController = navController, startDestination = "splash") {
-                    val openChat = {
-                        navController.navigate("chats")
-                    }
+                    val openBotstacks = { navController.navigate("botstacks") }
+                    val openLogin = { navController.navigate("login") }
+
                     composable("splash") {
-                        Splash(openChat = openChat, openLogin = {
-                            navController.navigate("login")
-                        })
+                        Splash(openChat = openBotstacks, openLogin = openLogin)
                     }
                     composable("login") {
-                        Login(openChat) {
+                        Login(openBotstacks) {
 
                         }
                     }
-                    BotStacksChatRoutes(
-                        navController = navController,
-                        navGraphBuilder = this,
-                        onLogout = {
-                            navController.navigate("login")
-                        })
+                    composable("botstacks") {
+                        BotstacksNavigation { navController.navigate("login") }
+                    }
                 }
             }
         }

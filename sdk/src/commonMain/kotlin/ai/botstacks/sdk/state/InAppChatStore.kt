@@ -8,24 +8,25 @@ import ai.botstacks.sdk.API
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.utils.Monitoring
-import android.util.Log
+import ai.botstacks.sdk.utils.log
+import ai.botstacks.sdk.utils.uuid
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import java.util.UUID
 import kotlin.properties.Delegates
 
 @Stable
-data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
+data class BotStacksChatStore(val id: String = uuid()) {
 
     //    val messages = ThreadPager()
     val favorites = FavoritesPager()
     val settings = Settings()
     val network = ChannelsPager()
     val contacts = ContactsPager()
+    val users = UsersPager()
     val invites = mutableStateMapOf<String, MutableList<User>>()
     val cache = Caches()
     val memberships = mutableStateListOf<Member>()
@@ -42,19 +43,20 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
     var loading by mutableStateOf(false)
 
     var currentUserID: String? by Delegates.observable(
-        BotStacksChat.shared.prefs.getString(
+        BotStacksChat.shared.prefs.getStringOrNull(
             "user-id",
-            null
         )
     ) { _, _, newValue ->
-        Log.d("iac", "user newV=$newValue")
-        BotStacksChat.shared.prefs.edit().putString("user-id", newValue).apply()
+        log("user newV=$newValue")
+        if (newValue != null) {
+            BotStacksChat.shared.prefs.putString("user-id", newValue)
+        }
     }
 
     var user by mutableStateOf<User?>(null)
 
     fun init() {
-        Monitoring.setup(BotStacksChat.shared.appContext)
+        Monitoring.setup()
         API.init()
         settings.init()
     }
@@ -62,7 +64,7 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
     suspend fun loadAsync() {
         currentUserID ?: return
         val user = API.me()
-        Log.d("iac", "user id ${user.id}")
+        log("user id ${user.id}")
         User.current = user
         val fcmToken = this.fcmToken
         if (fcmToken != null) {
@@ -101,13 +103,13 @@ data class BotStacksChatStore(val id: String = UUID.randomUUID().toString()) {
         when (list) {
             ChatList.dms -> {
                 val it = dms.sumOf { it.unreadCount }
-                Log.d("iac", "Dms unread count $it")
+                log("Dms unread count $it")
                 it
             }
 
             ChatList.groups -> {
                 val it = groups.sumOf { it.unreadCount }
-                Log.d("iac", "groups unread count $it")
+                log("groups unread count $it")
                 it
             }
         }

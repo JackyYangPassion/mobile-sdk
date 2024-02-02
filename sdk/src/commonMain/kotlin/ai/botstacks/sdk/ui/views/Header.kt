@@ -98,6 +98,17 @@ object HeaderDefaults {
     }
 
     @Composable
+    fun CreateAction(onClick: Fn) {
+        Pressable(onClick = onClick) {
+            Text(
+                text = "Create",
+                fontStyle = BotStacks.fonts.button1,
+                color = colorScheme.primary,
+            )
+        }
+    }
+
+    @Composable
     fun MenuAction(onClick: Fn) {
         HeaderButton(onClick = onClick) {
             Icon(

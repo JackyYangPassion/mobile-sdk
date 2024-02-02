@@ -2,8 +2,7 @@
   ~ Copyright (c) 2023.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -16,16 +15,4 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
-    <application>
-
-
-        <activity
-            android:name="ai.botstacks.sdk.BotStacksChatActivity"
-            android:configChanges="screenLayout|orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-
-                <meta-data android:name="io.sentry.auto-init" android:value="false" />
-
-    </application>
 </manifest>
