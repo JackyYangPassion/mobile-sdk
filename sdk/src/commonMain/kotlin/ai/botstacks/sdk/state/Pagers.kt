@@ -21,6 +21,12 @@ data class ChannelsPager(val list: String = "channels") : Pager<Chat>() {
     }
 }
 
+@Stable
+data class UsersPager(val list: String = "users") : Pager<User>() {
+    override suspend fun load(skip: Int, limit: Int): List<User> {
+        return API.getUsers(skip, limit)
+    }
+}
 
 @Stable
 data class ContactsPager(val list: String = "contacts") : Pager<User>() {

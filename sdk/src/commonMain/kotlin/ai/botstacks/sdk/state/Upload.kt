@@ -30,6 +30,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.content.PartData
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlin.coroutines.Continuation
@@ -49,7 +50,7 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
     var error by mutableStateOf<Error?>(null)
 
     private var _await: Continuation<String>? = null
-    suspend fun await() = suspendCoroutine<String> { cont ->
+    suspend fun await() = suspendCancellableCoroutine { cont ->
         url?.let {
             cont.resume(it)
         } ?: error?.let {

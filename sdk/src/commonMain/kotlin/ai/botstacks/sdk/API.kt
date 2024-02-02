@@ -201,7 +201,13 @@ object API {
                 invites = Optional.presentIfNotNull(invites)
             )
         )
-    ).execute().dataOrThrow().createGroup?.fChat?.let { Chat.get(it) }
+    ).execute().dataOrThrow().createGroup?.fChat?.let {
+        val chat = Chat.get(it)
+        chat.membership?.let { membership ->
+            BotStacksChatStore.current.memberships.add(membership)
+        }
+        chat
+    }
 
     suspend fun deleteChat(id: String) =
         client.mutation(DeleteGroupMutation(id)).execute().data?.deleteGroup

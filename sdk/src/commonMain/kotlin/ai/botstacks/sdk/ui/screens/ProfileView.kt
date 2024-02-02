@@ -19,6 +19,7 @@ import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genImageMessage
 import ai.botstacks.sdk.utils.genU
 import ai.botstacks.sdk.utils.random
+import ai.botstacks.sdk.utils.ui.keyboardAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -87,6 +88,7 @@ private fun EditProfileScreen(
         }
     }
 
+    val keyboardVisible by keyboardAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -97,8 +99,10 @@ private fun EditProfileScreen(
                 endAction = {
                     HeaderDefaults.SaveAction {
                         composeScope.launch {
-                            keyboardController?.hide()
-                            delay(300.milliseconds)
+                            if (keyboardVisible) {
+                                keyboardController?.hide()
+                                delay(300.milliseconds)
+                            }
                             saving = true
                         }
                     }

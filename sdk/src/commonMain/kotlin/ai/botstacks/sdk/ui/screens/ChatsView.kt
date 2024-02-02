@@ -46,10 +46,9 @@ fun ChatsView(
             Header(
                 icon = { HeaderDefaults.Logo() },
                 state = headerState,
-                onCompose = {},
-                onBackClick = {
-                    headerState.searchActive = false
-                }.takeIf { headerState.searchActive },
+                onCompose = onCreateChannel,
+                onBackClick = { headerState.searchActive = false }
+                    .takeIf { headerState.searchActive },
                 menu = {
                     label(onClick = openFavorites) {
                         Text(text = "Favorite Messages", fontStyle = BotStacks.fonts.button2)

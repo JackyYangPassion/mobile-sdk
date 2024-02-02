@@ -5,9 +5,13 @@ import ai.botstacks.sdk.navigation.LocalPlatformNavigator
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.screens.ChatRoute
 import ai.botstacks.sdk.ui.screens.ChatsView
+import ai.botstacks.sdk.ui.screens.CreateChannelScreen
 import ai.botstacks.sdk.ui.screens.FavoritesView
 import ai.botstacks.sdk.ui.screens.ProfileView
+import ai.botstacks.sdk.ui.screens.SelectChannelUsersScreen
+import ai.botstacks.sdk.ui.views.CreateChannelState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
 
@@ -19,7 +23,7 @@ data object ChatListScreen : Screen {
         val navigator = LocalPlatformNavigator.current
         ChatsView(
             openChat = { navigator.push(ChatScreen(it.id)) },
-            onCreateChannel = {},
+            onCreateChannel = { navigator.push(CreateChannelScreen) },
             editProfile = { navigator.push(EditProfileScreen) },
             openFavorites = { navigator.push(FavoriteMessagesScreen) },
             onConfirmedLogout = { BotStacksChat.logout() }
@@ -40,6 +44,40 @@ data class ChatScreen(val chatId: String) : Screen {
             openInvite = {},
             openProfile = { navigator.push(UserDetailsScreen(it)) },
             openReply = {}
+        )
+    }
+}
+
+data object CreateChannelScreen : Screen {
+    override val key = uniqueScreenKey
+
+    val state = CreateChannelState()
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalPlatformNavigator.current
+
+        CreateChannelScreen(
+            state = state,
+            onBackClicked = { navigator.pop() },
+            onChannelCreated = {
+                navigator.replaceAll(listOf(ChatListScreen, ChatScreen(it)))
+            },
+            onSelectUsers = { navigator.push(SelectUsersScreen(state)) }
+        )
+    }
+}
+
+private data class SelectUsersScreen(val state: CreateChannelState) : Screen {
+    override val key = uniqueScreenKey
+
+    @Composable
+    override fun Content() {
+        val navigator = LocalPlatformNavigator.current
+
+        SelectChannelUsersScreen(
+            state = state,
+            onBackClicked = { navigator.pop() }
         )
     }
 }

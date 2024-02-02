@@ -26,6 +26,7 @@ data class BotStacksChatStore(val id: String = uuid()) {
     val settings = Settings()
     val network = ChannelsPager()
     val contacts = ContactsPager()
+    val users = UsersPager()
     val invites = mutableStateMapOf<String, MutableList<User>>()
     val cache = Caches()
     val memberships = mutableStateListOf<Member>()

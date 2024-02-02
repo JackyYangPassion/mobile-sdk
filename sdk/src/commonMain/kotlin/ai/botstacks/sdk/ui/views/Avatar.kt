@@ -6,9 +6,12 @@ package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.resources.Res
+import ai.botstacks.sdk.ui.theme.BotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
+import ai.botstacks.sdk.ui.theme.dayNightColor
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -58,6 +62,15 @@ sealed interface AvatarSize {
 
 object AvatarDefaults {
     val Size: AvatarSize = AvatarSize.Small
+
+    val BackgroundColor: Color
+        @Composable get() = with (LocalBotStacksColorPalette.current) {
+            dayNightColor(light._100, dark._500)
+        }
+
+    val ContentColor: Color
+        @Composable get() = BotStacks.colorScheme.onSurface
+
 }
 
 sealed interface AvatarType {
@@ -89,17 +102,23 @@ fun Avatar(
     modifier: Modifier = Modifier,
     size: AvatarSize = AvatarDefaults.Size,
     user: User,
+    showOnlineStatus: Boolean = true,
+    isSelected: Boolean = false,
+    isRemovable: Boolean = false,
 ) {
+    val showIndicator = showOnlineStatus && !isSelected && !isRemovable
     val type = remember(user.avatar, user.status) {
         AvatarType.User(
             url = user.avatar,
-            status = user.status
+            status = if (showIndicator) user.status else OnlineStatus.UNKNOWN__
         )
     }
     Avatar(
         modifier = modifier,
         type = type,
         size = size,
+        isSelected = isSelected,
+        isRemovable = isRemovable,
     )
 }
 
@@ -126,19 +145,20 @@ fun Avatar(
     )
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
+    backgroundColor: Color = AvatarDefaults.BackgroundColor,
+    contentColor: Color = AvatarDefaults.ContentColor,
     size: AvatarSize = AvatarDefaults.Size,
     type: AvatarType,
+    isSelected: Boolean = false,
+    isRemovable: Boolean = false,
 ) {
-    val palette = LocalBotStacksColorPalette.current
-
     Box(
         modifier = modifier
             .size(size.value)
-            .background(color = palette.light._100, shape = CircleShape),
+            .background(color = backgroundColor, shape = CircleShape),
     ) {
         when (type) {
             is AvatarType.Channel -> {
@@ -177,7 +197,7 @@ fun Avatar(
                             .padding(dimens.inset)
                             .clip(CircleShape)
                             .align(Alignment.Center),
-                        colorFilter = ColorFilter.tint(palette.dark._900)
+                        colorFilter = ColorFilter.tint(contentColor)
                     )
                 }
             }
@@ -217,13 +237,21 @@ fun Avatar(
                             .padding(dimens.grid.x3)
                             .clip(CircleShape)
                             .align(Alignment.Center),
-                        colorFilter = ColorFilter.tint(palette.dark._900)
+                        colorFilter = ColorFilter.tint(contentColor)
                     )
                 }
 
-                if (isVisibleStatus) {
+                if (isVisibleStatus || isSelected || isRemovable) {
                     Layout(
-                        content = { OnlineStatusIndicator(status = status) }
+                        content = {
+                            if (isSelected) {
+                                SelectedBadge()
+                            } else if (isRemovable) {
+                                RemoveIndicator()
+                            } else {
+                                OnlineStatusIndicator(status = status)
+                            }
+                        }
                     ) { measurables, constraints ->
                         val dot = measurables[0].measure(constraints)
                         layout(
