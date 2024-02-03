@@ -76,7 +76,7 @@ fun ChatDrawerHeader(chat: Chat) {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ChatDrawer(
-    chat: Chat?, state: ModalBottomSheetState, hide: () -> Unit, openEdit: (Chat) -> Unit,
+    chat: Chat?, state: ModalBottomSheetState, hide: () -> Unit, openEdit: () -> Unit,
     openInvite: (Chat) -> Unit,
     openProfile: (User) -> Unit,
     back: () -> Unit,

@@ -98,13 +98,11 @@ fun Chat.update(
     op({
         bg {
             API.updateChat(
-                UpdateGroupInput(
-                    id = id,
-                    name = Optional.present(name),
-                    description = Optional.present(description),
-                    image = Optional.present(image),
-                    _private = Optional.present(_private)
-                )
+                id = id,
+                name = name.orEmpty(),
+                description = description,
+                image = image,
+                private = _private ?: false,
             )
         }
         updating = false

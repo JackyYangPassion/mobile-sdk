@@ -34,7 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun ChatDrawerButtons(
     chat: Chat,
-    openEdit: (Chat) -> Unit,
+    openEdit: () -> Unit,
     openInvite: (Chat) -> Unit,
     dismiss: () -> Unit,
     back: () -> Unit
@@ -57,7 +57,7 @@ fun ChatDrawerButtons(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.clickable {
                         dismiss()
-                        openEdit(chat)
+                        openEdit()
                     }) {
                     Image(
                         painter = painterResource(Res.Drawables.Filled.Gear),

@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-package ai.botstacks.sdk.ui.screens
+package ai.botstacks.sdk.ui.screens.profile
 
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.state.Upload

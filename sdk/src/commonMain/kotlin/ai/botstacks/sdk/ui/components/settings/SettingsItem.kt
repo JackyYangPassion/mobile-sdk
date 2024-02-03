@@ -173,7 +173,6 @@ fun SettingsSection(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.staticGrid.x2),
     ) {
         val scope = SettingsSectionScopeImpl()
             .apply(content)

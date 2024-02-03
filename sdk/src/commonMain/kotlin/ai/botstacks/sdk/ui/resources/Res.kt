@@ -74,6 +74,7 @@ internal object Res {
             val Pause = basicDrawable("pause_fill")
             val Play = basicDrawable("play_fill")
             val PlusCircle = basicDrawable("plus_circle_fill")
+            val Speaker = basicDrawable("speaker_fill")
             val Star = basicDrawable("star_fill")
             val Television = basicDrawable("television_fill")
             val Trash = basicDrawable("trash_fill")
@@ -85,6 +86,7 @@ internal object Res {
 
         object Outlined {
             val AddressBook = basicDrawable("address_book")
+            val AddUser = basicDrawable("add_user")
             val Camera = basicDrawable("camera")
             val CaretLeft = basicDrawable("caret_left")
             val ChatDots = basicDrawable("chat_dots")
@@ -130,7 +132,7 @@ internal object Res {
                 setOf(
                     ResourceItem(
                         setOf(ThemeQualifier.DARK),
-                        "drawable-dark/bostacks_logo.xml"
+                        "drawable/bostacks_logo.xml"
                     ),
                     ResourceItem(
                         setOf(),

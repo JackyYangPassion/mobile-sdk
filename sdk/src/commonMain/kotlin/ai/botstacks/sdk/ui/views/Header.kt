@@ -134,7 +134,6 @@ class HeaderState @OptIn(ExperimentalFoundationApi::class) constructor(
     var searchActive by mutableStateOf(isSearchActive)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun rememberHeaderState(
     isSearchVisible: Boolean = false,
@@ -144,7 +143,6 @@ fun rememberHeaderState(
 ) = remember(isSearchVisible, showSearchClear) {
     HeaderState(isSearchVisible, isSearchActive, showSearchClear, searchQuery)
 }
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Header(
     title: String,
@@ -170,7 +168,7 @@ fun Header(
     )
 }
 
-@ExperimentalFoundationApi
+
 @Composable
 fun Header() {
     Header(icon = { HeaderDefaults.Logo() })

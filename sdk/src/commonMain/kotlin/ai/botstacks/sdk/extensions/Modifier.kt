@@ -11,6 +11,9 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
@@ -72,4 +75,12 @@ fun Modifier.addIf(condition: Boolean, other: @Composable () -> Modifier): Modif
 
 fun <T> Modifier.addIfNonNull(value: T?, other: @Composable (T) -> Modifier): Modifier = composed {
     then(if (value != null) other(value) else Modifier)
+}
+
+fun Modifier.onEnter(block: () -> Unit) = this.onKeyEvent {
+    if (it.key == Key.Enter) {
+        block()
+        return@onKeyEvent true
+    }
+    false
 }

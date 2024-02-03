@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-package ai.botstacks.sdk.ui.screens
+package ai.botstacks.sdk.ui.screens.chats
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,14 +14,17 @@ import ai.botstacks.sdk.API
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
+import ai.botstacks.sdk.ui.screens.NotFound
 import ai.botstacks.sdk.ui.views.Header
 import ai.botstacks.sdk.ui.views.Spinner
 import ai.botstacks.sdk.utils.Monitoring
 
 
 @Composable
-fun ChatRoute(
-    gid: String? = null, uid: String? = null, mid: String? = null,
+fun ConversationRouter(
+    gid: String? = null,
+    uid: String? = null,
+    mid: String? = null,
     openProfile: (User) -> Unit,
     openInvite: (Chat) -> Unit,
     openEditChat: (Chat) -> Unit,
@@ -82,9 +85,9 @@ fun ChatRoute(
     })
 
     chat?.let {
-        ChatChat(
+        ConversationScreen(
             chat = it, openProfile = openProfile, openInvite = openInvite, openReply = openReply,
-            openEdit = openEditChat, back = back
+            openEdit = { openEditChat(it) }, back = back
         )
     } ?: if (notFound) NotFound(back = back) else Column {
         Header(title = "Chat")
