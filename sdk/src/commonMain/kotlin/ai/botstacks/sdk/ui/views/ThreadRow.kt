@@ -4,33 +4,32 @@
 
 package ai.botstacks.sdk.ui.views
 
+import ai.botstacks.sdk.state.Chat
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.ui.resources.Res
+import ai.botstacks.sdk.utils.relativeTimeString
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.ui.BotStacks.colorScheme
-import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.resources.Res
-import ai.botstacks.sdk.utils.timeAgo
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaLocalDateTime
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -89,7 +88,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
         Column(horizontalAlignment = Alignment.End) {
             chat.latest?.let {
                 Text(
-                    text = tsString(it.createdAt), fontStyle = fonts.body1, color = colorScheme.caption
+                    text = it.createdAt.relativeTimeString(), fontStyle = fonts.body1, color = colorScheme.caption
                 )
             }
             if (chat.isUnread) {
@@ -99,14 +98,14 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
     }
 }
 
-fun tsString(i: Instant): String {
-    if (i >= Clock.System.now().minus(60.seconds * 60 * 3)) {
-        return i.timeAgo()
-    } else if (i > (Clock.System.now().minus(1.days.inWholeSeconds.seconds))) {
-        return i.toLocalDateTime(TimeZone.UTC)
-            .toJavaLocalDateTime()
-            .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-    } else {
-        return i.timeAgo()
-    }
-}
+//fun tsString(i: Instant): String {
+//    if (i >= Clock.System.now().minus(60.seconds * 60 * 3)) {
+//        return i.relativeTimeString()
+//    } else if (i > (Clock.System.now().minus(1.days.inWholeSeconds.seconds))) {
+//        return i.toLocalDateTime(TimeZone.UTC)
+//            .toJavaLocalDateTime()
+//            .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+//    } else {
+//        return i.timeAgo()
+//    }
+//}

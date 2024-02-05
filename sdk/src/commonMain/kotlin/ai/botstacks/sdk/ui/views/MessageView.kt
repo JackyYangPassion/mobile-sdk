@@ -186,6 +186,6 @@ fun MessageTop(msg: Message) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = msg.createdAt.timeAgo(), fontStyle = fonts.caption2, color = colorScheme.caption)
+        Text(text = msg.createdAt.relativeTimeString(), fontStyle = fonts.caption2, color = colorScheme.caption)
     }
 }

@@ -4,6 +4,7 @@ import org.jetbrains.compose.resources.DensityQualifier
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.ResourceItem
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.ThemeQualifier
 import org.jetbrains.compose.resources.readResourceBytes
 
@@ -27,6 +28,17 @@ internal object Res {
                 setOf(),
                 "drawable/$name$extension"
             )
+        )
+    )
+
+    private fun string(name: String) = StringResource(
+        "string:$name",
+        key = name,
+        items = setOf(
+            ResourceItem(
+                setOf(),
+                "values/strings.xml"
+            ),
         )
     )
 

@@ -56,7 +56,7 @@ fun ChatPlaceholder(modifier: Modifier = Modifier) {
             .size(50)
     ) {
         Icon(
-            painter =  BotStacks.assets.chat?.let { painterResource(id = it) } ?: painterResource(Res.Drawables.Filled.UsersThree),
+            painter =  BotStacks.assets.chat?.let { painterResource(it) } ?: painterResource(Res.Drawables.Filled.UsersThree),
             contentDescription = "Chat icon",
             modifier = Modifier.fillMaxSize(0.5f)
         )
