@@ -3,7 +3,6 @@
 build/
 release
 gpp.json
-google-services.json
 
 
 
@@ -38,3 +37,6 @@ google-services.json
 # Android Profiling
 *.hprof
 gen
+
+# iOS user data
+xcuserdata

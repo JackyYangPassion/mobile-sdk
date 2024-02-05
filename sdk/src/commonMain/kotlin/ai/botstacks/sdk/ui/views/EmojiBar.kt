@@ -4,7 +4,6 @@
 
 package ai.botstacks.sdk.ui.views
 
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,6 +27,7 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
+import co.touchlab.kermit.Logger
 import nl.coffeeit.aroma.emojipicker.presentation.ui.emoji.EmojiBottomSheet
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -46,7 +46,7 @@ fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
 @Composable
 fun EmojiBar(
     current: String? = null,
-    onEmoji: (String) -> Unit = { Log.d("EmojiBar", "Got Emoji" + it) }
+    onEmoji: (String) -> Unit = { Logger.d("Got Emoji $it") }
 ) {
     var keyboard = remember {
         false

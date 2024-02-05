@@ -20,6 +20,7 @@ coil3 = "3.0.0-alpha03"
 ktor = "2.3.8"
 calf = "0.3.1"
 voyager = "1.0.0"
+kermit = "2.0.3"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
@@ -48,6 +49,8 @@ apache-commons-text = { module = "org.apache.commons:commons-text", version = "1
 
 apollo3-runtime = { module = "com.apollographql.apollo3:apollo-runtime", version.ref = "apollo3" }
 apollo3-adapters = { module = "com.apollographql.apollo3:apollo-adapters", version.ref = "apollo3" }
+
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.5.0" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version = "1.6.2" }

@@ -5,6 +5,7 @@
 package ai.botstacks.sdk.utils
 
 
+import co.touchlab.kermit.Logger
 import io.sentry.kotlin.multiplatform.Sentry
 
 object Monitoring {
@@ -31,7 +32,7 @@ object Monitoring {
     }
 
     fun log(message: String, data: Map<String, Any>? = null) {
-        println(message + " ${data?.entries?.joinToString()}")
+        Logger.d(message + " ${data?.entries?.joinToString()}")
         Sentry.captureMessage(
             if (data != null) message + " Data: ${data.entries.joinToString()}" else message,
         )

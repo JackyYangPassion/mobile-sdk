@@ -8,7 +8,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Location
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,6 +49,7 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.*
+import co.touchlab.kermit.Logger
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.io.readByteArray
 import com.mohamedrejeb.calf.picker.FilePickerFileType
@@ -188,7 +188,7 @@ fun MediaActionSheet(
                         hide()
                     }
 
-                    else -> Log.d("IAC", "empty media")
+                    else -> Logger.d("empty media")
                 }
             }
         },
