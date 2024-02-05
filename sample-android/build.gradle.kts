@@ -12,6 +12,17 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(project(":sdk"))
+                
+                implementation(compose.runtime)
+                implementation(compose.runtimeSaveable)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.ui)
+                implementation(compose.animation)
+                implementation(compose.preview)
+                implementation(compose.uiTooling)
 
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.core)
@@ -107,6 +118,24 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             pickFirsts += listOf("META-INF/INDEX.LIST","META-INF/io.netty.versions.properties")
+        }
+    }
+}
+
+
+tasks {
+    afterEvaluate {
+        android.applicationVariants.forEach { variant ->
+            register("open${variant.name.capitalize()}") {
+                notCompatibleWithConfigurationCache("not supported")
+                dependsOn("install${variant.name.capitalize()}")
+
+                doLast {
+                    exec {
+                        commandLine( "adb shell monkey -p ${variant.applicationId} -c android.intent.category.LAUNCHER 1".split(" "))
+                    }
+                }
+            }
         }
     }
 }
