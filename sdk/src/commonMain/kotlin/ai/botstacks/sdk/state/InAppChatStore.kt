@@ -8,7 +8,6 @@ import ai.botstacks.sdk.API
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.utils.Monitoring
-import ai.botstacks.sdk.utils.log
 import ai.botstacks.sdk.utils.uuid
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -16,6 +15,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import co.touchlab.kermit.Logger
 import kotlin.properties.Delegates
 
 @Stable
@@ -47,7 +47,7 @@ data class BotStacksChatStore(val id: String = uuid()) {
             "user-id",
         )
     ) { _, _, newValue ->
-        log("user newV=$newValue")
+        Logger.d("user newV=$newValue")
         if (newValue != null) {
             BotStacksChat.shared.prefs.putString("user-id", newValue)
         }
@@ -64,7 +64,7 @@ data class BotStacksChatStore(val id: String = uuid()) {
     suspend fun loadAsync() {
         currentUserID ?: return
         val user = API.me()
-        log("user id ${user.id}")
+        Logger.d("user id ${user.id}")
         User.current = user
         val fcmToken = this.fcmToken
         if (fcmToken != null) {
@@ -103,13 +103,13 @@ data class BotStacksChatStore(val id: String = uuid()) {
         when (list) {
             ChatList.dms -> {
                 val it = dms.sumOf { it.unreadCount }
-                log("Dms unread count $it")
+                Logger.d("Dms unread count $it")
                 it
             }
 
             ChatList.groups -> {
                 val it = groups.sumOf { it.unreadCount }
-                log("groups unread count $it")
+                Logger.d("groups unread count $it")
                 it
             }
         }

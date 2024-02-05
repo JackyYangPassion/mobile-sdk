@@ -81,6 +81,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.serialization.json)
 
+                implementation(libs.kermit)
+
                 implementation(libs.ktor.client.core)
 
                 implementation(libs.sentry)

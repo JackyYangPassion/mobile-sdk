@@ -1,6 +1,5 @@
 package ai.botstacks.sdk.state
 
-import android.util.Log
 import ai.botstacks.sdk.CoreSubscription
 import ai.botstacks.sdk.MeSubscription
 import ai.botstacks.sdk.fragment.FChat
@@ -9,6 +8,7 @@ import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.fragment.FUser
 import ai.botstacks.sdk.type.DeleteEntity
 import ai.botstacks.sdk.type.EntityEventType
+import co.touchlab.kermit.Logger
 
 fun BotStacksChatStore.onCreateMessage(it: FMessage) {
     val chat = Chat.get(it.chat_id)
@@ -31,7 +31,7 @@ fun BotStacksChatStore.onCreateChat(it: FChat) {
 }
 
 fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
-    Log.v("Events", "Got Core Event ${event}")
+    Logger.v("Got Core Event $event")
     event.onDeleteEvent?.fDelete?.let {
         when (it.kind) {
             DeleteEntity.Message -> {
@@ -108,7 +108,7 @@ fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
 }
 
 fun BotStacksChatStore.onMeEvent(event: MeSubscription.Me) {
-    Log.v("Events", "Got Me Event ${event}")
+    Logger.v("Got Me Event $event")
     event.onInviteEvent?.let {
         val chat = Chat.get(it.fInvite.to.fChat)
         val user = User.get(it.fInvite.by.fUser)

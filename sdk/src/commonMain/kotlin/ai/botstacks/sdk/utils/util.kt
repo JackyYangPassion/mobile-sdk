@@ -5,7 +5,6 @@
 package ai.botstacks.sdk.utils
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.AnnotatedString
 import com.apollographql.apollo3.api.Optional
