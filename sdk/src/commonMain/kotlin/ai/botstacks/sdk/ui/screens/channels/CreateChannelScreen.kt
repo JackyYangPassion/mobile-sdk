@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.ui.screens
+package ai.botstacks.sdk.ui.screens.channels
 
 import ai.botstacks.sdk.ui.components.ProgressOverlay
 import ai.botstacks.sdk.ui.views.CreateChannelState

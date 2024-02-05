@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-package ai.botstacks.sdk.ui.screens
+package ai.botstacks.sdk.ui.screens.chats
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -19,7 +19,7 @@ import ai.botstacks.sdk.utils.genM
 import ai.botstacks.sdk.utils.random
 
 @Composable
-fun FavoritesView(
+fun FavoritesMessagesScreen(
     back: () -> Unit,
     openReplies: (Message) -> Unit,
     openProfile: (User) -> Unit,
@@ -43,6 +43,6 @@ fun FavoritesView(
 fun FavoritesViewPreview() {
     BotStacksChatStore.current.favorites.items.addAll(random(50, { genM() }))
     BotStacksChatContext {
-        FavoritesView(back = {}, openReplies = {}, openProfile = {}, scrollToTop = 0)
+        FavoritesMessagesScreen(back = {}, openReplies = {}, openProfile = {}, scrollToTop = 0)
     }
 }

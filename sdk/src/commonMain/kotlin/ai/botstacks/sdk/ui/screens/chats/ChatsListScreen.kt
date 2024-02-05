@@ -4,7 +4,7 @@
 
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package ai.botstacks.sdk.ui.screens
+package ai.botstacks.sdk.ui.screens.chats
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.*
@@ -21,7 +21,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.forEachTextValue
 
 @Composable
-fun ChatsView(
+fun ChatsListScreen(
     scrollToTop: Int = 0,
     openChat: (Chat) -> Unit,
     onCreateChannel: () -> Unit,
@@ -124,7 +124,7 @@ fun ChatsView(
 @Composable
 fun EmptyUserChatsViewPreview() {
     BotStacksChatContext {
-        ChatsView(
+        ChatsListScreen(
             openChat = {},
             onCreateChannel = { /*TODO*/ },
             editProfile = {},
@@ -141,7 +141,7 @@ fun ChatsViewPreview() {
 //    Chats.current.chats.items.addAll(random(10, { genChatChat() }))
 //    Chats.current.messages.items.addAll(random(10, { genRepliesMessage() }))
     BotStacksChatContext {
-        ChatsView(
+        ChatsListScreen(
             openChat = {},
             onCreateChannel = { /*TODO*/ },
             editProfile = {},

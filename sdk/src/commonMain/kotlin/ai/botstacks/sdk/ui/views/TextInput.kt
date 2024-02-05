@@ -78,38 +78,38 @@ fun TextInput(
         textStyle = fontStyle.copy(textAlign = textAlign).asTextStyle().copy(color = color),
         lineLimits = lineLimit,
         decorator = { innerTextField ->
-            Row(
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                leadingIcon?.invoke()
-                Box(modifier = Modifier.weight(1f)) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = when (textAlign) {
-                            TextAlign.End -> Alignment.End
-                            TextAlign.Center -> Alignment.CenterHorizontally
-                            else -> Alignment.Start
-                        }
-                    ) {
-                        innerTextField()
-                        if (indicatorColor.isSpecified) {
-                            Spacer(modifier = Modifier.height(BotStacks.dimens.staticGrid.x2))
-                            Divider(color = indicatorColor)
-                        }
-                    }
-                    if (state.text.isEmpty() && placeholder.isNotEmpty()) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = placeholder,
-                            fontStyle = BotStacks.fonts.caption1,
-                            color = BotStacks.colorScheme.onChatInput,
-                            textAlign = textAlign
-                        )
-                    }
+                horizontalAlignment = when (textAlign) {
+                    TextAlign.End -> Alignment.End
+                    TextAlign.Center -> Alignment.CenterHorizontally
+                    else -> Alignment.Start
                 }
-                trailingIcon?.invoke()
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    leadingIcon?.invoke()
+                    Box(modifier = Modifier.weight(1f)) {
+                        innerTextField()
+                    }
+                    trailingIcon?.invoke()
+                }
+                if (indicatorColor.isSpecified) {
+                    Spacer(modifier = Modifier.height(BotStacks.dimens.staticGrid.x2))
+                    Divider(color = indicatorColor)
+                }
+            }
+            if (state.text.isEmpty() && placeholder.isNotEmpty()) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = placeholder,
+                    fontStyle = BotStacks.fonts.caption1,
+                    color = BotStacks.colorScheme.onChatInput,
+                    textAlign = textAlign
+                )
             }
         },
         scrollState = scrollState

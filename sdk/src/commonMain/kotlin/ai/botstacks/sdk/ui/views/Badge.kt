@@ -10,8 +10,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.theme.FontStyle
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.utils.ui.font
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,22 +33,51 @@ fun Badge(
         }
 
         val contentPadding = when {
-            count in 1 .. 99 -> PaddingValues(horizontal = BotStacks.dimens.grid.x2, vertical = BotStacks.dimens.grid.x1)
-            else -> PaddingValues(horizontal = BotStacks.dimens.grid.x3, vertical = BotStacks.dimens.grid.x1)
-        }
-        Box(
-            modifier = modifier
-                .background(color = palette.primary._800, shape = CircleShape)
-                .padding(contentPadding),
-        ) {
-            androidx.compose.material3.Text(
-                text = text,
-                color = Color.White,
-                fontSize = 10.sp,
-                modifier = Modifier
-                    .align(Alignment.Center)
+            count in 1..99 -> PaddingValues(
+                horizontal = BotStacks.dimens.grid.x2,
+                vertical = BotStacks.dimens.grid.x1
+            )
+
+            else -> PaddingValues(
+                horizontal = BotStacks.dimens.grid.x3,
+                vertical = BotStacks.dimens.grid.x1
             )
         }
+        Badge(
+            modifier = modifier,
+            label = text,
+            contentPadding = contentPadding,
+            backgroundColor = palette.primary._800,
+            contentColor = Color.White,
+            fontStyle = BotStacks.fonts.caption2.copy(size = 10.sp)
+        )
+    }
+}
+
+@Composable
+fun Badge(
+    label: String,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = BotStacks.colorScheme.primary,
+    contentColor: Color = BotStacks.colorScheme.onPrimary,
+    contentPadding: PaddingValues = PaddingValues(
+        horizontal = BotStacks.dimens.grid.x2,
+        vertical = BotStacks.dimens.grid.x1
+    ),
+    fontStyle: FontStyle = BotStacks.fonts.caption2,
+) {
+    Box(
+        modifier = modifier
+            .background(color = backgroundColor, shape = CircleShape)
+            .padding(contentPadding),
+    ) {
+        androidx.compose.material3.Text(
+            text = label,
+            color = contentColor,
+            style = fontStyle.asTextStyle(),
+            modifier = Modifier
+                .align(Alignment.Center)
+        )
     }
 }
 

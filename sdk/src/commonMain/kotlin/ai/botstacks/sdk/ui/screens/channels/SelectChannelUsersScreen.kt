@@ -1,6 +1,6 @@
-package ai.botstacks.sdk.ui.screens
+package ai.botstacks.sdk.ui.screens.channels
 
-import ai.botstacks.sdk.ui.views.CreateChannelState
+import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.views.Header
 import ai.botstacks.sdk.ui.views.HeaderDefaults
 import ai.botstacks.sdk.ui.views.SelectChannelUsersView
@@ -9,21 +9,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 
 @Composable
 fun SelectChannelUsersScreen(
-    state: CreateChannelState,
+    selections: List<User>,
+    onUsersSelected: (List<User>) -> Unit,
     onBackClicked: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
 
-        var selectedUsers by remember(state.participants) {
-            mutableStateOf(state.participants)
+        var selectedUsers = remember(selections) {
+            mutableStateListOf<User>().apply {
+                addAll(selections)
+            }
         }
 
         Column {
@@ -33,7 +34,7 @@ fun SelectChannelUsersScreen(
                 endAction = {
                     HeaderDefaults.SaveAction {
                         log("count=${selectedUsers.count()}")
-                        state.participants = selectedUsers
+                        onUsersSelected(selectedUsers)
                         onBackClicked()
                     }
                 }

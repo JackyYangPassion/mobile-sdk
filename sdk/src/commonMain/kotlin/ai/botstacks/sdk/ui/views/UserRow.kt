@@ -1,7 +1,6 @@
 package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.utils.IPreviews
@@ -10,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -21,12 +21,14 @@ import androidx.compose.ui.unit.dp
 fun UserRow(
     modifier: Modifier = Modifier,
     user: User,
-    onClick: () -> Unit,
+    endSlot: @Composable () -> Unit = { },
+    onClick: (() -> Unit)? = null
 ) {
     UserRow(
         modifier = modifier,
         avatar = { Avatar(type = AvatarType.User(user.avatar, user.status)) },
         displayName = user.displayNameFb,
+        endSlot = endSlot,
         onClick = onClick
     )
 }
@@ -36,12 +38,14 @@ fun UserRow(
     modifier: Modifier = Modifier,
     url: String?,
     displayName: String,
-    onClick: () -> Unit,
+    endSlot: @Composable () -> Unit = { },
+    onClick: (() -> Unit)? = null
 ) {
     UserRow(
         modifier = modifier,
         avatar = { Avatar(type = AvatarType.User(url)) },
         displayName = displayName,
+        endSlot = endSlot,
         onClick = onClick
     )
 }
@@ -51,11 +55,12 @@ fun UserRow(
     modifier: Modifier = Modifier,
     displayName: String,
     avatar: @Composable () -> Unit,
-    onClick: () -> Unit,
+    endSlot: @Composable () -> Unit = { },
+    onClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
-            .clickable { onClick() }
+            .clickable(enabled = onClick != null) { onClick?.invoke() }
             .padding(vertical = 10.dp).then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -66,6 +71,8 @@ fun UserRow(
             fontStyle = BotStacks.fonts.body1,
             color = BotStacks.colorScheme.onBackground
         )
+        Spacer(modifier = Modifier.weight(1f))
+        endSlot()
     }
 }
 

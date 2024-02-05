@@ -4,19 +4,9 @@
 
 package ai.botstacks.sdk
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.ApolloRequest
-import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.Operation
-import com.apollographql.apollo3.api.Optional
-import com.apollographql.apollo3.interceptor.ApolloInterceptor
-import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
-import com.apollographql.apollo3.network.http.LoggingInterceptor
-import com.apollographql.apollo3.network.ws.GraphQLWsProtocol
-import com.apollographql.apollo3.network.ws.WebSocketNetworkTransport
 import ai.botstacks.sdk.fragment.FUser
-import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.BotStacksChatStore
+import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Member
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
@@ -39,10 +29,20 @@ import ai.botstacks.sdk.type.UpdateProfileInput
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.ift
 import ai.botstacks.sdk.utils.uuid
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.ApolloRequest
+import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Operation
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
+import com.apollographql.apollo3.interceptor.ApolloInterceptor
+import com.apollographql.apollo3.interceptor.ApolloInterceptorChain
 import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import com.apollographql.apollo3.network.http.LoggingInterceptor
+import com.apollographql.apollo3.network.ws.GraphQLWsProtocol
+import com.apollographql.apollo3.network.ws.WebSocketNetworkTransport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.properties.Delegates
-
 
 
 object Server {
@@ -182,8 +181,34 @@ object API {
         }
 
     suspend fun updateChat(
-        input: UpdateGroupInput
-    ) = client.mutation(UpdateGroupMutation(input)).execute().data?.updateGroup
+        id: String,
+        name: String,
+        private: Boolean,
+        description: String? = null,
+        image: String? = null,
+    ) = client.mutation(
+        UpdateGroupMutation(
+            UpdateGroupInput(
+                id = id,
+                name = Optional.present(name),
+                _private = Optional.present(private),
+                description = Optional.presentIfNotNull(description),
+                image = Optional.presentIfNotNull(image),
+            )
+        )
+    ).execute().dataOrThrow().updateGroup.let {
+         if (!it) throw IllegalStateException("Result from update was false")
+        getChat(g = id)?.also { chat ->
+            chat.membership?.let { membership ->
+                BotStacksChatStore.current.memberships.toMutableList().apply {
+                    val index = indexOf(membership)
+                    if (index >= 0) {
+                        set(index, membership)
+                    }
+                }
+            }
+        }
+    }
 
     suspend fun createChat(
         name: String,

@@ -72,7 +72,6 @@ class CreateChannelState {
             }.onFailure {
                 saving = false
             }.onSuccess {
-                BotStacksChatStore.current.chats
                 saving = false
             }
         }

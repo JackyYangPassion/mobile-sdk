@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-package ai.botstacks.sdk.ui.screens
+package ai.botstacks.sdk.ui.screens.chats
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,20 +25,18 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
-import ai.botstacks.sdk.utils.genU
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ChatChat(
+fun ConversationScreen(
     chat: Chat,
     message: Message? = null,
     openProfile: (User) -> Unit,
     openInvite: (Chat) -> Unit,
     openReply: (Message) -> Unit,
-    openEdit: (Chat) -> Unit,
+    openEdit: () -> Unit,
     back: () -> Unit
 ) {
     val ctx = rememberCoroutineScope()
@@ -83,23 +81,27 @@ fun ChatChat(
                 back = back
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Header(icon = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Avatar(
-                                type = AvatarType.Channel(listOf(chat.displayImage)),
-                            )
-                            Column {
-                                Text(
-                                    text = chat.displayName,
-                                    fontStyle = fonts.h2,
-                                    color = colorScheme.onBackground,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                    Header(
+                        icon = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Avatar(
+                                    type = AvatarType.Channel(listOf(chat.displayImage)),
                                 )
-                                ChatCount(count = chat.members.size)
+                                Column {
+                                    Text(
+                                        text = chat.displayName,
+                                        fontStyle = fonts.h2,
+                                        color = colorScheme.onBackground,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    ChatCount(count = chat.members.size)
+                                }
                             }
-                        }
-                    }, onBackClick = back)
+                        },
+                        onBackClick = back,
+                        endAction = { HeaderDefaults.MenuAction { openEdit() } }
+                    )
                     MessageList(
                         chat = chat,
                         modifier = Modifier.weight(1f),
@@ -122,7 +124,7 @@ fun ChatChat(
 @Composable
 fun ChatChatPreview() {
     BotStacksChatContext {
-        ChatChat(
+        ConversationScreen(
             chat = genChat(),
             openProfile = {},
             openInvite = {},
