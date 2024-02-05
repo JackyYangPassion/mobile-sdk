@@ -1,15 +1,16 @@
+
+
 import com.android.SdkConstants.FN_LOCAL_PROPERTIES
 import com.android.build.gradle.internal.cxx.logging.infoln
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
-
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-//    kotlin("native.cocoapods")
+    kotlin("native.cocoapods")
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose)
     alias(libs.plugins.sentry)
@@ -20,7 +21,6 @@ plugins {
     id("signing")
 }
 
-val libraryVersion = "1.0.0"
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
@@ -35,8 +35,17 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "BotStacksSDK"
             isStatic = true
+        }
+    }
+
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = libs.versions.libraryVersion.get()
+        ios.deploymentTarget = libs.versions.ios.deploymentVersion.get()
+        framework {
+            baseName = "BotStacksSDK"
             export(libs.compose.adaptive.ui)
         }
     }
@@ -44,18 +53,16 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api(compose.runtime)
-                api(compose.runtimeSaveable)
-                api(compose.foundation)
-                api(compose.material)
-                api(compose.material3)
-                api(compose.materialIconsExtended)
-                api(compose.ui)
-                api(compose.uiTooling)
-                api(compose.preview)
-                api(compose.animation)
+                implementation(compose.runtime)
+                implementation(compose.runtimeSaveable)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.ui)
+                implementation(compose.animation)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-                api(compose.components.resources)
+                implementation(compose.components.resources)
 
                 implementation(libs.compose.adaptive.ui)
                 implementation(libs.compose.adaptive.ui.filepicker)
@@ -91,6 +98,8 @@ kotlin {
             dependsOn(commonMain.get())
             dependencies {
                 implementation(compose.preview)
+                implementation(compose.uiTooling)
+
                 implementation(libs.paho.mqtt.client)
                 implementation(libs.apache.commons.text)
                 implementation(libs.moshi.kotlin)
@@ -186,7 +195,7 @@ publishing {
         create<MavenPublication>("release") {
             groupId = "ai.botstacks"
             artifactId = "sdk"
-            version = libraryVersion
+            version = libs.versions.libraryVersion.get()
 
 //            from(components.getByName("release"))
 

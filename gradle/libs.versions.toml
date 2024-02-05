@@ -1,4 +1,6 @@
 [versions]
+libraryVersion = "1.0.0"
+ios-deploymentVersion = "14"
 android-compileSdk = "34"
 android-minSdk = "26"
 agp = "8.3.0-beta02"
