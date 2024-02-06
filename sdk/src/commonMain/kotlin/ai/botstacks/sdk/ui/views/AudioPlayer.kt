@@ -70,7 +70,7 @@ fun AudioPlayer(
                 val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(
                     context,
                     defaultDataSourceFactory
-                )
+                ),
                 val source = ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(MediaItem.fromUri(url))
 

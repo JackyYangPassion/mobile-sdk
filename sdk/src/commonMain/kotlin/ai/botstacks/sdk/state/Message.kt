@@ -145,34 +145,7 @@ data class Message(
 }
 
 fun FMessage.Attachment.vcard() =
-    if (type == AttachmentType.vcard) Ezvcard.parse(data).first() else null
-
-fun VCard.simpleName(): String {
-    var name = formattedName?.value
-    if (name.isNullOrBlank())
-        name = structuredName?.let {
-            (it.prefixes + listOf(
-                it.given,
-                it.family
-            ) + it.suffixes).filter { !it.isNullOrBlank() }.joinToString(" ")
-        }
-    if (name.isNullOrBlank()) name = nickname?.values?.firstOrNull()
-    println(this)
-    return name ?: ""
-}
-
-fun VCard.markdown(): String = "${
-    simpleName()
-}\n" +
-        (telephoneNumbers?.map {
-            "[${
-                it.types.firstOrNull()?.let { "${it.value}: " } ?: ""
-            }${it.text}](${it.uri})\n"
-        }?.joinToString("") ?: "") + (emails?.map {
-    "[${
-        it.types.firstOrNull()?.let { "${it.value}: " } ?: ""
-    }${it.value}](mailto:${it.value})\n"
-}?.joinToString("") ?: "")
+    if (type == AttachmentType.vcard) parseVcard(data) else null
 
 fun FMessage.Attachment.location() =
     if (type == AttachmentType.location) Location(latitude, longitude, address) else null

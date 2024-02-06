@@ -42,6 +42,7 @@ import ai.botstacks.sdk.utils.genFileMessage
 import ai.botstacks.sdk.utils.genImageMessage
 import ai.botstacks.sdk.utils.genChatextMessage
 import ai.botstacks.sdk.utils.ift
+import ai.botstacks.sdk.utils.markdown
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
