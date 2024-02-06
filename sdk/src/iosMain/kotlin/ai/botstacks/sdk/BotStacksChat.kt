@@ -58,8 +58,7 @@ actual class BotStacksChatPlatform : BotStacksChat() {
     private var didStartLoading = false
 
     actual suspend fun load() {
-//        Log.v(TAG, "Start load")
-        if (!this::apiKey.isInitialized) {
+        if (apiKey.isEmpty()) {
             throw Error("You must initialize BotStacksChat with BotStacksChat.init before calling load")
         }
         if (didStartLoading) throw Error("SDK Already initialized")

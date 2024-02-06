@@ -112,8 +112,6 @@ kotlin {
                 implementation(libs.androidx.media3.exoplayer)
                 implementation(libs.androidx.media3.ui)
 
-                implementation(libs.android.colorx)
-
                 implementation(libs.compose.markdown)
                 implementation(libs.compose.permissions)
 

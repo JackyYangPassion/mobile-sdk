@@ -9,7 +9,9 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.theme.EmptyScreenConfig
+import ai.botstacks.sdk.ui.theme.defaultImage
 import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.utils.ui.painterImageAsset
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,8 +46,8 @@ fun EmptyListView(
   Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
     Column(modifier = Modifier.padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
       Spacer(modifier = Modifier.weight(1f))
-      config.image()?.let {
-        Image(painter = it, contentDescription = "empty list")
+      (config.image()?.let { painterImageAsset(it) } ?: config.defaultImage)?.let { painter ->
+        Image(painter = painter, contentDescription = "empty list")
       }
       Space(8f)
       config.caption?.let {
