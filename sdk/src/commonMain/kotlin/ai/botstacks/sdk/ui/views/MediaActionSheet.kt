@@ -27,20 +27,11 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
-import com.giphy.sdk.core.models.enums.RenditionType
-import com.giphy.sdk.ui.GPHContentType
-import com.giphy.sdk.ui.GPHSettings
-import com.giphy.sdk.ui.themes.GPHTheme
-import com.giphy.sdk.ui.utils.imageWithRenditionType
-import com.giphy.sdk.ui.views.dialogview.GiphyDialogView
-import com.giphy.sdk.ui.views.dialogview.setup
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import ai.botstacks.sdk.actions.imageAttachment
 import ai.botstacks.sdk.actions.send
 import ai.botstacks.sdk.extensions.contains
 import ai.botstacks.sdk.state.*
@@ -260,70 +251,7 @@ fun ContactPicker(onContact: (AttachmentInput) -> Unit, onCancel: () -> Unit) {
 
 @Composable
 fun GifPicker(onUri: (String) -> Unit, onCancel: () -> Unit) {
-    var offset by rememberSaveable { mutableStateOf(0f) }
-    val configuration = LocalConfiguration.current
-    AndroidView(
-        factory = { ctx ->
-            val settings =
-                GPHSettings(theme = GPHTheme.Light, stickerColumnCount = 3)
-            settings.mediaTypeConfig = arrayOf(GPHContentType.gif)
-            GiphyDialogView(ctx).apply {
-                setup(
-                    settings
-                )
-                this.listener = object : GiphyDialogView.Listener {
-                    override fun didSearchTerm(term: String) {
-                    }
-
-                    override fun onClosed(selectedContentType: GPHContentType) {
-                    }
-
-                    override fun onFocusSearch() {
-                    }
-
-                    override fun onGifSelected(
-                        media: com.giphy.sdk.core.models.Media,
-                        searchTerm: String?,
-                        selectedContentType: GPHContentType
-                    ) {
-                        (media.imageWithRenditionType(RenditionType.fixedWidth)?.gifUrl
-                            ?: media.contentUrl ?: media.source)?.let {
-                            onUri(it)
-                        }
-                    }
-                }
-            }
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(LocalConfiguration.current.screenHeightDp.dp)
-    )
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(35.dp)
-            .background(Color.Transparent)
-            .pointerInput(Unit) {
-                detectVerticalDragGestures(
-                    onVerticalDrag = { change, dragAmount ->
-                        offset += change.positionChange().y
-                        if (offset > configuration.screenHeightDp.dp.toPx() * 0.6 || dragAmount > 50) {
-                            onCancel()
-                        }
-                    },
-                    onDragEnd = {
-                        if (offset <= configuration.screenHeightDp.dp.toPx() * 0.6) {
-                            offset = 0f
-                        }
-                    },
-                    onDragCancel = {
-                        if (offset <= configuration.screenHeightDp.dp.toPx() * 0.6) {
-                            offset = 0f
-                        }
-                    }
-                )
-            }
-    )
+    GiphyModalSheet(onSelection = onUri, onCancel = onCancel)
 }
 
 @SuppressLint("MissingPermission")

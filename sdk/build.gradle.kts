@@ -4,6 +4,9 @@ import com.android.SdkConstants.FN_LOCAL_PROPERTIES
 import com.android.build.gradle.internal.cxx.logging.infoln
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.linker
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.util.Properties
@@ -30,7 +33,7 @@ kotlin {
     withSourcesJar(publish = false)
 
     listOf(
-//        iosX64(),
+        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
@@ -47,6 +50,12 @@ kotlin {
         framework {
             baseName = "BotStacksSDK"
             export(libs.compose.adaptive.ui)
+        }
+
+        pod("Giphy") {
+            moduleName = "GiphyUISDK"
+            version = "2.2.8"
+            extraOpts += listOf("-compiler-option", "-fmodules")
         }
     }
 
@@ -73,7 +82,7 @@ kotlin {
                 implementation(libs.apollo3.adapters)
 
                 implementation(libs.coil3.compose)
-                implementation(libs.coil3.gif)
+//                implementation(libs.coil3.gif)
 
                 implementation(libs.coil3.network.ktor)
 
@@ -196,8 +205,6 @@ publishing {
             groupId = "ai.botstacks"
             artifactId = "sdk"
             version = libs.versions.libraryVersion.get()
-
-//            from(components.getByName("release"))
 
             pom {
                 name.set("BotStacksChat")

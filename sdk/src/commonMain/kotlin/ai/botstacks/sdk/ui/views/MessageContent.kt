@@ -28,7 +28,6 @@ import com.yazantarifi.compose.library.MarkdownConfig
 import com.yazantarifi.compose.library.MarkdownViewComposable
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.location
-import ai.botstacks.sdk.state.markdown
 import ai.botstacks.sdk.state.vcard
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks
