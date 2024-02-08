@@ -1,6 +1,6 @@
 package ai.botstacks.sdk.ui.components
 
-import ai.botstacks.sdk.extensions.disableInput
+import ai.botstacks.sdk.utils.ui.disableInput
 import ai.botstacks.sdk.ui.BotStacks
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition

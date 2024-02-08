@@ -33,7 +33,7 @@ kotlin {
     withSourcesJar(publish = false)
 
     listOf(
-        iosX64(),
+//        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
@@ -55,6 +55,13 @@ kotlin {
         pod("Giphy") {
             moduleName = "GiphyUISDK"
             version = "2.2.8"
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("Gifu") {
+            git("https://github.com/kaishin/Gifu.git") {
+                branch = "master"
+            }
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
     }
@@ -82,7 +89,6 @@ kotlin {
                 implementation(libs.apollo3.adapters)
 
                 implementation(libs.coil3.compose)
-//                implementation(libs.coil3.gif)
 
                 implementation(libs.coil3.network.ktor)
 
@@ -123,6 +129,8 @@ kotlin {
 
                 implementation(libs.compose.markdown)
                 implementation(libs.compose.permissions)
+
+                implementation(libs.coil3.gif)
 
                 implementation(libs.ktor.engine.android)
 

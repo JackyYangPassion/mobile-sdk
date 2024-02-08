@@ -1,6 +1,6 @@
 package ai.botstacks.sdk.ui.views
 
-import ai.botstacks.sdk.extensions.unboundedClickable
+import ai.botstacks.sdk.utils.ui.unboundedClickable
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.resources.Res
 import androidx.compose.animation.AnimatedContent
@@ -12,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text2.input.TextFieldState

@@ -2,10 +2,9 @@
 
 package ai.botstacks.sdk.ui.components.settings
 
-import ai.botstacks.sdk.extensions.addIfNonNull
+import ai.botstacks.sdk.utils.ui.addIfNonNull
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.views.Text
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,8 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi

@@ -4,16 +4,15 @@
 
 package ai.botstacks.sdk.actions
 
-import com.apollographql.apollo3.api.Optional
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Member
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.MemberRole
-import ai.botstacks.sdk.type.UpdateGroupInput
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
+import ai.botstacks.sdk.utils.removeIf
 import kotlinx.datetime.Clock
 
 fun Chat.dismissInvites() {

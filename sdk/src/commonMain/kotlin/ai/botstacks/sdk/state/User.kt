@@ -8,10 +8,11 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import ai.botstacks.sdk.extensions.contains
 import ai.botstacks.sdk.fragment.FUser
 import ai.botstacks.sdk.type.OnlineStatus
+import ai.botstacks.sdk.utils.contains
 import kotlinx.datetime.Instant
+import kotlin.math.min
 
 @Stable
 data class User(
@@ -99,7 +100,7 @@ data class User(
 }
 
 fun Collection<User>.usernames(): String {
-    val uns = this.toList().slice(0..Math.min(size - 1, 2)).map { it.username }
+    val uns = this.toList().slice(0..min(size - 1, 2)).map { it.username }
     if (uns.size < 3) {
         return uns.joinToString(" and ")
     } else if (uns.size == 3) {

@@ -34,6 +34,7 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.components.ImageRenderer
 import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.theme.LocalBotStacksMarkdownConfig
 import ai.botstacks.sdk.utils.IPreviews
@@ -68,8 +69,8 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
             ) {
                 for (attachment in message.attachments) {
                     when (attachment.type) {
-                        AttachmentType.image -> AsyncImage(
-                            model = attachment.url,
+                        AttachmentType.image -> ImageRenderer(
+                            url = attachment.url,
                             contentDescription = "shared image",
                             contentScale = ContentScale.Fit,
                             modifier = Modifier

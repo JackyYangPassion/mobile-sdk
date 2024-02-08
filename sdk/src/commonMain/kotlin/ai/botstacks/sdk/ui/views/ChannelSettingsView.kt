@@ -3,8 +3,8 @@
 package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.API
-import ai.botstacks.sdk.extensions.onEnter
-import ai.botstacks.sdk.extensions.unboundedClickable
+import ai.botstacks.sdk.utils.ui.onEnter
+import ai.botstacks.sdk.utils.ui.unboundedClickable
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
