@@ -24,11 +24,11 @@ import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.views.Header
-import ai.botstacks.sdk.ui.views.PagerList
-import ai.botstacks.sdk.ui.views.Text
-import ai.botstacks.sdk.ui.views.UserRow
-import ai.botstacks.sdk.ui.views.radius
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.PagerList
+import ai.botstacks.sdk.ui.components.Text
+import ai.botstacks.sdk.ui.components.UserRow
+import ai.botstacks.sdk.ui.components.radius
 import androidx.compose.foundation.layout.fillMaxWidth
 
 @Composable

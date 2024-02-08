@@ -1,9 +1,9 @@
 package ai.botstacks.sdk.ui.screens.channels
 
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.views.Header
-import ai.botstacks.sdk.ui.views.HeaderDefaults
-import ai.botstacks.sdk.ui.views.SelectChannelUsersView
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.HeaderDefaults
+import ai.botstacks.sdk.ui.components.SelectChannelUsersView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

@@ -1,5 +1,7 @@
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.ui.components.internal.CupertinoSection
+import ai.botstacks.sdk.ui.components.internal.SectionTokens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -87,7 +89,7 @@ actual inline fun ContextMenu(
  * All types of application already provide this container.
  * */
 @Composable
-fun ContextMenuContainer(
+internal fun ContextMenuContainer(
     content: @Composable () -> Unit
 ) {
     val provider = remember { ContextMenuProviderImpl() }

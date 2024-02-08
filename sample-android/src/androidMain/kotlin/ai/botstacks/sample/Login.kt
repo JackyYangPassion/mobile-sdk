@@ -4,9 +4,9 @@ import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksDayNightColorScheme
-import ai.botstacks.sdk.ui.views.SecureTextField
-import ai.botstacks.sdk.ui.views.Space
-import ai.botstacks.sdk.ui.views.TextInput
+import ai.botstacks.sdk.ui.components.SecureTextField
+import ai.botstacks.sdk.ui.components.Space
+import ai.botstacks.sdk.ui.components.TextInput
 import android.Manifest
 import android.util.Log
 import androidx.activity.compose.BackHandler

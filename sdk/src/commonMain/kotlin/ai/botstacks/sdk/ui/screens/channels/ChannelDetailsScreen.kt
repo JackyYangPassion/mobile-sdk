@@ -1,10 +1,10 @@
 package ai.botstacks.sdk.ui.screens.channels
 
-import ai.botstacks.sdk.ui.components.ProgressOverlay
-import ai.botstacks.sdk.ui.views.ChannelSettingsState
-import ai.botstacks.sdk.ui.views.ChannelSettingsView
-import ai.botstacks.sdk.ui.views.Header
-import ai.botstacks.sdk.ui.views.HeaderDefaults
+import ai.botstacks.sdk.ui.components.internal.ProgressOverlay
+import ai.botstacks.sdk.ui.components.ChannelSettingsState
+import ai.botstacks.sdk.ui.components.ChannelSettingsView
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.HeaderDefaults
 import ai.botstacks.sdk.utils.ui.keyboardAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

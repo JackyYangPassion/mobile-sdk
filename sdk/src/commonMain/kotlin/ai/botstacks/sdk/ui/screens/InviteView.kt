@@ -25,8 +25,12 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.components.ContactRow
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.PagerList
+import ai.botstacks.sdk.ui.components.Text
+import ai.botstacks.sdk.ui.components.circle
 import ai.botstacks.sdk.ui.resources.Res
-import ai.botstacks.sdk.ui.views.*
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
 import ai.botstacks.sdk.utils.genU

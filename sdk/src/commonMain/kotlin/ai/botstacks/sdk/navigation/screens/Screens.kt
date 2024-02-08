@@ -11,8 +11,8 @@ import ai.botstacks.sdk.ui.screens.chats.ChatsListScreen
 import ai.botstacks.sdk.ui.screens.chats.ConversationRouter
 import ai.botstacks.sdk.ui.screens.chats.FavoritesMessagesScreen
 import ai.botstacks.sdk.ui.screens.profile.ProfileView
-import ai.botstacks.sdk.ui.views.ChannelSettingsState
-import ai.botstacks.sdk.ui.views.CreateChannelState
+import ai.botstacks.sdk.ui.components.ChannelSettingsState
+import ai.botstacks.sdk.ui.components.CreateChannelState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.toMutableStateList
 import cafe.adriel.voyager.core.screen.Screen

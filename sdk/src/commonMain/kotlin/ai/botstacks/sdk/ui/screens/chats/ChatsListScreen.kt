@@ -12,9 +12,14 @@ import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.components.AlertActionStyle
-import ai.botstacks.sdk.ui.components.BotStacksAlertDialog
-import ai.botstacks.sdk.ui.views.*
+import ai.botstacks.sdk.ui.components.ChatRow
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.HeaderDefaults
+import ai.botstacks.sdk.ui.components.IACList
+import ai.botstacks.sdk.ui.components.Text
+import ai.botstacks.sdk.ui.components.internal.AlertActionStyle
+import ai.botstacks.sdk.ui.components.internal.BotStacksAlertDialog
+import ai.botstacks.sdk.ui.components.rememberHeaderState
 import ai.botstacks.sdk.utils.*
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi

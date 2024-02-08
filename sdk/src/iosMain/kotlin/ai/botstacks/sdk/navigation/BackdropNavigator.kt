@@ -1,7 +1,7 @@
 package ai.botstacks.sdk.navigation
 
-import ai.botstacks.sdk.ui.components.CupertinoBackdropScaffold
-import ai.botstacks.sdk.ui.components.cupertinoAnimationSpec
+import ai.botstacks.sdk.ui.components.internal.CupertinoBackdropScaffold
+import ai.botstacks.sdk.ui.components.internal.cupertinoAnimationSpec
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height

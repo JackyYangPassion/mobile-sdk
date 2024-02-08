@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ai.botstacks.sdk.BotStacksChat
-import ai.botstacks.sdk.ui.views.Spinner
+import ai.botstacks.sdk.ui.components.Spinner
 
 @Composable
 fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (() -> Unit)? = null) {

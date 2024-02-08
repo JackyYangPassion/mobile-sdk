@@ -19,10 +19,10 @@ import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.views.GrowSpacer
-import ai.botstacks.sdk.ui.views.Header
-import ai.botstacks.sdk.ui.views.Space
-import ai.botstacks.sdk.ui.views.Text
+import ai.botstacks.sdk.ui.components.internal.GrowSpacer
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.Space
+import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.utils.IPreviews
 
 @Composable

@@ -15,8 +15,8 @@ import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.screens.NotFound
-import ai.botstacks.sdk.ui.views.Header
-import ai.botstacks.sdk.ui.views.Spinner
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.Spinner
 import ai.botstacks.sdk.utils.Monitoring
 
 

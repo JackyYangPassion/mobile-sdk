@@ -11,9 +11,9 @@ import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.views.Header
-import ai.botstacks.sdk.ui.views.MessageView
-import ai.botstacks.sdk.ui.views.PagerList
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.MessageView
+import ai.botstacks.sdk.ui.components.PagerList
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genM
 import ai.botstacks.sdk.utils.random
