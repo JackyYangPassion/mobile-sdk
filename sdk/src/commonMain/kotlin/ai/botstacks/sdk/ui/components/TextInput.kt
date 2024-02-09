@@ -6,6 +6,7 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.theme.FontStyle
+import ai.botstacks.sdk.utils.ui.debugBounds
 import ai.botstacks.sdk.utils.ui.keyboardAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
@@ -89,27 +90,27 @@ fun TextInput(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x2)
                 ) {
                     leadingIcon?.invoke()
                     Box(modifier = Modifier.weight(1f)) {
+                        if (state.text.isEmpty() && placeholder.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = placeholder,
+                                fontStyle = BotStacks.fonts.caption1,
+                                color = BotStacks.colorScheme.onChatInput,
+                                textAlign = textAlign
+                            )
+                        }
                         innerTextField()
                     }
                     trailingIcon?.invoke()
                 }
                 if (indicatorColor.isSpecified) {
-                    Spacer(modifier = Modifier.height(BotStacks.dimens.staticGrid.x2))
+                    Spacer(modifier = Modifier.height(BotStacks.dimens.grid.x2))
                     Divider(color = indicatorColor)
                 }
-            }
-            if (state.text.isEmpty() && placeholder.isNotEmpty()) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = placeholder,
-                    fontStyle = BotStacks.fonts.caption1,
-                    color = BotStacks.colorScheme.onChatInput,
-                    textAlign = textAlign
-                )
             }
         },
         scrollState = scrollState
