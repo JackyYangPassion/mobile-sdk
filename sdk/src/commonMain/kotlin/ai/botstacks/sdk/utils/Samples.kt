@@ -7,7 +7,6 @@ package ai.botstacks.sdk.utils
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.state.*
 import ai.botstacks.sdk.type.AttachmentType
@@ -16,13 +15,12 @@ import ai.botstacks.sdk.type.MemberRole
 import ai.botstacks.sdk.type.OnlineStatus
 import com.benasher44.uuid.uuid4
 import kotlinx.datetime.Clock
-import net.datafaker.Faker
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-val faker = Faker()
+val faker = DataMock()
 
 fun genCurrentUser() = User.current ?: genU().let {
     User.current = it
@@ -31,17 +29,17 @@ fun genCurrentUser() = User.current ?: genU().let {
 
 fun genU(): User {
     val u = User(uuid())
-    u.username = faker.name().username()
+    u.username = faker.username()
     u.avatar = randomImage()
     u.status = OnlineStatus.entries.toTypedArray().random()
-    u.statusMessage = ift(Random.nextBoolean(), faker.lorem().sentence(), null)
+    u.statusMessage = ift(Random.nextBoolean(), faker.loremSentence(), null)
     u.lastSeen = ift(
         Random.nextBoolean(),
         Clock.System.now()
             .minus(Random.nextLong(10000000).toDuration(DurationUnit.SECONDS)),
         null
     )
-    u.displayName = faker.funnyName().name()
+    u.displayName = faker.funnyName()
 
     return u
 }
@@ -76,8 +74,8 @@ fun randomUser() = BotStacksChatStore.current.cache.users.values.randomOrNull() 
 
 fun genG(): Chat {
     val g = Chat(uuid(), ChatType.Group)
-    g.name = faker.company().name()
-    g.description = ift(chance(4, 5), faker.lorem().paragraph(), null)
+    g.name = faker.companyName()
+    g.description = ift(chance(4, 5), faker.loremParagraph(), null)
     g.image = ift(Random.nextBoolean(), randomImage(), null)
     g._private = Random.nextBoolean()
     val members = randomUsers().let { ift(it.isEmpty(), random(40, ::genU), it) }
@@ -126,7 +124,7 @@ fun genM(
         chat,
         _attachments ?: mutableStateListOf()
     )
-    m.updateText(faker.lorem().paragraph())
+    m.updateText(faker.loremParagraph())
     if (parent == null && chance(1, 5)) {
         m.replies.items.addAll((0 until Random.nextInt(10)).map { genM(m.chatID, m.id) })
     }
@@ -135,7 +133,7 @@ fun genM(
             random(
                 10
             ) {
-                faker.emoji().smiley() to (Chat.get(chat)?.let { randomAmount(it.members) }
+                faker.smileyEmoji() to (Chat.get(chat)?.let { randomAmount(it.members) }
                     ?.map { it.user_id }?.toMutableStateList() ?: mutableStateListOf())
             }
         )
@@ -160,12 +158,12 @@ fun genChatextMessage(user: User = randomUser(), chat: String = genG().id) = Mes
     null,
     chat,
 ).apply {
-    updateText(faker.lorem().paragraph())
+    updateText(faker.loremParagraph())
     reactions.addAll(
         random(
             4
         ) {
-            (faker.emoji().smiley() to randomAmount(randomUsers()).map { it.id }
+            (faker.smileyEmoji() to randomAmount(randomUsers()).map { it.id }
                 .toMutableStateList())
         }
     )
@@ -234,23 +232,23 @@ fun genDM() =
             unreadCount = Random.nextInt(0, items.size)
     }
 
-class SampleUser : PreviewParameterProvider<User> {
-    override val values: Sequence<User> = (0..40).map {
-        genU()
-    }.asSequence()
-}
-
-class SampleChat : PreviewParameterProvider<Chat> {
-    override val values: Sequence<Chat> = (0..3).map {
-        genG()
-    }.asSequence()
-}
-
-class SampleMessage : PreviewParameterProvider<Message> {
-    override val values: Sequence<Message> = sequenceOf(genM())
-}
-
-class SampleFn : PreviewParameterProvider<Fn> {
-    override val values: Sequence<Fn> = sequenceOf({})
-
-}
+//class SampleUser : PreviewParameterProvider<User> {
+//    override val values: Sequence<User> = (0..40).map {
+//        genU()
+//    }.asSequence()
+//}
+//
+//class SampleChat : PreviewParameterProvider<Chat> {
+//    override val values: Sequence<Chat> = (0..3).map {
+//        genG()
+//    }.asSequence()
+//}
+//
+//class SampleMessage : PreviewParameterProvider<Message> {
+//    override val values: Sequence<Message> = sequenceOf(genM())
+//}
+//
+//class SampleFn : PreviewParameterProvider<Fn> {
+//    override val values: Sequence<Fn> = sequenceOf({})
+//
+//}

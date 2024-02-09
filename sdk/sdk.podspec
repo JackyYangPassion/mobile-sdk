@@ -11,6 +11,7 @@ Pod::Spec.new do |spec|
     spec.ios.deployment_target = '14'
     spec.dependency 'Gifu'
     spec.dependency 'Giphy', '2.2.8'
+    spec.dependency 'MBFaker'
                 
     if !Dir.exist?('build/cocoapods/framework/BotStacksSDK.framework') || Dir.empty?('build/cocoapods/framework/BotStacksSDK.framework')
         raise "

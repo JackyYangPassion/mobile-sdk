@@ -64,6 +64,10 @@ kotlin {
             }
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
+
+        pod("MBFaker") {
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
     }
 
     sourceSets {
@@ -286,6 +290,12 @@ apollo {
         )
         mapScalarToKotlinDouble("Latitude")
         mapScalarToKotlinDouble("Longitude")
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.PodGenTask>().configureEach {
+    doLast {
+        podfile.get().appendText("\nENV['SWIFT_VERSION'] = '4'")
     }
 }
 
