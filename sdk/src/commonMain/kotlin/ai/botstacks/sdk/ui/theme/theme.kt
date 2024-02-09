@@ -7,7 +7,6 @@ import ai.botstacks.sdk.ui.utils.FullAlphaRipple
 import ai.botstacks.sdk.utils.ui.calculateScreenSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -17,13 +16,10 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.yazantarifi.compose.library.MarkdownConfig
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -38,21 +34,6 @@ internal fun Theme(
     val _colorsScheme = remember(isDark, colorScheme) {
         colorScheme.colors(isDark)
     }
-
-    @Stable
-    fun markdownConfig(sender: Boolean) = MarkdownConfig(
-        isLinksClickable = true,
-        isImagesClickable = false,
-        isScrollEnabled = false,
-        colors = HashMap<String, Color>().apply {
-            this[MarkdownConfig.CHECKBOX_COLOR] = Color.Black
-            this[MarkdownConfig.LINKS_COLOR] = _colorsScheme.primary
-            this[MarkdownConfig.TEXT_COLOR] = if (sender) _colorsScheme.onPrimary else _colorsScheme.onMessage
-            this[MarkdownConfig.HASH_TEXT_COLOR] = _colorsScheme.primary
-            this[MarkdownConfig.CODE_BACKGROUND_COLOR] = Color.Gray
-            this[MarkdownConfig.CODE_BLOCK_TEXT_COLOR] = Color.White
-        }
-    )
 
     val screenSize = calculateScreenSize()
     val windowSizeClass = calculateWindowSizeClass()
@@ -111,7 +92,6 @@ internal fun Theme(
         LocalBotStacksColorScheme provides _colorsScheme,
         LocalBotStacksDimens provides dimens,
         LocalBotStacksFonts provides fonts,
-        LocalBotStacksMarkdownConfig provides { sender -> markdownConfig(sender) },
         LocalBotStacksShapes provides shapes,
     ) {
         MaterialTheme(
@@ -133,5 +113,3 @@ internal fun Theme(
         }
     }
 }
-
-internal val LocalBotStacksMarkdownConfig = staticCompositionLocalOf { { sender: Boolean -> MarkdownConfig() } }

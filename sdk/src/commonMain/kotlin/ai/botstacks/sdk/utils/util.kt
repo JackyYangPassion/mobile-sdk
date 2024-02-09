@@ -4,26 +4,11 @@
 
 package ai.botstacks.sdk.utils
 
-import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.AnnotatedString
-import com.apollographql.apollo3.api.Optional
-import contacts.core.Contacts
-import contacts.core.equalToIgnoreCase
-import contacts.core.util.emails
-import contacts.core.util.nameList
-import contacts.core.util.phones
-import ezvcard.Ezvcard
-import ezvcard.VCard
-import ezvcard.property.Email
-import ezvcard.property.FormattedName
-import ezvcard.property.StructuredName
-import ezvcard.property.Telephone
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.type.AttachmentInput
-import ai.botstacks.sdk.type.AttachmentType
 import com.benasher44.uuid.uuid4
-import java.util.*
 
 fun bundleUrl() = BotStacksChat.shared.appIdentifier
 fun uuid() = uuid4().toString()
@@ -37,7 +22,7 @@ fun <A> ifteq(a: A, b: A) = if (a == b) a else b
 fun String.annotated() = AnnotatedString(this)
 
 
-fun contactUriToVCard(uri: Uri): VCard {
+fun contactUriToVCard(url: String): Vcard {
     throw NotImplementedError()
 //    Log.v("IAC", "Contact URI $uri")
 //    val result = Contacts(BotStacksChat.shared.appContext).query().where {
@@ -89,21 +74,24 @@ fun contactUriToVCard(uri: Uri): VCard {
 //    }.first()
 }
 
-fun VCard.attachment(): AttachmentInput {
-    return AttachmentInput(
-            url = "data",
-            type = AttachmentType.vcard,
-            data = Optional.present(Ezvcard.write(this).go()),
-            id = uuid()
-    )
+fun Vcard.attachment(): AttachmentInput {
+    // TODO:
+    throw NotImplementedError()
+//    return AttachmentInput(
+//            url = "data",
+//            type = AttachmentType.vcard,
+//            data = Optional.present(Ezvcard.write(this).go()),
+//            id = uuid()
+//    )
 }
 
-fun android.location.Location.attachment(): AttachmentInput {
-    return AttachmentInput(
-            longitude = Optional.present(this.longitude),
-            latitude = Optional.present(this.latitude),
-            id = uuid(),
-            type = AttachmentType.location,
-            url = "data"
-    )
-}
+// TODO:
+//fun android.location.Location.attachment(): AttachmentInput {
+//    return AttachmentInput(
+//            longitude = Optional.present(this.longitude),
+//            latitude = Optional.present(this.latitude),
+//            id = uuid(),
+//            type = AttachmentType.location,
+//            url = "data"
+//    )
+//}

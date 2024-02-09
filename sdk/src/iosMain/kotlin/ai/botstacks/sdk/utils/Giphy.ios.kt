@@ -54,6 +54,10 @@ actual fun GiphyModal.setTheme(themeType: GiphyThemeType) {
     })
 }
 
+actual fun GiphyModal.setMediaType(@IntRange(from = 0, to = 5) contentType: GiphyContentType) {
+    setMediaConfigWithTypes(listOf(contentType))
+}
+
 @Composable
 actual fun GiphyModalSheet(
     modifier: Modifier,

@@ -5,12 +5,7 @@
 package ai.botstacks.sdk.state
 
 import androidx.compose.runtime.*
-import contacts.core.Contacts
-import contacts.core.isNotNullOrEmpty
-import contacts.core.or
-import contacts.core.util.phones
 import ai.botstacks.sdk.API
-import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
 

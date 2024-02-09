@@ -4,18 +4,14 @@
 
 package ai.botstacks.sdk.actions
 
-import android.net.Uri
-import androidx.compose.runtime.toMutableStateList
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.SendingMessage
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.AttachmentInput
-import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
-import ai.botstacks.sdk.utils.uuid
+import androidx.compose.runtime.toMutableStateList
 
 
 fun Message.react(emoji: String) {
@@ -77,12 +73,6 @@ fun Message.delete() {
         bg { API.deleteMessage(id) }
     })
 }
-
-fun Uri.imageAttachment() = AttachmentInput(
-    url = this.toString(),
-    type = AttachmentType.image,
-    id = uuid()
-)
 
 fun SendingMessage.retry() {
     if (failed) {

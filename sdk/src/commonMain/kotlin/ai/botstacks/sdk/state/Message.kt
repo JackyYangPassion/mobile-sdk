@@ -6,15 +6,12 @@ package ai.botstacks.sdk.state
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import ezvcard.Ezvcard
-import ezvcard.VCard
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.utils.*
 import kotlinx.datetime.Instant
-import java.net.URLEncoder
 
 @Stable
 data class SendingMessage(
@@ -152,7 +149,7 @@ fun FMessage.Attachment.location() =
 
 data class Location(val latitude: Double?, val longitude: Double?, val address: String?) {
     val link: String
-        get() = "https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(
+        get() = "https://www.google.com/maps/search/?api=1&query=" + urlEncode(
             address ?: "${latitude!!},${longitude!!}", "utf-8"
         )
     val markdown: String

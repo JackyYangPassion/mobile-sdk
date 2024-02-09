@@ -12,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.resources.Res
@@ -20,10 +19,6 @@ import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
-
-class CountProvider : PreviewParameterProvider<Int> {
-    override val values: Sequence<Int> = sequenceOf(1, 4, 10, 301, 2931)
-}
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
