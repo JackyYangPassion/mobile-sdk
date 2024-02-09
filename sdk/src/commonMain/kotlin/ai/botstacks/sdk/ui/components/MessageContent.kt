@@ -103,13 +103,20 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                         AttachmentType.location, AttachmentType.vcard -> MarkdownView(
                             modifier = Modifier
                                 .padding(dimens.grid.x2),
-                            content = attachment.location()?.markdown ?: attachment.vcard()
-                                ?.markdown()
-                            ?: "No content",
+                            content = attachment.location()?.markdown
+                                ?: attachment.vcard()?.markdown()
+                                ?: "No content",
                             isCurrentUser = message.user.isCurrent,
                         )
 
-                        else -> {}
+                        else -> {
+                            MarkdownView(
+                                modifier = Modifier
+                                    .padding(dimens.grid.x2),
+                                content = message.markdown,
+                                isCurrentUser = message.user.isCurrent,
+                            )
+                        }
                     }
                 }
             }
