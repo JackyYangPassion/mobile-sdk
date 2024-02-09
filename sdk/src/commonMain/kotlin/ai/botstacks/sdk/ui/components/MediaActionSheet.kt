@@ -11,9 +11,11 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.ActionItem
+import ai.botstacks.sdk.ui.components.internal.location.LocationPicker
 import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.GiphyModalSheet
 import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.utils.attachment
 import ai.botstacks.sdk.utils.genChat
 import ai.botstacks.sdk.utils.op
 import androidx.compose.foundation.layout.Box
@@ -166,12 +168,12 @@ fun MediaActionSheet(
                     }
 
                     Media.location -> {
-//                        LocationPicker(onLocation = {
-////                        chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
-//                            hide()
-//                        }) {
-//                            hide()
-//                        }
+                        LocationPicker(onLocation = {
+                            chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
+                            hide()
+                        }) {
+                            hide()
+                        }
                     }
 
                     else -> Logger.d("empty media")
@@ -248,36 +250,3 @@ fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) 
 fun GifPicker(onUri: (String) -> Unit, onCancel: () -> Unit) {
     GiphyModalSheet(onSelection = onUri, onCancel = onCancel)
 }
-
-//@SuppressLint("MissingPermission")
-//@OptIn(ExperimentalPermissionsApi::class)
-//@Composable
-//fun LocationPicker(onLocation: (Location) -> Unit, onCancel: () -> Unit) {
-//    // Camera permission state
-//    val state = rememberMultiplePermissionsState(
-//        listOf(
-//            android.Manifest.permission.ACCESS_FINE_LOCATION,
-//            android.Manifest.permission.ACCESS_COARSE_LOCATION
-//        )
-//    )
-//    val have = state.allPermissionsGranted || state.permissions.contains { it.status.isGranted }
-//    val activity = LocalContext.current as Activity
-//    LaunchedEffect(key1 = have, block = {
-//        if (have) {
-//            onCancel()
-//            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
-//            val cancellationToken = CancellationTokenSource()
-//            val loc = fusedLocationClient.getCurrentLocation(
-//                Priority.PRIORITY_HIGH_ACCURACY,
-//                cancellationToken.token
-//            ).await()
-//            if (loc != null) {
-//                onLocation(loc)
-//            } else {
-//                onCancel()
-//            }
-//        } else {
-//            state.launchMultiplePermissionRequest()
-//        }
-//    })
-//}

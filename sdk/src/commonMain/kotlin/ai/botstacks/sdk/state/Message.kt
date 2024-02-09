@@ -147,7 +147,7 @@ fun FMessage.Attachment.vcard() =
 fun FMessage.Attachment.location() =
     if (type == AttachmentType.location) Location(latitude, longitude, address) else null
 
-data class Location(val latitude: Double?, val longitude: Double?, val address: String?) {
+data class Location(val latitude: Double?, val longitude: Double?, val address: String? = null) {
     val link: String
         get() = "https://www.google.com/maps/search/?api=1&query=" + urlEncode(
             address ?: "${latitude!!},${longitude!!}", "utf-8"

@@ -7,7 +7,10 @@ package ai.botstacks.sdk.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.AnnotatedString
 import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.state.Location
 import ai.botstacks.sdk.type.AttachmentInput
+import ai.botstacks.sdk.type.AttachmentType
+import com.apollographql.apollo3.api.Optional
 import com.benasher44.uuid.uuid4
 
 fun bundleUrl() = BotStacksChat.shared.appIdentifier
@@ -85,13 +88,13 @@ fun Vcard.attachment(): AttachmentInput {
 //    )
 }
 
-// TODO:
-//fun android.location.Location.attachment(): AttachmentInput {
-//    return AttachmentInput(
-//            longitude = Optional.present(this.longitude),
-//            latitude = Optional.present(this.latitude),
-//            id = uuid(),
-//            type = AttachmentType.location,
-//            url = "data"
-//    )
-//}
+
+fun Location.attachment(): AttachmentInput {
+    return AttachmentInput(
+        longitude = Optional.present(this.longitude),
+        latitude = Optional.present(this.latitude),
+        id = uuid(),
+        type = AttachmentType.location,
+        url = "data"
+    )
+}

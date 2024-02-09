@@ -35,6 +35,7 @@ import ai.botstacks.sdk.ui.components.MessageList
 import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import kotlinx.coroutines.launch
 
@@ -119,7 +120,8 @@ fun ConversationScreen(
                         onLongPress = { messageForAction = it }
                     )
                     MessageInput(
-                        modifier = Modifier.padding(dimens.grid.x4),
+                        modifier = Modifier.padding(dimens.grid.x4)
+                            .navigationBarsPadding(),
                         chat = chat,
                         replyingTo = message,
                         onMedia = { ctx.launch { media.show() } }
