@@ -6,7 +6,6 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
 import ai.botstacks.sdk.utils.bg
@@ -38,6 +37,7 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import com.mohamedrejeb.calf.ui.toggle.AdaptiveSwitch
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -103,7 +103,7 @@ fun SetChannelDetailsView(
                     .clickable { pickerLauncher.launch() },
                 type = AvatarType.User(
                     url = state.selectedImage,
-                    empty = painterResource(Res.Drawables.Outlined.Camera)
+                    empty = painterResource(Res.drawable.camera)
                 ),
                 size = AvatarSize.Large
             )
@@ -126,7 +126,7 @@ fun SetChannelDetailsView(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 item(
-                    icon = Res.Drawables.Filled.Lock,
+                    icon = Res.drawable.lock_fill,
                     title = "Private channel",
                     endSlot = {
                         AdaptiveSwitch(checked = state.private, onCheckedChange = null)
@@ -189,7 +189,7 @@ fun UserSelectView(
                         .clickable { onAddSelected() },
                     type = AvatarType.User(
                         url = null,
-                        empty = painterResource(Res.Drawables.Outlined.Plus),
+                        empty = painterResource(Res.drawable.plus),
                     ),
                     backgroundColor = dayNightColor(palette.dark._900, palette.dark._500),
                     contentColor = Color.White,

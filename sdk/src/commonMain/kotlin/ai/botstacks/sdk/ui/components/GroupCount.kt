@@ -14,9 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -25,7 +25,7 @@ import org.jetbrains.compose.resources.painterResource
 fun ChatCount(count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
-            painter = painterResource(Res.Drawables.Filled.Users),
+            painter = painterResource(Res.drawable.users_fill),
             contentDescription = "members",
             modifier = Modifier.size(16.dp),
             tint = BotStacks.colorScheme.caption

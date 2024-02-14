@@ -1,6 +1,6 @@
 package ai.botstacks.sample
 
-import ai.botstacks.sdk.navigation.BotstacksNavigation
+import ai.botstacks.sdk.BotStacksNavigation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     composable("botstacks") {
-                        BotstacksNavigation { navController.navigate("login") }
+                        BotStacksNavigation { navController.navigate("login") }
                     }
                 }
             }

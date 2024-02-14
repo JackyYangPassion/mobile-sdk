@@ -2,21 +2,24 @@
 //  ContentView.swift
 //  sample-ios
 //
-//  Created by Brandon McAnsh on 2/3/24.
+//  Created by Brandon McAnsh on 2/13/24.
 //
 
-import SwiftUI
 import BotStacksSDK
+import SwiftUI
+
+struct BotStacksNavigationView : UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        BotStacksNavigationKt.BotStacksNavigation()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    
+}
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        BotStacksNavigationView().ignoresSafeArea()
     }
 }
 

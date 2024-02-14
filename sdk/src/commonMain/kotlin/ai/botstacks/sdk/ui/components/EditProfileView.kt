@@ -2,7 +2,6 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.resources.Res
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +23,7 @@ import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -65,7 +65,7 @@ fun EditProfileView(
                     .clickable { pickerLauncher.launch() },
                 type = AvatarType.User(
                     url = state.userImage,
-                    empty = painterResource(Res.Drawables.Outlined.Camera)
+                    empty = painterResource(Res.drawable.camera)
                 ),
                 size = AvatarSize.Large
             )

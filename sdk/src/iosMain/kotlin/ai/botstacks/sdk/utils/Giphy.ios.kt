@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalForeignApi::class)
-
 package ai.botstacks.sdk.utils
 
 
@@ -22,14 +20,13 @@ import cocoapods.Giphy.GPHThemeTypeLight
 import cocoapods.Giphy.GiphyDelegateProtocol
 import cocoapods.Giphy.GiphyViewController
 import cocoapods.Giphy.urlWithRendition
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIApplication
+import platform.darwin.NSObject
 
 actual typealias GiphyModal = GiphyViewController
 actual typealias GiphyThemeType = Int
 actual typealias GiphyContentType = Int
 
-@OptIn(ExperimentalForeignApi::class)
 actual fun GiphyModal.setStickerColumnCount(@IntRange(from = 2, to = 4) count: Int) {
     val columnCount = when (count) {
         2 -> GPHStickerColumnCountTwo
@@ -69,7 +66,7 @@ actual fun GiphyModalSheet(
         this.setStickerColumnCount(GPHStickerColumnCountThree)
         this.setTheme(GPHTheme().apply { setType(GPHThemeTypeAutomatic) })
 
-        this.setDelegate(object : GiphyDelegateProtocol {
+        this.setDelegate(object : NSObject(), GiphyDelegateProtocol {
             override fun didSelectMediaWithGiphyViewController(
                 giphyViewController: GiphyViewController,
                 media: GPHMedia,

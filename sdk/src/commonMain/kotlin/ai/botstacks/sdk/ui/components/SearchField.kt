@@ -2,7 +2,6 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.internal.Pressable
-import ai.botstacks.sdk.ui.resources.Res
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -54,7 +54,7 @@ fun SearchField(
                     ) {
                         Icon(
                             modifier = Modifier.requiredIconSize(),
-                            painter = painterResource(Res.Drawables.Outlined.Close),
+                            painter = painterResource(Res.drawable.x),
                             contentDescription = "close search"
                         )
                     }

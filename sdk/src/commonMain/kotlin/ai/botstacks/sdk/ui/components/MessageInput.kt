@@ -12,7 +12,6 @@ import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.Pressable
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
@@ -40,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import kmp_template.sdk.generated.resources.Res
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -97,7 +97,7 @@ fun MessageInput(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(Res.Drawables.Filled.Paperclip),
+                        painter = painterResource(Res.drawable.paperclip_fill),
                         contentDescription = "send attachment",
                         modifier = Modifier.requiredIconSize(),
                         tint = colorScheme.caption
@@ -125,7 +125,7 @@ fun MessageInput(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter = painterResource(Res.Drawables.Filled.PaperPlaneTilt),
+                    painter = painterResource(Res.drawable.paper_plane_tilt_fill),
                     contentDescription = "send message",
                     modifier = Modifier.requiredIconSize(),
                     tint = contentColor

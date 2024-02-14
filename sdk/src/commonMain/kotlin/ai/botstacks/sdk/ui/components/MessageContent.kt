@@ -12,10 +12,10 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.components.internal.AudioPlayer
 import ai.botstacks.sdk.ui.components.internal.ImageRenderer
 import ai.botstacks.sdk.ui.components.internal.MarkdownView
 import ai.botstacks.sdk.ui.components.internal.VideoPlayer
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChatextMessage
 import ai.botstacks.sdk.utils.genFileMessage
@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -83,12 +84,10 @@ fun MessageContent(message: Message, modifier: Modifier = Modifier) {
                                 .clip(RoundedCornerShape(15.dp))
                         )
 
-                        AttachmentType.audio -> AudioPlayer(
-                            url = attachment.url
-                        )
+                        AttachmentType.audio -> AudioPlayer(url = attachment.url)
 
                         AttachmentType.file -> Image(
-                            painter = painterResource(Res.Drawables.Filled.FileArrowDown),
+                            painter = painterResource(Res.drawable.file_arrow_down_fill),
                             contentDescription = "File",
                             colorFilter = ColorFilter.tint(
                                 ift(

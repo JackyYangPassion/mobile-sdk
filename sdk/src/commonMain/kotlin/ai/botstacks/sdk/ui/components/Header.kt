@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.components.internal.Pressable
+import ai.botstacks.sdk.ui.resources.botstacks_logo_daynight
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
@@ -47,6 +47,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.Dp
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -67,7 +68,7 @@ object HeaderDefaults {
     @Composable
     fun Logo() {
         Icon(
-            painter = painterResource(resource = Res.Drawables.Logos.BotStacks),
+            painter = painterResource(resource = Res.drawable.botstacks_logo_daynight),
             tint = Color.Unspecified,
             contentDescription = "logo"
         )
@@ -251,7 +252,7 @@ fun Header(
                         if (state.showSearch) {
                             HeaderButton(onClick = onSearchClick?.let { { it.invoke() } } ?: { state.searchActive = true }) {
                                 Icon(
-                                    painterResource(Res.Drawables.Outlined.MagnifyingGlass),
+                                    painterResource(Res.drawable.magnifying_glass),
                                     contentDescription = "Search",
                                     tint = colorScheme.onBackground,
                                     modifier = Modifier.requiredIconSize()
@@ -261,7 +262,7 @@ fun Header(
                         if (onAdd != null) {
                             HeaderButton(onAdd) {
                                 Icon(
-                                    painterResource(Res.Drawables.Outlined.Plus),
+                                    painterResource(Res.drawable.plus),
                                     contentDescription = "Add",
                                     tint = colorScheme.onBackground,
                                     modifier = Modifier.requiredIconSize()
@@ -271,7 +272,7 @@ fun Header(
                         if (onCompose != null) {
                             HeaderButton(onClick = onCompose) {
                                 Icon(
-                                    painterResource(Res.Drawables.Outlined.Edit),
+                                    painterResource(Res.drawable.edit_outlined),
                                     contentDescription = "Compose",
                                     tint = colorScheme.onBackground,
                                     modifier = Modifier.requiredIconSize()

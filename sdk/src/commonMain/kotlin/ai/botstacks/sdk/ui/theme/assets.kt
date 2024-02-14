@@ -8,13 +8,13 @@ package ai.botstacks.sdk.ui.theme
 
 import androidx.compose.runtime.Stable
 import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.ui.ImageAsset
 import ai.botstacks.sdk.utils.ui.ImageAssetIdentifier
 import ai.botstacks.sdk.utils.ui.toImageAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.painter.Painter
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -80,10 +80,10 @@ data class Assets(
 internal val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }
 
 internal val EmptyChatDefault: Painter
-    @Composable get() = painterResource(Res.Drawables.EmptyChats)
+    @Composable get() = painterResource(Res.drawable.empty_chats)
 internal val EmptyChannelsDefault: Painter
-    @Composable get() = painterResource(Res.Drawables.EmptyChannels)
+    @Composable get() = painterResource(Res.drawable.empty_channels)
 internal val EmptyChatsDefault: Painter
-    @Composable get() = painterResource(Res.Drawables.EmptyChats)
+    @Composable get() = painterResource(Res.drawable.empty_chats)
 internal val EmptyAllChannelsDefault: Painter
-    @Composable get() = painterResource(Res.Drawables.EmptyChannels)
+    @Composable get() = painterResource(Res.drawable.empty_channels)

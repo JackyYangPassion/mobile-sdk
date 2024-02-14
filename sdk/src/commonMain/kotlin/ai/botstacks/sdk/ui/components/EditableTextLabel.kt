@@ -2,7 +2,6 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.utils.ui.unboundedClickable
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.resources.Res
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -56,7 +56,7 @@ fun EditableTextLabel(
                         modifier = Modifier
                             .size(BotStacks.dimens.staticGrid.x4)
                             .unboundedClickable { onEditComplete() },
-                        painter = painterResource(Res.Drawables.Outlined.Check),
+                        painter = painterResource(Res.drawable.check),
                         tint = BotStacks.colorScheme.primary,
                         contentDescription = "Save name change"
                     )
@@ -76,7 +76,7 @@ fun EditableTextLabel(
             ) {
                 Text(state.text.toString(), fontStyle = BotStacks.fonts.h3)
                 Icon(
-                    painterResource(Res.Drawables.Outlined.Edit),
+                    painterResource(Res.drawable.edit_outlined),
                     contentDescription = null,
                     tint = BotStacks.colorScheme.primary
                 )

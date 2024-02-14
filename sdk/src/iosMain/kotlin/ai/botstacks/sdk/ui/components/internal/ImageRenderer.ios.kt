@@ -10,8 +10,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import kotlinx.cinterop.BetaInteropApi
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFDataRef
 import platform.Foundation.CFBridgingRetain
 import platform.Foundation.NSData
@@ -54,7 +52,6 @@ internal actual fun ImageRenderer(
     }
 }
 
-@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 private fun isAnimated(url: String): Boolean {
     runCatching {
         val data = NSData.create(URLWithString(url)!!) ?: return false

@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.Text
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.ui.graphics.painter.Painter
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -65,7 +65,7 @@ internal fun ActionItem(text: String, icon: Painter, divider: Boolean = false, a
 private fun ActionItemPreview() {
     BotStacksChatContext {
         Column {
-            ActionItem(text = "Item", icon = Res.Drawables.Filled.AddressBook) {
+            ActionItem(text = "Item", icon = Res.drawable.address_book_fill) {
 
             }
         }

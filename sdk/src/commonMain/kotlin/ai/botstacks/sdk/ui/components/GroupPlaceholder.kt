@@ -5,7 +5,6 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ui.adjustedHsl
 import ai.botstacks.sdk.utils.ui.painterImageAsset
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.RectangleShape
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -41,7 +41,7 @@ fun ChatPlaceholder(modifier: Modifier = Modifier) {
             .size(50)
     ) {
         Icon(
-            painter =  BotStacks.assets.chat?.let { painterImageAsset(it) } ?: painterResource(Res.Drawables.Filled.UsersThree),
+            painter =  BotStacks.assets.chat?.let { painterImageAsset(it) } ?: painterResource(Res.drawable.users_three_fill),
             contentDescription = "Chat icon",
             modifier = Modifier.fillMaxSize(0.5f)
         )

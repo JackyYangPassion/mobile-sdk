@@ -39,7 +39,7 @@ fun genU(): User {
             .minus(Random.nextLong(10000000).toDuration(DurationUnit.SECONDS)),
         null
     )
-    u.displayName = faker.funnyName()
+    u.displayName = faker.funnyName().toString()
 
     return u
 }

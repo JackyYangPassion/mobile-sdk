@@ -4,7 +4,6 @@
 
 package ai.botstacks.sdk.ui.components
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,28 +17,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
 import co.touchlab.kermit.Logger
-import nl.coffeeit.aroma.emojipicker.presentation.ui.emoji.EmojiBottomSheet
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
-    val emojiBottomSheetDialogFragment = EmojiBottomSheet.newInstance({ emoji ->
-        onEmoji(emoji.emoji)
-    })
-    (LocalContext.current as? AppCompatActivity)?.supportFragmentManager?.let {
-        emojiBottomSheetDialogFragment.show(it, EmojiBottomSheet.TAG)
-    }
+//    val emojiBottomSheetDialogFragment = EmojiBottomSheet.newInstance({ emoji ->
+//        onEmoji(emoji.emoji)
+//    })
+//    (LocalContext.current as? AppCompatActivity)?.supportFragmentManager?.let {
+//        emojiBottomSheetDialogFragment.show(it, EmojiBottomSheet.TAG)
+//    }
 }
 
 @OptIn(ExperimentalResourceApi::class)
@@ -89,7 +86,7 @@ fun EmojiBar(
                 .clickable { keyboard = true }
         ) {
             Icon(
-                painter = painterResource(Res.Drawables.Outlined.Plus),
+                painter = painterResource(Res.drawable.plus),
                 contentDescription = "more reactions",
                 tint = colorScheme.onBackground,
                 modifier = Modifier.size(

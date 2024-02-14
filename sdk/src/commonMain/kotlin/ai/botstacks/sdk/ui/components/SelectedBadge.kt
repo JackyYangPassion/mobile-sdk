@@ -1,7 +1,6 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.resources.Res
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -29,7 +28,7 @@ fun SelectedBadge(
     ) {
         Icon(
             modifier = Modifier.padding(BotStacks.dimens.staticGrid.x1),
-            painter = painterResource(Res.Drawables.Outlined.Check),
+            painter = painterResource(Res.drawable.check),
             contentDescription = "is selected",
             tint = Color.White
         )

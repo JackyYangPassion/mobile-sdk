@@ -26,8 +26,8 @@ import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.Pressable
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.*
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -109,7 +109,7 @@ fun Favorite(favorite: Boolean) {
     if (favorite) {
         Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center) {
             Icon(
-                painter = painterResource(Res.Drawables.Filled.Star),
+                painter = painterResource(Res.drawable.star),
                 contentDescription = "favorite",
                 tint = colorScheme.primary,
                 modifier = Modifier.size(20),

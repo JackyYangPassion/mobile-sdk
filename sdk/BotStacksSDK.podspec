@@ -1,17 +1,17 @@
 Pod::Spec.new do |spec|
-    spec.name                     = 'sdk'
-    spec.version                  = '1.0.0'
-    spec.homepage                 = 'Link to the Shared Module homepage'
+    spec.name                     = 'BotStacksSDK'
+    spec.version                  = '0.0.1'
+    spec.homepage                 = 'https://botstacks.ai'
     spec.source                   = { :http=> ''}
-    spec.authors                  = ''
-    spec.license                  = ''
-    spec.summary                  = 'Some description for the Shared Module'
+    spec.authors                  = 'BotStacks'
+    spec.license                  = 'MIT'
+    spec.summary                  = 'BotStacks Mobile SDK'
     spec.vendored_frameworks      = 'build/cocoapods/framework/BotStacksSDK.framework'
     spec.libraries                = 'c++'
-    spec.ios.deployment_target = '14'
-    spec.dependency 'Gifu'
+    spec.ios.deployment_target = '15.0'
+    spec.dependency 'Gifu', '3.3.0'
     spec.dependency 'Giphy', '2.2.8'
-    spec.dependency 'MBFaker'
+    spec.dependency 'Sentry', '8.20.0'
                 
     if !Dir.exist?('build/cocoapods/framework/BotStacksSDK.framework') || Dir.empty?('build/cocoapods/framework/BotStacksSDK.framework')
         raise "
@@ -31,7 +31,7 @@ Pod::Spec.new do |spec|
                 
     spec.script_phases = [
         {
-            :name => 'Build sdk',
+            :name => 'Build BotStacksSDK',
             :execution_position => :before_compile,
             :shell_path => '/bin/sh',
             :script => <<-SCRIPT

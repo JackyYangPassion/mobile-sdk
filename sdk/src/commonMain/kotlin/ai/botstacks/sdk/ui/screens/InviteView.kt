@@ -30,7 +30,6 @@ import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.PagerList
 import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.ui.components.circle
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
 import ai.botstacks.sdk.utils.genU
@@ -42,6 +41,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -127,7 +127,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(Res.Drawables.Outlined.Check),
+                        painter = painterResource(Res.drawable.check),
                         contentDescription = "Check mark",
                         tint = colorScheme.background,
                         modifier = Modifier.size(14.dp)
@@ -147,7 +147,7 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
                     .clickable { back() }, contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(Res.Drawables.Outlined.CaretLeft),
+                    painter = painterResource(Res.drawable.caret_left),
                     contentDescription = "back",
                     tint = colorScheme.background,
                     modifier = Modifier.size(22.dp)

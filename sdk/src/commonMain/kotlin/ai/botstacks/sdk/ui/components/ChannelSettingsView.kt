@@ -11,7 +11,6 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.bg
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -46,6 +45,7 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import com.mohamedrejeb.calf.ui.toggle.AdaptiveSwitch
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -133,7 +133,7 @@ fun ChannelSettingsView(
                 .clickable { pickerLauncher.launch() },
             type = AvatarType.User(
                 url = state.channelImage,
-                empty = painterResource(Res.Drawables.Outlined.Camera)
+                empty = painterResource(Res.drawable.camera)
             ),
             size = AvatarSize.Large
         )
@@ -168,7 +168,7 @@ fun ChannelSettingsView(
 //                onClick = { state.toggleMute() }
 //            )
             item(
-                icon = Res.Drawables.Filled.Lock,
+                icon = Res.drawable.lock_fill,
                 title = "Private channel",
                 endSlot = {
                     AdaptiveSwitch(checked = state.private, onCheckedChange = null)
@@ -201,7 +201,7 @@ fun ChannelSettingsView(
                     ) {
                         Icon(
                             modifier = Modifier.size(BotStacks.dimens.staticGrid.x6),
-                            painter = painterResource(Res.Drawables.Filled.Users),
+                            painter = painterResource(Res.drawable.users_fill),
                             contentDescription = null
                         )
                         Text(
@@ -211,7 +211,7 @@ fun ChannelSettingsView(
                         Spacer(Modifier.weight(1f))
                         Icon(
                             modifier = Modifier.unboundedClickable { onAddUsers() },
-                            painter = painterResource(Res.Drawables.Outlined.AddUser),
+                            painter = painterResource(Res.drawable.add_user),
                             contentDescription = "Add user"
                         )
                         // TODO: add search

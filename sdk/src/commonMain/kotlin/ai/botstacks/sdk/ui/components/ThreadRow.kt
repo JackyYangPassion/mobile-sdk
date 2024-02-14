@@ -7,7 +7,6 @@ package ai.botstacks.sdk.ui.components
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.relativeTimeString
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -66,7 +66,7 @@ fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (!chat.isUnread)
                     Image(
-                        painter = painterResource(Res.Drawables.Filled.CheckCircle),
+                        painter = painterResource(Res.drawable.check_circle_fill),
                         contentDescription = "message read",
                         modifier = Modifier.size(12.dp),
                         colorFilter = ColorFilter.tint(colorScheme.primary)

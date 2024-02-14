@@ -31,9 +31,9 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
+import kmp_template.sdk.generated.resources.Res
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -62,7 +62,7 @@ fun ChatDrawerHeader(chat: Chat) {
             Text(text = "All Members", fontStyle = fonts.body2, color = colorScheme.onBackground)
             Space(14f)
             Image(
-                painter = painterResource(Res.Drawables.Filled.UsersThree),
+                painter = painterResource(Res.drawable.users_three_fill),
                 contentDescription = "member count",
                 colorFilter = ColorFilter.tint(colorScheme.caption),
                 modifier = Modifier.size(16)

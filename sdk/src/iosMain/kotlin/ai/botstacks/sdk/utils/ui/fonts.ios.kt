@@ -30,7 +30,7 @@ actual fun font(name: String, res: String, weight: FontWeight): Font {
 private fun readResourceBytes(path: String): ByteArray {
     val fileManager = NSFileManager.defaultManager()
     // todo: support fallback path at bundle root?
-    val composeResourcesPath = NSBundle.mainBundle.resourcePath + "/compose-resources/" + path
+    val composeResourcesPath = NSBundle.mainBundle.resourcePath + "/compose-composeResources/" + path
     val contentsAtPath = fileManager.contentsAtPath(composeResourcesPath) ?: throw MissingResourceException(path)
     return ByteArray(contentsAtPath.length.toInt()).apply {
         usePinned {

@@ -24,8 +24,8 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.*
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -60,7 +60,7 @@ fun ChatDrawerButtons(
                         openEdit()
                     }) {
                     Image(
-                        painter = painterResource(Res.Drawables.Filled.Gear),
+                        painter = painterResource(Res.drawable.gear_fill),
                         contentDescription = "settings",
                         colorFilter = ColorFilter.tint(colorScheme.border),
                         modifier = Modifier.size(24.dp)
@@ -77,7 +77,7 @@ fun ChatDrawerButtons(
                     openInvite(chat)
                 }) {
                 Image(
-                    painterResource(Res.Drawables.Filled.ArchiveBox),
+                    painterResource(Res.drawable.archive_box_fill),
                     contentDescription = "settings",
                     colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)
@@ -93,7 +93,7 @@ fun ChatDrawerButtons(
                     dialog.value = true
                 }) {
                 Image(
-                    painter = painterResource(Res.Drawables.Filled.Trash),
+                    painter = painterResource(Res.drawable.trash_fill),
                     contentDescription = "settings",
                     colorFilter = ColorFilter.tint(colorScheme.border),
                     modifier = Modifier.size(24.dp)

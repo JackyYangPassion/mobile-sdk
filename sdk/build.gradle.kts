@@ -1,55 +1,50 @@
-
-
-import com.android.SdkConstants.FN_LOCAL_PROPERTIES
-import com.android.build.gradle.internal.cxx.logging.infoln
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.konan.target.linker
-import java.io.FileInputStream
-import java.io.InputStreamReader
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     kotlin("native.cocoapods")
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose)
-    alias(libs.plugins.sentry)
-    alias(libs.plugins.apollo3)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.apollo3)
     id("com.codingfeline.buildkonfig")
-    id("maven-publish")
-    id("signing")
+    id("co.touchlab.kmmbridge") version "0.5.2"
 }
-
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     applyDefaultHierarchyTemplate()
+
     androidTarget()
 
-    withSourcesJar(publish = false)
-
     listOf(
-//        iosX64(),
+        iosX64(),
         iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            isStatic = true
-        }
-    }
+        iosSimulatorArm64()
+    )
 
     cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
+        name = "BotStacksSDK"
+        summary = "BotStacks Mobile SDK"
+        homepage = "https://botstacks.ai"
+        license = "MIT"
+        authors = "BotStacks"
         version = libs.versions.libraryVersion.get()
         ios.deploymentTarget = libs.versions.ios.deploymentVersion.get()
+
+        publishDir = project.file("../pod")
+
         framework {
             baseName = "BotStacksSDK"
             export(libs.compose.adaptive.ui)
+            binaryOption("bundleId", "ai.botstacks.sdk")
+        }
+
+        pod("Sentry") {
+            version = "8.20.0"
+            linkOnly = true
         }
 
         pod("Giphy") {
@@ -59,18 +54,16 @@ kotlin {
         }
 
         pod("Gifu") {
-            git("https://github.com/kaishin/Gifu.git") {
-                branch = "master"
-            }
-            extraOpts += listOf("-compiler-option", "-fmodules")
-        }
-
-        pod("MBFaker") {
+            version = "3.3.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
+            languageSettings.optIn("kotlinx.cinterop.BetaInteropApi")
+        }
         commonMain {
             dependencies {
                 implementation(compose.runtime)
@@ -81,10 +74,9 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(compose.ui)
                 implementation(compose.animation)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
 
-                implementation(libs.compose.adaptive.ui)
+                api(libs.compose.adaptive.ui)
                 implementation(libs.compose.adaptive.ui.filepicker)
 
                 implementation(libs.compose.windowSizeClass)
@@ -104,7 +96,7 @@ kotlin {
 
                 implementation(libs.ktor.client.core)
 
-                implementation(libs.sentry)
+                api(libs.sentry)
 
                 implementation(libs.settings)
 
@@ -165,18 +157,15 @@ kotlin {
 }
 
 android {
-    namespace = "ai.botstacks.sdk"
+    namespace = "${(findProperty("project.namespace") as String)}.sdk"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
-    // loaded for android fonts
-    sourceSets["main"].res.srcDirs("src/commonMain/res")
-    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+    sourceSets["main"].res.srcDirs("src/commonMain/composeResources")
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -205,46 +194,8 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
-
     kotlin {
         jvmToolchain(17)
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("release") {
-            groupId = "ai.botstacks"
-            artifactId = "sdk"
-            version = libs.versions.libraryVersion.get()
-
-            pom {
-                name.set("BotStacksChat")
-                description.set("BotStacks Android Chat SDK")
-                url.set("https://github.com/botstacks/android-example")
-
-                licenses {
-                    license {
-                        name.set("Stream License")
-                        url.set("https://github.com/botstacks/android-example/blob/main/LICENSE")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("reaperdtme")
-                        name.set("reaper")
-                        email.set("reaper@fastapps.one")
-                    }
-                }
-
-                scm {
-                    connection.set("scm:git:github.com/botstacks/android-sdl.git")
-                    developerConnection.set("scm:git:ssh://github.com/botstacks/android-example.git")
-                    url.set("https://github.com/botstacks/android-sdk/tree/main")
-                }
-            }
-        }
     }
 }
 
@@ -267,19 +218,6 @@ buildkonfig {
     }
 }
 
-println("CHECK SIGNING")
-if (rootProject.hasProperty("signing.keyId")) {
-    println("Set Up Signing")
-    signing {
-        useInMemoryPgpKeys(
-            gradleLocalProperties(rootProject.rootDir).getProperty("signing.keyId"),
-            gradleLocalProperties(rootProject.rootDir).getProperty("signing.key"),
-            gradleLocalProperties(rootProject.rootDir).getProperty("signing.password")
-        )
-        sign(publishing.publications)
-    }
-}
-
 apollo {
     service("service") {
         packageName.set("ai.botstacks.sdk")
@@ -293,25 +231,28 @@ apollo {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.PodGenTask>().configureEach {
+tasks.named("podPublishDebugXCFramework") {
     doLast {
-        podfile.get().appendText("\nENV['SWIFT_VERSION'] = '4'")
+        copy {
+            from(project.file("src/commonMain/composeResources"))
+            into(project.file("../pod/debug/build/compose/ios/BotStacksSDK/compose-resources"))
+        }
     }
 }
 
-/**
- * Retrieve the project local properties if they are available.
- * If there is no local properties file then an empty set of properties is returned.
- */
-fun gradleLocalProperties(projectRootDir: File): Properties {
-    val properties = Properties()
-    val localProperties = File(projectRootDir, FN_LOCAL_PROPERTIES)
-    if (localProperties.isFile) {
-        InputStreamReader(FileInputStream(localProperties), Charsets.UTF_8).use { reader ->
-            properties.load(reader)
+tasks.named("podPublishReleaseXCFramework") {
+    doLast {
+        copy {
+            from(project.file("src/commonMain/composeResources"))
+            into(project.file("../pod/release/build/compose/ios/BotStacksSDK/compose-resources"))
         }
-    } else {
-        infoln("Gradle local properties file not found at $localProperties")
     }
-    return properties
+}
+
+kmmbridge {
+//    mavenPublishArtifacts()
+    // TODO: support SPM
+//    spm()
+    // TODO: switch to trunk
+    cocoapods("git@github.com:BotStacks/mobile-sdk.git")
 }

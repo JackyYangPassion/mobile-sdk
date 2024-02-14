@@ -1,0 +1,53 @@
+PODS:
+  - BotStacksSDK (0.0.1):
+    - Gifu (= 3.3.0)
+    - Giphy (= 2.2.8)
+    - Sentry (= 8.20.0)
+  - Gifu (3.3)
+  - Giphy (2.2.8):
+    - libwebp
+  - libwebp (1.3.2):
+    - libwebp/demux (= 1.3.2)
+    - libwebp/mux (= 1.3.2)
+    - libwebp/sharpyuv (= 1.3.2)
+    - libwebp/webp (= 1.3.2)
+  - libwebp/demux (1.3.2):
+    - libwebp/webp
+  - libwebp/mux (1.3.2):
+    - libwebp/demux
+  - libwebp/sharpyuv (1.3.2)
+  - libwebp/webp (1.3.2):
+    - libwebp/sharpyuv
+  - Sentry (8.20.0):
+    - Sentry/Core (= 8.20.0)
+    - SentryPrivate (= 8.20.0)
+  - Sentry/Core (8.20.0):
+    - SentryPrivate (= 8.20.0)
+  - SentryPrivate (8.20.0)
+
+DEPENDENCIES:
+  - BotStacksSDK (from `../pod`)
+
+SPEC REPOS:
+  trunk:
+    - Gifu
+    - Giphy
+    - libwebp
+    - Sentry
+    - SentryPrivate
+
+EXTERNAL SOURCES:
+  BotStacksSDK:
+    :path: "../pod"
+
+SPEC CHECKSUMS:
+  BotStacksSDK: 5d988fae208bb8de33f7146ddc2f94b80a772f67
+  Gifu: 97c2a3c3865fbc834ab13f797e2e8e7729a1853c
+  Giphy: f63ab0e2dd819d6288feba07722aaafe8a5fe4b7
+  libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  Sentry: a8d7b373b9f9868442b02a0c425192f693103cbf
+  SentryPrivate: 006b24af16828441f70e2ab6adf241bd0a8ad130
+
+PODFILE CHECKSUM: eb14b7406b11db96b406121ea27b1074092c0fa3
+
+COCOAPODS: 1.14.3

@@ -16,10 +16,10 @@ import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.ActionItem
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genChatextMessage
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @Composable
@@ -63,7 +63,7 @@ fun MessageActionSheet(
             )
             ActionItem(
                 text = "Reply in Chat",
-                icon = Res.Drawables.Outlined.ChatDots,
+                icon = Res.drawable.chat_dots,
             ) {
                 message?.let(onReply)
                 hide()
@@ -71,7 +71,7 @@ fun MessageActionSheet(
 
             ActionItem(
                 text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
-                icon = Res.Drawables.Filled.Star,
+                icon = Res.drawable.star_fill,
             )
             {
                 message?.toggleFavorite()
@@ -80,7 +80,7 @@ fun MessageActionSheet(
 
             ActionItem(
                 text = "Copy message text",
-                icon = Res.Drawables.Outlined.Copy,
+                icon = Res.drawable.copy,
             ) {
                 copy()
             }

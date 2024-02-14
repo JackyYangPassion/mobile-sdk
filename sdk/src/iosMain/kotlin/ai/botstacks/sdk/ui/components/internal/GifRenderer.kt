@@ -7,16 +7,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
 import androidx.compose.ui.layout.ContentScale
 import cocoapods.Gifu.GIFImageView
-import kotlinx.cinterop.BetaInteropApi
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSData
 import platform.Foundation.NSURL
 import platform.Foundation.create
 import platform.UIKit.UIImage
 import platform.UIKit.UIView
 import platform.UIKit.UIViewContentMode
-
-@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 @Composable
 internal fun GifRenderer(
     modifier: Modifier,

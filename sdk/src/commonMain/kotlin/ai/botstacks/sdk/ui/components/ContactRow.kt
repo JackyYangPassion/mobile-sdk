@@ -23,11 +23,11 @@ import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.GrowSpacer
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genU
 import ai.botstacks.sdk.utils.ift
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -58,7 +58,7 @@ fun ContactRow(
                 )
 //                if (user.haveContact) {
                 Image(
-                    painterResource(Res.Drawables.Filled.AddressBook),
+                    painterResource(Res.drawable.address_book),
                     contentDescription = "contact",
                     modifier = Modifier.size(18),
                     colorFilter = ColorFilter.tint(Color(0xFF488AC7))

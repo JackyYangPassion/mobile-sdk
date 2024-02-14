@@ -8,7 +8,6 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.dimens
-import ai.botstacks.sdk.ui.resources.Res
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
 import ai.botstacks.sdk.utils.IPreviews
@@ -38,6 +37,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import kmp_template.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
@@ -83,13 +83,13 @@ sealed interface AvatarType {
     ) : AvatarType {
         @OptIn(ExperimentalResourceApi::class)
         override val emptyState: Painter
-            @Composable get() = empty ?: painterResource(Res.Drawables.Outlined.User)
+            @Composable get() = empty ?: painterResource(Res.drawable.user_outlined)
     }
 
     data class Channel(val urls: List<String?>, val empty: Painter? = null) : AvatarType {
         @OptIn(ExperimentalResourceApi::class)
         override val emptyState: Painter
-            @Composable get() = empty ?: painterResource(Res.Drawables.Outlined.User)
+            @Composable get() = empty ?: painterResource(Res.drawable.user_outlined)
     }
 }
 
