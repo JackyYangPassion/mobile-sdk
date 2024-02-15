@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BotStacksNavigationView : UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        BotStacksNavigationKt.BotStacksNavigation()
+        BotStacksNavigationKt.BotStacksNavigation { }
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

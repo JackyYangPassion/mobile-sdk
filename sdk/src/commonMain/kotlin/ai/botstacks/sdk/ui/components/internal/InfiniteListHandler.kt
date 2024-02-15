@@ -7,6 +7,10 @@ package ai.botstacks.sdk.ui.components.internal
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.*
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 /**
  * Handler to make any lazy column (or lazy row) infinite. Will notify the [onLoadMore]
@@ -22,21 +26,16 @@ internal fun InfiniteListHandler(
     buffer: Int = 20,
     onLoadMore: () -> Unit
 ) {
-    val loadMore = remember {
-        derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val totalItemsNumber = layoutInfo.totalItemsCount
-            val lastVisibleItemIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1
+    LaunchedEffect(buffer) {
+        snapshotFlow { listState.layoutInfo }
+            .map { layoutInfo ->
+                val totalItemsNumber = layoutInfo.totalItemsCount
+                val lastVisibleItemIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1
 
-            lastVisibleItemIndex > (totalItemsNumber - buffer)
-        }
-    }
-
-    LaunchedEffect(loadMore) {
-        snapshotFlow { loadMore.value }
+                lastVisibleItemIndex > (totalItemsNumber - buffer)
+            }.filter { it }
             .distinctUntilChanged()
-            .collect {
-                onLoadMore()
-            }
+            .onEach { onLoadMore() }
+            .launchIn(this)
     }
 }

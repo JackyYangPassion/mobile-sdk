@@ -5,107 +5,159 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.state.Chat
+import ai.botstacks.sdk.type.AttachmentType
+import ai.botstacks.sdk.type.NotificationSetting
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.utils.relativeTimeString
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material.icons.rounded.NotificationsOff
+import androidx.compose.material.icons.rounded.VideoFile
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.unit.dp
-import kmp_template.sdk.generated.resources.Res
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ChatRow(chat: Chat, onClick: (Chat) -> Unit) {
+fun ChatRow(modifier: Modifier = Modifier, chat: Chat, onClick: () -> Unit) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(16.dp, 12.dp)
-            .height(84.dp)
-            .clickable { onClick(chat) }
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(60.dp)
-                .background(colorScheme.surface, CircleShape)
-                .border(
-                    2.dp,
-                    if (chat.isUnread) colorScheme.primary else colorScheme.surface,
-                    CircleShape
-                )
+        modifier = modifier
+            .clickable { onClick() }
+            .padding(BotStacks.dimens.inset, BotStacks.dimens.grid.x4),
+        horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x3),
+        verticalAlignment = Alignment.CenterVertically) {
+        Avatar(url = chat.displayImage)
+        Column(
+            modifier = Modifier.fillMaxHeight(),
         ) {
-            Avatar(url = chat.displayImage)
-        }
-        Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(start = 14.dp)) {
-            Row {
-                Text(text = chat.displayName, fontStyle = fonts.h3, color = colorScheme.onBackground, maxLines = 1)
-                Space()
-                if (chat.isGroup) {
-                    PrivacyPill(chat._private)
+            val isMuted by remember(chat.notification_setting) {
+                derivedStateOf { chat.notification_setting == NotificationSetting.none }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = chat.displayName,
+                    fontStyle = fonts.label1,
+                    color = colorScheme.onBackground,
+                    maxLines = 1
+                )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x3)) {
+                    if (isMuted) {
+                        Icon(Icons.Rounded.NotificationsOff, contentDescription = "Muted")
+                    }
+
+                    chat.latest?.let {
+                        Text(
+                            text = it.createdAt.relativeTimeString(),
+                            fontStyle = fonts.caption2,
+                            color = if (chat.isUnread) colorScheme.primary else colorScheme.caption
+                        )
+                    }
                 }
             }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (!chat.isUnread)
-                    Image(
-                        painter = painterResource(Res.drawable.check_circle_fill),
-                        contentDescription = "message read",
-                        modifier = Modifier.size(12.dp),
-                        colorFilter = ColorFilter.tint(colorScheme.primary)
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                val messagePreviewContents = chat.messagePreview
+                val text = messagePreviewContents?.first ?: AnnotatedString("No messages yet")
+                val contentMap = messagePreviewContents?.second.orEmpty()
                 Text(
-                    text = chat.latest?.summary ?: "No messages yet",
-                    fontStyle = fonts.body1,
-                    maxLines = 2,
-                    color = if (chat.isUnread) colorScheme.onBackground else colorScheme.caption,
-                    modifier = Modifier.fillMaxWidth(0.7f)
+                    text = text,
+                    inlineContent = contentMap,
+                    fontStyle = fonts.caption2.copy(
+                        weight = if (chat.isUnread) FontWeight.W500 else FontWeight.W400
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = chat.messagePreviewColor
                 )
-            }
-        }
-        Spacer(
-            modifier = Modifier
-                .weight(1f)
-                .defaultMinSize(minWidth = 18.dp)
-        )
-        Column(horizontalAlignment = Alignment.End) {
-            chat.latest?.let {
-                Text(
-                    text = it.createdAt.relativeTimeString(), fontStyle = fonts.body1, color = colorScheme.caption
-                )
-            }
-            if (chat.isUnread) {
-                Badge(chat.unreadCount)
+                if (chat.isUnread) {
+                    Badge(chat.unreadCount)
+                }
             }
         }
     }
 }
 
-//fun tsString(i: Instant): String {
-//    if (i >= Clock.System.now().minus(60.seconds * 60 * 3)) {
-//        return i.relativeTimeString()
-//    } else if (i > (Clock.System.now().minus(1.days.inWholeSeconds.seconds))) {
-//        return i.toLocalDateTime(TimeZone.UTC)
-//            .toJavaLocalDateTime()
-//            .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-//    } else {
-//        return i.timeAgo()
-//    }
-//}
+private val Chat.messagePreviewColor: Color
+    @Composable get() = when {
+        typingUsers.isNotEmpty() -> colorScheme.primary
+        isUnread -> colorScheme.onBackground
+        else -> colorScheme.caption
+    }
+
+@OptIn(ExperimentalResourceApi::class)
+private val Chat.messagePreview: Pair<AnnotatedString, Map<String, InlineTextContent>>?
+    @Composable get() = when {
+        typingUsers.isNotEmpty() -> AnnotatedString("Typing...") to emptyMap()
+        isGroup && latest?.attachments.orEmpty()
+            .isEmpty() -> latest?.let { with(it) { AnnotatedString("${user.displayNameFb}: $msg") to emptyMap() } }
+
+        latest?.attachments.orEmpty().isNotEmpty() -> {
+            val attachment = latest?.attachments.orEmpty().first()
+            when (val type = attachment.type) {
+                AttachmentType.image,
+                AttachmentType.video,
+                AttachmentType.file -> buildAnnotatedString {
+                    appendInlineContent("imageId")
+                    append(" ${type.name}")
+                } to mapOf(
+                    "imageId" to InlineTextContent(Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.TextCenter)) {
+                        val painter = when (type) {
+                            AttachmentType.image -> rememberVectorPainter(Icons.Rounded.Image)
+                            AttachmentType.video -> rememberVectorPainter(Icons.Rounded.VideoFile)
+                            else -> painterResource(Res.drawable.document_fill)
+                        }
+                        Image(
+                            painter = painter,
+                            colorFilter = ColorFilter.tint(if (isUnread) colorScheme.onBackground else colorScheme.caption),
+                            modifier = Modifier.fillMaxSize(),
+                            contentDescription = null
+                        )
+                    }
+                )
+
+                AttachmentType.vcard -> AnnotatedString("Shared a contact") to emptyMap()
+                AttachmentType.location -> AnnotatedString("Shared a location") to emptyMap()
+                AttachmentType.audio -> AnnotatedString("Shared audio") to emptyMap()
+
+                AttachmentType.UNKNOWN__ -> AnnotatedString("Unknown file") to emptyMap()
+            }
+        }
+
+        else -> latest?.msg?.let { AnnotatedString(it) to emptyMap() }
+    }

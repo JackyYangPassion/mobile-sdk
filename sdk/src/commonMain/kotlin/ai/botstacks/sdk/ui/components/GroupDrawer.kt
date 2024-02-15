@@ -33,7 +33,7 @@ import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genG
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -76,7 +76,10 @@ fun ChatDrawerHeader(chat: Chat) {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ChatDrawer(
-    chat: Chat?, state: ModalBottomSheetState, hide: () -> Unit, openEdit: () -> Unit,
+    chat: Chat?,
+    state: ModalBottomSheetState,
+    hide: () -> Unit,
+    openEdit: () -> Unit,
     openInvite: (Chat) -> Unit,
     openProfile: (User) -> Unit,
     back: () -> Unit,
@@ -88,7 +91,7 @@ fun ChatDrawer(
         modifier = Modifier.fillMaxSize(),
         sheetBackgroundColor = colorScheme.background,
         sheetContentColor = colorScheme.onBackground,
-        scrimColor = colorScheme.caption,
+        scrimColor = colorScheme.scrim,
         sheetContent = {
             Box(contentAlignment = Alignment.BottomCenter) {
                 Column {

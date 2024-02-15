@@ -10,8 +10,8 @@ import androidx.compose.ui.window.ComposeUIViewController
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 
-fun BotStacksNavigation() = ComposeUIViewController {
-    BotStacksChat.shared.onLogout = {  }
+fun BotStacksNavigation(onLogout: () -> Unit) = ComposeUIViewController {
+    BotStacksChat.shared.onLogout = onLogout
 
     BotstacksRouter {
         Navigator(ChatListScreen) { navigator ->

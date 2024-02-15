@@ -36,7 +36,7 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource

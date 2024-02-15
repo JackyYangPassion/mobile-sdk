@@ -19,7 +19,7 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.utils.IPreviews
 import androidx.compose.ui.graphics.painter.Painter
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource

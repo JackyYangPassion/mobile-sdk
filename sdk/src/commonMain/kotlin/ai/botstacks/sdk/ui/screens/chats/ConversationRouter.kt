@@ -18,6 +18,7 @@ import ai.botstacks.sdk.ui.screens.NotFound
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.Spinner
 import ai.botstacks.sdk.utils.Monitoring
+import co.touchlab.kermit.Logger
 
 
 @Composable
@@ -31,16 +32,16 @@ fun ConversationRouter(
     openReply: (Message) -> Unit,
     back: () -> Unit
 ) {
-    println("Chat route with uid $uid")
     var chat by remember {
-        mutableStateOf<Chat?>(gid?.let { Chat.get(it) } ?: uid?.let { Chat.getByUser(it) }
-        ?: mid?.let { Message.Companion.get(it)?.chat })
+        mutableStateOf(gid?.let { Chat.get(it) } ?: uid?.let { Chat.getByUser(it) }
+        ?: mid?.let { Message.get(it)?.chat })
     }
     var notFound by remember {
         mutableStateOf(false)
     }
-    LaunchedEffect(key1 = gid, block = {
+    LaunchedEffect(gid) {
         if (gid != null && chat == null) {
+            Logger.d("gid trigger")
             try {
                 chat = API.getChat(gid)
             } catch (err: Exception) {
@@ -51,10 +52,11 @@ fun ConversationRouter(
                 notFound = true
             }
         }
-    })
+    }
 
-    LaunchedEffect(key1 = uid, block = {
+    LaunchedEffect(uid) {
         if (uid != null && chat == null) {
+            Logger.d("uid trigger")
             try {
                 chat = API.dm(uid)
             } catch (err: Exception) {
@@ -65,10 +67,11 @@ fun ConversationRouter(
                 notFound = true
             }
         }
-    })
+    }
 
-    LaunchedEffect(key1 = mid, block = {
+    LaunchedEffect(mid) {
         if (mid != null && chat == null) {
+            Logger.d("mid trigger")
             try {
                 val m = Message.get(mid) ?: API.getMessage(mid)
                 m?.let {
@@ -82,17 +85,26 @@ fun ConversationRouter(
                 notFound = true
             }
         }
-    })
+    }
 
-    chat?.let {
-        ConversationScreen(
-            chat = it, openProfile = openProfile, openInvite = openInvite, openReply = openReply,
-            openEdit = { openEditChat(it) }, back = back
-        )
-    } ?: if (notFound) NotFound(back = back) else Column {
-        Header(title = "Chat")
-        Box(modifier = Modifier.fillMaxSize(1f), contentAlignment = Alignment.Center) {
-            Spinner()
+    Logger.d("chatId=${chat?.id}")
+    chat.let {
+        if (it != null) {
+            ConversationScreen(
+                chat = it,
+                openProfile = openProfile,
+                openInvite = openInvite,
+                openReply = openReply,
+                openEdit = { openEditChat(it) },
+                back = back
+            )
+        } else {
+            if (notFound) NotFound(back = back) else Column {
+                Header(title = "Chat")
+                Box(modifier = Modifier.fillMaxSize(1f), contentAlignment = Alignment.Center) {
+                    Spinner()
+                }
+            }
         }
     }
 }

@@ -27,7 +27,7 @@ import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genU
 import ai.botstacks.sdk.utils.ift
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -52,7 +52,7 @@ fun ContactRow(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = user.username.annotated(),
-                    iac = fonts.h3,
+                    fontStyle = fonts.h3,
                     maxLines = 1,
                     color = colorScheme.onBackground
                 )
@@ -67,7 +67,7 @@ fun ContactRow(
             }
             Text(
                 text = user.status.rawValue.capitalize(Locale.current).annotated(),
-                iac = fonts.body1,
+                fontStyle = fonts.body1,
                 color = ift(
                     user.status == OnlineStatus.Online,
                     colorScheme.primary,

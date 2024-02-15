@@ -35,6 +35,6 @@ plugins {
     id("dev.aga.gradle.version-catalog-generator") version("1.1.0")
 }
 
-rootProject.name = "kmp-template"
+rootProject.name = "botstacks"
 include(":sample-android")
 include(":sdk")

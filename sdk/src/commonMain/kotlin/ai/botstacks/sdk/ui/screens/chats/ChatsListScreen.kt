@@ -13,6 +13,7 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.ChatRow
+import ai.botstacks.sdk.ui.components.EmptyListView
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.HeaderDefaults
 import ai.botstacks.sdk.ui.components.IACList
@@ -112,16 +113,18 @@ fun ChatsListScreen(
                     .contains(searchQuery.lowercase()) || it.user.displayNameFb.lowercase()
                     .contains(searchQuery.lowercase())
             } || chat.name.orEmpty().lowercase().contains(searchQuery.lowercase())
-        }
+        }.sortedByDescending { it.latest?.createdAt }
 
     IACList(
         items = items,
         header = header,
-        empty = @Composable { },
+        empty = @Composable {
+            EmptyListView(config = BotStacks.assets.emptyChats)
+        },
         scrollToTop = scrollToTop.toString(),
-        divider = true
+        divider = false
     ) {
-        ChatRow(chat = it, onClick = openChat)
+        ChatRow(chat = it, onClick = { openChat(it) })
     }
 }
 

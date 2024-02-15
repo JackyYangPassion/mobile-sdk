@@ -26,7 +26,7 @@ PODS:
   - SentryPrivate (8.20.0)
 
 DEPENDENCIES:
-  - BotStacksSDK (from `../pod`)
+  - BotStacksSDK (from `../pod/debug`)
 
 SPEC REPOS:
   trunk:
@@ -38,10 +38,10 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   BotStacksSDK:
-    :path: "../pod"
+    :path: "../pod/debug"
 
 SPEC CHECKSUMS:
-  BotStacksSDK: 5d988fae208bb8de33f7146ddc2f94b80a772f67
+  BotStacksSDK: 6fcb44f025260743c25f83fa1e461e909fd4cdf9
   Gifu: 97c2a3c3865fbc834ab13f797e2e8e7729a1853c
   Giphy: f63ab0e2dd819d6288feba07722aaafe8a5fe4b7
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009

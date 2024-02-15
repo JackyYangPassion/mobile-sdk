@@ -39,6 +39,6 @@ google-services.json
 gen
 
 # iOS user data
-xcuserdata
+xcuserdata/
 Pods
 pod

@@ -2,9 +2,9 @@
 
 package ai.botstacks.sdk.ui.components.internal.settings
 
-import ai.botstacks.sdk.utils.ui.addIfNonNull
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.Text
+import ai.botstacks.sdk.utils.ui.addIfNonNull
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

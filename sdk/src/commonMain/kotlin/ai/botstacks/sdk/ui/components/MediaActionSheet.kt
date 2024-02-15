@@ -37,7 +37,7 @@ import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -68,6 +68,7 @@ fun MediaActionSheet(
     val hide = {
         media = null
         scope.launch { state.hide() }
+        Unit
     }
 
     val onFile = { file: KmpFile ->
@@ -81,7 +82,7 @@ fun MediaActionSheet(
         sheetState = state,
         sheetBackgroundColor = BotStacks.colorScheme.background,
         sheetContentColor = BotStacks.colorScheme.onBackground,
-        scrimColor = BotStacks.colorScheme.caption,
+        scrimColor = BotStacks.colorScheme.scrim,
         sheetContent = {
             Box {
                 Column {
@@ -122,6 +123,13 @@ fun MediaActionSheet(
                         media = Media.gif
                     }
                     ActionItem(
+                        icon = painterResource(Res.drawable.file_arrow_down_fill),
+                        text = "Send a file",
+                        divider = true
+                    ) {
+                        media = Media.file
+                    }
+                    ActionItem(
                         icon = painterResource(Res.drawable.map_pin),
                         text = "Send Location",
                         divider = true
@@ -142,7 +150,9 @@ fun MediaActionSheet(
                         onUri = {
                             onFile(it)
                             hide()
-                        }) { hide() }
+                        },
+                        onCancel = hide
+                    )
 
                     Media.recordPhoto, Media.recordVideo -> {
 //                        CameraPicker(
@@ -153,10 +163,13 @@ fun MediaActionSheet(
 //                            }) { hide() }
                     }
 
-                    Media.gif -> GifPicker(onUri = {
+                    Media.gif -> GifPicker(
+                        onUri = {
 //                        chat.send(inReplyTo?.id, attachments = listOf(it.toUri().imageAttachment()))
-                        hide()
-                    }) { hide() }
+                            hide()
+                        },
+                        onCancel = hide
+                    )
 
                     Media.contact -> {
 //                        ContactPicker(onContact = {
@@ -167,13 +180,24 @@ fun MediaActionSheet(
 //                        }
                     }
 
+                    Media.file -> {
+                        FilePicker(
+                            onUri = {
+                                onFile(it)
+                                hide()
+                            },
+                            onCancel = hide
+                        )
+                    }
+
                     Media.location -> {
-                        LocationPicker(onLocation = {
-                            chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
-                            hide()
-                        }) {
-                            hide()
-                        }
+                        LocationPicker(
+                            onLocation = {
+                                chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
+                                hide()
+                            },
+                            onCancel = hide
+                        )
                     }
 
                     else -> Logger.d("empty media")
@@ -215,7 +239,29 @@ fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) 
     LaunchedEffect(video, onUri) {
         pickerLauncher.launch()
     }
+}
 
+@Composable
+fun FilePicker(onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
+    val pickerLauncher = rememberFilePickerLauncher(
+        type = FilePickerFileType.Custom(
+            listOf(
+                *FilePickerFileType.Spreadsheet.value,
+                *FilePickerFileType.Pdf.value,
+                *FilePickerFileType.Word.value,
+                *FilePickerFileType.Presentation.value,
+                FilePickerFileType.TextContentType
+            ),
+
+
+            ),
+        selectionMode = FilePickerSelectionMode.Single,
+        onResult = { files -> files.firstOrNull() ?: onCancel() }
+    )
+
+    LaunchedEffect(onUri) {
+        pickerLauncher.launch()
+    }
 }
 
 //@Composable

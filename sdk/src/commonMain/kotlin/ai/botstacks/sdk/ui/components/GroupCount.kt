@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -33,7 +33,7 @@ fun ChatCount(count: Int) {
         Space()
         Text(
             text = count.toString().annotated(),
-            iac = BotStacks.fonts.caption1,
+            fontStyle = BotStacks.fonts.caption1,
             color = BotStacks.colorScheme.caption
         )
     }

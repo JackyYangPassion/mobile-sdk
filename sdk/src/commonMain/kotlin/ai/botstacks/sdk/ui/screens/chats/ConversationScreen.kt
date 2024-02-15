@@ -12,7 +12,6 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.style.TextOverflow
 import ai.botstacks.sdk.actions.markRead
 import ai.botstacks.sdk.state.Message
@@ -50,8 +49,7 @@ fun ConversationScreen(
     openEdit: () -> Unit,
     back: () -> Unit
 ) {
-    val ctx = rememberCoroutineScope()
-    var focusRequester = remember { FocusRequester() }
+    val composeScope = rememberCoroutineScope()
     var messageForAction by remember {
         mutableStateOf<Message?>(null)
     }
@@ -61,7 +59,8 @@ fun ConversationScreen(
     val menu = androidx.compose.material.rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden, skipHalfExpanded = true
     )
-    DisposableEffect(key1 = chat.id, effect = {
+
+    DisposableEffect(chat.id) {
         Chat.currentlyViewed = chat.id
         chat.markRead()
         onDispose {
@@ -70,11 +69,12 @@ fun ConversationScreen(
             }
             chat.markRead()
         }
-    })
+    }
+
     MediaActionSheet(
         state = media,
         chat = chat,
-        dismiss = { ctx.launch { menu.hide() } },
+        dismiss = { composeScope.launch { menu.hide() } },
         inReplyTo = message
     ) {
         MessageActionSheet(
@@ -85,7 +85,7 @@ fun ConversationScreen(
             ChatDrawer(
                 chat = chat,
                 state = menu,
-                hide = { ctx.launch { menu.hide() } },
+                hide = { composeScope.launch { menu.hide() } },
                 openEdit = openEdit,
                 openInvite = openInvite,
                 openProfile = openProfile,
@@ -124,7 +124,7 @@ fun ConversationScreen(
                             .navigationBarsPadding(),
                         chat = chat,
                         replyingTo = message,
-                        onMedia = { ctx.launch { media.show() } }
+                        onMedia = { composeScope.launch { media.show() } }
                     )
                 }
             }
