@@ -17,13 +17,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import ai.botstacks.sdk.ui.theme.FontStyle
 import ai.botstacks.sdk.utils.annotated
+import androidx.compose.foundation.text.InlineTextContent
 
 @Composable
 fun Text(
     text: AnnotatedString,
-    iac: FontStyle,
+    fontStyle: FontStyle,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
+    inlineContent: Map<String, InlineTextContent> = emptyMap(),
     letterSpacing: TextUnit = TextUnit.Unspecified,
     textDecoration: TextDecoration? = null,
     textAlign: TextAlign? = null,
@@ -37,10 +39,11 @@ fun Text(
     androidx.compose.material3.Text(
         text,
         modifier = modifier,
+        inlineContent = inlineContent,
         color = color,
-        fontSize = iac.size,
-        fontWeight = iac.weight,
-        fontFamily = iac.family,
+        fontSize = fontStyle.size,
+        fontWeight = fontStyle.weight,
+        fontFamily = fontStyle.family,
         letterSpacing = letterSpacing,
         textDecoration = textDecoration,
         textAlign = textAlign,

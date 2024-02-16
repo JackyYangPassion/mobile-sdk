@@ -27,7 +27,7 @@ import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.Pressable
 import ai.botstacks.sdk.utils.*
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 

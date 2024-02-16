@@ -41,7 +41,7 @@ data class CTA(val icon: Painter?, val text: String, val to: () -> Unit)
 @Composable
 fun EmptyListView(
   config: EmptyScreenConfig,
-  cta: CTA?
+  cta: CTA? = null,
 ) {
   Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
     Column(modifier = Modifier.padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally) {

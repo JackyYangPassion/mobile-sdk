@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -74,7 +74,7 @@ fun EditableTextLabel(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x2, Alignment.CenterHorizontally)
             ) {
-                Text(state.text.toString(), fontStyle = BotStacks.fonts.h3)
+                Text(state.text.toString(), fontStyle = BotStacks.fonts.h3, color = BotStacks.colorScheme.onBackground)
                 Icon(
                     painterResource(Res.drawable.edit_outlined),
                     contentDescription = null,

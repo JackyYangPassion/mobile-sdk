@@ -51,27 +51,33 @@ fun <T : Identifiable> IACList(
 ) {
     val pullRefreshState = rememberPullRefreshState(refreshing, { refresh?.let { it() } })
     if (items.isEmpty() && !hasMore) {
-        Column(
+        Box(
             modifier = modifier
                 .pullRefresh(pullRefreshState)
                 .fillMaxSize()
         ) {
-            header?.invoke()
+            Column(
+                modifier = modifier.fillMaxSize()
+            ) {
+                header?.invoke()
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    empty()
+                }
+                footer?.invoke()
+            }
+
             PullRefreshIndicator(
                 refreshing,
                 pullRefreshState,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.TopCenter)
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Column(
-                modifier = Modifier.padding(16.dp, 0.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                empty()
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            footer?.invoke()
         }
+
     } else {
         Box(
             modifier = modifier
@@ -131,9 +137,10 @@ fun <T : Identifiable> PagerList(
     content: @Composable LazyItemScope.(T) -> Unit
 ) {
     val array = prefix + pager.items
-    LaunchedEffect(key1 = pager.id, block = {
+    LaunchedEffect(pager.id) {
         pager.loadMoreIfEmpty()
-    })
+    }
+
     IACList(
         modifier = modifier,
         items = array,

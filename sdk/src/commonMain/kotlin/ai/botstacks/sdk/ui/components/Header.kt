@@ -47,7 +47,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.Dp
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -58,7 +58,7 @@ object HeaderDefaults {
     fun Title(text: String) {
         Text(
             text = text.annotated(),
-            iac = fonts.h2,
+            fontStyle = fonts.h2,
             color = colorScheme.onBackground,
             maxLines = 1
         )

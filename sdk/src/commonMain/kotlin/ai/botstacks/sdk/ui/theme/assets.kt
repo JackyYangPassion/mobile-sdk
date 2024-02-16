@@ -14,15 +14,13 @@ import ai.botstacks.sdk.utils.ui.toImageAsset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.painter.Painter
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 sealed interface EmptyScreenType {
-    data object Chat : EmptyScreenType
+    data object Messages : EmptyScreenType
     data object Chats : EmptyScreenType
-
-    data object Channels : EmptyScreenType
 
     data object AllChannels : EmptyScreenType
 }
@@ -45,8 +43,7 @@ data class EmptyScreenConfig(
 val EmptyScreenConfig.defaultImage: Painter?
     @Composable get() = when (type) {
         EmptyScreenType.AllChannels -> EmptyAllChannelsDefault
-        EmptyScreenType.Channels -> EmptyChannelsDefault
-        EmptyScreenType.Chat -> EmptyChatDefault
+        EmptyScreenType.Messages -> EmptyChatDefault
         EmptyScreenType.Chats -> EmptyChatsDefault
         else -> null
     }
@@ -54,14 +51,6 @@ val EmptyScreenConfig.defaultImage: Painter?
 @Stable
 data class Assets(
     val chat: ImageAssetIdentifier? = null,
-    val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
-        caption = "Your friends are waiting for you",
-        type = EmptyScreenType.Chat
-    ),
-    val emptyChannels: EmptyScreenConfig = EmptyScreenConfig(
-        caption = "No channels yet. Go join one",
-        type = EmptyScreenType.Channels
-    ),
     val emptyChats: EmptyScreenConfig = EmptyScreenConfig(
         caption = "You haven't added any chats yet",
         type = EmptyScreenType.Chats
@@ -72,18 +61,16 @@ data class Assets(
     ),
 ) {
     fun list(list: BotStacksChatStore.ChatList) = when (list) {
-        BotStacksChatStore.ChatList.dms -> emptyChat
-        BotStacksChatStore.ChatList.groups -> emptyChannels
+        BotStacksChatStore.ChatList.dms -> emptyChats
+        BotStacksChatStore.ChatList.groups -> emptyChats
     }
 }
 
 internal val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }
 
 internal val EmptyChatDefault: Painter
-    @Composable get() = painterResource(Res.drawable.empty_chats)
-internal val EmptyChannelsDefault: Painter
-    @Composable get() = painterResource(Res.drawable.empty_channels)
+    @Composable get() = painterResource(Res.drawable.chat_multiple_outline)
 internal val EmptyChatsDefault: Painter
-    @Composable get() = painterResource(Res.drawable.empty_chats)
+    @Composable get() = painterResource(Res.drawable.chat_multiple_outline)
 internal val EmptyAllChannelsDefault: Painter
-    @Composable get() = painterResource(Res.drawable.empty_channels)
+    @Composable get() = painterResource(Res.drawable.empty_all_channels)

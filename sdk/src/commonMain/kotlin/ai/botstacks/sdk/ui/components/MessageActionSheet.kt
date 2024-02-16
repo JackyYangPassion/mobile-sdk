@@ -19,7 +19,7 @@ import ai.botstacks.sdk.ui.components.internal.ActionItem
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.annotated
 import ai.botstacks.sdk.utils.genChatextMessage
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @Composable
@@ -51,7 +51,7 @@ fun MessageActionSheet(
         sheetState = state,
         sheetBackgroundColor = colorScheme.background,
         sheetContentColor = colorScheme.onBackground,
-        scrimColor = colorScheme.caption,
+        scrimColor = colorScheme.scrim,
         sheetContent = {
             Space(8f)
             EmojiBar(

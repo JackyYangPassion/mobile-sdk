@@ -25,7 +25,7 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
 import co.touchlab.kermit.Logger
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 

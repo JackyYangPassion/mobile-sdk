@@ -115,11 +115,6 @@ data class Message(
         } ?: text
 
 
-    val summary: String
-        get() =
-            "${user.username}: $msg"
-
-
     var reacting by mutableStateOf(false)
     var favoriting by mutableStateOf(false)
     var editingText by mutableStateOf(false)
@@ -147,6 +142,9 @@ fun FMessage.Attachment.vcard() =
 fun FMessage.Attachment.location() =
     if (type == AttachmentType.location) Location(latitude, longitude, address) else null
 
+fun FMessage.Attachment.file() =
+    if (type == AttachmentType.file) File(data = data.orEmpty(), mimeString = mime.orEmpty()) else null
+
 data class Location(val latitude: Double?, val longitude: Double?, val address: String? = null) {
     val link: String
         get() = "https://www.google.com/maps/search/?api=1&query=" + urlEncode(
@@ -156,4 +154,6 @@ data class Location(val latitude: Double?, val longitude: Double?, val address: 
         get() = "[Location${address?.let { ": $it" } ?: ""}](${link})"
 
 }
+
+data class File(val data: String, val mimeString: String)
 

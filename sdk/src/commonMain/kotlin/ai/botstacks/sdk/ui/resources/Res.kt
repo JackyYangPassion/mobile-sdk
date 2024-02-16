@@ -4,7 +4,7 @@ package ai.botstacks.sdk.ui.resources
 
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import androidx.compose.runtime.Composable
-import kmp_template.sdk.generated.resources.Res
+import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 

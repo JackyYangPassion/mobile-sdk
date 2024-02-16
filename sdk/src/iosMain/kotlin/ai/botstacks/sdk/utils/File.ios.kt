@@ -1,6 +1,7 @@
 package ai.botstacks.sdk.utils
 
 import com.mohamedrejeb.calf.io.KmpFile
+import com.mohamedrejeb.calf.io.name
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreFoundation.CFStringRef
 import platform.CoreServices.UTTypeCopyPreferredTagWithClass
@@ -9,6 +10,8 @@ import platform.CoreServices.kUTTagClassFilenameExtension
 import platform.CoreServices.kUTTagClassMIMEType
 import platform.Foundation.CFBridgingRelease
 import platform.Foundation.CFBridgingRetain
+import platform.Foundation.NSURL
+import platform.Foundation.NSURL.Companion.resourceValuesForKeys
 import platform.Foundation.NSURLFileSizeKey
 import platform.Foundation.pathExtension
 
@@ -33,4 +36,8 @@ actual fun KmpFile.size(): Long {
         val resources = resourceValuesForKeys(listOf(NSURLFileSizeKey), null)
         resources?.get(NSURLFileSizeKey) as? Long
     }.getOrNull() ?: -1L
+}
+
+actual fun guessRemoteFilename(url: String): String? {
+    return NSURL.URLWithString(url)?.name
 }
