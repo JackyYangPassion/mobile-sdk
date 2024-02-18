@@ -4,11 +4,39 @@
 
 package ai.botstacks.sdk.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import ai.botstacks.sdk.actions.react
+import ai.botstacks.sdk.fragment.FMessage
+import ai.botstacks.sdk.state.Message
+import ai.botstacks.sdk.state.User
+import ai.botstacks.sdk.type.AttachmentType
+import ai.botstacks.sdk.ui.BotStacks.colorScheme
+import ai.botstacks.sdk.ui.BotStacks.dimens
+import ai.botstacks.sdk.ui.BotStacks.fonts
+import ai.botstacks.sdk.ui.BotStacks.shapes
+import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.components.internal.Pressable
+import ai.botstacks.sdk.utils.Fn
+import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.utils.format
+import ai.botstacks.sdk.utils.genChatextMessage
+import ai.botstacks.sdk.utils.genCurrentUser
+import ai.botstacks.sdk.utils.genU
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -16,28 +44,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ai.botstacks.sdk.actions.react
-import ai.botstacks.sdk.state.Message
-import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.ui.BotStacks.colorScheme
-import ai.botstacks.sdk.ui.BotStacks.dimens
-import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.components.internal.Pressable
-import ai.botstacks.sdk.utils.*
 import botstacks.sdk.generated.resources.Res
+import co.touchlab.kermit.Logger
+import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MessageView(
+    modifier: Modifier = Modifier,
     message: Message,
+    isGroup: Boolean,
+    shape: CornerBasedShape = shapes.medium,
+    showAvatar: Boolean = false,
+    showTimestamp: Boolean = true,
     onPressUser: (User) -> Unit,
-    onLongPress: (Message) -> Unit,
-    onClick: ((Message) -> Unit)? = null
+    onLongPress: () -> Unit,
+    onClick: (() -> Unit)? = null
 ) {
     if (message.user.blocked) {
         return
@@ -45,33 +69,140 @@ fun MessageView(
     val current = message.user.isCurrent
     val align = if (current) Alignment.End else Alignment.Start
 
-    Column(
-        horizontalAlignment = align,
-        modifier = Modifier
-            .fillMaxWidth()
-            .combinedClickable(
-                onClick = {
-                    onClick?.invoke(message)
-                },
-                onLongClick = {
-                    onLongPress(message)
-                })
+    message.attachments.onEachIndexed { index, attachment ->
+
+        val showAvatarForThis = showAvatar &&
+                index == message.attachments.lastIndex &&
+                message.markdown.isEmpty()
+
+        val showTimestampForThis = showTimestamp &&
+                index == message.attachments.lastIndex &&
+                message.markdown.isEmpty()
+
+        MessageView(
+            modifier = modifier,
+            avatar = message.user.avatar,
+            username = message.user.displayNameFb,
+            content = null,
+            attachment = attachment,
+            date = message.createdAt,
+            isCurrentUser = current,
+            isGroup = isGroup,
+            shape = shape,
+            alignment = align,
+            showAvatar = showAvatarForThis,
+            showTimestamp = showTimestampForThis,
+            onPressUser = { onPressUser(message.user) },
+            onLongPress = onLongPress,
+            onClick = onClick
+        )
+    }
+
+    if (message.markdown.isNotEmpty()) {
+        MessageView(
+            modifier = modifier,
+            avatar = message.user.avatar,
+            username = message.user.displayNameFb,
+            content = message.markdown,
+            attachment = null,
+            date = message.createdAt,
+            isCurrentUser = current,
+            isGroup = isGroup,
+            shape = shape,
+            alignment = align,
+            showAvatar = message.attachments.isEmpty() && showAvatar,
+            showTimestamp = message.attachments.isEmpty() && showTimestamp,
+            onPressUser = { onPressUser(message.user) },
+            onLongPress = onLongPress,
+            onClick = onClick
+        )
+    }
+}
+
+@Composable
+fun MessageView(
+    modifier: Modifier = Modifier,
+    avatar: String?,
+    username: String,
+    content: String? = null,
+    attachment: FMessage.Attachment? = null,
+    date: Instant,
+    isCurrentUser: Boolean,
+    isGroup: Boolean,
+    shape: CornerBasedShape = shapes.medium,
+    alignment: Alignment.Horizontal,
+    showAvatar: Boolean = false,
+    showTimestamp: Boolean = true,
+    onPressUser: () -> Unit,
+    onLongPress: () -> Unit,
+    onClick: (() -> Unit)? = null
+) {
+    BoxWithConstraints(
+        modifier = modifier.fillMaxWidth(),
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .padding(10.dp, 5.dp)
-                .fillMaxWidth(0.8f)
+        val maxWidth = maxWidth
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
         ) {
-            if (align == Alignment.Start) {
-                Favorite(message.favorite)
-                Avvy(message.user.avatar) { onPressUser(message.user) }
-                Content(msg = message, modifier = Modifier.weight(1f))
-            } else {
-                Content(msg = message, modifier = Modifier.weight(1f))
-                Avvy(message.user.avatar) { onPressUser(message.user) }
-                Favorite(message.favorite)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(dimens.grid.x2, alignment),
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                if (alignment == Alignment.Start && isGroup) {
+                    if (showAvatar) {
+                        Avvy(avatar) { onPressUser() }
+                    } else {
+                        Spacer(Modifier.requiredWidth(AvatarSize.Small.value))
+                    }
+                }
+
+                when (attachment?.type) {
+                    AttachmentType.image -> MessageImageContent(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .widthIn(max = maxWidth * 0.67f),
+                        isCurrentUser = isCurrentUser,
+                        image = attachment,
+                        username = username,
+                        shape = shape,
+                        showOwner = isGroup && !isCurrentUser && showTimestamp,
+                        onClick = onClick,
+                        onLongClick = onLongPress,
+                    )
+
+                    else -> Unit
+                }
+
+                if (content != null) {
+                    MessageTextContent(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .widthIn(max = maxWidth * 0.56f),
+                        shape = shape,
+                        content = content,
+                        showOwner = isGroup && !isCurrentUser && showTimestamp,
+                        isCurrentUser = isCurrentUser,
+                        username = username,
+                        onClick = onClick,
+                        onLongClick = onLongPress,
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(dimens.grid.x2, alignment = alignment),
+            ) {
+                Spacer(Modifier.requiredWidth(AvatarSize.Small.value))
+                if (showTimestamp) {
+                    Text(
+                        text = date.format("h:mm a"),
+                        fontStyle = fonts.caption2,
+                        color = colorScheme.caption
+                    )
+                }
             }
         }
     }
@@ -82,9 +213,14 @@ fun MessageView(
 fun MessageViewPreview() {
     BotStacksChatContext {
         Column {
-            MessageView(message = genChatextMessage(genU()), onPressUser = {}, onLongPress = {})
+            MessageView(
+                message = genChatextMessage(genU()),
+                isGroup = false,
+                onPressUser = {},
+                onLongPress = {})
             MessageView(
                 message = genChatextMessage(genCurrentUser()),
+                isGroup = false,
                 onPressUser = {},
                 onLongPress = {})
         }
@@ -158,35 +294,5 @@ fun Reactions(msg: Message, modifier: Modifier = Modifier) {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun Content(msg: Message, modifier: Modifier = Modifier) {
-    val align = if (msg.user.isCurrent) Alignment.End else Alignment.Start
-    Column(
-        horizontalAlignment = align, verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = modifier
-    ) {
-        MessageTop(msg)
-        MessageContent(message = msg)
-        Reactions(msg)
-        ReplyCount(count = msg.replyCount)
-    }
-}
-
-@Composable
-fun MessageTop(msg: Message) {
-    Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = msg.user.username,
-            fontStyle = fonts.body1,
-            color = ift(msg.user.isCurrent, colorScheme.primary, colorScheme.onMessage),
-            modifier = Modifier
-                .requiredSizeIn(maxWidth = 120.dp),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(text = msg.createdAt.relativeTimeString(), fontStyle = fonts.caption2, color = colorScheme.caption)
     }
 }

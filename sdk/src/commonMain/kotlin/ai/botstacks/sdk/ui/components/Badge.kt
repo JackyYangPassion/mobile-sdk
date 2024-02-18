@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.graphics.Shape
 
 
 @Composable
@@ -64,10 +65,11 @@ fun Badge(
         vertical = BotStacks.dimens.grid.x1
     ),
     fontStyle: FontStyle = BotStacks.fonts.caption2,
+    shape: Shape = CircleShape
 ) {
     Box(
         modifier = modifier
-            .background(color = backgroundColor, shape = CircleShape)
+            .background(color = backgroundColor, shape = shape)
             .padding(contentPadding),
     ) {
         androidx.compose.material3.Text(

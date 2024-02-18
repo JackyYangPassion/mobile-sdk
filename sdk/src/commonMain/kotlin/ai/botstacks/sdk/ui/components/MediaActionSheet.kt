@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import co.touchlab.kermit.Logger
 import com.mohamedrejeb.calf.io.KmpFile
@@ -38,6 +39,7 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import botstacks.sdk.generated.resources.Res
+import com.mohamedrejeb.calf.io.name
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -149,7 +151,6 @@ fun MediaActionSheet(
                         video = media == Media.pickVideo,
                         onUri = {
                             onFile(it)
-                            hide()
                         },
                         onCancel = hide
                     )
@@ -184,7 +185,6 @@ fun MediaActionSheet(
                         FilePicker(
                             onUri = {
                                 onFile(it)
-                                hide()
                             },
                             onCancel = hide
                         )
@@ -246,17 +246,14 @@ fun FilePicker(onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
     val pickerLauncher = rememberFilePickerLauncher(
         type = FilePickerFileType.Custom(
             listOf(
-                *FilePickerFileType.Spreadsheet.value,
-                *FilePickerFileType.Pdf.value,
-                *FilePickerFileType.Word.value,
-                *FilePickerFileType.Presentation.value,
-                FilePickerFileType.TextContentType
+                FilePickerFileType.DocumentContentType,
+                FilePickerFileType.TextContentType,
             ),
-
-
-            ),
+        ),
         selectionMode = FilePickerSelectionMode.Single,
-        onResult = { files -> files.firstOrNull() ?: onCancel() }
+        onResult = { files ->
+            Logger.d("onresult ${files.firstOrNull()?.name}")
+            files.firstOrNull() ?: onCancel() }
     )
 
     LaunchedEffect(onUri) {

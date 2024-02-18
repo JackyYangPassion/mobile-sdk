@@ -51,6 +51,10 @@ val EmptyScreenConfig.defaultImage: Painter?
 @Stable
 data class Assets(
     val chat: ImageAssetIdentifier? = null,
+    val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
+        caption = "No messages",
+        type = EmptyScreenType.Messages
+    ),
     val emptyChats: EmptyScreenConfig = EmptyScreenConfig(
         caption = "You haven't added any chats yet",
         type = EmptyScreenType.Chats

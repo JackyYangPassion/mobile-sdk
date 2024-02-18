@@ -12,7 +12,6 @@ import com.yazantarifi.compose.library.MarkdownViewComposable
 
 @Composable
 actual fun MarkdownView(modifier: Modifier, content: String, isCurrentUser: Boolean) {
-    Logger.d("content=$content")
     val openUrl = LocalUriHandler.current
     MarkdownViewComposable(
         modifier = modifier,

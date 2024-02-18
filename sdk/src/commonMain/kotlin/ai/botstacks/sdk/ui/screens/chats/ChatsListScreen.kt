@@ -122,7 +122,6 @@ fun ChatsListScreen(
             EmptyListView(config = BotStacks.assets.emptyChats)
         },
         scrollToTop = scrollToTop.toString(),
-        divider = false
     ) {
         ChatRow(chat = it, onClick = { openChat(it) })
     }

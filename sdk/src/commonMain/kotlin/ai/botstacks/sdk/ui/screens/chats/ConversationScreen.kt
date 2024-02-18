@@ -71,64 +71,66 @@ fun ConversationScreen(
         }
     }
 
-    MediaActionSheet(
-        state = media,
-        chat = chat,
-        dismiss = { composeScope.launch { menu.hide() } },
-        inReplyTo = message
-    ) {
-        MessageActionSheet(
-            message = messageForAction,
-            hide = { messageForAction = null },
-            onReply = openReply
-        ) {
-            ChatDrawer(
-                chat = chat,
-                state = menu,
-                hide = { composeScope.launch { menu.hide() } },
-                openEdit = openEdit,
-                openInvite = openInvite,
-                openProfile = openProfile,
-                back = back
-            ) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Header(
-                        icon = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Avatar(
-                                    type = AvatarType.Channel(listOf(chat.displayImage)),
-                                )
-                                Column {
-                                    Text(
-                                        text = chat.displayName,
-                                        fontStyle = fonts.h2,
-                                        color = colorScheme.onBackground,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    ChatCount(count = chat.members.size)
-                                }
-                            }
-                        },
-                        onBackClick = back,
-                        endAction = { HeaderDefaults.MenuAction { openEdit() } }
+//    MediaActionSheet(
+//        state = media,
+//        chat = chat,
+//        dismiss = { composeScope.launch { menu.hide() } },
+//        inReplyTo = message
+//    ) {
+//        MessageActionSheet(
+//            message = messageForAction,
+//            hide = { messageForAction = null },
+//            onReply = openReply
+//        ) {
+//            ChatDrawer(
+//                chat = chat,
+//                state = menu,
+//                hide = { composeScope.launch { menu.hide() } },
+//                openEdit = openEdit,
+//                openInvite = openInvite,
+//                openProfile = openProfile,
+//                back = back
+//            ) {
+//
+//            }
+//        }
+//    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Header(
+            icon = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Avatar(
+                        type = AvatarType.Channel(listOf(chat.displayImage)),
                     )
-                    MessageList(
-                        chat = chat,
-                        modifier = Modifier.weight(1f),
-                        onPressUser = { openProfile(it) },
-                        onLongPress = { messageForAction = it }
-                    )
-                    MessageInput(
-                        modifier = Modifier.padding(dimens.grid.x4)
-                            .navigationBarsPadding(),
-                        chat = chat,
-                        replyingTo = message,
-                        onMedia = { composeScope.launch { media.show() } }
-                    )
+                    Column {
+                        Text(
+                            text = chat.displayName,
+                            fontStyle = fonts.h2,
+                            color = colorScheme.onBackground,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        ChatCount(count = chat.members.size)
+                    }
                 }
-            }
-        }
+            },
+            onBackClick = back,
+            endAction = { HeaderDefaults.MenuAction { openEdit() } }
+        )
+        MessageList(
+            chat = chat,
+            modifier = Modifier.weight(1f),
+            onPressUser = { openProfile(it) },
+            onLongPress = { messageForAction = it }
+        )
+        MessageInput(
+            modifier = Modifier.padding(dimens.grid.x4)
+                .navigationBarsPadding(),
+            chat = chat,
+            replyingTo = message,
+            onMedia = { composeScope.launch { media.show() } }
+        )
     }
 }
 

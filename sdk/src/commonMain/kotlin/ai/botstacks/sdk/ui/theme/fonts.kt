@@ -184,7 +184,7 @@ private fun defaultAppFonts() = Fonts(
     ),
     label2 = FontStyle(
         size = 14.sp,
-        weight = FontWeight.W600,
+        weight = FontWeight.W500,
         family = interW600
     ),
     button1 = FontStyle(
