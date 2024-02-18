@@ -5,6 +5,7 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.fragment.FMessage
+import ai.botstacks.sdk.state.Location
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks
@@ -13,6 +14,7 @@ import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.ImageRenderer
 import ai.botstacks.sdk.ui.components.internal.MarkdownView
+import ai.botstacks.sdk.ui.components.internal.location.MapPin
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChatextMessage
 import ai.botstacks.sdk.utils.genFileMessage
@@ -119,6 +121,52 @@ fun MessageImageContent(
                     onClick = { onClick?.invoke() },
                     onLongClick = onLongClick,
                 ),
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MessageMapContent(
+    username: String,
+    avatar: String?,
+    location: Location,
+    isCurrentUser: Boolean,
+    modifier: Modifier = Modifier,
+    shape: CornerBasedShape = BotStacks.shapes.medium,
+    showOwner: Boolean = false,
+    onClick: (() -> Unit)? = null,
+    onLongClick: () -> Unit = { }
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        if (showOwner) {
+            Text(
+                text = username,
+                fontStyle = BotStacks.fonts.label2,
+                color = colorScheme.primary
+            )
+        }
+
+        MapPin(
+            modifier = Modifier
+                .height(dimens.imagePreviewSize.height.dp)
+                .fillMaxWidth()
+                .background(
+                    color = ift(
+                        isCurrentUser,
+                        colorScheme.primary,
+                        colorScheme.message
+                    ),
+                    shape = shape
+                ).clip(shape)
+                .combinedClickable(
+                    onClick = { onClick?.invoke() },
+                    onLongClick = onLongClick,
+                ),
+            location = location,
+            userAvatar = avatar
         )
     }
 }

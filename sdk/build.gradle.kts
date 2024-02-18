@@ -42,11 +42,6 @@ kotlin {
             binaryOption("bundleId", "ai.botstacks.sdk")
         }
 
-        pod("Sentry") {
-            version = "8.20.0"
-            linkOnly = true
-        }
-
         pod("Giphy") {
             moduleName = "GiphyUISDK"
             version = "2.2.8"
@@ -56,6 +51,15 @@ kotlin {
         pod("Gifu") {
             version = "3.3.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("GoogleMaps") {
+            version = "8.2.0"
+        }
+
+        pod("Sentry") {
+            version = "8.20.0"
+            linkOnly = true
         }
     }
 
@@ -135,6 +139,9 @@ kotlin {
                 implementation(libs.contacts.async)
                 implementation(libs.contacts.core)
                 implementation(libs.contacts.vcard)
+
+                implementation(libs.google.maps.compose)
+                implementation(libs.google.maps.compose.utils)
 
                 implementation(libs.datafaker)
                 implementation(libs.emoji.picker)

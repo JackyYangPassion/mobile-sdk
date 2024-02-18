@@ -8,6 +8,7 @@ import ai.botstacks.sdk.actions.react
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
+import ai.botstacks.sdk.state.location
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
@@ -172,6 +173,19 @@ fun MessageView(
                         onLongClick = onLongPress,
                     )
 
+                    AttachmentType.location -> MessageMapContent(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .widthIn(max = maxWidth * 0.67f),
+                        location = attachment.location()!!,
+                        isCurrentUser = isCurrentUser,
+                        username = username,
+                        avatar = avatar,
+                        shape = shape,
+                        showOwner = isGroup && !isCurrentUser && showTimestamp,
+                        onClick = onClick,
+                        onLongClick = onLongPress,
+                    )
                     else -> Unit
                 }
 

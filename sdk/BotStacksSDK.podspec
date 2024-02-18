@@ -11,6 +11,7 @@ Pod::Spec.new do |spec|
     spec.ios.deployment_target = '15.0'
     spec.dependency 'Gifu', '3.3.0'
     spec.dependency 'Giphy', '2.2.8'
+    spec.dependency 'GoogleMaps', '8.2.0'
     spec.dependency 'Sentry', '8.20.0'
                 
     if !Dir.exist?('build/cocoapods/framework/BotStacksSDK.framework') || Dir.empty?('build/cocoapods/framework/BotStacksSDK.framework')
