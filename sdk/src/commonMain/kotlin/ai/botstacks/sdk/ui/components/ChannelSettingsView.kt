@@ -13,6 +13,7 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.utils.bg
+import ai.botstacks.sdk.utils.readBytes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,6 +38,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +48,14 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import botstacks.sdk.generated.resources.Res
+import co.touchlab.kermit.Logger
+import com.mohamedrejeb.calf.io.exists
+import com.mohamedrejeb.calf.io.path
+import com.mohamedrejeb.calf.io.readByteArray
+import com.mohamedrejeb.calf.picker.toImageBitmap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -55,7 +65,7 @@ class ChannelSettingsState(private val chat: Chat) {
     var selectedImage by mutableStateOf<KmpFile?>(null)
 
     val channelImage: Any?
-        get() = selectedImage ?: chat.displayImage
+        @Composable get() = selectedImage?.readBytes()?.toImageBitmap() ?: chat.displayImage
 
     @OptIn(ExperimentalFoundationApi::class)
     val name: TextFieldState = TextFieldState(chat.displayName)
@@ -119,11 +129,19 @@ fun ChannelSettingsView(
         verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.inset),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val scope = rememberCoroutineScope()
         val pickerLauncher = rememberFilePickerLauncher(
             type = FilePickerFileType.Image,
             selectionMode = FilePickerSelectionMode.Single,
             onResult = { files ->
-                state.selectedImage = files.firstOrNull()
+                scope.launch {
+                    withContext(Dispatchers.Main) {
+                        files.firstOrNull()?.let {
+                            Logger.d { "selected=${it.path}, exists=${it.exists()}" }
+                            state.selectedImage = it
+                        }
+                    }
+                }
             }
         )
 

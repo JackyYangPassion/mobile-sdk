@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,9 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import botstacks.sdk.generated.resources.Res
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -45,11 +49,16 @@ class EditProfileState(private val user: User) {
 fun EditProfileView(
     state: EditProfileState,
 ) {
+    val scope = rememberCoroutineScope()
     val pickerLauncher = rememberFilePickerLauncher(
         type = FilePickerFileType.Image,
         selectionMode = FilePickerSelectionMode.Single,
         onResult = { files ->
-            state.selectedImage = files.firstOrNull()
+            scope.launch {
+                withContext(Dispatchers.Main) {
+                    state.selectedImage = files.firstOrNull()
+                }
+            }
         }
     )
 

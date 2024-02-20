@@ -3,6 +3,7 @@ package ai.botstacks.sdk.state
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.Server
+import ai.botstacks.sdk.type.Attachment
 import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.utils.Monitoring
@@ -61,7 +62,7 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
         }
     }
 
-    suspend fun awaitAttachment() = await().let { attachment()!! }
+    suspend fun awaitAttachment() = runCatching { await() }.getOrNull()?.let { attachment() }
 
 
     fun upload() {
@@ -110,6 +111,10 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
                 _await?.resumeWithException(it)
                 _await = null
             }
+        }, onError = {
+            uploading = false
+            _await?.resumeWithException(Throwable("Unknown error occurred"))
+            _await = null
         })
     }
 

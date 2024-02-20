@@ -6,4 +6,6 @@ import com.mohamedrejeb.calf.io.readByteArray
 expect fun KmpFile.contentType(): String?
 expect fun KmpFile.size(): Long
 
+expect fun KmpFile.readBytes(): ByteArray
+
 expect fun guessRemoteFilename(url: String): String?

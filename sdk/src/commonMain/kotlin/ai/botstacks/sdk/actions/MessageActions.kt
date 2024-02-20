@@ -7,7 +7,6 @@ package ai.botstacks.sdk.actions
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Message
-import ai.botstacks.sdk.state.SendingMessage
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
@@ -74,12 +73,14 @@ fun Message.delete() {
     })
 }
 
-fun SendingMessage.retry() {
+fun Message.retry() {
     if (failed) {
         failed = false
-        if (upload?.error != null) {
-            upload.upload()
+        upload?.let {
+            if (it.error != null) {
+                it.upload()
+            }
         }
-        msg.chat.send(this)
+        chat.send(this)
     }
 }

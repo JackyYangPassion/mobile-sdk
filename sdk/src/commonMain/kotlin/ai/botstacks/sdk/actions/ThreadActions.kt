@@ -14,6 +14,7 @@ import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
 import ai.botstacks.sdk.utils.opbg
 import ai.botstacks.sdk.utils.uuid
+import com.apollographql.apollo3.api.Optional
 import kotlinx.datetime.Clock
 
 fun AttachmentInput.toAttachment() = FMessage.Attachment(
@@ -29,6 +30,22 @@ fun AttachmentInput.toAttachment() = FMessage.Attachment(
     address = address.getOrNull(),
     mime = mime.getOrNull()
 )
+
+fun FMessage.Attachment.toInput(): AttachmentInput {
+    return AttachmentInput(
+        id = id,
+        url = url,
+        data = Optional.presentIfNotNull(data),
+        type = type,
+        width = Optional.presentIfNotNull(width),
+        height = Optional.presentIfNotNull(height),
+        duration = Optional.presentIfNotNull(duration),
+        latitude = Optional.presentIfNotNull(latitude),
+        longitude = Optional.presentIfNotNull(longitude),
+        address = Optional.presentIfNotNull(address),
+        mime = Optional.presentIfNotNull(mime),
+    )
+}
 
 fun Chat.send(
     inReplyTo: String?,
@@ -49,30 +66,36 @@ fun Chat.send(
         attachments = atts.map { it.toAttachment() }.toMutableStateList(),
     )
     m.text = text ?: ""
-    val sendingMessage = SendingMessage(m, upload = upload, attachments = attachments ?: listOf())
-    send(sendingMessage)
+    send(m)
 }
 
-fun Chat.send(sendingMessage: SendingMessage) {
+fun Chat.send(sendingMessage: Message) {
     if (!sending.contains(sendingMessage)) {
         sending.add(0, sendingMessage)
+        sendingMessage.isSending = true
     }
     print("Sending Message")
     op({
         val sm = bg {
-            val attachments = sendingMessage.attachments.toMutableList()
+            val attachments = sendingMessage.attachments
+                .map { it.toInput() }
+                .toMutableList()
+
             if (sendingMessage.upload != null) {
                 print("Awaiting upload")
-                val upload = sendingMessage.upload.awaitAttachment()
-                println("Got Upload " + upload.url)
-                attachments.add(upload)
+                sendingMessage.upload?.let {
+                    it.awaitAttachment()?.let { attachment ->
+                        println("Got Upload " + attachment.url)
+                        attachments.add(attachment)
+                    }
+                }
             }
             println("Sending")
             API.send(
                 id,
-                id = sendingMessage.msg.id,
-                inReplyTo = sendingMessage.msg.parentID,
-                text = sendingMessage.msg.text,
+                id = sendingMessage.id,
+                inReplyTo = sendingMessage.parentID,
+                text = sendingMessage.text,
                 attachments = attachments
             )
         }
@@ -81,9 +104,11 @@ fun Chat.send(sendingMessage: SendingMessage) {
             sending.remove(sendingMessage)
         } ?: {
             sendingMessage.failed = true
+            sendingMessage.isSending = false
         }
     }) {
         sendingMessage.failed = true
+        sendingMessage.isSending = false
     }
 }
 
