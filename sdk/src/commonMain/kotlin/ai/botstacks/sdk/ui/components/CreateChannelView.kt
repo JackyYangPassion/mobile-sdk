@@ -10,6 +10,7 @@ import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
 import ai.botstacks.sdk.utils.bg
+import ai.botstacks.sdk.utils.storeTemporarily
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +40,11 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import botstacks.sdk.generated.resources.Res
+import co.touchlab.kermit.Logger
+import com.mohamedrejeb.calf.io.exists
+import com.mohamedrejeb.calf.io.path
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -92,9 +97,11 @@ fun SetChannelDetailsView(
         type = FilePickerFileType.Image,
         selectionMode = FilePickerSelectionMode.Single,
         onResult = { files ->
-            scope.launch {
-                withContext(Dispatchers.Main) {
-                    state.selectedImage = files.firstOrNull()
+            scope.launch(Dispatchers.IO) {
+                files.firstOrNull()?.storeTemporarily()?.let {
+                    withContext(Dispatchers.Main) {
+                        state.selectedImage = it
+                    }
                 }
             }
         }

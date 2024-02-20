@@ -55,7 +55,8 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
         url?.let {
             cont.resume(it)
         } ?: error?.let {
-            cont.resumeWithException(Error(it))
+            println(it.message)
+            cont.resume(null)
         } ?: run {
             _await = cont
             if (!uploading) upload()

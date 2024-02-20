@@ -3,8 +3,6 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.API
-import ai.botstacks.sdk.utils.ui.onEnter
-import ai.botstacks.sdk.utils.ui.unboundedClickable
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
@@ -14,6 +12,9 @@ import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.readBytes
+import ai.botstacks.sdk.utils.storeTemporarily
+import ai.botstacks.sdk.utils.ui.onEnter
+import ai.botstacks.sdk.utils.ui.unboundedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,17 +44,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import botstacks.sdk.generated.resources.Res
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import botstacks.sdk.generated.resources.Res
-import co.touchlab.kermit.Logger
-import com.mohamedrejeb.calf.io.exists
-import com.mohamedrejeb.calf.io.path
-import com.mohamedrejeb.calf.io.readByteArray
-import com.mohamedrejeb.calf.picker.toImageBitmap
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -134,10 +131,9 @@ fun ChannelSettingsView(
             type = FilePickerFileType.Image,
             selectionMode = FilePickerSelectionMode.Single,
             onResult = { files ->
-                scope.launch {
-                    withContext(Dispatchers.Main) {
-                        files.firstOrNull()?.let {
-                            Logger.d { "selected=${it.path}, exists=${it.exists()}" }
+                scope.launch(Dispatchers.IO) {
+                    files.firstOrNull()?.storeTemporarily()?.let {
+                        withContext(Dispatchers.Main) {
                             state.selectedImage = it
                         }
                     }

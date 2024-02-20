@@ -2,6 +2,7 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.utils.storeTemporarily
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,7 +26,11 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import botstacks.sdk.generated.resources.Res
+import co.touchlab.kermit.Logger
+import com.mohamedrejeb.calf.io.exists
+import com.mohamedrejeb.calf.io.path
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -54,9 +59,12 @@ fun EditProfileView(
         type = FilePickerFileType.Image,
         selectionMode = FilePickerSelectionMode.Single,
         onResult = { files ->
-            scope.launch {
-                withContext(Dispatchers.Main) {
-                    state.selectedImage = files.firstOrNull()
+            scope.launch(Dispatchers.IO) {
+                files.firstOrNull()?.storeTemporarily()?.let {
+                    Logger.d { "selected=${it.path}, exists=${it.exists()}" }
+                    withContext(Dispatchers.Main) {
+                        state.selectedImage = it
+                    }
                 }
             }
         }

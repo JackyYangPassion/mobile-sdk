@@ -17,6 +17,7 @@ import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.attachment
 import ai.botstacks.sdk.utils.genChat
 import ai.botstacks.sdk.utils.op
+import ai.botstacks.sdk.utils.storeTemporarily
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
@@ -39,8 +40,13 @@ import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import botstacks.sdk.generated.resources.Res
+import com.mohamedrejeb.calf.io.exists
 import com.mohamedrejeb.calf.io.name
+import com.mohamedrejeb.calf.io.path
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -230,10 +236,20 @@ fun MediaActionSheetPreview() {
 
 @Composable
 fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
+    val scope = rememberCoroutineScope()
     val pickerLauncher = rememberFilePickerLauncher(
         type = if (video) FilePickerFileType.Video else FilePickerFileType.Image,
         selectionMode = FilePickerSelectionMode.Single,
-        onResult = { files -> files.firstOrNull() ?: onCancel() }
+        onResult = { files ->
+            scope.launch(Dispatchers.IO) {
+                files.firstOrNull()?.storeTemporarily()?.let {
+                    Logger.d { "selected=${it.path}, exists=${it.exists()}" }
+                    withContext(Dispatchers.Main) {
+                        onUri(it)
+                    }
+                } ?: onCancel()
+            }
+        }
     )
 
     LaunchedEffect(video, onUri) {
