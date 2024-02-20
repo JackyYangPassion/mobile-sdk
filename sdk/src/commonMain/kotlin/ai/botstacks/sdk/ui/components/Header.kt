@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.components.internal.OverflowMenu
+import ai.botstacks.sdk.ui.components.internal.OverflowMenuScope
 import ai.botstacks.sdk.ui.components.internal.Pressable
 import ai.botstacks.sdk.ui.resources.botstacks_logo_daynight
 import ai.botstacks.sdk.utils.Fn
@@ -151,7 +153,7 @@ fun Header(
     onAdd: Fn? = null,
     onCompose: Fn? = null,
     onBackClicked: Fn? = null,
-    menu: (ContextMenuScope.() -> Unit)? = null,
+    menu: (OverflowMenuScope.() -> Unit)? = null,
     endAction: @Composable Fn = { },
 ) {
     Header(
@@ -185,7 +187,7 @@ fun Header(
     onAdd: Fn? = null,
     onCompose: Fn? = null,
     onBackClick: Fn? = null,
-    menu: (ContextMenuScope.() -> Unit)? = null,
+    menu: (OverflowMenuScope.() -> Unit)? = null,
     endAction: @Composable Fn = { },
 ) {
     Row(
@@ -283,7 +285,7 @@ fun Header(
                             var expanded by remember {
                                 mutableStateOf(false)
                             }
-                            ContextMenu(
+                            OverflowMenu(
                                 visible = expanded,
                                 onDismissRequest = { expanded = false },
                                 menu = { menu(this) },

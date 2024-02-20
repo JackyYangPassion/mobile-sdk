@@ -8,7 +8,8 @@ import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
 
-expect fun Instant.relativeTimeString(other: Instant = Clock.System.now()): String
+expect fun Instant.relativeTimeString(): String
+expect fun Instant.relativeTimeString(other: Instant): String
 
 fun Instant.minutesBetween(other: Instant): Int = other.minus(this, DateTimeUnit.MINUTE).toInt()
 fun Instant.hoursBetween(other: Instant): Int = other.minus(this, DateTimeUnit.HOUR).toInt()

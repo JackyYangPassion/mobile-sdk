@@ -113,7 +113,7 @@ fun ChatsListScreen(
                     .contains(searchQuery.lowercase()) || it.user.displayNameFb.lowercase()
                     .contains(searchQuery.lowercase())
             } || chat.name.orEmpty().lowercase().contains(searchQuery.lowercase())
-        }.sortedByDescending { it.latest?.createdAt }
+        }.sortedByDescending { it.latest?.createdAt }.distinctBy { it.id }
 
     IACList(
         items = items,

@@ -182,7 +182,7 @@ fun <T : Identifiable> IACList(
         refresh = refresh,
         refreshing = refreshing,
     ) {
-        itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
+        itemsIndexed(items) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
                 separator(items.getOrNull(index - 1), item)
                 content(item)
@@ -228,7 +228,7 @@ fun <T : Identifiable> IACListIndexed(
         refresh = refresh,
         refreshing = refreshing,
     ) {
-        itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
+        itemsIndexed(items) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
                 separator(items.getOrNull(index - 1), item)
                 content(index, item)

@@ -1,7 +1,10 @@
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.internal.CupertinoSection
 import ai.botstacks.sdk.ui.components.internal.SectionTokens
+import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
+import ai.botstacks.sdk.ui.theme.LocalBotStacksShapes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -11,6 +14,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +31,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ProvideTextStyle
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -41,6 +49,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -75,9 +84,6 @@ actual inline fun ContextMenu(
     key = key,
     visible = visible,
     onDismissRequest = onDismissRequest,
-    enterTransition = enterTransition,
-    exitTransition = exitTransition,
-    alignment = alignment,
     menu = menu,
     modifier = modifier,
     content = content
@@ -167,7 +173,7 @@ internal fun ContextMenuContainer(
                     .padding(horizontal = SectionTokens.HorizontalPadding)
             ) {
                 val scope = remember(provider.content.menu) {
-                    ContextMenuScopeImpl().apply(provider.content.menu)
+                    ContextMenuScopeCupertinoImpl().apply(provider.content.menu)
                 }
                 AnimatedVisibility(
                     modifier = Modifier
@@ -295,7 +301,7 @@ private interface ContextMenuProvider {
     fun dismiss()
 }
 
-private class ContextMenuScopeImpl : ContextMenuScope {
+private class ContextMenuScopeCupertinoImpl : ContextMenuScope {
 
     private val items = mutableListOf<@Composable (PaddingValues) -> Unit>()
 

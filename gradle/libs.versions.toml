@@ -22,6 +22,8 @@ ktor = "2.3.8"
 calf = "0.3.1"
 voyager = "1.0.0"
 kermit = "2.0.3"
+richtext = "0.12.0"
+markdown = "0.6.1"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
@@ -37,13 +39,11 @@ androidx-test-compose-ui = { module = "androidx.compose.ui:ui-test-junit4", vers
 androidx-test-espresso = { module = "androidx.test.espresso:espresso-core", version = "3.5.1" }
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version = "2.9.0" }
 
-android-colorx = { module = "me.jorgecastillo:androidcolorx", version = "0.2.0" }
-
 compose-adaptive-ui = { module = "com.mohamedrejeb.calf:calf-ui", version.ref = "calf" }
 compose-adaptive-ui-filepicker = { module = "com.mohamedrejeb.calf:calf-file-picker", version.ref = "calf" }
 
 compose-permissions = { module = "com.google.accompanist:accompanist-permissions", version = "0.32.0" }
-compose-markdown = { module = "com.yazantarifi:markdown-compose", version = "1.0.2" }
+compose-markdown = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "richtext" }
 compose-windowSizeClass = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version = "0.3.1" }
 
 apache-commons-text = { module = "org.apache.commons:commons-text", version = "1.10.0" }
@@ -85,6 +85,7 @@ google-play-services-location = { module = "com.google.android.gms:play-services
 
 junit = { module = "junit:junit", version = "4.13.2" }
 
+markdown = { module = "org.jetbrains:markdown", version.ref = "markdown" }
 moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshi" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 

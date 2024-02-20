@@ -6,8 +6,6 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.state.Location
-import ai.botstacks.sdk.state.Message
-import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
@@ -16,16 +14,11 @@ import ai.botstacks.sdk.ui.components.internal.ImageRenderer
 import ai.botstacks.sdk.ui.components.internal.MarkdownView
 import ai.botstacks.sdk.ui.components.internal.location.MapPin
 import ai.botstacks.sdk.utils.IPreviews
-import ai.botstacks.sdk.utils.genChatextMessage
-import ai.botstacks.sdk.utils.genFileMessage
-import ai.botstacks.sdk.utils.genImageMessage
 import ai.botstacks.sdk.utils.ift
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding

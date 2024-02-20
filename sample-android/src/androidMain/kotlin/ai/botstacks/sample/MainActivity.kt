@@ -1,13 +1,14 @@
 package ai.botstacks.sample
 
-import ai.botstacks.sdk.BotStacksNavigation
+import ai.botstacks.sdk.BotStacksChatController
+import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.theme.lightColors
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ai.botstacks.sdk.ui.BotStacksChatContext
 import androidx.activity.enableEdgeToEdge
 
 class MainActivity : ComponentActivity() {
@@ -15,8 +16,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
             BotStacksChatContext {
+                val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "splash") {
                     val openBotstacks = { navController.navigate("botstacks") }
                     val openLogin = { navController.navigate("login") }
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     composable("botstacks") {
-                        BotStacksNavigation { navController.navigate("login") }
+                        BotStacksChatController { navController.navigate("login") }
                     }
                 }
             }

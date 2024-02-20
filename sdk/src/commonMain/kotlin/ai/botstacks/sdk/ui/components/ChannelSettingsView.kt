@@ -10,6 +10,7 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.utils.bg
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -44,7 +45,6 @@ import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import com.mohamedrejeb.calf.ui.toggle.AdaptiveSwitch
 import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -163,7 +163,7 @@ fun ChannelSettingsView(
 //                icon = Res.Drawables.Filled.BellSimple,
 //                title = "Notifications",
 //                endSlot = {
-//                    AdaptiveSwitch(checked = state.muted, onCheckedChange = null)
+//                    ToggleSwitch(checked = state.muted, onCheckedChange = null)
 //                },
 //                onClick = { state.toggleMute() }
 //            )
@@ -171,7 +171,7 @@ fun ChannelSettingsView(
                 icon = Res.drawable.lock_fill,
                 title = "Private channel",
                 endSlot = {
-                    AdaptiveSwitch(checked = state.private, onCheckedChange = null)
+                    ToggleSwitch(checked = state.private, onCheckedChange = null)
                 },
                 onClick = { state.private = !state.private }
             )

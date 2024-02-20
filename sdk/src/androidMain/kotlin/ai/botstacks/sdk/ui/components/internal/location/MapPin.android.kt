@@ -140,7 +140,7 @@ fun rememberMapViewWithLifecycle(): MapView {
     val context = LocalContext.current
     val mapView = remember {
         MapView(context).apply {
-            id = R.id.map
+            id = 1
         }
     }
 

@@ -4,6 +4,7 @@ import ai.botstacks.sdk.actions.toggleBlock
 import ai.botstacks.sdk.actions.toggleMute
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -24,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.util.fastForEach
-import com.mohamedrejeb.calf.ui.toggle.AdaptiveSwitch
 import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -97,7 +97,7 @@ fun UserDetailsView(
                     icon = Res.drawable.bell_simple_fill,
                     title = "Notifications",
                     endSlot = {
-                        AdaptiveSwitch(checked = user.muted, onCheckedChange = null)
+                        ToggleSwitch(checked = user.muted, onCheckedChange = null)
                     },
                     onClick = { user.toggleMute() }
                 )
