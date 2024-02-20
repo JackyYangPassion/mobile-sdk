@@ -50,12 +50,16 @@ actual fun KmpFile.size(): Long {
 }
 
 private fun NSURL.readData(): NSData {
-    while (true) {
+    var result: NSData? = null
+    while (result == null) {
         val data = NSData.dataWithContentsOfURL(this)
         if (data != null)
-            return data
+            result = data
     }
+
+    return result
 }
+
 actual fun KmpFile.readBytes(): ByteArray =
     with(readData()) {
         ByteArray(length.toInt()).apply {

@@ -63,9 +63,13 @@ fun MessageInput(
     val keyboardController = LocalSoftwareKeyboardController.current
     val onSend = {
         if (state.text.isNotBlank()) {
-            chat.send(replyingTo?.id, state.text.toString())
-            keyboardController?.hide()
-            state.clearText()
+            composeScope.launch {
+                val text = state.text.toString()
+                keyboardController?.hide()
+                state.clearText()
+                delay(300)
+                chat.send(replyingTo?.id, text)
+            }
         }
     }
 

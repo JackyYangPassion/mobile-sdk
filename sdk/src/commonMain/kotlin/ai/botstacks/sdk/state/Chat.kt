@@ -11,6 +11,7 @@ import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.type.MemberRole
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.type.OnlineStatus
+import ai.botstacks.sdk.utils.contains
 import ai.botstacks.sdk.utils.op
 
 
@@ -77,8 +78,15 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     val isDM: Boolean
         get() = kind == ChatType.DirectMessage
 
-    fun addMessage(message: Message) {
-        items.add(0, message)
+    fun addMessage(message: Message): Boolean {
+        val index = items.indexOfFirst { it.id == message.id }
+        return if (index >= 0) {
+            items[index] = message
+            false
+        } else {
+            items.add(0, message)
+            true
+        }
     }
 
     var deleting by mutableStateOf(false)

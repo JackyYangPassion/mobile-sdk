@@ -89,18 +89,19 @@ fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
             }
         }
         it.entity.onMessage?.fMessage?.let {
-            println("On new Message")
-            Chat.get(it.chat_id)?.let { chat ->
-                println("Have chat for message")
-                val message = Message.get(it)
-                if (!chat.items.contains(message)) {
-                    chat.items.add(0, message)
-                    if (Chat.currentlyViewed != message.chatID) {
-                        chat.unreadCount += 1
+            if (it.user.fUser.id != currentUserID) {
+                println("On new Message")
+                Chat.get(it.chat_id)?.let { chat ->
+                    println("Have chat for message")
+                    val message = Message.get(it)
+                    if (chat.addMessage(message)) {
+                        if (Chat.currentlyViewed != message.chatID) {
+                            chat.unreadCount += 1
+                        }
                     }
-                }
-                if (!isUpdate && (chat.latest == null || chat.latest!!.createdAt < message.createdAt)) {
-                    chat.latest = message
+                    if (!isUpdate && (chat.latest == null || chat.latest!!.createdAt < message.createdAt)) {
+                        chat.latest = message
+                    }
                 }
             }
         }

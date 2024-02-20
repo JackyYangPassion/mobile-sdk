@@ -65,7 +65,7 @@ fun Chat.send(
         chatID = id,
         attachments = atts.map { it.toAttachment() }.toMutableStateList(),
     )
-    m.text = text ?: ""
+    m.updateText(text.orEmpty())
     send(m)
 }
 
@@ -74,7 +74,9 @@ fun Chat.send(sendingMessage: Message) {
         sending.add(0, sendingMessage)
         sendingMessage.isSending = true
     }
-    print("Sending Message")
+    latest = sendingMessage
+
+    println("Sending Message")
     op({
         val sm = bg {
             val attachments = sendingMessage.attachments
@@ -82,7 +84,7 @@ fun Chat.send(sendingMessage: Message) {
                 .toMutableList()
 
             if (sendingMessage.upload != null) {
-                print("Awaiting upload")
+                println("Awaiting upload")
                 sendingMessage.upload?.let {
                     it.awaitAttachment()?.let { attachment ->
                         println("Got Upload " + attachment.url)
@@ -90,9 +92,8 @@ fun Chat.send(sendingMessage: Message) {
                     }
                 }
             }
-            println("Sending")
             API.send(
-                id,
+                this@send.id,
                 id = sendingMessage.id,
                 inReplyTo = sendingMessage.parentID,
                 text = sendingMessage.text,
@@ -100,15 +101,19 @@ fun Chat.send(sendingMessage: Message) {
             )
         }
         sm?.let {
-            items.add(0, it)
+            latest = it
+            sendingMessage.isSending = false
+            items.add(0, sendingMessage)
             sending.remove(sendingMessage)
         } ?: {
             sendingMessage.failed = true
             sendingMessage.isSending = false
+            latest = sendingMessage
         }
     }) {
         sendingMessage.failed = true
         sendingMessage.isSending = false
+        latest = sendingMessage
     }
 }
 

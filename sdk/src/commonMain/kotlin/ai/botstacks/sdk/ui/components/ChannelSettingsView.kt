@@ -65,7 +65,7 @@ class ChannelSettingsState(private val chat: Chat) {
     var selectedImage by mutableStateOf<KmpFile?>(null)
 
     val channelImage: Any?
-        @Composable get() = selectedImage?.readBytes()?.toImageBitmap() ?: chat.displayImage
+        @Composable get() = selectedImage?.readBytes() ?: chat.displayImage
 
     @OptIn(ExperimentalFoundationApi::class)
     val name: TextFieldState = TextFieldState(chat.displayName)

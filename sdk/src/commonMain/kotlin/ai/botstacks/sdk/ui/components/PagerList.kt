@@ -31,7 +31,10 @@ import ai.botstacks.sdk.utils.Fn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.util.fastDistinctBy
 import kotlinx.coroutines.launch
 
 
@@ -182,7 +185,7 @@ fun <T : Identifiable> IACList(
         refresh = refresh,
         refreshing = refreshing,
     ) {
-        itemsIndexed(items) { index, item ->
+        itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
                 separator(items.getOrNull(index - 1), item)
                 content(item)
@@ -228,7 +231,7 @@ fun <T : Identifiable> IACListIndexed(
         refresh = refresh,
         refreshing = refreshing,
     ) {
-        itemsIndexed(items) { index, item ->
+        itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
                 separator(items.getOrNull(index - 1), item)
                 content(index, item)
@@ -253,7 +256,10 @@ fun <T : Identifiable> PagerList(
     scrollToTop: String? = null,
     content: @Composable LazyItemScope.(T) -> Unit
 ) {
-    val array = prefix + pager.items
+    val array by remember(prefix, pager.items) {
+        derivedStateOf { (prefix + pager.items).fastDistinctBy { it.id } }
+    }
+
     LaunchedEffect(pager.id) {
         pager.loadMoreIfEmpty()
     }
