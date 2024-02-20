@@ -56,7 +56,7 @@ kotlin {
         }
 
         pod("GoogleMaps") {
-            version = "8.2.0"
+            version = "8.4.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
 

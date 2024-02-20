@@ -38,6 +38,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import botstacks.sdk.generated.resources.Res
+import co.touchlab.kermit.Logger
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
@@ -63,7 +64,7 @@ object AvatarDefaults {
     val Size: AvatarSize = AvatarSize.Small
 
     val BackgroundColor: Color
-        @Composable get() = with (LocalBotStacksColorPalette.current) {
+        @Composable get() = with(LocalBotStacksColorPalette.current) {
             dayNightColor(light._100, dark._500)
         }
 
@@ -179,6 +180,10 @@ fun Avatar(
                                             .data(user)
                                             .crossfade(true)
                                             .build(),
+                                        onError = {
+                                            Logger.e(throwable = it.result.throwable) { "failed to load user avatar" }
+                                        },
+                                        fallback = type.emptyState,
                                         contentDescription = "user profile picture",
                                         contentScale = ContentScale.Crop,
                                         modifier = Modifier.weight(1f),
@@ -219,7 +224,10 @@ fun Avatar(
                             .data(url)
                             .crossfade(true)
                             .build(),
-                        onError = { it.result.throwable.printStackTrace() },
+                        fallback = type.emptyState,
+                        onError = {
+                            Logger.e(throwable = it.result.throwable) { "failed to load user avatar" }
+                        },
                         contentDescription = "user profile picture",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
