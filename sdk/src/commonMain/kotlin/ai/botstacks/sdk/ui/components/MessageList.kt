@@ -47,7 +47,7 @@ fun MessageList(
 
             if (dateBefore != dateAfter) {
                 dateBefore?.let {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxWidth().padding(bottom = dimens.grid.x4), contentAlignment = Alignment.Center) {
                         Badge(
                             label = it,
                             backgroundColor = colorScheme.message,

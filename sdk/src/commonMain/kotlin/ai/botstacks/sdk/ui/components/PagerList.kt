@@ -187,14 +187,18 @@ fun <T : Identifiable> IACList(
     ) {
         itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
-                separator(items.getOrNull(index - 1), item)
+                if (!invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
                 content(item)
+                if (invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Identifiable> IACListIndexed(
     modifier: Modifier = Modifier,
@@ -233,8 +237,13 @@ fun <T : Identifiable> IACListIndexed(
     ) {
         itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
-                separator(items.getOrNull(index - 1), item)
+                if (!invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
                 content(index, item)
+                if (invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
             }
         }
     }

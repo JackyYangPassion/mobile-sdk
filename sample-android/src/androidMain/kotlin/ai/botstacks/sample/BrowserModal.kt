@@ -19,16 +19,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import ai.botstacks.sdk.ui.components.TextInput
+import ai.botstacks.sdk.ui.components.internal.TextInput
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BrowserModal(url: String, onClose: () -> Unit) {
-    val state = rememberTextFieldState(initialText = url)
+    var state by remember { mutableStateOf(TextFieldValue(url)) }
     Column(modifier = Modifier.fillMaxHeight()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -36,7 +40,12 @@ fun BrowserModal(url: String, onClose: () -> Unit) {
                 .height(44.dp)
                 .padding(12.dp)
         ) {
-            TextInput(modifier = Modifier.weight(1f), state = state, enabled = false)
+            TextInput(
+                modifier = Modifier.weight(1f),
+                value = state,
+                onValueChanged = { state = it },
+                enabled = false
+            )
             Box(
                 modifier = Modifier
                     .height(44.dp)

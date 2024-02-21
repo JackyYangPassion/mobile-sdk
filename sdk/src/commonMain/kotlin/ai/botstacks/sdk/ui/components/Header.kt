@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -126,12 +127,12 @@ object HeaderDefaults {
 
 internal fun Modifier.requiredIconSize() = this.size(HeaderDefaults.IconSize)
 
-class HeaderState @OptIn(ExperimentalFoundationApi::class) constructor(
+class HeaderState constructor(
     val showSearch: Boolean = false,
     val showSearchClear: Boolean = false,
     isSearchActive: Boolean = false,
-    val searchQuery: TextFieldState = TextFieldState(),
 ) {
+    var searchQuery: TextFieldValue = TextFieldValue()
     var searchActive by mutableStateOf(isSearchActive)
 }
 
@@ -140,9 +141,8 @@ fun rememberHeaderState(
     isSearchVisible: Boolean = false,
     isSearchActive: Boolean = false,
     showSearchClear: Boolean = false,
-    searchQuery: TextFieldState = rememberTextFieldState(),
 ) = remember(isSearchVisible, showSearchClear) {
-    HeaderState(isSearchVisible, isSearchActive, showSearchClear, searchQuery)
+    HeaderState(isSearchVisible, isSearchActive, showSearchClear)
 }
 @Composable
 fun Header(
@@ -229,9 +229,10 @@ fun Header(
                 val focusRequester = remember { FocusRequester() }
                 SearchField(
                     modifier = Modifier.focusRequester(focusRequester),
-                    state = state.searchQuery,
+                    value = state.searchQuery,
+                    onValueChanged = { state.searchQuery = it },
                     showClear = state.showSearchClear,
-                    onClear = { }
+                    onClear = { state.searchQuery = TextFieldValue() }
                 )
 
                 LaunchedEffect(Unit) {

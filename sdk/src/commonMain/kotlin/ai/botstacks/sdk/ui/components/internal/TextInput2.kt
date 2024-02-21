@@ -1,13 +1,11 @@
-/*
- * Copyright (c) 2023.
- */
-
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.ui.components.internal
 
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.ui.theme.FontStyle
-import ai.botstacks.sdk.utils.ui.debugBounds
+import ai.botstacks.sdk.utils.ui.addIf
 import ai.botstacks.sdk.utils.ui.keyboardAsState
+import ai.botstacks.sdk.utils.ui.measured
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,6 +29,9 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,14 +39,16 @@ import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isSpecified
+import androidx.compose.ui.unit.isUnspecified
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TextInput(
+fun TextInput2(
     modifier: Modifier = Modifier,
     placeholder: String = "",
     minLines: Int = 1,
@@ -69,8 +73,16 @@ fun TextInput(
         TextFieldLineLimits.MultiLine(minHeightInLines = minLines, maxHeightInLines = maxLines)
     }
 
+    var height by remember { mutableStateOf(Dp.Unspecified) }
+
     BasicTextField2(
-        modifier = modifier,
+        modifier = modifier
+            .addIf(height.isSpecified) { Modifier.heightIn(min = height) }
+            .measured {
+                if (height.isUnspecified) {
+                    height = it.height
+                }
+            },
         enabled = enabled,
         readOnly = readOnly,
         state = state,
@@ -133,7 +145,7 @@ fun TextInput(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SecureTextField(
+fun SecureTextField2(
     modifier: Modifier = Modifier,
     placeholder: String = "",
     state: TextFieldState,
@@ -147,8 +159,16 @@ fun SecureTextField(
     onSubmit: () -> Unit,
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    var height by remember { mutableStateOf(Dp.Unspecified) }
+
     BasicSecureTextField(
-        modifier = modifier,
+        modifier = modifier
+            .addIf(height.isSpecified) { Modifier.heightIn(min = height) }
+            .measured {
+                if (height.isUnspecified) {
+                    height = it.height
+                }
+            },
         enabled = enabled,
         state = state,
         textStyle = fontStyle.asTextStyle().copy(color = color),

@@ -5,6 +5,7 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.TextInput
 import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
@@ -35,14 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import botstacks.sdk.generated.resources.Res
-import co.touchlab.kermit.Logger
-import com.mohamedrejeb.calf.io.exists
-import com.mohamedrejeb.calf.io.path
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -50,13 +49,11 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalFoundationApi::class)
 @Stable
 class CreateChannelState {
     var selectedImage by mutableStateOf<KmpFile?>(null)
 
-    @OptIn(ExperimentalFoundationApi::class)
-    val name: TextFieldState = TextFieldState()
+    var name by mutableStateOf(TextFieldValue())
 
     var private by mutableStateOf(false)
 
@@ -72,7 +69,7 @@ class CreateChannelState {
             runCatching {
                 val imageUrl = selectedImage?.let { Upload(file = it) }?.await()
                 API.createChat(
-                    name = name.text.toString(),
+                    name = name.text,
                     _private = private,
                     image = imageUrl,
                     invites = participants.map { it.id }.filterNot { it == User.current?.id }
@@ -86,7 +83,7 @@ class CreateChannelState {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SetChannelDetailsView(
     state: CreateChannelState,
@@ -130,7 +127,8 @@ fun SetChannelDetailsView(
                     .fillMaxWidth()
                     .padding(top = BotStacks.dimens.grid.x6)
                     .padding(horizontal = BotStacks.dimens.inset),
-                state = state.name,
+                value = state.name,
+                onValueChanged = { state.name = it },
                 placeholder = "Enter channel name",
                 maxLines = 1,
                 fontStyle = BotStacks.fonts.body2,

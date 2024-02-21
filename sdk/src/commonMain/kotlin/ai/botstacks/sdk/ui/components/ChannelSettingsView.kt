@@ -8,6 +8,7 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.EditableTextLabel
 import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.utils.bg
@@ -44,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.generated.resources.Res
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
@@ -65,7 +67,7 @@ class ChannelSettingsState(private val chat: Chat) {
         @Composable get() = selectedImage?.readBytes() ?: chat.displayImage
 
     @OptIn(ExperimentalFoundationApi::class)
-    val name: TextFieldState = TextFieldState(chat.displayName)
+    var name by mutableStateOf(TextFieldValue(chat.displayName))
     var isEditingName by mutableStateOf(false)
 
     var muted: Boolean by mutableStateOf(chat.notification_setting == NotificationSetting.none)
@@ -157,7 +159,8 @@ fun ChannelSettingsView(
                 .padding(horizontal = BotStacks.dimens.inset)
                 .onEnter { state.isEditingName = false },
             isEditing = state.isEditingName,
-            state = state.name,
+            value = state.name,
+            onValueChanged = { state.name = it },
             placeholder = "Enter channel name",
             onStartEditing = { state.isEditingName = true },
             onEditComplete = { state.isEditingName = false }

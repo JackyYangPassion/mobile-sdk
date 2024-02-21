@@ -2,6 +2,7 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.TextInput
 import ai.botstacks.sdk.utils.storeTemporarily
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.TextFieldValue
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
@@ -39,10 +41,7 @@ import org.jetbrains.compose.resources.painterResource
 @Stable
 class EditProfileState(private val user: User) {
     var selectedImage by mutableStateOf<KmpFile?>(null)
-    @OptIn(ExperimentalFoundationApi::class)
-    val textState : TextFieldState = TextFieldState(
-        initialText = user.username
-    )
+    var textState by mutableStateOf(TextFieldValue(user.username))
 
 
     val userImage: Any?
@@ -92,7 +91,8 @@ fun EditProfileView(
                 Modifier
                     .fillMaxWidth()
                     .padding(top = BotStacks.dimens.grid.x6),
-                state = state.textState,
+                value = state.textState,
+                onValueChanged = { state.textState = it },
                 placeholder = "Username",
                 maxLines = 1,
                 fontStyle = BotStacks.fonts.body2,

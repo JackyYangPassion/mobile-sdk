@@ -24,12 +24,9 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.Avatar
 import ai.botstacks.sdk.ui.components.AvatarType
 import ai.botstacks.sdk.ui.components.ChatCount
-import ai.botstacks.sdk.ui.components.ChatDrawer
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.HeaderDefaults
-import ai.botstacks.sdk.ui.components.MediaActionSheet
-import ai.botstacks.sdk.ui.components.MessageActionSheet
-import ai.botstacks.sdk.ui.components.MessageInput
+import ai.botstacks.sdk.ui.components.internal.MessageInput
 import ai.botstacks.sdk.ui.components.MessageList
 import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.utils.IPreviews

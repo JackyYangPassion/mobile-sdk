@@ -4,9 +4,9 @@ import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksDayNightColorScheme
-import ai.botstacks.sdk.ui.components.SecureTextField
+import ai.botstacks.sdk.ui.components.internal.SecureTextField
 import ai.botstacks.sdk.ui.components.Space
-import ai.botstacks.sdk.ui.components.TextInput
+import ai.botstacks.sdk.ui.components.internal.TextInput
 import android.Manifest
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -32,6 +32,7 @@ import androidx.compose.foundation.text2.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.TextField
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -39,8 +40,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -51,6 +55,8 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -93,10 +99,11 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
     BackHandler(enabled = true) {
         scope.launch { terms.hide() }
     }
-    var email= rememberTextFieldState()
-    var password = rememberTextFieldState()
+    var email by remember { mutableStateOf(TextFieldValue()) }
+    var password  by remember { mutableStateOf(TextFieldValue()) }
+
     val passwordFocus = remember { FocusRequester() }
-    val canLogin = isValidEmail(email.text.toString()) && password.text.length > 4
+    val canLogin = isValidEmail(email.text) && password.text.length > 4
     val login = {
         if (canLogin) {
             Log.v("InAppChat-Sample", "Login Click")
@@ -132,14 +139,15 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                     Space(60f)
                     val autofillEmail =
                         AutoFillRequestHandler(autofillTypes = listOf(AutofillType.EmailAddress),
-                            onFill = { email.setTextAndPlaceCursorAtEnd(it) }
+                            onFill = { email = TextFieldValue(it) }
                         )
-                    TextInput(
+
+                    TextField(
                         modifier = Modifier
                             .connectNode(handler = autofillEmail)
                             .defaultFocusChangeAutoFill(handler = autofillEmail),
-                        state = email,
-                        placeholder = "Email",
+                        value = email,
+                        onValueChange = { email = it },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next
@@ -150,15 +158,16 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                     Space(12f)
                     val autofillPassword =
                         AutoFillRequestHandler(autofillTypes = listOf(AutofillType.Password),
-                            onFill = { email.setTextAndPlaceCursorAtEnd(it) }
+                            onFill = { password = TextFieldValue(it) }
                         )
-                    SecureTextField(
+
+                    TextField(
                         modifier = Modifier
                             .connectNode(autofillPassword)
                             .defaultFocusChangeAutoFill(autofillPassword),
-                        state = password,
-                        placeholder = "Password",
-                        onSubmit = login
+                        visualTransformation = PasswordVisualTransformation(),
+                        value = password,
+                        onValueChange = { password = it },
                     )
 
                     ElevatedButton(
