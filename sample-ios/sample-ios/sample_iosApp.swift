@@ -15,12 +15,14 @@ struct sample_iosApp: SwiftUI.App {
     @ObservedObject var router = Router()
     
     init() {
-        // Load the Google maps API key from the AppSecrets.plist file
+        // Load the API keys from secrets
         let filePath = Bundle.main.path(forResource: "AppSecrets", ofType: "plist")!
         let plist = NSDictionary(contentsOfFile: filePath)!
         let botstacksApiKey = plist["BOTSTACKS_API_KEY"] as! String
+        let googleMapsApiKey = plist["GOOGLE_MAPS_API_KEY"] as! String
+        let giphyApiKey = plist["GIPHY_API_KEY"] as! String
         
-        BotStacksChat.companion.shared.setup(apiKey: botstacksApiKey, delayLoad: false)
+        BotStacksChat.companion.shared.setup(apiKey: botstacksApiKey, giphyApiKey: giphyApiKey, googleMapsApiKey: googleMapsApiKey)
     }
     
 

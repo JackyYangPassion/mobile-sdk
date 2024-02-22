@@ -8,11 +8,11 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.EditableTextLabel
 import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.readBytes
-import ai.botstacks.sdk.utils.storeTemporarily
 import ai.botstacks.sdk.utils.ui.onEnter
 import ai.botstacks.sdk.utils.ui.unboundedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -44,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.generated.resources.Res
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
@@ -65,7 +65,7 @@ class ChannelSettingsState(private val chat: Chat) {
         @Composable get() = selectedImage?.readBytes() ?: chat.displayImage
 
     @OptIn(ExperimentalFoundationApi::class)
-    val name: TextFieldState = TextFieldState(chat.displayName)
+    var name by mutableStateOf(TextFieldValue(chat.displayName))
     var isEditingName by mutableStateOf(false)
 
     var muted: Boolean by mutableStateOf(chat.notification_setting == NotificationSetting.none)
@@ -126,18 +126,11 @@ fun ChannelSettingsView(
         verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.inset),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val scope = rememberCoroutineScope()
         val pickerLauncher = rememberFilePickerLauncher(
             type = FilePickerFileType.Image,
             selectionMode = FilePickerSelectionMode.Single,
             onResult = { files ->
-                scope.launch(Dispatchers.IO) {
-                    files.firstOrNull()?.storeTemporarily()?.let {
-                        withContext(Dispatchers.Main) {
-                            state.selectedImage = it
-                        }
-                    }
-                }
+                state.selectedImage = files.firstOrNull()
             }
         )
 
@@ -157,7 +150,8 @@ fun ChannelSettingsView(
                 .padding(horizontal = BotStacks.dimens.inset)
                 .onEnter { state.isEditingName = false },
             isEditing = state.isEditingName,
-            state = state.name,
+            value = state.name,
+            onValueChanged = { state.name = it },
             placeholder = "Enter channel name",
             onStartEditing = { state.isEditingName = true },
             onEditComplete = { state.isEditingName = false }

@@ -17,6 +17,7 @@ import ai.botstacks.sdk.actions.markRead
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
@@ -24,16 +25,16 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.Avatar
 import ai.botstacks.sdk.ui.components.AvatarType
 import ai.botstacks.sdk.ui.components.ChatCount
-import ai.botstacks.sdk.ui.components.ChatDrawer
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.HeaderDefaults
 import ai.botstacks.sdk.ui.components.MediaActionSheet
 import ai.botstacks.sdk.ui.components.MessageActionSheet
-import ai.botstacks.sdk.ui.components.MessageInput
+import ai.botstacks.sdk.ui.components.internal.MessageInput
 import ai.botstacks.sdk.ui.components.MessageList
 import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import kotlinx.coroutines.launch
@@ -71,66 +72,57 @@ fun ConversationScreen(
         }
     }
 
-//    MediaActionSheet(
-//        state = media,
-//        chat = chat,
-//        dismiss = { composeScope.launch { menu.hide() } },
-//        inReplyTo = message
-//    ) {
-//        MessageActionSheet(
-//            message = messageForAction,
-//            hide = { messageForAction = null },
-//            onReply = openReply
-//        ) {
-//            ChatDrawer(
-//                chat = chat,
-//                state = menu,
-//                hide = { composeScope.launch { menu.hide() } },
-//                openEdit = openEdit,
-//                openInvite = openInvite,
-//                openProfile = openProfile,
-//                back = back
-//            ) {
-//
-//            }
-//        }
-//    }
+    MediaActionSheet(
+        state = media,
+        chat = chat,
+        inReplyTo = message
+    ) {
+        MessageActionSheet(
+            message = messageForAction,
+            hide = { messageForAction = null },
+            onReply = openReply
+        ) {
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Header(
-            icon = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Avatar(
-                        type = AvatarType.Channel(listOf(chat.displayImage)),
-                    )
-                    Column {
-                        Text(
-                            text = chat.displayName,
-                            fontStyle = fonts.h2,
-                            color = colorScheme.onBackground,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        ChatCount(count = chat.members.size)
-                    }
-                }
-            },
-            onBackClick = back,
-            endAction = { HeaderDefaults.MenuAction { openEdit() } }
-        )
-        MessageList(
-            chat = chat,
-            modifier = Modifier.weight(1f),
-            onPressUser = { openProfile(it) },
-            onLongPress = { messageForAction = it }
-        )
-        MessageInput(
-            modifier = Modifier.padding(dimens.grid.x4)
-                .navigationBarsPadding(),
-            chat = chat,
-            replyingTo = message,
-            onMedia = { composeScope.launch { media.show() } }
-        )
+            Column(modifier = Modifier.fillMaxSize()) {
+                Header(
+                    icon = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(dimens.grid.x4)
+                        ) {
+                            Avatar(
+                                type = AvatarType.Channel(listOf(chat.displayImage)),
+                            )
+                            Column {
+                                Text(
+                                    text = chat.displayName,
+                                    fontStyle = fonts.h2,
+                                    color = colorScheme.onBackground,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                ChatCount(count = chat.members.size)
+                            }
+                        }
+                    },
+                    onBackClick = back,
+                    endAction = { HeaderDefaults.MenuAction { openEdit() } }
+                )
+                MessageList(
+                    chat = chat,
+                    modifier = Modifier.weight(1f),
+                    onPressUser = { openProfile(it) },
+                    onLongPress = { messageForAction = it }
+                )
+                MessageInput(
+                    modifier = Modifier.padding(dimens.grid.x4)
+                        .navigationBarsPadding(),
+                    chat = chat,
+                    replyingTo = message,
+                    onMedia = { composeScope.launch { media.show() } }
+                )
+            }
+        }
     }
 }
 

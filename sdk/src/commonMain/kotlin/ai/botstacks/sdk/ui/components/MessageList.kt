@@ -41,13 +41,14 @@ fun MessageList(
         modifier = modifier,
         scrollToTop = chat.sending.firstOrNull()?.id ?: chat.items.firstOrNull()?.id,
         invert = true,
+        canRefresh = false,
         separator = { before, after ->
             val dateBefore = (before as? Message)?.createdAt?.format("MMM dd")
             val dateAfter = (after as? Message)?.createdAt?.format("MMM dd")
 
             if (dateBefore != dateAfter) {
                 dateBefore?.let {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxWidth().padding(bottom = dimens.grid.x4), contentAlignment = Alignment.Center) {
                         Badge(
                             label = it,
                             backgroundColor = colorScheme.message,

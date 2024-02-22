@@ -9,5 +9,7 @@ internal expect fun ImageRenderer(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Fit,
-    url: String
+    url: String,
+    onClick: (() -> Unit)? = null,
+    onLongClick: () -> Unit,
 )

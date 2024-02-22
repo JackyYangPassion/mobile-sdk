@@ -31,21 +31,27 @@ fun MessageActionSheet(
     content: @Composable () -> Unit
 ) {
     val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true,
+        confirmStateChange = {
+            if (it == ModalBottomSheetValue.Hidden) {
+                hide()
+            }
+            true
+        }
     )
-    LaunchedEffect(key1 = message, block = {
+    LaunchedEffect(message) {
         if (message != null) {
             state.show()
         } else {
             state.hide()
         }
-    })
-    val annotatedString = (message?.text ?: "").annotated()
-    val clipboardManager = LocalClipboardManager.current
-    val copy = {
-        clipboardManager.setText(annotatedString)
-        hide()
     }
+
+    val annotatedString = (message?.text ?: "").annotated()
+
+    val clipboardManager = LocalClipboardManager.current
+
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = state,
@@ -53,36 +59,39 @@ fun MessageActionSheet(
         sheetContentColor = colorScheme.onBackground,
         scrimColor = colorScheme.scrim,
         sheetContent = {
-            Space(8f)
-            EmojiBar(
-                current = message?.currentReaction,
-                onEmoji = {
-                    message?.react(it)
+            Column(modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
+                Space(8f)
+                EmojiBar(
+                    current = message?.currentReaction,
+                    onEmoji = {
+                        message?.react(it)
+                        hide()
+                    }
+                )
+                ActionItem(
+                    text = "Reply in Chat",
+                    icon = Res.drawable.chat_dots,
+                ) {
+                    message?.let(onReply)
                     hide()
                 }
-            )
-            ActionItem(
-                text = "Reply in Chat",
-                icon = Res.drawable.chat_dots,
-            ) {
-                message?.let(onReply)
-                hide()
-            }
 
-            ActionItem(
-                text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
-                icon = Res.drawable.star_fill,
-            )
-            {
-                message?.toggleFavorite()
-                hide()
-            }
+                ActionItem(
+                    text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
+                    icon = Res.drawable.star_fill,
+                )
+                {
+                    message?.toggleFavorite()
+                    hide()
+                }
 
-            ActionItem(
-                text = "Copy message text",
-                icon = Res.drawable.copy,
-            ) {
-                copy()
+                ActionItem(
+                    text = "Copy message text",
+                    icon = Res.drawable.copy,
+                ) {
+                    clipboardManager.setText(annotatedString)
+                    hide()
+                }
             }
         },
         content = content

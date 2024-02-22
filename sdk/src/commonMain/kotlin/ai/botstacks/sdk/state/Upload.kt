@@ -16,6 +16,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.apollographql.apollo3.api.Optional
 import com.benasher44.uuid.uuid4
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.io.name
@@ -132,7 +133,12 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
     fun attachment() = url?.let { AttachmentInput(url = it, type = attachmentType(), id = id) }
 
     fun localAttachment() =
-        AttachmentInput(url = file.path.orEmpty(), type = attachmentType(), id = id)
+        AttachmentInput(
+            url = file.path.orEmpty(),
+            type = attachmentType(),
+            mime = Optional.presentIfNotNull(file.contentType()),
+            id = id
+        )
 
 }
 

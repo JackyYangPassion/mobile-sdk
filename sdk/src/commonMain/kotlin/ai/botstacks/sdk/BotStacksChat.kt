@@ -6,6 +6,7 @@ package ai.botstacks.sdk
 
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
+import ai.botstacks.sdk.utils.GiphyModal
 import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.async
 import ai.botstacks.sdk.utils.opbg

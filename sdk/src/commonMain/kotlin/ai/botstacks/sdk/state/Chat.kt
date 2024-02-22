@@ -7,12 +7,14 @@ package ai.botstacks.sdk.state
 import androidx.compose.runtime.*
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.fragment.FChat
+import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.type.MemberRole
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.utils.contains
 import ai.botstacks.sdk.utils.op
+import androidx.compose.runtime.snapshots.SnapshotStateList
 
 
 @Stable

@@ -5,13 +5,12 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.TextInput
 import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
 import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.storeTemporarily
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,40 +22,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
+import botstacks.sdk.generated.resources.Res
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import botstacks.sdk.generated.resources.Res
-import co.touchlab.kermit.Logger
-import com.mohamedrejeb.calf.io.exists
-import com.mohamedrejeb.calf.io.path
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalFoundationApi::class)
 @Stable
 class CreateChannelState {
     var selectedImage by mutableStateOf<KmpFile?>(null)
 
-    @OptIn(ExperimentalFoundationApi::class)
-    val name: TextFieldState = TextFieldState()
+    var name by mutableStateOf(TextFieldValue())
 
     var private by mutableStateOf(false)
 
@@ -72,7 +61,7 @@ class CreateChannelState {
             runCatching {
                 val imageUrl = selectedImage?.let { Upload(file = it) }?.await()
                 API.createChat(
-                    name = name.text.toString(),
+                    name = name.text,
                     _private = private,
                     image = imageUrl,
                     invites = participants.map { it.id }.filterNot { it == User.current?.id }
@@ -86,24 +75,17 @@ class CreateChannelState {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SetChannelDetailsView(
     state: CreateChannelState,
     onSelectUsers: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
     val pickerLauncher = rememberFilePickerLauncher(
         type = FilePickerFileType.Image,
         selectionMode = FilePickerSelectionMode.Single,
         onResult = { files ->
-            scope.launch(Dispatchers.IO) {
-                files.firstOrNull()?.storeTemporarily()?.let {
-                    withContext(Dispatchers.Main) {
-                        state.selectedImage = it
-                    }
-                }
-            }
+            state.selectedImage = files.firstOrNull()
         }
     )
 
@@ -130,7 +112,8 @@ fun SetChannelDetailsView(
                     .fillMaxWidth()
                     .padding(top = BotStacks.dimens.grid.x6)
                     .padding(horizontal = BotStacks.dimens.inset),
-                state = state.name,
+                value = state.name,
+                onValueChanged = { state.name = it },
                 placeholder = "Enter channel name",
                 maxLines = 1,
                 fontStyle = BotStacks.fonts.body2,

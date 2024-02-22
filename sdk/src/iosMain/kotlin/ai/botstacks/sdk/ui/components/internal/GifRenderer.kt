@@ -1,56 +1,75 @@
 package ai.botstacks.sdk.ui.components.internal
 
+import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.utils.launch
 import ai.botstacks.sdk.utils.ui.contentDescription
+import ai.botstacks.sdk.utils.ui.gifImageWithURL
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
 import androidx.compose.ui.layout.ContentScale
-import cocoapods.Gifu.GIFImageView
-import platform.Foundation.NSData
-import platform.Foundation.NSURL
-import platform.Foundation.create
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import kotlinx.cinterop.useContents
 import platform.UIKit.UIImage
-import platform.UIKit.UIView
-import platform.UIKit.UIViewContentMode
+import platform.UIKit.UIImageView
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun GifRenderer(
     modifier: Modifier,
     contentDescription: String?,
     contentScale: ContentScale,
-    url: String
+    url: String,
+    onClick: (() -> Unit)?,
+    onLongClick: () -> Unit,
 ) {
-
-    val gifView: GIFImageView? = remember(url) {
-        val data = NSData.create(NSURL.URLWithString(url)!!) ?: return@remember null
-        val image = UIImage.imageWithData(data) ?: return@remember null
-        GIFImageView(image).apply {
-            val contentMode = when (contentScale) {
-                ContentScale.None -> null
-                ContentScale.Fit -> UIViewContentMode.UIViewContentModeScaleAspectFit
-                ContentScale.Crop -> UIViewContentMode.UIViewContentModeCenter
-                ContentScale.FillBounds -> UIViewContentMode.UIViewContentModeScaleToFill
-                else -> null
-            }
-            if (contentMode != null) {
-                this.contentMode = contentMode
+    val gifView = remember(url) {
+        UIImageView().apply {
+            launch {
+                image = UIImage.gifImageWithURL(url)
             }
         }
     }
 
-    UIKitView(
-        modifier = modifier.contentDescription(contentDescription),
-        factory = {
-            val container = UIView().apply {
-                if (gifView != null) {
-                    addSubview(gifView)
+    Box(
+        modifier = modifier
+            .contentDescription(contentDescription),
+    ) {
+        val min = BotStacks.dimens.imagePreviewSize.height.dp
+        var height by remember { mutableStateOf(min) }
+        UIKitView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(height),
+            factory = { gifView },
+            interactive = true,
+            onResize = { view, size ->
+                view.frame.useContents {
+                    val h = this.size.height.dp
+                    if (h > height) {
+                        height = h
+                    }
                 }
-            }
-
-            container
-        },
-        update = {
-            gifView?.startAnimating()
-        }
-    )
+                view.layer.setFrame(size)
+            },
+            update = { it.startAnimating() }
+        )
+        Box(
+            modifier = Modifier
+                .zIndex(100f)
+                .fillMaxSize()
+                .combinedClickable(onClick = { onClick?.invoke()}, onLongClick = onLongClick),
+            )
+    }
 }
