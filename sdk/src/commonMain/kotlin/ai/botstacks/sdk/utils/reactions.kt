@@ -12,7 +12,11 @@ fun parseReactions(reactions: String?): Reactions? {
     if (reactions == null) return null
     return reactions.split(";").map { reaction ->
         val split = reaction.split(":")
-        (split[0] to split[1].split(",").toMutableStateList())
+        if (split.isNotEmpty()) {
+            (split[0] to split[1].split(",").toMutableStateList())
+        } else {
+            Pair("", mutableStateListOf())
+        }
     }.toMutableStateList()
 }
 
