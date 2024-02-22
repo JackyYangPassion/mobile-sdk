@@ -1,7 +1,5 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -50,11 +48,6 @@ kotlin {
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
 
-        pod("Gifu") {
-            version = "3.3.0"
-            extraOpts += listOf("-compiler-option", "-fmodules")
-        }
-
         pod("GoogleMaps") {
             version = "8.4.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
@@ -64,6 +57,12 @@ kotlin {
             version = "8.20.0"
             linkOnly = true
         }
+    }
+
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes"
+        )
     }
 
     sourceSets {
@@ -83,7 +82,6 @@ kotlin {
                 implementation(compose.animation)
                 implementation(compose.components.resources)
 
-                implementation(libs.compose.adaptive.ui.filepicker)
                 implementation(libs.compose.windowSizeClass)
 
                 implementation(libs.apollo3.runtime)

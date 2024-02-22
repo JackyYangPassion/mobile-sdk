@@ -10,11 +10,14 @@ import ai.botstacks.sdk.ui.theme.FontStyle
 import ai.botstacks.sdk.utils.ui.addIf
 import ai.botstacks.sdk.utils.ui.keyboardAsState
 import ai.botstacks.sdk.utils.ui.measured
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -30,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalFocusManager
@@ -80,13 +84,19 @@ fun TextInput(
                 }
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x2)
                 ) {
-                    leadingIcon?.invoke()
-                    Box(modifier = Modifier.weight(1f)) {
-                        if (value.isEmpty() && placeholder.isNotEmpty()) {
+                    Box(contentAlignment = Alignment.Center) {
+                        leadingIcon?.invoke()
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.CenterStart,
+                    ) {
+                        if (value.isEmpty()) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = placeholder,
@@ -164,13 +174,21 @@ fun TextInput(
                 }
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x2)
                 ) {
-                    leadingIcon?.invoke()
-                    Box(modifier = Modifier.weight(1f)) {
-                        if (value.text.isEmpty() && placeholder.isNotEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxHeight(),
+                        contentAlignment = Alignment.Center) {
+                        leadingIcon?.invoke()
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f),
+                        contentAlignment = Alignment.CenterStart,
+                    ) {
+                        if (value.text.isEmpty()) {
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = placeholder,

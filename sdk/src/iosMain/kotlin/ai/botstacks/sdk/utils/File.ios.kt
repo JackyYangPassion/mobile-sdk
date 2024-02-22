@@ -1,5 +1,3 @@
-@file:Suppress("CAST_NEVER_SUCCEEDS")
-
 package ai.botstacks.sdk.utils
 
 import com.mohamedrejeb.calf.io.KmpFile
@@ -36,21 +34,12 @@ import platform.UIKit.UIGraphicsGetImageFromCurrentImageContext
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIImageOrientation
+import platform.UniformTypeIdentifiers.UTType
 import platform.posix.memcpy
 
-@OptIn(ExperimentalForeignApi::class)
 actual fun KmpFile.contentType(): String? {
     val pathExtension = this.pathExtension().orEmpty()
-    cfRetain(pathExtension) {
-        val x = CFBridgingRelease(it) as? CFStringRef
-        val uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, x, null)
-        if (uti != null) {
-            val mimetypeRef = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType)
-            val result =  CFBridgingRelease(mimetypeRef) as? NSString ?: return null
-            return result as String
-        }
-        return "application/octet-stream"
-    }
+    return UTType.typeWithFilenameExtension(pathExtension)?.preferredMIMEType
 }
 
 @OptIn(ExperimentalForeignApi::class)
@@ -61,7 +50,7 @@ actual fun KmpFile.size(): Long {
     }.getOrNull() ?: -1L
 }
 
-private fun NSURL.readData(): NSData {
+fun NSURL.readData(): NSData {
     var result: NSData? = null
     while (result == null) {
         val data = NSData.dataWithContentsOfURL(this)
@@ -80,62 +69,3 @@ actual fun KmpFile.readBytes(): ByteArray =
             }
         }
     }
-
-actual fun guessRemoteFilename(url: String): String? {
-    return NSURL.URLWithString(url)?.name
-}
-
-actual suspend fun KmpFile.storeTemporarily(): KmpFile {
-    return UIImage.imageWithData(this.readData())
-        ?.let { image ->
-            if (image.imageOrientation == UIImageOrientation.UIImageOrientationUp) {
-                image
-            } else {
-                UIGraphicsBeginImageContextWithOptions(
-                    image.size,
-                    false,
-                    image.scale
-                )
-                val rect = CGRectMake(
-                    x = 0.0,
-                    y = 0.0,
-                    width = image.size.useContents { this.width },
-                    height = image.size.useContents { this.height }
-                )
-                image.drawInRect(rect)
-                val normalisedImage = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                normalisedImage
-            }
-        }
-        ?.let { image ->
-            // Use NSFileManager to write the image data into a file in the cache directory. We can as well use the
-            // temp directory here.
-            NSFileManager.defaultManager.URLForDirectory(
-                NSCachesDirectory,
-                NSUserDomainMask,
-                null,
-                true,
-                null
-            )?.let {
-                val fileName = "temp_image"
-                val url = NSURL.fileURLWithPath("$fileName.jpg", it)
-                val jpeg = UIImageJPEGRepresentation(image, 0.5)
-                val hasWritten = jpeg?.writeToURL(url, true)
-                if (hasWritten == true) {
-                    url
-                } else {
-                    this
-                }
-            }
-        } ?: this
-}
-
-internal inline fun <T> cfRetain(value: Any?, block: MemScope.(CFTypeRef?) -> T): T = memScoped {
-    val cfValue = CFBridgingRetain(value)
-    return try {
-        block(cfValue)
-    } finally {
-        CFBridgingRelease(cfValue)
-    }
-}

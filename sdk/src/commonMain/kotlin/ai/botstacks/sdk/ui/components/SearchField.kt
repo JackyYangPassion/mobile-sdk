@@ -2,9 +2,13 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.internal.Pressable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,8 +17,10 @@ import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.foundation.text2.input.clearText
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.generated.resources.Res
@@ -38,9 +44,10 @@ fun SearchField(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch() }),
         decorationBox = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.height(IntrinsicSize.Max),
+                verticalAlignment = Alignment.CenterVertically) {
                 Box(modifier = Modifier.weight(1f)) {
-                    it()
                     if (value.text.isEmpty()) {
                         Text(
                             text = "Search...",
@@ -48,6 +55,7 @@ fun SearchField(
                             color = BotStacks.colorScheme.onChatInput
                         )
                     }
+                    it()
                 }
                 if (showClear) {
                     Pressable(

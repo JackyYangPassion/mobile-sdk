@@ -1,6 +1,7 @@
 package ai.botstacks.sdk
 
 import ai.botstacks.sdk.state.BotStacksChatStore
+import ai.botstacks.sdk.utils.Giphy
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
 import ai.botstacks.sdk.utils.retryIO
@@ -36,16 +37,37 @@ actual class BotStacksChatPlatform : BotStacksChat() {
         get() = NSUserDefaultsSettings(NSUserDefaults.standardUserDefaults())
 
     fun setup(apiKey: String) {
-        setup(apiKey, false)
+        setup(apiKey, null, null, false)
     }
 
-    fun setup(apiKey: String, delayLoad: Boolean = false) {
+    fun setup(apiKey: String, giphyApiKey: String?, googleMapsApiKey: String?) {
+        setup(
+            apiKey = apiKey,
+            giphyApiKey = giphyApiKey,
+            googleMapsApiKey = googleMapsApiKey,
+            delayLoad = false
+        )
+    }
+
+    fun setup(apiKey: String,
+              giphyApiKey: String?,
+              googleMapsApiKey: String?,
+              delayLoad: Boolean = false
+    ) {
         this._apiKey = apiKey
         this.bundleIdentifier = NSBundle.mainBundle.bundleIdentifier().orEmpty()
 
         BotStacksChatStore.current.init()
         BotStacksChatStore.current.contacts.requestContacts = false
 
+        if (!giphyApiKey.isNullOrEmpty()) {
+            Giphy.configureWithApiKey(giphyApiKey, verificationMode = true, metadata = emptyMap<Any?, Any>())
+            BotStacksChatStore.current.giphyApiKey = giphyApiKey
+        }
+
+        if (!googleMapsApiKey.isNullOrEmpty()) {
+            BotStacksChatStore.current.mapsApiKey = googleMapsApiKey
+        }
         if (!delayLoad) {
 //            Log.v(TAG, "Launch load")
             scope.launch {

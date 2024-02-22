@@ -98,3 +98,9 @@ fun Location.attachment(): AttachmentInput {
         url = "data"
     )
 }
+
+fun String.imageAttachment() = AttachmentInput(
+    url = this.toString(),
+    type = AttachmentType.image,
+    id = uuid()
+)

@@ -7,7 +7,3 @@ expect fun KmpFile.contentType(): String?
 expect fun KmpFile.size(): Long
 
 expect fun KmpFile.readBytes(): ByteArray
-
-expect fun guessRemoteFilename(url: String): String?
-
-expect suspend fun KmpFile.storeTemporarily(): KmpFile

@@ -16,10 +16,3 @@ actual fun KmpFile.size(): Long {
 }
 
 actual fun KmpFile.readBytes(): ByteArray = readByteArray()
-
-actual suspend fun KmpFile.storeTemporarily(): KmpFile = this
-
-actual fun guessRemoteFilename(url: String): String? {
-    Logger.d("guessing filename for $url")
-    return URLUtil.guessFileName(url, null, null)
-}
