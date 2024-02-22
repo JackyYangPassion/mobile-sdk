@@ -12,7 +12,12 @@ import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.ActionItemDefaults
+import ai.botstacks.sdk.ui.components.internal.camera.rememberCameraManager
 import ai.botstacks.sdk.ui.components.internal.location.LocationPicker
+import ai.botstacks.sdk.ui.components.internal.permissions.PermissionCallback
+import ai.botstacks.sdk.ui.components.internal.permissions.PermissionStatus
+import ai.botstacks.sdk.ui.components.internal.permissions.PermissionType
+import ai.botstacks.sdk.ui.components.internal.permissions.createPermissionsManager
 import ai.botstacks.sdk.utils.GiphyModalSheet
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.Platform
@@ -66,6 +71,7 @@ enum class Media {
     companion object {
         val supportedMediaTypes = listOf(
             pickPhoto,
+            recordPhoto,
             gif,
             location
         )
@@ -128,12 +134,12 @@ fun MediaActionSheet(
                 }
 
                 Media.recordPhoto, Media.recordVideo -> {
-//                        CameraPicker(
-//                            video = media == Media.recordVideo,
-//                            onUri = {
-////                            onFile(it)
-//                                hide()
-//                            }) { hide() }
+                    scope.launch { state.hide() }
+                    CameraPicker(
+                        video = media == Media.recordVideo,
+                        onUri = onFile,
+                        onCancel = hide
+                    )
                 }
 
                 Media.gif -> {
@@ -236,22 +242,38 @@ fun FilePicker(onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
     }
 }
 
-//@Composable
-//fun CameraPicker(video: Boolean, onUri: (Uri) -> Unit, onCancel: () -> Unit) {
-//    val uri = LocalContext.current.cacheDir.resolve(uuid()).toUri()
-//    val launcher = rememberLauncherForActivityResult(
-//        contract = if (video) ActivityResultContracts.CaptureVideo() else ActivityResultContracts.TakePicture(),
-//        onResult = {
-//            if (it) {
-//                onUri(uri)
-//            } else {
-//                onCancel()
-//            }
-//        })
-//    LaunchedEffect(key1 = true, block = {
-//        launcher.launch(uri)
-//    })
-//}
+@Composable
+fun CameraPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
+    val cameraManager = rememberCameraManager { result ->
+        if (result != null) {
+            onUri(result)
+        } else {
+            onCancel()
+        }
+    }
+
+    val permissionsManager = createPermissionsManager(object : PermissionCallback {
+        override fun onPermissionStatus(permissionType: PermissionType, status: PermissionStatus) {
+            when (permissionType) {
+                PermissionType.Camera -> {
+                    if (status == PermissionStatus.GRANTED) {
+                        cameraManager.launch()
+                    }
+                }
+
+                else -> Unit
+            }
+        }
+    })
+
+    if (permissionsManager.isPermissionGranted(PermissionType.Camera)) {
+        LaunchedEffect(Unit) {
+            cameraManager.launch()
+        }
+    } else {
+        permissionsManager.askPermission(PermissionType.Camera)
+    }
+}
 
 //@Composable
 //fun ContactPicker(onContact: (AttachmentInput) -> Unit, onCancel: () -> Unit) {

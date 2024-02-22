@@ -31,21 +31,27 @@ fun MessageActionSheet(
     content: @Composable () -> Unit
 ) {
     val state = rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+        ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true,
+        confirmStateChange = {
+            if (it == ModalBottomSheetValue.Hidden) {
+                hide()
+            }
+            true
+        }
     )
-    LaunchedEffect(key1 = message, block = {
+    LaunchedEffect(message) {
         if (message != null) {
             state.show()
         } else {
             state.hide()
         }
-    })
-    val annotatedString = (message?.text ?: "").annotated()
-    val clipboardManager = LocalClipboardManager.current
-    val copy = {
-        clipboardManager.setText(annotatedString)
-        hide()
     }
+
+    val annotatedString = (message?.text ?: "").annotated()
+
+    val clipboardManager = LocalClipboardManager.current
+
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
         sheetState = state,
@@ -83,7 +89,8 @@ fun MessageActionSheet(
                     text = "Copy message text",
                     icon = Res.drawable.copy,
                 ) {
-                    copy()
+                    clipboardManager.setText(annotatedString)
+                    hide()
                 }
             }
         },

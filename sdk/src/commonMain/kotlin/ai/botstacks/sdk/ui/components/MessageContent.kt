@@ -113,11 +113,9 @@ fun MessageImageContent(
                         colorScheme.message
                     ),
                     shape = shape
-                ).clip(shape)
-                .combinedClickable(
-                    onClick = { onClick?.invoke() },
-                    onLongClick = onLongClick,
-                ),
+                ).clip(shape),
+            onClick = onClick,
+            onLongClick = onLongClick
         )
     }
 }

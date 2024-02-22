@@ -4,10 +4,12 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.utils.launch
 import ai.botstacks.sdk.utils.ui.contentDescription
 import ai.botstacks.sdk.utils.ui.gifImageWithURL
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,16 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitView
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import kotlinx.cinterop.useContents
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageView
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun GifRenderer(
     modifier: Modifier,
     contentDescription: String?,
     contentScale: ContentScale,
-    url: String
+    url: String,
+    onClick: (() -> Unit)?,
+    onLongClick: () -> Unit,
 ) {
     val gifView = remember(url) {
         UIImageView().apply {
@@ -47,8 +53,9 @@ internal fun GifRenderer(
                 .fillMaxWidth()
                 .height(height),
             factory = { gifView },
+            interactive = true,
             onResize = { view, size ->
-                size.useContents {
+                view.frame.useContents {
                     val h = this.size.height.dp
                     if (h > height) {
                         height = h
@@ -58,5 +65,11 @@ internal fun GifRenderer(
             },
             update = { it.startAnimating() }
         )
+        Box(
+            modifier = Modifier
+                .zIndex(100f)
+                .fillMaxSize()
+                .combinedClickable(onClick = { onClick?.invoke()}, onLongClick = onLongClick),
+            )
     }
 }
