@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Location
@@ -144,7 +145,7 @@ fun MessageMapContent(
             )
         }
 
-        if (BotStacksChatStore.current.mapsApiKey != null) {
+        if (BotStacksChat.shared.hasMapsSupport) {
             MapPin(
                 modifier = Modifier
                     .fillMaxWidth()

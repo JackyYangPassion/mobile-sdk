@@ -1,6 +1,7 @@
 package ai.botstacks.sdk.ui.components.internal.permissions
 
 import ai.botstacks.sdk.BotStacksChat
+import ai.botstacks.sdk.utils.contains
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
@@ -13,6 +14,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.launch
@@ -50,6 +52,34 @@ actual class PermissionsManager actual constructor(private val callback: Permiss
                     }
                 }
             }
+
+            PermissionType.Location -> {
+                val permissionState = rememberMultiplePermissionsState(
+                    listOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+
+                LaunchedEffect(permissionState) {
+                    val granted = permissionState.allPermissionsGranted || permissionState.permissions.contains { it.status.isGranted }
+                    if (!granted) {
+                        if (permissionState.shouldShowRationale) {
+                            callback.onPermissionStatus(
+                                permission, PermissionStatus.SHOW_RATIONALE
+                            )
+                        } else {
+                            lifecycleOwner.lifecycleScope.launch {
+                                permissionState.launchMultiplePermissionRequest()
+                            }
+                        }
+                    } else {
+                        callback.onPermissionStatus(
+                            permission, PermissionStatus.GRANTED
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -61,6 +91,16 @@ actual class PermissionsManager actual constructor(private val callback: Permiss
             is PermissionType.Camera -> {
                 val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
                 cameraPermissionState.status.isGranted
+            }
+
+            PermissionType.Location -> {
+                val permissionState = rememberMultiplePermissionsState(
+                    listOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+                permissionState.allPermissionsGranted || permissionState.permissions.contains { it.status.isGranted }
             }
         }
     }

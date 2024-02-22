@@ -7,24 +7,24 @@ package ai.botstacks.sdk.ui.components
 import ai.botstacks.sdk.actions.send
 import ai.botstacks.sdk.navigation.BackHandler
 import ai.botstacks.sdk.state.Chat
+import ai.botstacks.sdk.state.Location
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.ActionItemDefaults
+import ai.botstacks.sdk.ui.components.internal.ProgressOverlay
 import ai.botstacks.sdk.ui.components.internal.camera.rememberCameraManager
-import ai.botstacks.sdk.ui.components.internal.location.LocationPicker
+import ai.botstacks.sdk.ui.components.internal.location.rememberLocationManager
 import ai.botstacks.sdk.ui.components.internal.permissions.PermissionCallback
 import ai.botstacks.sdk.ui.components.internal.permissions.PermissionStatus
 import ai.botstacks.sdk.ui.components.internal.permissions.PermissionType
 import ai.botstacks.sdk.ui.components.internal.permissions.createPermissionsManager
 import ai.botstacks.sdk.utils.GiphyModalSheet
 import ai.botstacks.sdk.utils.IPreviews
-import ai.botstacks.sdk.utils.Platform
 import ai.botstacks.sdk.utils.attachment
 import ai.botstacks.sdk.utils.genChat
 import ai.botstacks.sdk.utils.imageAttachment
-import ai.botstacks.sdk.utils.isAndroid
 import ai.botstacks.sdk.utils.op
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,14 +48,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import co.touchlab.kermit.Logger
 import com.mohamedrejeb.calf.io.KmpFile
-import com.mohamedrejeb.calf.io.path
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 enum class Media {
@@ -88,9 +84,12 @@ fun MediaActionSheet(
 ) {
     var media by remember { mutableStateOf<Media?>(null) }
     val scope = rememberCoroutineScope()
+    var loading by remember { mutableStateOf(false) }
+
     val hide = {
         media = null
         scope.launch { state.hide() }
+        loading = false
         Unit
     }
 
@@ -100,6 +99,7 @@ fun MediaActionSheet(
         })
         media = null
     }
+
 
     Box {
         ModalBottomSheetLayout(
@@ -173,10 +173,14 @@ fun MediaActionSheet(
                 }
 
                 Media.location -> {
+                    scope.launch { state.hide() }
                     LocationPicker(
+                        onLoading = { loading = true },
                         onLocation = {
-                            chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
-                            hide()
+                            if (loading) {
+                                chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
+                                hide()
+                            }
                         },
                         onCancel = hide
                     )
@@ -185,6 +189,8 @@ fun MediaActionSheet(
                 else -> Logger.d("empty media")
             }
         }
+
+        ProgressOverlay(loading)
     }
 }
 
@@ -234,7 +240,7 @@ fun FilePicker(onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
             ),
         ),
         selectionMode = FilePickerSelectionMode.Single,
-        onResult = { files -> files.firstOrNull() ?: onCancel() }
+        onResult = { files -> files.firstOrNull()?.let(onUri) ?: onCancel() }
     )
 
     LaunchedEffect(Unit) {
@@ -258,6 +264,9 @@ fun CameraPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit)
                 PermissionType.Camera -> {
                     if (status == PermissionStatus.GRANTED) {
                         cameraManager.launch()
+                    } else {
+                        println("camera permission not granted")
+                        onCancel()
                     }
                 }
 
@@ -266,13 +275,42 @@ fun CameraPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit)
         }
     })
 
-    if (permissionsManager.isPermissionGranted(PermissionType.Camera)) {
-        LaunchedEffect(Unit) {
-            cameraManager.launch()
-        }
-    } else {
-        permissionsManager.askPermission(PermissionType.Camera)
+    permissionsManager.askPermission(PermissionType.Camera)
+}
+
+@Composable
+private fun LocationPicker(
+    onLoading: () -> Unit,
+    onLocation: (Location) -> Unit,
+    onCancel: () -> Unit
+) {
+    val locationManager = rememberLocationManager {
+        it?.let(onLocation) ?: onCancel()
     }
+
+    val fetchLocation = {
+        onLoading()
+        locationManager.launch()
+    }
+
+    val permissionsManager = createPermissionsManager(object : PermissionCallback {
+        override fun onPermissionStatus(permissionType: PermissionType, status: PermissionStatus) {
+            when (permissionType) {
+                PermissionType.Location -> {
+                    if (status == PermissionStatus.GRANTED) {
+                        fetchLocation()
+                    } else {
+                        println("location permission not granted")
+                        onCancel()
+                    }
+                }
+
+                else -> Unit
+            }
+        }
+    })
+
+    permissionsManager.askPermission(PermissionType.Location)
 }
 
 //@Composable

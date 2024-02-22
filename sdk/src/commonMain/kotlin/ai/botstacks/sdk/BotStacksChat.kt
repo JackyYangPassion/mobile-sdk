@@ -25,6 +25,11 @@ abstract class BotStacksChat {
 
     var onLogout: (() -> Unit)? = null
 
+    var hasGiphySupport by mutableStateOf(false)
+    var hasMapsSupport by mutableStateOf(false)
+    var hasLocationSupport by mutableStateOf(false)
+    var hasCameraSupport by mutableStateOf(false)
+
 
     suspend fun login(
         accessToken: String? = null,

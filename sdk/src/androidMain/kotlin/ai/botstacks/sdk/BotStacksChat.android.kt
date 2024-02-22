@@ -1,7 +1,6 @@
 package ai.botstacks.sdk
 
 import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.utils.Monitoring
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
 import ai.botstacks.sdk.utils.retryIO
@@ -9,7 +8,6 @@ import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.core.content.ContextCompat
 import com.giphy.sdk.ui.Giphy
@@ -70,12 +68,15 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
         if (!giphyApiKey.isNullOrEmpty()) {
             Giphy.configure(context, giphyApiKey)
-            BotStacksChatStore.current.giphyApiKey = giphyApiKey
+            hasGiphySupport = true
         }
 
         if (!googleMapsApiKey.isNullOrEmpty()) {
-            BotStacksChatStore.current.mapsApiKey = googleMapsApiKey
+            hasMapsSupport = true // runtime permission grants location access
         }
+
+        hasLocationSupport = true // runtime permission grants camera access
+        hasCameraSupport = true // runtime permission grants camera access
 
         if (!delayLoad) {
             scope.launch {
