@@ -14,6 +14,7 @@ import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.op
 import ai.botstacks.sdk.utils.opbg
 import ai.botstacks.sdk.utils.uuid
+import com.apollographql.apollo3.api.Optional
 import kotlinx.datetime.Clock
 
 fun AttachmentInput.toAttachment() = FMessage.Attachment(
@@ -30,6 +31,22 @@ fun AttachmentInput.toAttachment() = FMessage.Attachment(
     mime = mime.getOrNull()
 )
 
+fun FMessage.Attachment.toInput(): AttachmentInput {
+    return AttachmentInput(
+        id = id,
+        url = url,
+        data = Optional.presentIfNotNull(data),
+        type = type,
+        width = Optional.presentIfNotNull(width),
+        height = Optional.presentIfNotNull(height),
+        duration = Optional.presentIfNotNull(duration),
+        latitude = Optional.presentIfNotNull(latitude),
+        longitude = Optional.presentIfNotNull(longitude),
+        address = Optional.presentIfNotNull(address),
+        mime = Optional.presentIfNotNull(mime),
+    )
+}
+
 fun Chat.send(
     inReplyTo: String?,
     text: String? = null,
@@ -38,8 +55,11 @@ fun Chat.send(
 ) {
     val atts = (attachments?.toMutableList() ?: mutableListOf())
     if (upload != null) {
+        val local = upload.localAttachment()
+        println("$local")
         atts.add(upload.localAttachment())
     }
+
     val m = Message(
         id = uuid(),
         createdAt = Clock.System.now(),
@@ -48,42 +68,59 @@ fun Chat.send(
         chatID = id,
         attachments = atts.map { it.toAttachment() }.toMutableStateList(),
     )
-    m.text = text ?: ""
-    val sendingMessage = SendingMessage(m, upload = upload, attachments = attachments ?: listOf())
-    send(sendingMessage)
+    m.updateText(text.orEmpty())
+    m.upload = upload
+    send(m)
 }
 
-fun Chat.send(sendingMessage: SendingMessage) {
+fun Chat.send(sendingMessage: Message) {
     if (!sending.contains(sendingMessage)) {
         sending.add(0, sendingMessage)
+        sendingMessage.isSending = true
     }
-    print("Sending Message")
+    latest = sendingMessage
+
+    println("Sending Message")
     op({
         val sm = bg {
-            val attachments = sendingMessage.attachments.toMutableList()
+            var attachments = sendingMessage.attachments
+                .map { it.toInput() }
+                .toMutableList()
+
             if (sendingMessage.upload != null) {
-                print("Awaiting upload")
-                val upload = sendingMessage.upload.awaitAttachment()
-                println("Got Upload " + upload.url)
-                attachments.add(upload)
+                println("Awaiting upload")
+                sendingMessage.upload?.let { upload ->
+                    upload.awaitAttachment()?.let { attachment ->
+                        println("Got Upload " + attachment.url)
+                        val map = attachments.associateBy { it.id }.toMutableMap()
+                        map[attachment.id] = attachment.copy(type = upload.attachmentType())
+
+                        attachments = map.values.toMutableList()
+                    }
+                }
             }
-            println("Sending")
+
             API.send(
-                id,
-                id = sendingMessage.msg.id,
-                inReplyTo = sendingMessage.msg.parentID,
-                text = sendingMessage.msg.text,
+                this@send.id,
+                id = sendingMessage.id,
+                inReplyTo = sendingMessage.parentID,
+                text = sendingMessage.text,
                 attachments = attachments
             )
         }
         sm?.let {
-            items.add(0, it)
+            latest = it
+            sendingMessage.isSending = false
             sending.remove(sendingMessage)
         } ?: {
             sendingMessage.failed = true
+            sendingMessage.isSending = false
+            latest = sendingMessage
         }
     }) {
         sendingMessage.failed = true
+        sendingMessage.isSending = false
+        latest = sendingMessage
     }
 }
 

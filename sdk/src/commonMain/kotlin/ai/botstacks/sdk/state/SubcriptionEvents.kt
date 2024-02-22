@@ -93,8 +93,7 @@ fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
             Chat.get(it.chat_id)?.let { chat ->
                 println("Have chat for message")
                 val message = Message.get(it)
-                if (!chat.items.contains(message)) {
-                    chat.items.add(0, message)
+                if (chat.addMessage(message)) {
                     if (Chat.currentlyViewed != message.chatID) {
                         chat.unreadCount += 1
                     }

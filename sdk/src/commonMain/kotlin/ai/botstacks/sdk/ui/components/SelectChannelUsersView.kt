@@ -3,6 +3,7 @@ package ai.botstacks.sdk.ui.components
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.TextInput
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,15 +18,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectChannelUsersView(
     selectedUsers: List<User>,
     onUserSelected: (User) -> Unit,
     onUserRemoved: (User) -> Unit,
 ) {
-    val search = rememberTextFieldState()
+    var search by remember { mutableStateOf(TextFieldValue()) }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -45,7 +46,8 @@ fun SelectChannelUsersView(
         ) {
             TextInput(
                 modifier = Modifier.fillMaxWidth(),
-                state = search,
+                value = search,
+                onValueChanged = { search = it },
                 placeholder = "Search name",
                 maxLines = 1,
                 fontStyle = BotStacks.fonts.body2,

@@ -98,9 +98,9 @@ fun ChatsListScreen(
     }
 
 
-    LaunchedEffect(Unit) {
-        headerState.searchQuery.forEachTextValue {
-            searchQuery = it.toString()
+    LaunchedEffect(headerState.searchQuery) {
+        if (searchQuery != headerState.searchQuery.text) {
+            searchQuery = headerState.searchQuery.text
         }
     }
 

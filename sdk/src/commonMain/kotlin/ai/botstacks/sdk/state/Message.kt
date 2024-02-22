@@ -14,30 +14,6 @@ import ai.botstacks.sdk.utils.*
 import kotlinx.datetime.Instant
 
 @Stable
-data class SendingMessage(
-    val msg: Message,
-    val attachments: List<AttachmentInput> = listOf(),
-    val upload: Upload? = null
-) : Identifiable {
-    override val id: String
-        get() = msg.id
-
-    var failed by mutableStateOf(false)
-
-//    fun retry() {
-//        if (failed) {
-//            failed = false
-//            if (upload != null) {
-//                if (upload.error != null) {
-//                    upload.upload()
-//                }
-//            }
-//            msg.chat.send(this)
-//        }
-//    }
-}
-
-@Stable
 data class Message(
     override val id: String,
     val createdAt: Instant,
@@ -118,6 +94,10 @@ data class Message(
     var reacting by mutableStateOf(false)
     var favoriting by mutableStateOf(false)
     var editingText by mutableStateOf(false)
+
+    var upload: Upload? = null
+    var failed by mutableStateOf(false)
+    var isSending by mutableStateOf(false)
 
     companion object {
         fun get(id: String): Message? {

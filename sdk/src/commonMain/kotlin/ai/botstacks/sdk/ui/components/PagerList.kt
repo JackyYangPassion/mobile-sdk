@@ -28,10 +28,16 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.components.internal.InfiniteListHandler
 import ai.botstacks.sdk.utils.Fn
+import ai.botstacks.sdk.utils.ui.addIf
+import ai.botstacks.sdk.utils.ui.addIfNonNull
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.util.fastDistinctBy
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -62,11 +68,15 @@ fun <T : Identifiable> BotStacksLazyList(
     refreshing: Boolean = false,
     content: LazyListScope.() -> Unit
 ) {
-    val pullRefreshState = rememberPullRefreshState(refreshing, { refresh?.let { it() } })
+
+    val pullRefreshState = refresh?.let {
+        rememberPullRefreshState(refreshing, { refresh() })
+    }
+
     if (items.isEmpty() && !hasMore) {
         Box(
             modifier = modifier
-                .pullRefresh(pullRefreshState)
+                .addIfNonNull(pullRefreshState) { Modifier.pullRefresh(it) }
                 .fillMaxSize()
         ) {
             Column(
@@ -84,17 +94,19 @@ fun <T : Identifiable> BotStacksLazyList(
                 footer?.invoke()
             }
 
-            PullRefreshIndicator(
-                refreshing,
-                pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
+            pullRefreshState?.let {
+                PullRefreshIndicator(
+                    refreshing,
+                    it,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
         }
 
     } else {
         Box(
             modifier = modifier
-                .pullRefresh(pullRefreshState)
+                .addIfNonNull(pullRefreshState) { Modifier.pullRefresh(it) }
                 .fillMaxSize()
         ) {
             val listState = rememberLazyListState()
@@ -110,7 +122,10 @@ fun <T : Identifiable> BotStacksLazyList(
                 header?.let { item { it() } }
                 if (items.isEmpty()) {
                     item {
-                        Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier.fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
                             CircularProgressIndicator(color = colorScheme.primary)
                         }
                     }
@@ -129,17 +144,21 @@ fun <T : Identifiable> BotStacksLazyList(
                     }
                 }
             }
-            PullRefreshIndicator(
-                refreshing,
-                pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
+
+            pullRefreshState?.let {
+                PullRefreshIndicator(
+                    refreshing,
+                    it,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
+            }
 
             InfiniteListHandler(listState = listState) {
                 loadMore?.invoke()
             }
 
             LaunchedEffect(key1 = scrollToTop, block = {
+                delay(300)
                 coroutineScope.launch { listState.animateScrollToItem(0) }
             })
         }
@@ -182,16 +201,20 @@ fun <T : Identifiable> IACList(
         refresh = refresh,
         refreshing = refreshing,
     ) {
-        itemsIndexed(items) { index, item ->
+        itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
-                separator(items.getOrNull(index - 1), item)
+                if (!invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
                 content(item)
+                if (invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T : Identifiable> IACListIndexed(
     modifier: Modifier = Modifier,
@@ -228,10 +251,15 @@ fun <T : Identifiable> IACListIndexed(
         refresh = refresh,
         refreshing = refreshing,
     ) {
-        itemsIndexed(items) { index, item ->
+        itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
             Column(verticalArrangement = verticalArrangement) {
-                separator(items.getOrNull(index - 1), item)
+                if (!invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
                 content(index, item)
+                if (invert) {
+                    separator(items.getOrNull(index - 1), item)
+                }
             }
         }
     }
@@ -251,9 +279,13 @@ fun <T : Identifiable> PagerList(
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     scrollToTop: String? = null,
+    canRefresh: Boolean = true,
     content: @Composable LazyItemScope.(T) -> Unit
 ) {
-    val array = prefix + pager.items
+    val array by remember(prefix, pager.items) {
+        derivedStateOf { (prefix + pager.items) }
+    }
+
     LaunchedEffect(pager.id) {
         pager.loadMoreIfEmpty()
     }
@@ -272,8 +304,10 @@ fun <T : Identifiable> PagerList(
         scrollToTop = scrollToTop,
         hasMore = pager.hasMore,
         loadMore = pager::loadMore,
-        refresh = pager::refresh,
-        refreshing = pager.refreshing,
+        refresh = if (canRefresh) {
+            { pager.refresh() }
+        } else null,
+        refreshing = if (canRefresh) pager.refreshing else false,
         content = content
     )
 }
@@ -292,6 +326,7 @@ fun <T : Identifiable> PagerListIndexed(
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     scrollToTop: String? = null,
+    canRefresh: Boolean = true,
     content: @Composable LazyItemScope.(Int, T) -> Unit
 ) {
     val array = prefix + pager.items
@@ -313,8 +348,10 @@ fun <T : Identifiable> PagerListIndexed(
         scrollToTop = scrollToTop,
         hasMore = pager.hasMore,
         loadMore = pager::loadMore,
-        refresh = pager::refresh,
-        refreshing = pager.refreshing,
+        refresh = if (canRefresh) {
+            { pager.refresh() }
+        } else null,
+        refreshing = if (canRefresh) pager.refreshing else false,
         content = content
     )
 }

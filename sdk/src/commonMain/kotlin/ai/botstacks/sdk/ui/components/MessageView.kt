@@ -93,6 +93,8 @@ fun MessageView(
             alignment = align,
             showAvatar = showAvatarForThis,
             showTimestamp = showTimestampForThis,
+            isSending = message.isSending,
+            hasError = message.failed,
             onPressUser = { onPressUser(message.user) },
             onLongPress = onLongPress,
             onClick = onClick
@@ -113,6 +115,8 @@ fun MessageView(
             alignment = align,
             showAvatar = message.attachments.isEmpty() && showAvatar,
             showTimestamp = message.attachments.isEmpty() && showTimestamp,
+            isSending = message.isSending,
+            hasError = message.failed,
             onPressUser = { onPressUser(message.user) },
             onLongPress = onLongPress,
             onClick = onClick
@@ -134,6 +138,8 @@ fun MessageView(
     alignment: Alignment.Horizontal,
     showAvatar: Boolean = false,
     showTimestamp: Boolean = true,
+    isSending: Boolean = false,
+    hasError: Boolean = false,
     onPressUser: () -> Unit,
     onLongPress: () -> Unit,
     onClick: (() -> Unit)? = null
@@ -211,11 +217,29 @@ fun MessageView(
             ) {
                 Spacer(Modifier.requiredWidth(AvatarSize.Small.value))
                 if (showTimestamp) {
-                    Text(
-                        text = date.format("h:mm a"),
-                        fontStyle = fonts.caption2,
-                        color = colorScheme.caption
-                    )
+                    when {
+                        isSending -> {
+                            Text(
+                                text = "Sending...",
+                                fontStyle = fonts.caption2,
+                                color = colorScheme.primary
+                            )
+                        }
+                        hasError -> {
+                            Text(
+                                text = "Failed to send.",
+                                fontStyle = fonts.caption2,
+                                color = colorScheme.error
+                            )
+                        }
+                        else -> {
+                            Text(
+                                text = date.format("h:mm a"),
+                                fontStyle = fonts.caption2,
+                                color = colorScheme.caption
+                            )
+                        }
+                    }
                 }
             }
         }

@@ -1,13 +1,27 @@
 package ai.botstacks.sdk.utils
 
 import androidx.annotation.IntRange
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil3.PlatformContext
 import com.giphy.sdk.core.models.enums.RenditionType
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.GPHSettings
@@ -17,6 +31,7 @@ import com.giphy.sdk.ui.utils.imageWithRenditionType
 import com.giphy.sdk.ui.views.dialogview.GiphyDialogView
 import com.giphy.sdk.ui.views.dialogview.setup
 
+actual typealias Giphy = Giphy
 actual typealias GiphyModal = GiphyDialogView
 actual typealias GiphyThemeType = Int
 actual typealias GiphyContentType = Int
@@ -25,6 +40,7 @@ object GiphyConfig {
     var settings = GPHSettings()
         internal set
 }
+
 
 actual fun GiphyModal.setStickerColumnCount(@IntRange(from = 2, to = 4) count: Int) {
     GiphyConfig.settings = GiphyConfig.settings.apply {
@@ -61,9 +77,9 @@ actual fun GiphyModalSheet(
                 listener = object : GiphyDialogView.Listener {
                     override fun didSearchTerm(term: String) = Unit
 
-                    override fun onClosed(selectedContentType: GPHContentType) = Unit
+                        override fun onClosed(selectedContentType: GPHContentType) = Unit
 
-                    override fun onFocusSearch() = Unit
+                        override fun onFocusSearch() = Unit
 
                     override fun onGifSelected(
                         media: com.giphy.sdk.core.models.Media,
@@ -80,6 +96,7 @@ actual fun GiphyModalSheet(
         },
         modifier = Modifier
             .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.statusBars)
             .height(LocalConfiguration.current.screenHeightDp.dp)
             .then(modifier)
     )

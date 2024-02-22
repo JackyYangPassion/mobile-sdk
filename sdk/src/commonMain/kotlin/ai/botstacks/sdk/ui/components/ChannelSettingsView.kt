@@ -3,16 +3,18 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.API
-import ai.botstacks.sdk.utils.ui.onEnter
-import ai.botstacks.sdk.utils.ui.unboundedClickable
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.EditableTextLabel
 import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.utils.bg
+import ai.botstacks.sdk.utils.readBytes
+import ai.botstacks.sdk.utils.ui.onEnter
+import ai.botstacks.sdk.utils.ui.unboundedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,7 +31,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -37,15 +38,21 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.TextFieldValue
+import botstacks.sdk.generated.resources.Res
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import botstacks.sdk.generated.resources.Res
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -55,10 +62,10 @@ class ChannelSettingsState(private val chat: Chat) {
     var selectedImage by mutableStateOf<KmpFile?>(null)
 
     val channelImage: Any?
-        get() = selectedImage ?: chat.displayImage
+        @Composable get() = selectedImage?.readBytes() ?: chat.displayImage
 
     @OptIn(ExperimentalFoundationApi::class)
-    val name: TextFieldState = TextFieldState(chat.displayName)
+    var name by mutableStateOf(TextFieldValue(chat.displayName))
     var isEditingName by mutableStateOf(false)
 
     var muted: Boolean by mutableStateOf(chat.notification_setting == NotificationSetting.none)
@@ -143,7 +150,8 @@ fun ChannelSettingsView(
                 .padding(horizontal = BotStacks.dimens.inset)
                 .onEnter { state.isEditingName = false },
             isEditing = state.isEditingName,
-            state = state.name,
+            value = state.name,
+            onValueChanged = { state.name = it },
             placeholder = "Enter channel name",
             onStartEditing = { state.isEditingName = true },
             onEditComplete = { state.isEditingName = false }

@@ -8,7 +8,7 @@
 import BotStacksSDK
 import SwiftUI
 
-struct BotStacksChatController : UIViewControllerRepresentable {
+private struct BotStacksChatController : UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         let vc = BotStacksChatControllerKt.BotStacksChatController(onLogout: {})
 
@@ -16,7 +16,6 @@ struct BotStacksChatController : UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-    
 }
 
 struct ContentView: View {

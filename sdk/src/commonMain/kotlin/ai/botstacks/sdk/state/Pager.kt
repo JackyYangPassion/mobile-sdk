@@ -17,7 +17,7 @@ interface Identifiable {
 @Stable
 abstract class Pager<T : Identifiable>(
     val id: String = uuid(),
-    val items: SnapshotStateList<T> = mutableStateListOf<T>(),
+    val items: SnapshotStateList<T> = mutableStateListOf(),
     val pageSize: Int = 20
 ) {
     var loading by mutableStateOf(false)

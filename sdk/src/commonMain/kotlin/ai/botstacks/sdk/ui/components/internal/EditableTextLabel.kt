@@ -1,7 +1,8 @@
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.ui.components.internal
 
 import ai.botstacks.sdk.utils.ui.unboundedClickable
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.Text
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,15 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun EditableTextLabel(
     modifier: Modifier = Modifier,
-    state: TextFieldState,
+    value: TextFieldValue,
+    onValueChanged: (TextFieldValue) -> Unit,
     placeholder: String,
     isEditing: Boolean,
     onStartEditing: () -> Unit,
@@ -45,7 +47,8 @@ fun EditableTextLabel(
         if (editing) {
             TextInput(
                 Modifier.fillMaxWidth().focusRequester(focusRequester),
-                state = state,
+                value = value,
+                onValueChanged = onValueChanged,
                 placeholder = placeholder,
                 maxLines = 1,
                 fontStyle = BotStacks.fonts.body2,
@@ -74,7 +77,7 @@ fun EditableTextLabel(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x2, Alignment.CenterHorizontally)
             ) {
-                Text(state.text.toString(), fontStyle = BotStacks.fonts.h3, color = BotStacks.colorScheme.onBackground)
+                Text(value.text, fontStyle = BotStacks.fonts.h3, color = BotStacks.colorScheme.onBackground)
                 Icon(
                     painterResource(Res.drawable.edit_outlined),
                     contentDescription = null,

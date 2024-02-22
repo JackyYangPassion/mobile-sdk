@@ -3,6 +3,7 @@ package ai.botstacks.sdk.state
 import ai.botstacks.sdk.API
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.Server
+import ai.botstacks.sdk.type.Attachment
 import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.utils.Monitoring
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.apollographql.apollo3.api.Optional
 import com.benasher44.uuid.uuid4
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.io.name
@@ -54,14 +56,15 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
         url?.let {
             cont.resume(it)
         } ?: error?.let {
-            cont.resumeWithException(Error(it))
+            println(it.message)
+            cont.resume(null)
         } ?: run {
             _await = cont
             if (!uploading) upload()
         }
     }
 
-    suspend fun awaitAttachment() = await().let { attachment()!! }
+    suspend fun awaitAttachment() = runCatching { await() }.getOrNull()?.let { attachment() }
 
 
     fun upload() {
@@ -110,6 +113,10 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
                 _await?.resumeWithException(it)
                 _await = null
             }
+        }, onError = {
+            uploading = false
+            _await?.resumeWithException(Throwable("Unknown error occurred"))
+            _await = null
         })
     }
 
@@ -126,7 +133,12 @@ data class Upload(val id: String = uuid(), val file: KmpFile) {
     fun attachment() = url?.let { AttachmentInput(url = it, type = attachmentType(), id = id) }
 
     fun localAttachment() =
-        AttachmentInput(url = file.path.orEmpty(), type = attachmentType(), id = id)
+        AttachmentInput(
+            url = file.path.orEmpty(),
+            type = attachmentType(),
+            mime = Optional.presentIfNotNull(file.contentType()),
+            id = id
+        )
 
 }
 

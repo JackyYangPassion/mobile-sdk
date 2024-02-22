@@ -17,12 +17,15 @@ import cocoapods.Giphy.GPHTheme
 import cocoapods.Giphy.GPHThemeTypeAutomatic
 import cocoapods.Giphy.GPHThemeTypeDark
 import cocoapods.Giphy.GPHThemeTypeLight
+import cocoapods.Giphy.Giphy
 import cocoapods.Giphy.GiphyDelegateProtocol
 import cocoapods.Giphy.GiphyViewController
 import cocoapods.Giphy.urlWithRendition
+import coil3.PlatformContext
 import platform.UIKit.UIApplication
 import platform.darwin.NSObject
 
+actual typealias Giphy = Giphy
 actual typealias GiphyModal = GiphyViewController
 actual typealias GiphyThemeType = Int
 actual typealias GiphyContentType = Int
@@ -79,6 +82,7 @@ actual fun GiphyModalSheet(
 
                 if (url != null) {
                     onSelection(url)
+                    giphyViewController.dismissViewControllerAnimated(true, null)
                 }
             }
             override fun didDismissWithController(controller: GiphyViewController?) {

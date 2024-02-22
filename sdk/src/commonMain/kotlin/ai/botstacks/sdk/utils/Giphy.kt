@@ -3,7 +3,9 @@ package ai.botstacks.sdk.utils
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import coil3.PlatformContext
 
+expect class Giphy
 expect class GiphyModal
 expect class GiphyThemeType
 expect class GiphyContentType
