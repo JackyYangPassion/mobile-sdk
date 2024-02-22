@@ -40,6 +40,8 @@ private suspend fun UIImage.Companion.load(url: String) =
                             return@launch
                         }
                     }
+                } else {
+                    cont.resume(null)
                 }
             }
         ).resume()

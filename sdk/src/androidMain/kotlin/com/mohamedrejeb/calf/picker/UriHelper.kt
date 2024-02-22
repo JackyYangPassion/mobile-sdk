@@ -67,7 +67,7 @@ internal object URIPathHelper {
         return null
     }
 
-    private fun getDataColumn(context: Context, uri: Uri?, selection: String?, selectionArgs: Array<String>?): String? {
+    private fun getDataColumn(context: Context, uri: Uri?, selection: String?, selectionArgs: Array<String>?): String? = runCatching {
         var cursor: Cursor? = null
         val column = "_data"
         val projection = arrayOf(column)
@@ -81,7 +81,7 @@ internal object URIPathHelper {
             cursor?.close()
         }
         return null
-    }
+    }.getOrNull()
 
     private fun isExternalStorageDocument(uri: Uri): Boolean {
         return "com.android.externalstorage.documents" == uri.authority

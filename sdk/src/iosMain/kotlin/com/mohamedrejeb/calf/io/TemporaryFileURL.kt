@@ -2,6 +2,7 @@ package com.mohamedrejeb.calf.io
 
 import ai.botstacks.sdk.utils.readData
 import ai.botstacks.sdk.utils.uuid
+import platform.Foundation.NSData
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSTemporaryDirectory
 import platform.Foundation.NSURL
@@ -25,12 +26,13 @@ class TemporaryFileURL(
 }
 
 class TemporaryImageURL(
-    private val content: NSURL,
-    private val extension: String = content.pathExtension().orEmpty()
+    private val content: UIImage,
 ) : TemporaryURL {
+
+    constructor(contentURL: NSURL): this(UIImage(contentURL.readData()))
     override val contentURL: NSURL
         get() {
-            val jpgData = UIImageJPEGRepresentation(UIImage(content.readData()), 1.0)
+            val jpgData = UIImageJPEGRepresentation(content, 1.0)
             val path = "${NSTemporaryDirectory()}/${uuid()}.jpg"
             NSFileManager.defaultManager().createFileAtPath(path, jpgData, null)
             return NSURL.fileURLWithPath(path)
