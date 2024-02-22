@@ -8,9 +8,11 @@
 import BotStacksSDK
 import SwiftUI
 
-struct BotStacksNavigationView : UIViewControllerRepresentable {
+struct BotStacksChatController : UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        BotStacksNavigationKt.BotStacksNavigation { }
+        let vc = BotStacksChatControllerKt.BotStacksChatController(onLogout: {})
+
+        return vc
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
@@ -18,8 +20,13 @@ struct BotStacksNavigationView : UIViewControllerRepresentable {
 }
 
 struct ContentView: View {
+    
+    @EnvironmentObject var router: Router
+    
     var body: some View {
-        BotStacksNavigationView().ignoresSafeArea()
+        BotStacksChatController()
+            .ignoresSafeArea()
+            .navigationBarBackButtonHidden()
     }
 }
 

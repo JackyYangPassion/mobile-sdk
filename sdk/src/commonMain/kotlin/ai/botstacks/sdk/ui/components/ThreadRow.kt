@@ -91,6 +91,7 @@ fun ChatRow(modifier: Modifier = Modifier, chat: Chat, onClick: () -> Unit) {
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 val messagePreviewContents = chat.messagePreview
                 val text = messagePreviewContents?.first ?: AnnotatedString("No messages yet")

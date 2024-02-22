@@ -40,7 +40,7 @@ fun RepliesView(
                 color = colorScheme.caption
             )
             for (msg in message.replies.items) {
-                MessageView(message = msg, onPressUser = onPressUser, onLongPress = {})
+                MessageView(message = msg, isGroup = false, onPressUser = onPressUser, onLongPress = {})
             }
             Space(24f)
         }

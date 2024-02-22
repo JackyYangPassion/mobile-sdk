@@ -15,8 +15,8 @@ internal actual fun ImageRenderer(
 ) {
     AsyncImage(
         model = url,
-        contentDescription = "shared image",
-        contentScale = ContentScale.Fit,
+        contentDescription = contentDescription,
+        contentScale = contentScale,
         modifier = modifier
     )
 }

@@ -35,6 +35,10 @@ actual class BotStacksChatPlatform : BotStacksChat() {
     override val prefs: Settings
         get() = NSUserDefaultsSettings(NSUserDefaults.standardUserDefaults())
 
+    fun setup(apiKey: String) {
+        setup(apiKey, false)
+    }
+
     fun setup(apiKey: String, delayLoad: Boolean = false) {
         this._apiKey = apiKey
         this.bundleIdentifier = NSBundle.mainBundle.bundleIdentifier().orEmpty()

@@ -13,10 +13,10 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         app = this
-        Giphy.configure(this, getString(R.string.giphy))
+        Giphy.configure(this, getString(R.string.giphy_api_key))
         BotStacksChat.shared.setup(
             this,
-            getString(R.string.inappchat)
+            getString(R.string.botstacks_api_key)
         )
     }
 

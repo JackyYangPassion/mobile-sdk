@@ -41,6 +41,10 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
     actual val scope = CoroutineScope(Dispatchers.Main)
 
+    fun setup(context: Context, apiKey: String) {
+        setup(context, apiKey, false)
+    }
+
     fun setup(context: Context, apiKey: String, delayLoad: Boolean = false) {
         this.sharedPreferences = context.getSharedPreferences("botstackschat", Context.MODE_PRIVATE)
         this._apiKey = apiKey

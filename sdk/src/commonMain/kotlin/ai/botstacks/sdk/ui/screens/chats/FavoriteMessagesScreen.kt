@@ -30,10 +30,18 @@ fun FavoritesMessagesScreen(
     })
     Column {
         Header(title = "Favorite Messages", onBackClicked = back)
-        PagerList(pager = BotStacksChatStore.current.favorites, scrollToTop = scrollToTop.toString()) {
-            MessageView(message = it, onPressUser = openProfile, onLongPress = {}, onClick = {
-                openReplies(it)
-            })
+        PagerList(
+            pager = BotStacksChatStore.current.favorites,
+            scrollToTop = scrollToTop.toString()
+        ) {
+            MessageView(
+                message = it,
+                onPressUser = openProfile,
+                onLongPress = {},
+                isGroup = true,
+                onClick = {
+                    openReplies(it)
+                })
         }
     }
 }

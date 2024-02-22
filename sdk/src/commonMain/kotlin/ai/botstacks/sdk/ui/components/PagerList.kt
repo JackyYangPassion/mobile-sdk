@@ -22,24 +22,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.Identifiable
+import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.Pager
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.components.internal.InfiniteListHandler
 import ai.botstacks.sdk.utils.Fn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.remember
 import kotlinx.coroutines.launch
+
+
+object PagerListDefaults {
+    @Composable
+    fun Divider() {
+        Divider(color = colorScheme.caption)
+    }
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun <T : Identifiable> IACList(
+fun <T : Identifiable> BotStacksLazyList(
     modifier: Modifier = Modifier,
     items: List<T> = listOf(),
     invert: Boolean = false,
     header: @Composable Fn? = null,
     footer: @Composable Fn? = null,
     empty: @Composable () -> Unit = {},
-    divider: Boolean = false,
-    topInset: Dp = 0.dp,
-    bottomInset: Dp = 0.dp,
+    separator: @Composable (T?, T?) -> Unit = { _, _ -> },
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     scrollToTop: String? = null,
@@ -47,7 +60,7 @@ fun <T : Identifiable> IACList(
     loadMore: (() -> Unit)? = null,
     refresh: (() -> Unit)? = null,
     refreshing: Boolean = false,
-    content: @Composable LazyItemScope.(T) -> Unit
+    content: LazyListScope.() -> Unit
 ) {
     val pullRefreshState = rememberPullRefreshState(refreshing, { refresh?.let { it() } })
     if (items.isEmpty() && !hasMore) {
@@ -87,7 +100,7 @@ fun <T : Identifiable> IACList(
             val listState = rememberLazyListState()
             val coroutineScope = rememberCoroutineScope()
             LazyColumn(
-                contentPadding = PaddingValues(top = topInset, bottom = bottomInset),
+                contentPadding = contentPadding,
                 state = listState,
                 reverseLayout = invert,
                 modifier = Modifier.fillMaxSize(),
@@ -95,10 +108,24 @@ fun <T : Identifiable> IACList(
                 horizontalAlignment = horizontalAlignment,
             ) {
                 header?.let { item { it() } }
-                items(items, key = { item -> item.id }) { item ->
-                    Column(Modifier.padding(0.dp)) {
-                        content(item)
-                        if (divider) Divider(color = colorScheme.caption)
+                if (items.isEmpty()) {
+                    item {
+                        Box(modifier = Modifier.fillParentMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(color = colorScheme.primary)
+                        }
+                    }
+                }
+
+                content(this)
+
+                // add last separator
+                // this isn't handled by paging separators due to no `beforeItem` to reference against
+                // at end of list due to reverseLayout
+                if (invert) {
+                    (items.getOrNull(items.count() - 1))?.let {
+                        item {
+                            separator(it, null)
+                        }
                     }
                 }
             }
@@ -120,6 +147,97 @@ fun <T : Identifiable> IACList(
 }
 
 @Composable
+fun <T : Identifiable> IACList(
+    modifier: Modifier = Modifier,
+    items: List<T> = listOf(),
+    invert: Boolean = false,
+    header: @Composable Fn? = null,
+    footer: @Composable Fn? = null,
+    empty: @Composable () -> Unit = {},
+    separator: @Composable (T?, T?) -> Unit = { _, _ -> },
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    scrollToTop: String? = null,
+    hasMore: Boolean = false,
+    loadMore: (() -> Unit)? = null,
+    refresh: (() -> Unit)? = null,
+    refreshing: Boolean = false,
+    content: @Composable LazyItemScope.(T) -> Unit
+) {
+    BotStacksLazyList(
+        modifier = modifier,
+        items = items,
+        invert = invert,
+        header = header,
+        footer = footer,
+        empty = empty,
+        separator = separator,
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        scrollToTop = scrollToTop,
+        hasMore = hasMore,
+        loadMore = loadMore,
+        refresh = refresh,
+        refreshing = refreshing,
+    ) {
+        itemsIndexed(items) { index, item ->
+            Column(verticalArrangement = verticalArrangement) {
+                separator(items.getOrNull(index - 1), item)
+                content(item)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun <T : Identifiable> IACListIndexed(
+    modifier: Modifier = Modifier,
+    items: List<T> = listOf(),
+    invert: Boolean = false,
+    header: @Composable Fn? = null,
+    footer: @Composable Fn? = null,
+    empty: @Composable () -> Unit = {},
+    separator: @Composable (T?, T?) -> Unit = { _, _ -> },
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    scrollToTop: String? = null,
+    hasMore: Boolean = false,
+    loadMore: (() -> Unit)? = null,
+    refresh: (() -> Unit)? = null,
+    refreshing: Boolean = false,
+    content: @Composable LazyItemScope.(Int, T) -> Unit
+) {
+    BotStacksLazyList(
+        modifier = modifier,
+        items = items,
+        invert = invert,
+        header = header,
+        footer = footer,
+        empty = empty,
+        separator = separator,
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        scrollToTop = scrollToTop,
+        hasMore = hasMore,
+        loadMore = loadMore,
+        refresh = refresh,
+        refreshing = refreshing,
+    ) {
+        itemsIndexed(items) { index, item ->
+            Column(verticalArrangement = verticalArrangement) {
+                separator(items.getOrNull(index - 1), item)
+                content(index, item)
+            }
+        }
+    }
+}
+
+@Composable
 fun <T : Identifiable> PagerList(
     pager: Pager<T>,
     modifier: Modifier = Modifier,
@@ -128,9 +246,8 @@ fun <T : Identifiable> PagerList(
     header: @Composable Fn? = null,
     footer: @Composable Fn? = null,
     empty: @Composable () -> Unit = {},
-    divider: Boolean = false,
-    topInset: Dp = 0.dp,
-    bottomInset: Dp = 0.dp,
+    separator: @Composable (T?, T?) -> Unit = { _, _ -> },
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     scrollToTop: String? = null,
@@ -148,9 +265,49 @@ fun <T : Identifiable> PagerList(
         header = header,
         footer = footer,
         empty = empty,
-        divider = divider,
-        topInset = topInset,
-        bottomInset = bottomInset,
+        separator = separator,
+        contentPadding = contentPadding,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        scrollToTop = scrollToTop,
+        hasMore = pager.hasMore,
+        loadMore = pager::loadMore,
+        refresh = pager::refresh,
+        refreshing = pager.refreshing,
+        content = content
+    )
+}
+
+@Composable
+fun <T : Identifiable> PagerListIndexed(
+    pager: Pager<T>,
+    modifier: Modifier = Modifier,
+    prefix: List<T> = listOf(),
+    invert: Boolean = false,
+    header: @Composable Fn? = null,
+    footer: @Composable Fn? = null,
+    empty: @Composable () -> Unit = {},
+    separator: @Composable (T?, T?) -> Unit = { _, _ -> },
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    scrollToTop: String? = null,
+    content: @Composable LazyItemScope.(Int, T) -> Unit
+) {
+    val array = prefix + pager.items
+    LaunchedEffect(pager.id) {
+        pager.loadMoreIfEmpty()
+    }
+
+    IACListIndexed(
+        modifier = modifier,
+        items = array,
+        invert = invert,
+        header = header,
+        footer = footer,
+        empty = empty,
+        separator = separator,
+        contentPadding = contentPadding,
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment,
         scrollToTop = scrollToTop,

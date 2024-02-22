@@ -1,5 +1,7 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -38,13 +40,8 @@ kotlin {
 
         framework {
             baseName = "BotStacksSDK"
-            export(libs.compose.adaptive.ui)
             binaryOption("bundleId", "ai.botstacks.sdk")
-        }
-
-        pod("Sentry") {
-            version = "8.20.0"
-            linkOnly = true
+            isStatic = true
         }
 
         pod("Giphy") {
@@ -56,6 +53,16 @@ kotlin {
         pod("Gifu") {
             version = "3.3.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("GoogleMaps") {
+            version = "8.4.0"
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+
+        pod("Sentry") {
+            version = "8.20.0"
+            linkOnly = true
         }
     }
 
@@ -76,9 +83,7 @@ kotlin {
                 implementation(compose.animation)
                 implementation(compose.components.resources)
 
-                api(libs.compose.adaptive.ui)
                 implementation(libs.compose.adaptive.ui.filepicker)
-
                 implementation(libs.compose.windowSizeClass)
 
                 implementation(libs.apollo3.runtime)
@@ -95,6 +100,8 @@ kotlin {
                 implementation(libs.kermit)
 
                 implementation(libs.ktor.client.core)
+
+                implementation(libs.markdown)
 
                 api(libs.sentry)
 
@@ -123,7 +130,6 @@ kotlin {
                 implementation(libs.androidx.media3.exoplayer)
                 implementation(libs.androidx.media3.ui)
 
-                implementation(libs.compose.markdown)
                 implementation(libs.compose.permissions)
 
                 implementation(libs.coil3.gif)
@@ -135,6 +141,9 @@ kotlin {
                 implementation(libs.contacts.async)
                 implementation(libs.contacts.core)
                 implementation(libs.contacts.vcard)
+
+                implementation(libs.google.maps.compose)
+                implementation(libs.google.maps.compose.utils)
 
                 implementation(libs.datafaker)
                 implementation(libs.emoji.picker)

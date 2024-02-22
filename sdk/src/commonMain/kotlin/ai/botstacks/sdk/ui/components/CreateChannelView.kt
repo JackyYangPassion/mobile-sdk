@@ -5,6 +5,7 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
@@ -36,7 +37,6 @@ import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import com.mohamedrejeb.calf.ui.toggle.AdaptiveSwitch
 import botstacks.sdk.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -129,7 +129,7 @@ fun SetChannelDetailsView(
                     icon = Res.drawable.lock_fill,
                     title = "Private channel",
                     endSlot = {
-                        AdaptiveSwitch(checked = state.private, onCheckedChange = null)
+                        ToggleSwitch(checked = state.private, onCheckedChange = null)
                     },
                     onClick = { state.private = !state.private }
                 )

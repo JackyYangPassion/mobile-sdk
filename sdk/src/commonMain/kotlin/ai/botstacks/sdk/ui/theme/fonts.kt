@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package ai.botstacks.sdk.ui.theme
 
 /*
@@ -5,19 +7,21 @@ package ai.botstacks.sdk.ui.theme
  */
 
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.utils.ift
 import ai.botstacks.sdk.utils.ifteq
-import ai.botstacks.sdk.utils.ui.font
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import botstacks.sdk.generated.resources.Res
+import com.mikepenz.markdown.model.MarkdownTypography
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.Font
 
 internal val LocalBotStacksFonts = staticCompositionLocalOf {
     Fonts(
@@ -45,7 +49,6 @@ data class FontStyle(
     @Composable
     fun asTextStyle(): TextStyle {
         return TextStyle(
-            color = BotStacks.colorScheme.onBackground,
             fontFamily = family,
             fontSize = size,
             fontWeight = weight,
@@ -184,7 +187,7 @@ private fun defaultAppFonts() = Fonts(
     ),
     label2 = FontStyle(
         size = 14.sp,
-        weight = FontWeight.W600,
+        weight = FontWeight.W500,
         family = interW600
     ),
     button1 = FontStyle(
@@ -210,21 +213,13 @@ private fun defaultAppFonts() = Fonts(
 )
 
 private val interW400: FontFamily
-    @Composable get() = FontFamily(
-        font("Inter Regular", "inter_w400", FontWeight.W400)
-    )
+    @Composable get() = FontFamily(Font(Res.font.inter_w400))
 
 private val interW500: FontFamily
-    @Composable get() = FontFamily(
-        font("Inter Medium", "inter_w500", FontWeight.W500)
-    )
+    @Composable get() = FontFamily(Font(Res.font.inter_w500))
 
 private val interW600: FontFamily
-    @Composable get() = FontFamily(
-        font("Inter SemiBold", "inter_w600", FontWeight.W600)
-    )
+    @Composable get() = FontFamily(Font(Res.font.inter_w600))
 
 private val interW700: FontFamily
-    @Composable get() = FontFamily(
-        font("Inter Bold", "inter_w700", FontWeight.W700)
-    )
+    @Composable get() = FontFamily(Font(Res.font.inter_w700))

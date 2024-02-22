@@ -28,6 +28,7 @@ import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.ContactRow
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.PagerList
+import ai.botstacks.sdk.ui.components.PagerListDefaults
 import ai.botstacks.sdk.ui.components.Text
 import ai.botstacks.sdk.ui.components.circle
 import ai.botstacks.sdk.utils.IPreviews
@@ -113,7 +114,9 @@ fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
         Header(title = "Invite to ${chat.name}", onBackClicked = back)
         PagerList(
             pager = BotStacksChatStore.current.contacts,
-            divider = true,
+            separator = { before, after ->
+                if (before != null) PagerListDefaults.Divider()
+            },
             modifier = Modifier.weight(1f)
         ) {
             val isSelected = selected.contains(it)
