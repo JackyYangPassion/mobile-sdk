@@ -11,11 +11,18 @@ import BotStacksSDK
 @main
 struct sample_iosApp: SwiftUI.App {
     
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @ObservedObject var router = Router()
     
     init() {
-        BotStacksChat.companion.shared.setup(apiKey: "l35ndgs2p75ikbzj6jh8uofk", delayLoad: false)
+        // Load the Google maps API key from the AppSecrets.plist file
+        let filePath = Bundle.main.path(forResource: "AppSecrets", ofType: "plist")!
+        let plist = NSDictionary(contentsOfFile: filePath)!
+        let botstacksApiKey = plist["BOTSTACKS_API_KEY"] as! String
+        
+        BotStacksChat.companion.shared.setup(apiKey: botstacksApiKey, delayLoad: false)
     }
+    
 
     var body: some Scene {
         WindowGroup {
@@ -30,26 +37,5 @@ struct sample_iosApp: SwiftUI.App {
             }
             .environmentObject(router)
         }
-    }
-}
-
-final class Router: ObservableObject {
-    
-    public enum Destination: Codable, Hashable {
-        case chats
-    }
-    
-    @Published var navPath = NavigationPath()
-    
-    func navigate(to destination: Destination) {
-        navPath.append(destination)
-    }
-    
-    func navigateBack() {
-        navPath.removeLast()
-    }
-    
-    func navigateToRoot() {
-        navPath.removeLast(navPath.count)
     }
 }
