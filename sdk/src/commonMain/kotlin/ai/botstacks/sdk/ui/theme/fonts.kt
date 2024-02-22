@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import botstacks.sdk.generated.resources.Res
 import com.mikepenz.markdown.model.MarkdownTypography
-import com.mikepenz.markdown.model.markdownTypography
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 
@@ -50,7 +49,6 @@ data class FontStyle(
     @Composable
     fun asTextStyle(): TextStyle {
         return TextStyle(
-            color = BotStacks.colorScheme.onBackground,
             fontFamily = family,
             fontSize = size,
             fontWeight = weight,
@@ -125,20 +123,6 @@ class Fonts(
         button2 = button2,
         caption1 = caption1,
         caption2 = caption2
-    )
-
-    @Composable
-    fun forMarkdown(): MarkdownTypography = markdownTypography(
-        h1 = h1.asTextStyle(),
-        h2 = h2.asTextStyle(),
-        h3 = h3.asTextStyle(),
-        text = body1.asTextStyle(),
-        paragraph = body1.asTextStyle(),
-        ordered = body1.asTextStyle(),
-        bullet = body1.asTextStyle(),
-        list = body1.asTextStyle(),
-        code = body2.copy(family = FontFamily.Monospace).asTextStyle(),
-        quote = body2.asTextStyle().plus(SpanStyle(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic))
     )
 }
 

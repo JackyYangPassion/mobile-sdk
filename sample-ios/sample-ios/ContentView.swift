@@ -10,9 +10,9 @@ import SwiftUI
 
 struct BotStacksChatController : UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        BotStacksChatControllerKt.BotStacksChatController {
-                
-        }
+        let vc = BotStacksChatControllerKt.BotStacksChatController(onLogout: {})
+
+        return vc
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}

@@ -56,7 +56,7 @@ kotlin {
         }
 
         pod("GoogleMaps") {
-            version = "8.2.0"
+            version = "8.4.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
 
@@ -84,7 +84,6 @@ kotlin {
                 implementation(compose.components.resources)
 
                 implementation(libs.compose.adaptive.ui.filepicker)
-                implementation(libs.compose.markdown)
                 implementation(libs.compose.windowSizeClass)
 
                 implementation(libs.apollo3.runtime)

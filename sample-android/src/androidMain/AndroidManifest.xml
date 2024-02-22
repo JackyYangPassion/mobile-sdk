@@ -11,7 +11,7 @@
         android:hardwareAccelerated="true"
         android:theme="@style/Theme.Botstackschat">
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="ENTER KEY HERE"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="@string/google_maps_api_key"/>
 
         <activity
             android:name=".MainActivity"

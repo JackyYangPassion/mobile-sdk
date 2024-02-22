@@ -68,8 +68,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        resValue("string", "giphy", rootProject.ext["giphyIAC"] as String)
-        resValue("string", "inappchat", rootProject.ext["inappchatApiKey"] as String)
     }
 
     signingConfigs {
