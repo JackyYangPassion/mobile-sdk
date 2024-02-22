@@ -15,6 +15,7 @@ import ai.botstacks.sdk.ui.components.requiredIconSize
 import ai.botstacks.sdk.utils.Fn
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.genChat
+import ai.botstacks.sdk.utils.ui.keyboardAsState
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -41,6 +43,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.generated.resources.Res
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -59,14 +64,17 @@ fun MessageInput(
 ) {
     val composeScope = rememberCoroutineScope()
     var state by remember { mutableStateOf(TextFieldValue()) }
+    val keyboardVisible by keyboardAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
     val onSend = {
         if (state.text.isNotBlank()) {
             composeScope.launch {
                 val text = state.text
-                keyboardController?.hide()
                 state = TextFieldValue()
-                delay(300)
+                if (keyboardVisible) {
+                    keyboardController?.hide()
+                    delay(500)
+                }
                 chat.send(replyingTo?.id, text)
             }
         }
@@ -74,7 +82,7 @@ fun MessageInput(
 
     Row(
         modifier = modifier
-            .clickable { keyboardController?.show() }
+//            .clickable { keyboardController?.show() }
             .imePadding(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimens.grid.x2),

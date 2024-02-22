@@ -34,7 +34,6 @@ internal fun InfiniteListHandler(
 
                 lastVisibleItemIndex > (totalItemsNumber - buffer)
             }.filter { it }
-            .distinctUntilChanged()
             .onEach { onLoadMore() }
             .launchIn(this)
     }

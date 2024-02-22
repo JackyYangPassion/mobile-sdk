@@ -46,7 +46,7 @@ actual fun VideoPlayer(modifier: Modifier, url: String,) {
     }
 
     DisposableEffect(exoPlayer) {
-        exoPlayer.playWhenReady = true
+        exoPlayer.playWhenReady = false
         exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
         exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
         exoPlayer.volume = 0.0f

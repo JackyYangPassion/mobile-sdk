@@ -13,7 +13,6 @@ import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
 import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
 import ai.botstacks.sdk.utils.bg
 import ai.botstacks.sdk.utils.readBytes
-import ai.botstacks.sdk.utils.storeTemporarily
 import ai.botstacks.sdk.utils.ui.onEnter
 import ai.botstacks.sdk.utils.ui.unboundedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -32,7 +31,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -128,18 +126,11 @@ fun ChannelSettingsView(
         verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.inset),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val scope = rememberCoroutineScope()
         val pickerLauncher = rememberFilePickerLauncher(
             type = FilePickerFileType.Image,
             selectionMode = FilePickerSelectionMode.Single,
             onResult = { files ->
-                scope.launch(Dispatchers.IO) {
-                    files.firstOrNull()?.storeTemporarily()?.let {
-                        withContext(Dispatchers.Main) {
-                            state.selectedImage = it
-                        }
-                    }
-                }
+                state.selectedImage = files.firstOrNull()
             }
         )
 

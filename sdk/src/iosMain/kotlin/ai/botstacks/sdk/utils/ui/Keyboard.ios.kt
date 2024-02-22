@@ -15,35 +15,36 @@ import platform.UIKit.UIKeyboardWillShowNotification
 @Composable
 actual fun keyboardAsState(): State<Boolean> {
     val keyboardState = remember { mutableStateOf(false) }
-
+    val keyboardObserver = remember { KeyboardObserver { keyboardState.value = it } }
     DisposableEffect(LocalUIViewController.current) {
-        NSNotificationCenter.defaultCenter.addObserver(
-            this,
-            selector = NSSelectorFromString("keyboardWillDisappear"),
-            name = UIKeyboardWillHideNotification,
-            `object` = null,
-        )
-        NSNotificationCenter.defaultCenter.addObserver(
-            this,
-            selector = NSSelectorFromString("keyboardWillAppear"),
-            name = UIKeyboardWillShowNotification,
-            `object` = null,
-        )
-
-        onDispose {
-            NSNotificationCenter.defaultCenter.removeObserver(this)
-        }
-    }
-
-    @ObjCAction
-    fun keyboardWillDisappear() {
-        keyboardState.value = false
-    }
-
-    @ObjCAction
-    fun keyboardWillAppear() {
-        keyboardState.value = true
+        keyboardObserver.watch()
+        onDispose { keyboardObserver.stop() }
     }
 
     return keyboardState
+}
+
+private class KeyboardObserver(
+    private val onStateChanged: (Boolean) -> Unit,
+) {
+    fun watch() {
+        NSNotificationCenter.defaultCenter.addObserverForName(
+            name = UIKeyboardWillHideNotification,
+            `object` = null,
+            queue = null,
+        ) {
+            onStateChanged(false)
+        }
+        NSNotificationCenter.defaultCenter.addObserverForName(
+            name = UIKeyboardWillShowNotification,
+            `object` = null,
+            queue = null,
+        ) {
+            onStateChanged(false)
+        }
+    }
+
+    fun stop() {
+        NSNotificationCenter.defaultCenter.removeObserver(this)
+    }
 }

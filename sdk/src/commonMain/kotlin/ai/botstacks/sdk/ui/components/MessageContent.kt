@@ -5,6 +5,7 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.fragment.FMessage
+import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Location
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
@@ -12,15 +13,18 @@ import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksChatContext
 import ai.botstacks.sdk.ui.components.internal.ImageRenderer
 import ai.botstacks.sdk.ui.components.internal.MarkdownView
+import ai.botstacks.sdk.ui.components.internal.VideoPlayer
 import ai.botstacks.sdk.ui.components.internal.location.MapPin
 import ai.botstacks.sdk.utils.IPreviews
 import ai.botstacks.sdk.utils.ift
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.runtime.Composable
@@ -100,7 +104,7 @@ fun MessageImageContent(
             contentDescription = "shared image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .height(dimens.imagePreviewSize.height.dp)
+                .heightIn(min = dimens.imagePreviewSize.height.dp)
                 .fillMaxWidth()
                 .background(
                     color = ift(
@@ -142,10 +146,30 @@ fun MessageMapContent(
             )
         }
 
-        MapPin(
-            modifier = Modifier
-                .height(dimens.imagePreviewSize.height.dp)
+        if (BotStacksChatStore.current.mapsApiKey != null) {
+            MapPin(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(dimens.imagePreviewSize.height.dp)
+                    .background(
+                        color = ift(
+                            isCurrentUser,
+                            colorScheme.primary,
+                            colorScheme.message
+                        ),
+                        shape = shape
+                    ).clip(shape)
+                    .combinedClickable(
+                        onClick = { onClick?.invoke() },
+                        onLongClick = onLongClick,
+                    ),
+                location = location,
+                userAvatar = avatar
+            )
+        } else {
+            Box(modifier = Modifier
                 .fillMaxWidth()
+                .height(dimens.imagePreviewSize.height.dp)
                 .background(
                     color = ift(
                         isCurrentUser,
@@ -157,10 +181,8 @@ fun MessageMapContent(
                 .combinedClickable(
                     onClick = { onClick?.invoke() },
                     onLongClick = onLongClick,
-                ),
-            location = location,
-            userAvatar = avatar
-        )
+                ),)
+        }
     }
 }
 

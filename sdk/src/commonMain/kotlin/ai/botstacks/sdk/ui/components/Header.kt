@@ -127,12 +127,12 @@ object HeaderDefaults {
 
 internal fun Modifier.requiredIconSize() = this.size(HeaderDefaults.IconSize)
 
-class HeaderState constructor(
+class HeaderState(
     val showSearch: Boolean = false,
     val showSearchClear: Boolean = false,
     isSearchActive: Boolean = false,
 ) {
-    var searchQuery: TextFieldValue = TextFieldValue()
+    var searchQuery: TextFieldValue by mutableStateOf(TextFieldValue())
     var searchActive by mutableStateOf(isSearchActive)
 }
 

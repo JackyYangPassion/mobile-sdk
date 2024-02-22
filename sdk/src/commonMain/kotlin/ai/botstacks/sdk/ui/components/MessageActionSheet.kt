@@ -53,36 +53,38 @@ fun MessageActionSheet(
         sheetContentColor = colorScheme.onBackground,
         scrimColor = colorScheme.scrim,
         sheetContent = {
-            Space(8f)
-            EmojiBar(
-                current = message?.currentReaction,
-                onEmoji = {
-                    message?.react(it)
+            Column(modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
+                Space(8f)
+                EmojiBar(
+                    current = message?.currentReaction,
+                    onEmoji = {
+                        message?.react(it)
+                        hide()
+                    }
+                )
+                ActionItem(
+                    text = "Reply in Chat",
+                    icon = Res.drawable.chat_dots,
+                ) {
+                    message?.let(onReply)
                     hide()
                 }
-            )
-            ActionItem(
-                text = "Reply in Chat",
-                icon = Res.drawable.chat_dots,
-            ) {
-                message?.let(onReply)
-                hide()
-            }
 
-            ActionItem(
-                text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
-                icon = Res.drawable.star_fill,
-            )
-            {
-                message?.toggleFavorite()
-                hide()
-            }
+                ActionItem(
+                    text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
+                    icon = Res.drawable.star_fill,
+                )
+                {
+                    message?.toggleFavorite()
+                    hide()
+                }
 
-            ActionItem(
-                text = "Copy message text",
-                icon = Res.drawable.copy,
-            ) {
-                copy()
+                ActionItem(
+                    text = "Copy message text",
+                    icon = Res.drawable.copy,
+                ) {
+                    copy()
+                }
             }
         },
         content = content
