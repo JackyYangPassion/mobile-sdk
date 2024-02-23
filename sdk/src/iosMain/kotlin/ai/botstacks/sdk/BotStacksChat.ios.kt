@@ -3,7 +3,9 @@ package ai.botstacks.sdk
 import ai.botstacks.sdk.state.BotStacksChatStore
 import ai.botstacks.sdk.utils.Giphy
 import ai.botstacks.sdk.utils.bg
+import ai.botstacks.sdk.utils.hasKeysInPlist
 import ai.botstacks.sdk.utils.op
+import ai.botstacks.sdk.utils.readPlist
 import ai.botstacks.sdk.utils.retryIO
 import androidx.compose.runtime.Stable
 import com.russhwolf.settings.NSUserDefaultsSettings
@@ -61,13 +63,20 @@ actual class BotStacksChatPlatform : BotStacksChat() {
         BotStacksChatStore.current.contacts.requestContacts = false
 
         if (!giphyApiKey.isNullOrEmpty()) {
-            Giphy.configureWithApiKey(giphyApiKey, verificationMode = true, metadata = emptyMap<Any?, Any>())
-            BotStacksChatStore.current.giphyApiKey = giphyApiKey
+            Giphy.configureWithApiKey(giphyApiKey, verificationMode = false, metadata = emptyMap<Any?, Any>())
+            hasGiphySupport = true
         }
 
         if (!googleMapsApiKey.isNullOrEmpty()) {
-            BotStacksChatStore.current.mapsApiKey = googleMapsApiKey
+            hasMapsSupport = true
         }
+
+        hasLocationSupport = readPlist<String>("Info", "NSLocationAlwaysAndWhenInUseUsageDescription") != null
+        // Info.plist privacy reason also required
+
+        // Info.plist privacy reason also required
+        hasCameraSupport = readPlist<String>("Info", "NSCameraUsageDescription") != null
+
         if (!delayLoad) {
 //            Log.v(TAG, "Launch load")
             scope.launch {

@@ -13,9 +13,16 @@ import platform.AVFoundation.AVCaptureDevice
 import platform.AVFoundation.AVMediaTypeVideo
 import platform.AVFoundation.authorizationStatusForMediaType
 import platform.AVFoundation.requestAccessForMediaType
+import platform.CoreLocation.CLLocationManager
+import platform.CoreLocation.CLLocationManagerDelegateProtocol
+import platform.CoreLocation.kCLAuthorizationStatusAuthorizedAlways
+import platform.CoreLocation.kCLAuthorizationStatusAuthorizedWhenInUse
+import platform.CoreLocation.kCLAuthorizationStatusDenied
+import platform.CoreLocation.kCLAuthorizationStatusNotDetermined
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationOpenSettingsURLString
+import platform.darwin.NSObject
 
 @Composable
 actual fun createPermissionsManager(callback: PermissionCallback): PermissionsManager {
@@ -24,6 +31,9 @@ actual fun createPermissionsManager(callback: PermissionCallback): PermissionsMa
 
 actual class PermissionsManager actual constructor(private val callback: PermissionCallback) :
     PermissionHandler {
+
+    private val locationManager = CLLocationManager()
+
     @Composable
     override fun askPermission(permission: PermissionType) {
         when (permission) {
@@ -31,6 +41,10 @@ actual class PermissionsManager actual constructor(private val callback: Permiss
                 val status: AVAuthorizationStatus =
                     remember { AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) }
                 askCameraPermission(status, permission, callback)
+            }
+
+            PermissionType.Location -> {
+                askLocationPermission(permission, locationManager, callback)
             }
         }
     }
@@ -42,6 +56,12 @@ actual class PermissionsManager actual constructor(private val callback: Permiss
                 val status: AVAuthorizationStatus =
                     remember { AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo) }
                 status == AVAuthorizationStatusAuthorized
+            }
+
+            PermissionType.Location -> {
+                val authStatus = locationManager.authorizationStatus()
+                println("location auth status=$authStatus")
+                authStatus == 4 || authStatus == 3
             }
         }
     }
@@ -82,6 +102,50 @@ actual class PermissionsManager actual constructor(private val callback: Permiss
             }
 
             else -> error("unknown camera status $status")
+        }
+    }
+
+    private fun askLocationPermission(
+        permission: PermissionType,
+        locationManager: CLLocationManager,
+        callback: PermissionCallback
+    ) {
+        when (val authStatus = locationManager.authorizationStatus()) {
+            kCLAuthorizationStatusAuthorizedWhenInUse,
+            kCLAuthorizationStatusAuthorizedAlways -> {
+                CoroutineScope(Dispatchers.Main).launch {
+                    callback.onPermissionStatus(permission, PermissionStatus.GRANTED)
+                }
+            }
+
+            kCLAuthorizationStatusNotDetermined -> {
+                locationManager.requestWhenInUseAuthorization()
+                locationManager.delegate = object : NSObject(), CLLocationManagerDelegateProtocol {
+                    override fun locationManager(manager: CLLocationManager, didChangeAuthorizationStatus: Int) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            val isGranted = when (didChangeAuthorizationStatus) {
+                                kCLAuthorizationStatusAuthorizedWhenInUse,
+                                kCLAuthorizationStatusAuthorizedAlways -> true
+                                else -> false
+                            }
+
+                            if (isGranted) {
+                                callback.onPermissionStatus(permission, PermissionStatus.GRANTED)
+                            } else {
+                                callback.onPermissionStatus(permission, PermissionStatus.DENIED)
+                            }
+                        }
+                    }
+                }
+            }
+
+            kCLAuthorizationStatusDenied -> {
+                CoroutineScope(Dispatchers.Main).launch {
+                    callback.onPermissionStatus(permission, PermissionStatus.DENIED)
+                }
+            }
+
+            else -> error("unknown location status $authStatus")
         }
     }
 }

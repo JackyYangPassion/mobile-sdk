@@ -39,8 +39,6 @@ data class BotStacksChatStore(val id: String = uuid()) {
         get() = chats.filter { it.kind == ChatType.Group }
 
     var fcmToken: String? = null
-    var giphyApiKey: String? = null
-    var mapsApiKey: String? = null
 
     var loading by mutableStateOf(false)
 

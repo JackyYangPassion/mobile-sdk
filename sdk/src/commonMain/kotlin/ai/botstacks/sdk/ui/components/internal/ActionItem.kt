@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.ui.components.internal
 
+import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.state.BotStacksChatStore
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -62,11 +63,11 @@ object ActionItemDefaults {
     @Composable
     fun mediaItems(onItemSelected: (Media) -> Unit): List<@Composable () -> Unit> = Media.supportedMediaTypes
         .filter {
-            if (it == Media.location && BotStacksChatStore.current.mapsApiKey == null) {
+            if (it == Media.location && !BotStacksChat.shared.hasLocationSupport) {
                 return@filter false
             }
 
-            if (it == Media.gif && BotStacksChatStore.current.giphyApiKey == null) {
+            if (it == Media.gif && !BotStacksChat.shared.hasGiphySupport) {
                 return@filter false
             }
 
