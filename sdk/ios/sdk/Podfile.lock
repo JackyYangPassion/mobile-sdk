@@ -1,7 +1,5 @@
 PODS:
-  - BotStacksSDK (0.0.1):
-    - BotStacksSDK/botstacks_core (= 0.0.1)
-  - BotStacksSDK/botstacks_core (0.0.1):
+  - botstacks-core (0.0.1):
     - Giphy (= 2.2.8)
     - GoogleMaps (= 8.4.0)
     - Sentry (= 8.20.0)
@@ -32,7 +30,7 @@ PODS:
   - SentryPrivate (8.20.0)
 
 DEPENDENCIES:
-  - BotStacksSDK (from `../sdk/ios/sdk/sdk`)
+  - botstacks-core (from `../../pod/debug`)
 
 SPEC REPOS:
   trunk:
@@ -43,17 +41,17 @@ SPEC REPOS:
     - SentryPrivate
 
 EXTERNAL SOURCES:
-  BotStacksSDK:
-    :path: "../sdk/ios/sdk/sdk"
+  botstacks-core:
+    :path: "../../pod/debug"
 
 SPEC CHECKSUMS:
-  BotStacksSDK: 64c91089f4c8c0f9b114a8477f6c29a5291aa93b
+  botstacks-core: add5f9f4575bde64e788652b83120e82de40f163
   Giphy: f63ab0e2dd819d6288feba07722aaafe8a5fe4b7
   GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Sentry: a8d7b373b9f9868442b02a0c425192f693103cbf
   SentryPrivate: 006b24af16828441f70e2ab6adf241bd0a8ad130
 
-PODFILE CHECKSUM: c56035b45e36003d31260a7a8400a5d0b20bc91a
+PODFILE CHECKSUM: 4c9ce02895c0173c1eaf54f79c239b92fd1e6f61
 
 COCOAPODS: 1.14.3
