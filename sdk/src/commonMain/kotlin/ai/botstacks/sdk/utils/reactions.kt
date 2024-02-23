@@ -12,7 +12,7 @@ fun parseReactions(reactions: String?): Reactions? {
     if (reactions == null) return null
     return reactions.split(";").map { reaction ->
         val split = reaction.split(":")
-        if (split.isNotEmpty()) {
+        if (split.count() == 2) {
             (split[0] to split[1].split(",").toMutableStateList())
         } else {
             Pair("", mutableStateListOf())
@@ -21,9 +21,10 @@ fun parseReactions(reactions: String?): Reactions? {
 }
 
 fun addReaction(reactions: Reactions, uid: String, reaction: String) {
-    reactions.firstOrNull { it.first == reaction }?.let {
-        it.second.add(reaction)
-    } ?: reactions.add((reaction to mutableStateListOf(uid)))
+    reactions.firstOrNull { it.first == reaction }
+        ?.second
+        ?.add(reaction) 
+        ?: reactions.add((reaction to mutableStateListOf(uid)))
 }
 
 fun removeReaction(reactions: Reactions, index: Int, uid: String) {
