@@ -61,13 +61,14 @@ fun MessageActionSheet(
         sheetContent = {
             Column(modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
                 Space(8f)
-                EmojiBar(
-                    current = message?.currentReaction,
-                    onEmoji = {
-                        message?.react(it)
-                        hide()
-                    }
-                )
+                // TODO: add back once emoji keyboard is KMP
+//                EmojiBar(
+//                    current = message?.currentReaction,
+//                    onEmoji = {
+//                        message?.react(it)
+//                        hide()
+//                    }
+//                )
                 ActionItem(
                     text = "Reply in Chat",
                     icon = Res.drawable.chat_dots,
