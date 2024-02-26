@@ -15,6 +15,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 abstract class BotStacksChat {
     var loaded by mutableStateOf(false)
@@ -77,10 +79,6 @@ abstract class BotStacksChat {
          * logout from BotStacks
          */
         fun logout() {
-            shared.onLogout?.invoke()
-            BotStacksChatStore.current.currentUserID = null
-            BotStacksChatStore.current.user = null
-            User.current = null
             async {
                 try {
                     API.logout()

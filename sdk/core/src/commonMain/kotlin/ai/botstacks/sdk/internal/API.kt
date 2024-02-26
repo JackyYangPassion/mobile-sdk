@@ -155,7 +155,7 @@ internal object API {
                 return chain.proceed(request).onEach { response ->
                     response.errors?.let {
                         for (err in it) {
-                            println("Got error " + err.message)
+                            Monitoring.log("Got error " + err.message)
                             if (err.message == "login required") {
                                 withContext(Dispatchers.Main) {
                                     onLogout()
@@ -374,7 +374,7 @@ internal object API {
         subscriptionScope.launch {
             client.subscription(CoreSubscription()).toFlow().collectLatest {
                 it.data?.let {
-                    println("Got subscription event $it")
+                    Monitoring.log("Got subscription event $it")
                     BotStacksChat.shared.scope.launch {
                         BotStacksChatStore.current.onCoreEvent(it.core)
                     }
@@ -499,9 +499,11 @@ internal object API {
         client.query(GetUserQuery(id)).execute().data?.user?.fUser?.let { User.get(it) }
 
     suspend fun logout() {
-        client.mutation(LogoutMutation()).execute().data?.logout
-        BotStacksChat.shared.scope.launch {
-            onLogout()
+        val result = client.mutation(LogoutMutation()).execute().data?.logout ?: false
+        if (result) {
+            BotStacksChat.shared.scope.launch {
+                onLogout()
+            }
         }
     }
 

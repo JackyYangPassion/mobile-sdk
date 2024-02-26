@@ -60,7 +60,7 @@ internal suspend fun <T> retryIO(
         } catch (e: Exception) {
             // you can log an error here and/or make a more finer-grained
             // analysis of the cause to see if retry is needed
-            println(e)
+            Monitoring.error(e)
         }
         delay(currentDelay)
         currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)

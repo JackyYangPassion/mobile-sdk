@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.internal.ui.components
 
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.actions.send
 import ai.botstacks.sdk.internal.navigation.BackHandler
 import ai.botstacks.sdk.state.Chat
@@ -43,7 +44,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import co.touchlab.kermit.Logger
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
@@ -183,7 +183,7 @@ fun MediaActionSheet(
                     )
                 }
 
-                else -> Logger.d("empty media")
+                else -> Monitoring.log("empty media")
             }
         }
 
@@ -217,7 +217,7 @@ fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) 
         selectionMode = FilePickerSelectionMode.Single,
         onResult = { files ->
             val file = files.firstOrNull()
-            println("selected $file")
+            Monitoring.log("selected $file")
             file?.let(onUri) ?: onCancel()
         }
     )
@@ -262,7 +262,7 @@ fun CameraPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit)
                     if (status == PermissionStatus.GRANTED) {
                         cameraManager.launch()
                     } else {
-                        println("camera permission not granted")
+                        Monitoring.log("camera permission not granted")
                         onCancel()
                     }
                 }
@@ -297,7 +297,7 @@ private fun LocationPicker(
                     if (status == PermissionStatus.GRANTED) {
                         fetchLocation()
                     } else {
-                        println("location permission not granted")
+                        Monitoring.log("location permission not granted")
                         onCancel()
                     }
                 }

@@ -1,7 +1,9 @@
 package ai.botstacks.sample
 
+import ai.botstacks.sample.ui.theme.Example
 import ai.botstacks.sample.ui.theme.Purple40
 import ai.botstacks.sample.ui.theme.Purple80
+import ai.botstacks.sample.ui.theme.Router
 import ai.botstacks.sample.ui.theme.Typography
 import ai.botstacks.sdk.BotStacksChatController
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
@@ -17,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 
@@ -25,39 +28,47 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BotStacksThemeEngine(
-                useDarkTheme = isSystemInDarkTheme(),
-                lightColorScheme = lightBotStacksColors(
-                    primary = Purple40,
-                    onPrimary = Color.White,
-                ),
-                darkColorScheme = darkBotStacksColors(
-                    primary = Purple80,
-                    onPrimary = Color.Black
-                ),
-                fonts = with(Typography.bodyLarge) {
-                    botstacksFonts(
-                        body1 = FontStyle(
-                            size = fontSize,
+            MaterialTheme {
+                BotStacksThemeEngine(
+                    useDarkTheme = isSystemInDarkTheme(),
+                    lightColorScheme = lightBotStacksColors(
+                        primary = Purple40,
+                        onPrimary = Color.White,
+                    ),
+                    darkColorScheme = darkBotStacksColors(
+                        primary = Purple80,
+                        onPrimary = Color.Black
+                    ),
+                    fonts = with(Typography.bodyLarge) {
+                        botstacksFonts(
+                            body1 = FontStyle(
+                                size = fontSize,
+                            )
                         )
-                    )
-                }
-            ) {
-                val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "splash") {
-                    val openBotstacks = { navController.navigate("botstacks") }
-                    val openLogin = { navController.navigate("login") }
-
-                    composable("splash") {
-                        Splash(openChat = openBotstacks, openLogin = openLogin)
                     }
-                    composable("login") {
-                        Login(openBotstacks) {
+                ) {
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "splash") {
+                        val openBotstacks = { navController.navigate("router") }
+                        val openLogin = { navController.navigate("login") }
 
+                        composable("splash") {
+                            Splash(openChat = openBotstacks, openLogin = openLogin)
                         }
-                    }
-                    composable("botstacks") {
-                        BotStacksChatController { navController.navigate("login") }
+                        composable("login") {
+                            Login(openBotstacks)
+                        }
+
+                        composable("router") {
+                            Router(
+                                onOpenExample = { navController.navigate(it.route) },
+                                onLogout = { navController.navigate("login") }
+                            )
+                        }
+
+                        composable(Example.Full.route) {
+                            BotStacksChatController { navController.navigate("login") }
+                        }
                     }
                 }
             }
