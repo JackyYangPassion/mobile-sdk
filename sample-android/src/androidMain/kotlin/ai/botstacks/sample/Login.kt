@@ -107,7 +107,7 @@ fun Login(openChat: () -> Unit) {
     val login = {
         if (canLogin) {
             scope.launch {
-                BotStacksChat.shared.login(null, "1", "testuser", "testuser", "")
+                BotStacksChat.shared.login(email.text.hashCode().toString(), email.text)
                 if (BotStacksChat.shared.isUserLoggedIn) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
