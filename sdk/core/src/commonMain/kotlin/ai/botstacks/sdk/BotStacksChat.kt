@@ -15,11 +15,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 abstract class BotStacksChat {
+    /**
+     * Whether or not the SDK has loaded initial data
+     */
     var loaded by mutableStateOf(false)
 
+    /**
+     * If currently logging in a user
+     */
     var loggingIn by mutableStateOf(false)
+
+    /**
+     * If a user is currently logged in.
+     */
     var isUserLoggedIn by mutableStateOf(false)
 
     internal abstract val prefs: Settings
@@ -77,10 +89,6 @@ abstract class BotStacksChat {
          * logout from BotStacks
          */
         fun logout() {
-            shared.onLogout?.invoke()
-            BotStacksChatStore.current.currentUserID = null
-            BotStacksChatStore.current.user = null
-            User.current = null
             async {
                 try {
                     API.logout()

@@ -45,10 +45,10 @@ internal fun genU(): User {
     return u
 }
 
-internal fun genMember(chatId: String = uuid()): Member {
+internal fun genMember(chatId: String = uuid()): Participant {
     val user = genU()
     BotStacksChatStore.current.cache.users[user.id] = user
-    return Member(user.id, chatId, Clock.System.now(), MemberRole.Member)
+    return Participant(user.id, chatId, Clock.System.now(), MemberRole.Member)
 }
 
 internal fun reqU() {
@@ -81,7 +81,7 @@ internal fun genG(): Chat {
     g._private = Random.nextBoolean()
     val members = randomUsers().let { ift(it.isEmpty(), random(40, ::genU), it) }
         .map {
-            Member(it.id, g.id, Clock.System.now(), MemberRole.entries.toTypedArray().random())
+            Participant(it.id, g.id, Clock.System.now(), MemberRole.entries.toTypedArray().random())
         }
     if (Random.nextBoolean())
         g.invites.addAll(randomAmount(members).map { it.user })
@@ -220,8 +220,8 @@ internal fun genDM() =
     Chat(uuid(), ChatType.DirectMessage).apply {
         val u = genU()
         val c = genCurrentUser()
-        members.add(Member(u.id, id, Clock.System.now(), MemberRole.Member))
-        members.add(Member(c.id, id, Clock.System.now(), MemberRole.Member))
+        members.add(Participant(u.id, id, Clock.System.now(), MemberRole.Member))
+        members.add(Participant(c.id, id, Clock.System.now(), MemberRole.Member))
         items.addAll(
             random(
                 10,
@@ -249,7 +249,7 @@ internal fun genDM() =
 //    override val values: Sequence<Message> = sequenceOf(genM())
 //}
 //
-//class SampleFn : PreviewParameterProvider<Fn> {
+//class Sample() -> Unit : PreviewParameterProvider<Fn> {
 //    override val values: Sequence<Fn> = sequenceOf({})
 //
 //}

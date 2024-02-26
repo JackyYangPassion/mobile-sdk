@@ -22,7 +22,6 @@ import ai.botstacks.sdk.internal.ui.components.Pressable
 import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.ui.components.radius
 import ai.botstacks.sdk.internal.ui.components.size
-import ai.botstacks.sdk.internal.utils.Fn
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.format
 import ai.botstacks.sdk.internal.utils.genChatextMessage
@@ -303,9 +302,8 @@ private fun Spinner(loading: Boolean) {
 }
 
 @Composable
-private fun Avvy(url: String?, onClick: Fn) {
+private fun Avvy(url: String?, onClick: () -> Unit) {
     Pressable(onClick = onClick) {
-        println("User avatar $url")
         Avatar(url = url)
     }
 }

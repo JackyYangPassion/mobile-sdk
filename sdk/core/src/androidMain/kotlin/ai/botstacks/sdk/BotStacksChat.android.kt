@@ -1,5 +1,6 @@
 package ai.botstacks.sdk
 
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.op
@@ -17,6 +18,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Main Android entry point for the BotStacks SDK.
+ *
+ * Setup/initialization is done via [setup], while login and log out are done
+ * via [login] and [BotStacksChat.logout], respectively.
+ *
+ * Registering an FCM token for push notification support is done
+ * via [BotStacksChat.registerFCMToken].
+ */
 @Stable
 actual class BotStacksChatPlatform : BotStacksChat() {
 
@@ -35,6 +45,14 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
     actual val scope = CoroutineScope(Dispatchers.Main)
 
+    /**
+     * setup app instance for interfacing with the BotStacksSDK.
+     *
+     * @param context Application context
+     * @param apiKey BotStacks API key
+     * @param giphyApiKey optional API from Giphy for Gif selection support.
+     * @param delayLoad If enabled, you must call [load] prior to rendering UI.
+     */
     fun setup(
         context: Context,
         apiKey: String,
@@ -80,8 +98,14 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
     private var didStartLoading = false
 
+    /**
+     * Load trigger for loading user data. A logged in check is done during this phase to allow routing
+     * to login if needed.
+     *
+     * NOTE: An [apiKey] must be provided during [setup] prior to calling this.
+     */
     actual suspend fun load() {
-        println("Start load")
+        Monitoring.log("Start load")
         if (apiKey.isEmpty()) {
             throw Error("You must initialize BotStacksChat with BotStacksChat.init before calling load")
         }

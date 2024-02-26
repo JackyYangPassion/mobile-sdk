@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.Identifiable
 import ai.botstacks.sdk.state.Pager
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
-import ai.botstacks.sdk.internal.utils.Fn
 import ai.botstacks.sdk.internal.utils.ui.addIfNonNull
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -47,8 +46,8 @@ internal fun <T : Identifiable> BotStacksLazyList(
     modifier: Modifier = Modifier,
     items: List<T> = listOf(),
     invert: Boolean = false,
-    header: @Composable Fn? = null,
-    footer: @Composable Fn? = null,
+    header: @Composable (() -> Unit)? = null,
+    footer: @Composable (() -> Unit)? = null,
     empty: @Composable () -> Unit = {},
     separator: @Composable (T?, T?) -> Unit = { _, _ -> },
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -163,8 +162,8 @@ internal fun <T : Identifiable> IACList(
     modifier: Modifier = Modifier,
     items: List<T> = listOf(),
     invert: Boolean = false,
-    header: @Composable Fn? = null,
-    footer: @Composable Fn? = null,
+    header: @Composable (() -> Unit)? = null,
+    footer: @Composable (() -> Unit)? = null,
     empty: @Composable () -> Unit = {},
     separator: @Composable (T?, T?) -> Unit = { _, _ -> },
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -213,8 +212,8 @@ internal fun <T : Identifiable> IACListIndexed(
     modifier: Modifier = Modifier,
     items: List<T> = listOf(),
     invert: Boolean = false,
-    header: @Composable Fn? = null,
-    footer: @Composable Fn? = null,
+    header: @Composable (() -> Unit)? = null,
+    footer: @Composable (() -> Unit)? = null,
     empty: @Composable () -> Unit = {},
     separator: @Composable (T?, T?) -> Unit = { _, _ -> },
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -264,8 +263,8 @@ internal fun <T : Identifiable> PagerList(
     modifier: Modifier = Modifier,
     prefix: List<T> = listOf(),
     invert: Boolean = false,
-    header: @Composable Fn? = null,
-    footer: @Composable Fn? = null,
+    header: @Composable (() -> Unit)? = null,
+    footer: @Composable (() -> Unit)? = null,
     empty: @Composable () -> Unit = {},
     separator: @Composable (T?, T?) -> Unit = { _, _ -> },
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -311,8 +310,8 @@ internal fun <T : Identifiable> PagerListIndexed(
     modifier: Modifier = Modifier,
     prefix: List<T> = listOf(),
     invert: Boolean = false,
-    header: @Composable Fn? = null,
-    footer: @Composable Fn? = null,
+    header: @Composable (() -> Unit)? = null,
+    footer: @Composable (() -> Unit)? = null,
     empty: @Composable () -> Unit = {},
     separator: @Composable (T?, T?) -> Unit = { _, _ -> },
     contentPadding: PaddingValues = PaddingValues(0.dp),

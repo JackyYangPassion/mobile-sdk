@@ -15,6 +15,7 @@ import ai.botstacks.sdk.ui.theme.LocalBotStacksDimens
 import ai.botstacks.sdk.ui.theme.LocalBotStacksFonts
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksShapes
 import ai.botstacks.sdk.internal.ui.theme.Theme
+import ai.botstacks.sdk.ui.theme.ShapeDefinitions
 import ai.botstacks.sdk.ui.theme.darkBotStacksColors
 import ai.botstacks.sdk.ui.theme.lightBotStacksColors
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -23,13 +24,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import ai.botstacks.sdk.ui.theme.botstacksFonts as defaultFonts
 
-
+/**
+ * The Theme Engine that drives BotStacks UI.
+ *
+ * @param useDarkTheme Whether to use the dark theme supplied in [darkColorScheme]. This defaults to
+ * the system setting for Light vs. Dark and respects Auto settings.
+ * @param lightColorScheme The [Colors] to utilize when [useDarkTheme] is false.
+ * @param darkColorScheme The [Colors] to utilize when [useDarkTheme] is true.
+ * @param shapes The shape definitions to use for component rendering.
+ * @param assets Various assets used throughout the components (empty states, logo)
+ * @param fonts The fonts to utilize for all Text within Components.
+ */
 @Composable
 fun BotStacksThemeEngine(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     lightColorScheme: Colors = lightBotStacksColors(),
     darkColorScheme: Colors = darkBotStacksColors(),
-    shapes: Shapes = BotStacks.shapes,
+    shapes: ShapeDefinitions = ShapeDefinitions(),
     assets: Assets = BotStacks.assets,
     fonts: Fonts? = null,
     content: @Composable () -> Unit
@@ -42,12 +53,15 @@ fun BotStacksThemeEngine(
         isDark = useDarkTheme,
         colorScheme = DayNightColorScheme(lightColorScheme, darkColorScheme),
         fonts = appFonts,
-        shapes = shapes,
+        shapeDefinitions = shapes,
     ) {
         content()
     }
 }
 
+/**
+ * Compose composition access to the various theme controls set in [BotStacksThemeEngine]
+ */
 object BotStacks {
     val assets: Assets
         @Composable

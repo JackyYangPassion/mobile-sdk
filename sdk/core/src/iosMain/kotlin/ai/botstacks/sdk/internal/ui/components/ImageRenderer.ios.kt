@@ -1,5 +1,6 @@
 package ai.botstacks.sdk.internal.ui.components
 
+import ai.botstacks.sdk.internal.Monitoring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -70,7 +71,7 @@ internal actual fun ImageRenderer(
     }
     LaunchedEffect(url) {
         isAnimated = isAnimated(url).also {
-            println("$url is animated=$it")
+            Monitoring.log("$url is animated=$it")
         }
     }
 }

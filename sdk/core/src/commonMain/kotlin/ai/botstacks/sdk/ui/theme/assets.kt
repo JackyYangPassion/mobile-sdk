@@ -15,50 +15,73 @@ import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * Type determination for empty states for certain components
+ */
 sealed interface EmptyScreenType {
+    /**
+     * Empty state for within a chat (no messages)
+     */
     data object Messages : EmptyScreenType
-    data object Chats : EmptyScreenType
 
-    data object AllChannels : EmptyScreenType
+    /**
+     * Empty state for chat list (no chats)
+     */
+    data object Chats : EmptyScreenType
 }
 
-@Stable
-data class EmptyScreenConfig(
-    val image: @Composable () -> ImageAsset? = { null },
-    val caption: String? = null,
-    val type: EmptyScreenType?
+/**
+ * Configuration for an empty state
+ *
+ * @param image Image to be display above [caption], if provided.
+ * @param caption Text to be displayed below [image], if provided.
+ * @param type The [EmptyScreenType] for this configuration.
+ */
+sealed class EmptyScreenConfig(
+    open val image: @Composable () -> ImageAsset? = { null },
+    open val caption: String? = null,
+    open val type: EmptyScreenType
 ) {
-    constructor(asset: ImageAssetIdentifier?, caption: String?, type: EmptyScreenType?) : this(
-        image = @Composable {
-            asset?.toImageAsset()
-        },
+    data class Chats(
+        override val image: @Composable () -> ImageAsset? = { null },
+        override val caption: String? = null,
+    ) : EmptyScreenConfig(
+        image = image,
         caption = caption,
-        type = type,
+        type = EmptyScreenType.Chats,
+    )
+
+    data class Messages(
+        override val image: @Composable () -> ImageAsset? = { null },
+        override val caption: String? = null
+    ) : EmptyScreenConfig(
+        image = image,
+        caption = caption,
+        type = EmptyScreenType.Messages,
     )
 }
 
-val EmptyScreenConfig.defaultImage: Painter?
+internal val EmptyScreenConfig.defaultImage: Painter
     @Composable get() = when (type) {
-        EmptyScreenType.AllChannels -> EmptyAllChannelsDefault
         EmptyScreenType.Messages -> EmptyChatDefault
         EmptyScreenType.Chats -> EmptyChatsDefault
-        else -> null
     }
 
+/**
+ * Assets to be utilized and customized for on-brand experience within BotStacks.
+ *
+ * @param logo An optional logo, will default to the BotStacks Logo if not provided.
+ * @param emptyChat Empty state configuration for [EmptyScreenType.Messages]
+ * @param emptyChats Empty state configuration for [EmptyScreenType.Chats]
+ */
 @Stable
 data class Assets(
-    val chat: ImageAssetIdentifier? = null,
-    val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
+    val logo: ImageAssetIdentifier? = null,
+    val emptyChat: EmptyScreenConfig.Messages = EmptyScreenConfig.Messages(
         caption = "No messages",
-        type = EmptyScreenType.Messages
     ),
-    val emptyChats: EmptyScreenConfig = EmptyScreenConfig(
+    val emptyChats: EmptyScreenConfig.Chats = EmptyScreenConfig.Chats(
         caption = "You haven't added any chats yet",
-        type = EmptyScreenType.Chats
-    ),
-    val emptyAllChannels: EmptyScreenConfig = EmptyScreenConfig(
-        caption = "No channels around here yet. Make one",
-        type = EmptyScreenType.AllChannels
     ),
 )
 

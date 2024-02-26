@@ -1,5 +1,6 @@
 package ai.botstacks.sdk.internal.utils.ui
 
+import ai.botstacks.sdk.internal.Monitoring
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -71,13 +72,13 @@ fun UIImage.Companion.gifImageWithData(data: NSData?): UIImage? {
             delays.add(delaySeconds * 1000.0) // s to ms
         }
 
-        println("images=${images.count()}")
+        Monitoring.log("images=${images.count()}")
 
         val duration = delays.sum()
-        println("duration=$duration")
+        Monitoring.log("duration=$duration")
 
         val gcd = gcdForList(delays)
-        println("gcd=$gcd")
+        Monitoring.log("gcd=$gcd")
         val frames = mutableListOf<UIImage>()
 
         for (i in 0 until count) {
@@ -87,7 +88,7 @@ fun UIImage.Companion.gifImageWithData(data: NSData?): UIImage? {
                 frames.add(frame)
             }
         }
-        println("frames=${frames.count()}")
+        Monitoring.log("frames=${frames.count()}")
 
         val animation = UIImage.animatedImageWithImages(frames, duration / 1000.0) ?: return null
         animation

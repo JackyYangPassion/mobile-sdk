@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.internal.ui
+package ai.botstacks.sdk.internal.ui.utils
 
 import platform.UIKit.UIApplication
 import platform.UIKit.UIViewController

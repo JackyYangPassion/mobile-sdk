@@ -53,9 +53,9 @@ internal fun ChatsListScreen(
                 onBackClick = { headerState.searchActive = false }
                     .takeIf { headerState.searchActive },
                 menu = {
-                    label(onClick = openFavorites) {
-                        Text(text = "Favorite Messages", fontStyle = BotStacks.fonts.button2)
-                    }
+//                    label(onClick = openFavorites) {
+//                        Text(text = "Favorite Messages", fontStyle = BotStacks.fonts.button2)
+//                    }
                     label(onClick = editProfile) {
                         Text(text = "Edit Profile", fontStyle = BotStacks.fonts.button2)
                     }

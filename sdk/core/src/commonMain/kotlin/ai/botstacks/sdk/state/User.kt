@@ -15,6 +15,9 @@ import ai.botstacks.sdk.internal.utils.contains
 import kotlinx.datetime.Instant
 import kotlin.math.min
 
+/**
+ * A representation for a User within BotStacks.
+ */
 @Stable
 data class User(
     override val id: String
@@ -30,7 +33,7 @@ data class User(
     var description by mutableStateOf<String?>(null)
     var muted by mutableStateOf(false)
 
-    constructor(user: FUser, blocked: Boolean = false, haveContact: Boolean = false, muted: Boolean = false) : this(
+    internal constructor(user: FUser, blocked: Boolean = false, haveContact: Boolean = false, muted: Boolean = false) : this(
         user.id
     ) {
         this.username = user.username
@@ -79,13 +82,13 @@ data class User(
 
     @Stable
     companion object {
-        var current by mutableStateOf<User?>(null)
+        internal var current by mutableStateOf<User?>(null)
 
-        fun get(id: String): User? {
+        internal fun get(id: String): User? {
             return BotStacksChatStore.current.cache.users[id]
         }
 
-        fun get(user: FUser): User {
+        internal fun get(user: FUser): User {
             val u = get(user.id)
             if (u != null) {
                 u.update(user)
@@ -93,14 +96,10 @@ data class User(
             }
             return User(user)
         }
-
-        fun fetched(id: String) =
-            get(id) ?: User(id)
-
     }
 }
 
-fun Collection<User>.usernames(): String {
+internal fun Collection<User>.usernames(): String {
     val uns = this.toList().slice(0..min(size - 1, 2)).map { it.username }
     if (uns.size < 3) {
         return uns.joinToString(" and ")

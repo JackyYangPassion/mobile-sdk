@@ -1,7 +1,7 @@
 package ai.botstacks.sdk.internal.ui.components.location
 
 import ai.botstacks.sdk.R
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.internal.ui.utils.CircleCropTransformation
 import android.content.Context

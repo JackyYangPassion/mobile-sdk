@@ -35,6 +35,30 @@ internal data class DayNightColorScheme(
     fun colors(isDark: Boolean) = if (isDark) night else day
 }
 
+/**
+ * ColorScheme that drives all BotStacks Components.
+ *
+ * @param isDark if this scheme is for Dark mode.
+ * @param primary The primary color is the color displayed most frequently across your app’s screens and components.
+ * @param onPrimary Color used for text and icons displayed on top of the primary color.
+ * @param header The preferred background color for the [ai.botstacks.sdk.ui.components.Header] component.
+ * @param onHeader Color used for text and icons displayed on top of the header color.
+ * @param background The background color that appears behind scrollable content.
+ * @param onBackground Color used for text and icons displayed on top of the background color.
+ * @param surface The surface color that affect surfaces of components, such as cards, sheets, and menus.
+ * @param onSurface Color used for text and icons displayed on top of the surface color.
+ * @param onSurfaceVariant The color (and state variants) that can be used for content on top of surface.
+ * @param border Subtle color used for boundaries. Outline color role adds contrast for accessibility purposes.
+ * @param message The color used for rendering incoming Chat Messages [ai.botstacks.sdk.ui.components.ChatMessage] (not from current user).
+ * @param chatInput The color that affects the background of the [ai.botstacks.sdk.ui.components.ChatInput] component.
+ * @param onChatInput Color used for text and icons displayed on top of the chatInput color.
+ * @param caption Color used for text and icons that are supplementary in nature (e.g timestamps in chat).
+ * @param success Color used to represent a success state, as well as online statuses when present.
+ * @param error The error color is used to indicate errors in components, as well as the offline statuses when present.
+ * @param onError Color used for text and icons displayed on top of the error color.
+ * @param ripple Color used for click interactions that "ripple" behind content.
+ * @param scrim Color of a scrim that obscures content.
+ */
 @Stable
 class Colors(
     isDark: Boolean,
@@ -190,6 +214,9 @@ class Colors(
     }
 }
 
+/**
+ * Default "Light" color scheme.
+ */
 fun lightBotStacksColors(
     primary: Color = BotStacksColorPalette.primary._800,
     onPrimary: Color = BotStacksColorPalette.light._900,
@@ -237,6 +264,9 @@ fun lightBotStacksColors(
     scrim = scrim,
 )
 
+/**
+ * Default "dark" color scheme
+ */
 fun darkBotStacksColors(
     primary: Color = BotStacksColorPalette.primary._700,
     onPrimary: Color = BotStacksColorPalette.light._900,

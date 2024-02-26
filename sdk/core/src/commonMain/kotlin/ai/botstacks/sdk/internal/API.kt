@@ -50,7 +50,7 @@ import ai.botstacks.sdk.UpdateProfileMutation
 import ai.botstacks.sdk.fragment.FUser
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.state.Member
+import ai.botstacks.sdk.state.Participant
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.internal.state.onCoreEvent
@@ -155,7 +155,7 @@ internal object API {
                 return chain.proceed(request).onEach { response ->
                     response.errors?.let {
                         for (err in it) {
-                            println("Got error " + err.message)
+                            Monitoring.log("Got error " + err.message)
                             if (err.message == "login required") {
                                 withContext(Dispatchers.Main) {
                                     onLogout()
@@ -280,7 +280,7 @@ internal object API {
         client.mutation(DeleteGroupMutation(id)).execute().data?.deleteGroup
 
     suspend fun joinChat(g: String) =
-        client.mutation(JoinChatMutation(g)).execute().data?.join?.let { Member.get(it.fMember) }
+        client.mutation(JoinChatMutation(g)).execute().data?.join?.let { Participant.get(it.fMember) }
 
     suspend fun leaveChat(g: String) = client.mutation(LeaveChatMutation(g)).execute().data?.leave
     suspend fun getChat(g: String) =
@@ -344,7 +344,7 @@ internal object API {
 
     suspend fun invite(users: List<String>, toChat: String) =
         client.mutation(InviteUsersMutation(toChat, users))
-            .execute().data?.inviteMany?.map { Member.get(it.fMember) }
+            .execute().data?.inviteMany?.map { Participant.get(it.fMember) }
 
 //    suspend fun getSharedMedia(uid: String) =
 //        _default.getUserMessages(uid, 0, 10, MessageType.image).result().map { it.m() }
@@ -374,7 +374,7 @@ internal object API {
         subscriptionScope.launch {
             client.subscription(CoreSubscription()).toFlow().collectLatest {
                 it.data?.let {
-                    println("Got subscription event $it")
+                    Monitoring.log("Got subscription event $it")
                     BotStacksChat.shared.scope.launch {
                         BotStacksChatStore.current.onCoreEvent(it.core)
                     }
@@ -499,9 +499,11 @@ internal object API {
         client.query(GetUserQuery(id)).execute().data?.user?.fUser?.let { User.get(it) }
 
     suspend fun logout() {
-        client.mutation(LogoutMutation()).execute().data?.logout
-        BotStacksChat.shared.scope.launch {
-            onLogout()
+        val result = client.mutation(LogoutMutation()).execute().data?.logout ?: false
+        if (result) {
+            BotStacksChat.shared.scope.launch {
+                onLogout()
+            }
         }
     }
 
@@ -590,7 +592,7 @@ internal object API {
             data.memberships.forEach {
                 Chat.get(it.chat.fChat)
             }
-            BotStacksChatStore.current.memberships.addAll(data.memberships.map { Member.get(it.fMember) })
+            BotStacksChatStore.current.memberships.addAll(data.memberships.map { Participant.get(it.fMember) })
             data.me.let {
                 BotStacksChatStore.current.settings.blocked.addAll(it.blocks ?: listOf())
                 User.get(it.fUser)

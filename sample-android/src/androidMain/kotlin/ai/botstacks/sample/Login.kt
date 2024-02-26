@@ -3,10 +3,10 @@ package ai.botstacks.sample
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import android.Manifest
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +60,6 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import timber.log.Timber
 import kotlin.coroutines.resume
 
 val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$".toRegex()
@@ -74,7 +73,7 @@ fun isValidEmail(email: String): Boolean {
     ExperimentalMaterial3Api::class
 )
 @Composable
-fun Login(openChat: () -> Unit, register: () -> Unit) {
+fun Login(openChat: () -> Unit) {
     val scope = rememberCoroutineScope()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -122,6 +121,7 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
             .background(colorScheme.background)
             .windowInsetsPadding(WindowInsets.systemBars)
             .fillMaxSize(),
+        sheetPeekHeight = 0.dp,
         sheetContent = {
             BrowserModal(url = "https://botstacks.ai/terms-of-service") {
                 scope.launch { terms.hide() }
@@ -197,7 +197,6 @@ fun Login(openChat: () -> Unit, register: () -> Unit) {
                         .padding(4.dp)
                         .fillMaxWidth()
                         .clickable {
-                            register()
                         }, horizontalArrangement = Arrangement.Center
                 ) {
                     val annotatedString = buildAnnotatedString {
@@ -265,7 +264,7 @@ private suspend fun FirebaseMessaging.token(): Result<String?> =
                         cont.resume(Result.success(it))
                     }
                 }.addOnFailureListener {
-                    Timber.tag("Login").e(it.stackTraceToString())
+                    Log.e("Login", "Failed to login", it)
                     cont.resume(Result.success(null))
                 }
         }
@@ -275,6 +274,6 @@ private suspend fun FirebaseMessaging.token(): Result<String?> =
 @Composable
 fun LoginPreview() {
     MaterialTheme {
-        Login(openChat = {}, register = {})
+        Login(openChat = {})
     }
 }
