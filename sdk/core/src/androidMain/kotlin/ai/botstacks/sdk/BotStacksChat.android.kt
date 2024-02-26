@@ -1,5 +1,6 @@
 package ai.botstacks.sdk
 
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.op
@@ -81,7 +82,7 @@ actual class BotStacksChatPlatform : BotStacksChat() {
     private var didStartLoading = false
 
     actual suspend fun load() {
-        println("Start load")
+        Monitoring.log("Start load")
         if (apiKey.isEmpty()) {
             throw Error("You must initialize BotStacksChat with BotStacksChat.init before calling load")
         }

@@ -54,7 +54,7 @@ internal data class Upload(val id: String = uuid(), val file: KmpFile) {
         url?.let {
             cont.resume(it)
         } ?: error?.let {
-            println(it.message)
+            Monitoring.log(it.message.orEmpty())
             cont.resume(null)
         } ?: run {
             _await = cont
@@ -96,8 +96,7 @@ internal data class Upload(val id: String = uuid(), val file: KmpFile) {
                     Monitoring.error("Upload response code: " + response.status.value + " Message: " + message)
                 }
             } catch (err: Error) {
-                println("Upload error")
-                Monitoring.error(err)
+                Monitoring.error(err, "Upload error")
                 error = err
             }
             if (url == null && error == null) {

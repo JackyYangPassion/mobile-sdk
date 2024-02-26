@@ -305,7 +305,6 @@ private fun Spinner(loading: Boolean) {
 @Composable
 private fun Avvy(url: String?, onClick: Fn) {
     Pressable(onClick = onClick) {
-        println("User avatar $url")
         Avatar(url = url)
     }
 }

@@ -7,6 +7,7 @@ package ai.botstacks.sdk.internal.actions
 import androidx.compose.runtime.toMutableStateList
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.fragment.FMessage
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.state.Upload
 import ai.botstacks.sdk.state.*
 import ai.botstacks.sdk.type.AttachmentInput
@@ -57,7 +58,6 @@ internal fun Chat.send(
     val atts = (attachments?.toMutableList() ?: mutableListOf())
     if (upload != null) {
         val local = upload.localAttachment()
-        println("$local")
         atts.add(upload.localAttachment())
     }
 
@@ -81,7 +81,7 @@ internal fun Chat.send(sendingMessage: Message) {
     }
     latest = sendingMessage
 
-    println("Sending Message")
+    Monitoring.log("Sending Message")
     op({
         val sm = bg {
             var attachments = sendingMessage.attachments
@@ -89,10 +89,10 @@ internal fun Chat.send(sendingMessage: Message) {
                 .toMutableList()
 
             if (sendingMessage.upload != null) {
-                println("Awaiting upload")
+                Monitoring.log("Awaiting upload")
                 sendingMessage.upload?.let { upload ->
                     upload.awaitAttachment()?.let { attachment ->
-                        println("Got Upload " + attachment.url)
+                        Monitoring.log("Got Upload " + attachment.url)
                         val map = attachments.associateBy { it.id }.toMutableMap()
                         map[attachment.id] = attachment.copy(type = upload.attachmentType())
 

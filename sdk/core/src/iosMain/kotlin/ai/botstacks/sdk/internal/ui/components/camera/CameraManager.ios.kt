@@ -1,6 +1,6 @@
 package ai.botstacks.sdk.internal.ui.components.camera
 
-import ai.botstacks.sdk.internal.ui.rootViewController
+import ai.botstacks.sdk.internal.ui.utils.rootViewController
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.mohamedrejeb.calf.io.KmpFile

@@ -1,5 +1,6 @@
 package com.mikepenz.markdown.compose.elements
 
+import ai.botstacks.sdk.internal.Monitoring
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -53,7 +54,7 @@ internal fun MarkdownText(
                     try {
                         uriHandler.openUri(foundReference)
                     } catch (t: Throwable) {
-                        println("Could not open the provided url: $foundReference")
+                        Monitoring.error(message = "Could not open the provided url: $foundReference", error = t)
                     }
                 }
             }

@@ -1,12 +1,12 @@
 package ai.botstacks.sdk
 
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
-import ai.botstacks.sdk.internal.utils.ui.Giphy
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.op
 import ai.botstacks.sdk.internal.utils.readPlist
 import ai.botstacks.sdk.internal.utils.retryIO
 import androidx.compose.runtime.Stable
+import cocoapods.Giphy.Giphy
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope

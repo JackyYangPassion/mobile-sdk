@@ -7,7 +7,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-val LocalBotStacksDimens = staticCompositionLocalOf<Dimensions> { error("No Dimensions provided") }
+internal val LocalBotStacksDimens = staticCompositionLocalOf<Dimensions> { error("No Dimensions provided") }
 
 
 private val staticGridPreset =

@@ -40,7 +40,7 @@ internal fun ConversationRouter(
     }
     LaunchedEffect(gid) {
         if (gid != null && chat == null) {
-            println("gid trigger")
+            Monitoring.log("gid trigger")
             try {
                 chat = API.getChat(gid)
             } catch (err: Exception) {
@@ -55,7 +55,7 @@ internal fun ConversationRouter(
 
     LaunchedEffect(uid) {
         if (uid != null && chat == null) {
-            println("uid trigger")
+            Monitoring.log("uid trigger")
             try {
                 chat = API.dm(uid)
             } catch (err: Exception) {
@@ -70,7 +70,7 @@ internal fun ConversationRouter(
 
     LaunchedEffect(mid) {
         if (mid != null && chat == null) {
-            println("mid trigger")
+            Monitoring.log("mid trigger")
             try {
                 val m = Message.get(mid) ?: API.getMessage(mid)
                 m?.let {
@@ -86,7 +86,6 @@ internal fun ConversationRouter(
         }
     }
 
-    println("chatId=${chat?.id}")
     chat.let {
         if (it != null) {
             ConversationScreen(

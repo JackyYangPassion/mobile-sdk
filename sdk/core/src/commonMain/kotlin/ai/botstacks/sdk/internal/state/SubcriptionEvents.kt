@@ -6,13 +6,13 @@ import ai.botstacks.sdk.fragment.FChat
 import ai.botstacks.sdk.fragment.FMember
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.fragment.FUser
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Member
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.DeleteEntity
 import ai.botstacks.sdk.type.EntityEventType
-import co.touchlab.kermit.Logger
 
 internal fun BotStacksChatStore.onCreateMessage(it: FMessage) {
     val chat = Chat.get(it.chat_id)
@@ -35,7 +35,7 @@ internal fun BotStacksChatStore.onCreateChat(it: FChat) {
 }
 
 internal fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
-    Logger.v("Got Core Event $event")
+    Monitoring.log("Got Core Event $event")
     event.onDeleteEvent?.fDelete?.let {
         when (it.kind) {
             DeleteEntity.Message -> {
@@ -93,9 +93,9 @@ internal fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
             }
         }
         it.entity.onMessage?.fMessage?.let {
-            println("On new Message")
+            Monitoring.log("On new Message")
             Chat.get(it.chat_id)?.let { chat ->
-                println("Have chat for message")
+                Monitoring.log("Have chat for message")
                 val message = Message.get(it)
                 if (chat.addMessage(message)) {
                     if (Chat.currentlyViewed != message.chatID) {
@@ -111,7 +111,7 @@ internal fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
 }
 
 internal fun BotStacksChatStore.onMeEvent(event: MeSubscription.Me) {
-    Logger.v("Got Me Event $event")
+    Monitoring.log("Got Me Event $event")
     event.onInviteEvent?.let {
         val chat = Chat.get(it.fInvite.to.fChat)
         val user = User.get(it.fInvite.by.fUser)
