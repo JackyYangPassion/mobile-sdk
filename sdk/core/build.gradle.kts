@@ -15,6 +15,7 @@ plugins {
     id("com.codingfeline.buildkonfig")
     id("co.touchlab.kmmbridge") version "0.5.2"
     id("org.jetbrains.dokka") version "1.9.10"
+    id("maven-publish")
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -286,4 +287,43 @@ kmmbridge {
 
 dependencies {
     dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = "ai.botstacks"
+            artifactId = "sdk"
+            version = libs.versions.libraryVersion.get()
+
+//            from(components.getByName("release"))
+
+            pom {
+                name.set("BotStacksChat")
+                description.set("BotStacks Multiplatform Mobile SDK")
+                url.set("https://github.com/botstacks/mobile-sdk")
+
+                licenses {
+                    license {
+                        name.set("Stream License")
+                        url.set("https://github.com/botstacks/android-example/blob/main/LICENSE")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("bmc08gt")
+                        name.set("Brandon McAnsh")
+                        email.set("brandon@bmcreations.dev")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:github.com/botstacks/mobile-sdk.git")
+                    developerConnection.set("scm:git:ssh://github.com/botstacks/mobile-sdk.git")
+                    url.set("https://github.com/botstacks/mobile-sdk/tree/main")
+                }
+            }
+        }
+    }
 }
