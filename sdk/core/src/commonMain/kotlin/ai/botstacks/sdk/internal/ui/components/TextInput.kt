@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
@@ -71,6 +72,7 @@ internal fun TextInput(
         textStyle = fontStyle.copy(textAlign = textAlign).asTextStyle().copy(color = color),
         minLines = minLines,
         maxLines = maxLines,
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorationBox = { innerTextField ->
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -161,6 +163,7 @@ internal fun TextInput(
         textStyle = fontStyle.copy(textAlign = textAlign).asTextStyle().copy(color = color),
         minLines = minLines,
         maxLines = maxLines,
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorationBox = { innerTextField ->
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -244,6 +247,7 @@ internal fun SecureTextField(
         visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
         textStyle = fontStyle.asTextStyle().copy(color = color),
         keyboardActions = KeyboardActions(onGo = { onSubmit() }),
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorationBox = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -295,6 +299,7 @@ internal fun SecureTextField(
         visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
         textStyle = fontStyle.asTextStyle().copy(color = color),
         keyboardActions = KeyboardActions(onGo = { onSubmit() }),
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorationBox = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

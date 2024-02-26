@@ -29,6 +29,7 @@ import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.ui.resources.botstacks_logo_daynight
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.annotated
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.theme.LocalBotStacksAssets
 import ai.botstacks.sdk.ui.theme.painterImageAsset
 import ai.botstacks.sdk.ui.theme.toImageAsset
@@ -236,6 +237,7 @@ fun Header(
                     modifier = Modifier.focusRequester(focusRequester),
                     value = state.searchQuery,
                     onValueChanged = { state.searchQuery = it },
+                    textColor = colorScheme.onHeader,
                     showClear = state.showSearchClear,
                     onClear = { state.searchQuery = TextFieldValue() }
                 )

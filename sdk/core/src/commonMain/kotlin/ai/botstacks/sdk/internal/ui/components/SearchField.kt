@@ -17,6 +17,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.core.generated.resources.Res
@@ -29,6 +32,7 @@ internal fun SearchField(
     modifier: Modifier = Modifier,
     value: TextFieldValue,
     onValueChanged: (TextFieldValue) -> Unit,
+    textColor: Color = BotStacks.colorScheme.onBackground,
     showClear: Boolean = false,
     onSearch: () -> Unit = { },
     onClear: () -> Unit = { }
@@ -39,6 +43,8 @@ internal fun SearchField(
         onValueChange = onValueChanged,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+        textStyle = TextStyle.Default.copy(color = textColor),
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorationBox = {
             Row(
                 modifier = Modifier.height(IntrinsicSize.Max),
@@ -77,6 +83,7 @@ fun SearchField2(
     modifier: Modifier = Modifier,
     state: TextFieldState,
     showClear: Boolean = false,
+    textColor: Color = BotStacks.colorScheme.onBackground,
     onSearch: () -> Unit = { },
     onClear: () -> Unit = { }
 ) {
@@ -85,6 +92,8 @@ fun SearchField2(
         state = state,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch() }),
+        textStyle = TextStyle.Default.copy(color = textColor),
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorator = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(modifier = Modifier.weight(1f)) {
