@@ -1,6 +1,6 @@
 package ai.botstacks.sdk.internal.ui.components.location
 
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.internal.utils.launch
 import android.annotation.SuppressLint
 import android.app.Activity

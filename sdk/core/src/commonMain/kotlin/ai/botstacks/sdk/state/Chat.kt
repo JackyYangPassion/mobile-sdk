@@ -15,13 +15,22 @@ import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.internal.utils.op
 
 
+/**
+ * Class that holds information for a given Chat (Group, DM, etc.)
+ *
+ * @param id The identifier for the Chat
+ * @param kind The kind of Chat
+ */
 @Stable
 class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
 
     var name by mutableStateOf<String?>(null)
+        internal set
     var image by mutableStateOf<String?>(null)
+        internal set
     var description by mutableStateOf<String?>(null)
-    val members = mutableStateListOf<Member>()
+        internal set
+    val members = mutableStateListOf<Participant>()
     var _private by mutableStateOf(false)
     val invites = mutableStateListOf<User>()
     var unreadCount by mutableStateOf(0)
@@ -30,7 +39,8 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
 
     //    var notification by mutableStateOf(NotificationSetting.all)
     var latest by mutableStateOf<Message?>(null)
-    val membership: Member?
+        internal set
+    val membership: Participant?
         get() = members.find { it.user_id == User.current?.id }
     val isAdmin: Boolean
         get() =
@@ -58,15 +68,15 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
         get() = description ?: friend?.description
 
     @Stable
-    val admins: List<Member>
+    val admins: List<Participant>
         get() = members.filter { it.isAdmin }
 
     @Stable
-    val onlineNotAdminUsers: List<Member>
+    val onlineNotAdminUsers: List<Participant>
         get() = members.filter { !it.isAdmin && it.user.status != OnlineStatus.Offline }
 
     @Stable
-    val offlineNotAdminUsers: List<Member>
+    val offlineNotAdminUsers: List<Participant>
         get() = members.filter { !it.isAdmin && it.user.status == OnlineStatus.Offline }
 
     val friend: User?
@@ -128,7 +138,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
         this._private = chat._private
         chat.members.let {
             this.members.removeAll { true }
-            this.members.addAll(it.map { Member.get(it.fMember) })
+            this.members.addAll(it.map { Participant.get(it.fMember) })
         }
         if (chat.last_message?.fMessage?.id != latest?.id && chat.last_message != null) {
             val date = latest?.createdAt

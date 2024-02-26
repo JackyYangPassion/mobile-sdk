@@ -15,13 +15,17 @@ import kotlinx.coroutines.launch
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
 
+/**
+ * Main iOS entry point for the BotStacks SDK.
+ *
+ * Setup/initialization is done via [setup], while login and log out are done
+ * via [login] and [BotStacksChat.logout], respectively.
+ *
+ * Registering an FCM token for push notification support is done
+ * via [BotStacksChat.registerFCMToken].
+ */
 @Stable
 actual class BotStacksChatPlatform : BotStacksChat() {
-
-    companion object {
-        private val TAG = "BotStacksIOS"
-    }
-
 
     private lateinit var _apiKey: String
     private lateinit var bundleIdentifier: String

@@ -20,15 +20,18 @@ import ai.botstacks.sdk.internal.utils.parseReactions
 import ai.botstacks.sdk.type.AttachmentType
 import kotlinx.datetime.Instant
 
+/**
+ * A representation of a Message in a given [Chat].
+ */
 @Stable
 data class Message(
     override val id: String,
-    val createdAt: Instant,
-    val userID: String,
-    val parentID: String?,
-    val chatID: String,
-    val attachments: SnapshotStateList<FMessage.Attachment> = mutableStateListOf(),
-    val reactions: Reactions = mutableStateListOf()
+    internal val createdAt: Instant,
+    internal val userID: String,
+    internal val parentID: String?,
+    internal val chatID: String,
+    internal val attachments: SnapshotStateList<FMessage.Attachment> = mutableStateListOf(),
+    internal val reactions: Reactions = mutableStateListOf()
 ) : Identifiable {
     var text by mutableStateOf("")
     var markdown by mutableStateOf("")
@@ -46,7 +49,7 @@ data class Message(
         get() = Chat.get(chatID)!!
     val path: String get() = "message/$id"
 
-    constructor(msg: FMessage) : this(
+    internal constructor(msg: FMessage) : this(
         msg.id,
         msg.created_at,
         msg.user.fUser.id,
@@ -109,11 +112,11 @@ data class Message(
     var isSending by mutableStateOf(false)
 
     companion object {
-        fun get(id: String): Message? {
+        internal fun get(id: String): Message? {
             return BotStacksChatStore.current.cache.messages[id]
         }
 
-        fun get(apiMessage: FMessage): Message {
+        internal fun get(apiMessage: FMessage): Message {
             User.get((apiMessage.user.fUser))
             val m = get(apiMessage.id)
             if (m != null) {

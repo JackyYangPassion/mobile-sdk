@@ -1,8 +1,8 @@
 package ai.botstacks.sdk.internal.utils
 
 import ai.botstacks.sdk.fragment.FMessage
-import ai.botstacks.sdk.state.File
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.File
+import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.type.AttachmentType
 
 internal fun FMessage.Attachment.vcard() =

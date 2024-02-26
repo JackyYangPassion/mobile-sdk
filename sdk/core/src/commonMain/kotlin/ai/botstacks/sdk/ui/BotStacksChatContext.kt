@@ -23,7 +23,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import ai.botstacks.sdk.ui.theme.botstacksFonts as defaultFonts
 
-
+/**
+ * The Theme Engine that drives BotStacks UI.
+ *
+ * @param useDarkTheme Whether to use the dark theme supplied in [darkColorScheme]. This defaults to
+ * the system setting for Light vs. Dark and respects Auto settings.
+ * @param lightColorScheme The [Colors] to utilize when [useDarkTheme] is false.
+ * @param darkColorScheme The [Colors] to utilize when [useDarkTheme] is true.
+ * @param shapes The shapes to use for component rendering.
+ * @param assets Various assets used throughout the components (empty states, logo)
+ * @param fonts The fonts to utilize for all Text within Components.
+ */
 @Composable
 fun BotStacksThemeEngine(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -48,6 +58,9 @@ fun BotStacksThemeEngine(
     }
 }
 
+/**
+ * Compose composition access to the various theme controls set in [BotStacksThemeEngine]
+ */
 object BotStacks {
     val assets: Assets
         @Composable

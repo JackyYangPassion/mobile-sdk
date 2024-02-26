@@ -17,11 +17,9 @@ internal fun launch(
     BotStacksChat.shared.scope.launch(context, start, block)
 }
 
-private val EmptyFn: () -> Unit = {}
-
 internal fun op(
     block: suspend CoroutineScope.() -> Unit,
-    onError: () -> Unit = EmptyFn,
+    onError: () -> Unit = {  },
     context: CoroutineContext = Dispatchers.Main
 ) = launch(context) {
     try {
@@ -35,12 +33,12 @@ internal fun op(
     }
 }
 
-internal fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) =
+internal fun op(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = { }) =
     op(block, onError, Dispatchers.Main)
 
 
 internal suspend fun <T> bg(block: suspend CoroutineScope.() -> T) = withContext(Dispatchers.IO, block)
-internal fun opbg(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = EmptyFn) =
+internal fun opbg(block: suspend CoroutineScope.() -> Unit, onError: () -> Unit = { }) =
     op(block, onError, Dispatchers.IO)
 
 internal fun <T : Unit> async(block: suspend CoroutineScope.() -> T) =

@@ -13,7 +13,7 @@ import ai.botstacks.sdk.state.ChannelsPager
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.ContactsPager
 import ai.botstacks.sdk.state.FavoritesPager
-import ai.botstacks.sdk.state.Member
+import ai.botstacks.sdk.state.Participant
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.state.UsersPager
 import androidx.compose.runtime.Stable
@@ -35,7 +35,7 @@ internal data class BotStacksChatStore(val id: String = uuid()) {
     val users = UsersPager()
     val invites = mutableStateMapOf<String, MutableList<User>>()
     val cache = Caches()
-    val memberships = mutableStateListOf<Member>()
+    val memberships = mutableStateListOf<Participant>()
     val chats: List<Chat>
         get() = memberships.filter { it.isMember }
             .map { it.chat }

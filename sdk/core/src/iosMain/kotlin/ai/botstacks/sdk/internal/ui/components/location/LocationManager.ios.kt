@@ -1,7 +1,7 @@
 package ai.botstacks.sdk.internal.ui.components.location
 
 import ai.botstacks.sdk.internal.Monitoring
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.internal.utils.launch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

@@ -1,6 +1,6 @@
 package ai.botstacks.sdk.internal.ui.components.location
 
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.Location
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize

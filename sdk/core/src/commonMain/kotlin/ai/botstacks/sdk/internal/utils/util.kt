@@ -7,7 +7,7 @@ package ai.botstacks.sdk.internal.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.AnnotatedString
 import ai.botstacks.sdk.BotStacksChat
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.type.AttachmentInput
 import ai.botstacks.sdk.type.AttachmentType
 import com.apollographql.apollo3.api.Optional
@@ -15,8 +15,6 @@ import com.benasher44.uuid.uuid4
 
 internal fun bundleUrl() = BotStacksChat.shared.appIdentifier
 internal fun uuid() = uuid4().toString()
-
-typealias Fn = () -> Unit
 
 internal fun <A> ift(cond: Boolean, a: A, b: A) = if (cond) a else b
 internal fun <A> ifteq(a: A, b: A) = if (a == b) a else b

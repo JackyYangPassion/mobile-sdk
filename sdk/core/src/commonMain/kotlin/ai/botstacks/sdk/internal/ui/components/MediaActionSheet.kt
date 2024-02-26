@@ -8,7 +8,7 @@ import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.actions.send
 import ai.botstacks.sdk.internal.navigation.BackHandler
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.internal.state.Upload
 import ai.botstacks.sdk.ui.BotStacks

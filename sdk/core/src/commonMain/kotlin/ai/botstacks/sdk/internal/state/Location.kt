@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.state
+package ai.botstacks.sdk.internal.state
 
 import ai.botstacks.sdk.internal.utils.urlEncode
 

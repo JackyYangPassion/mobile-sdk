@@ -44,11 +44,8 @@ internal fun Theme(
         colorScheme.colors(isDark)
     }
 
-    val screenSize = calculateScreenSize()
     val windowSizeClass = calculateWindowSizeClass()
     val dimens = Dimensions(
-        screenWidth = screenSize.width,
-        screenHeight = screenSize.height,
         inset = when (windowSizeClass.widthSizeClass) {
             WindowWidthSizeClass.Expanded -> 30.dp
             else -> 20.dp

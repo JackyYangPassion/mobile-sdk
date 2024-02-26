@@ -13,7 +13,6 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
-import ai.botstacks.sdk.internal.utils.Fn
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.genChat
 import ai.botstacks.sdk.internal.utils.ui.keyboardAsState
@@ -55,7 +54,7 @@ fun ChatInput(
     modifier: Modifier = Modifier,
     chat: Chat,
     replyingTo: Message? = null,
-    onMedia: Fn,
+    onMedia: () -> Unit,
     focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
     val composeScope = rememberCoroutineScope()

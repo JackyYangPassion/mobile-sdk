@@ -27,9 +27,11 @@ import ai.botstacks.sdk.internal.ui.components.Pressable
 import ai.botstacks.sdk.internal.ui.components.SearchField
 import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.ui.resources.botstacks_logo_daynight
-import ai.botstacks.sdk.internal.utils.Fn
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.annotated
+import ai.botstacks.sdk.ui.theme.LocalBotStacksAssets
+import ai.botstacks.sdk.ui.theme.painterImageAsset
+import ai.botstacks.sdk.ui.theme.toImageAsset
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
@@ -70,15 +72,18 @@ object HeaderDefaults {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     fun Logo() {
+        val icon = LocalBotStacksAssets.current.logo?.let { painterImageAsset(it) }
+            ?: painterResource(resource = Res.drawable.botstacks_logo_daynight)
+
         Icon(
-            painter = painterResource(resource = Res.drawable.botstacks_logo_daynight),
+            painter = icon,
             tint = Color.Unspecified,
             contentDescription = "logo"
         )
     }
 
     @Composable
-    fun NextAction(onClick: Fn) {
+    fun NextAction(onClick: () -> Unit) {
         Pressable(onClick = onClick) {
             Text(
                 text = "Next",
@@ -89,7 +94,7 @@ object HeaderDefaults {
     }
 
     @Composable
-    fun SaveAction(onClick: Fn) {
+    fun SaveAction(onClick: () -> Unit) {
         Pressable(onClick = onClick) {
             Text(
                 text = "Save",
@@ -100,7 +105,7 @@ object HeaderDefaults {
     }
 
     @Composable
-    fun CreateAction(onClick: Fn) {
+    fun CreateAction(onClick: () -> Unit) {
         Pressable(onClick = onClick) {
             Text(
                 text = "Create",
@@ -111,7 +116,7 @@ object HeaderDefaults {
     }
 
     @Composable
-    fun MenuAction(onClick: Fn) {
+    fun MenuAction(onClick: () -> Unit) {
         HeaderButton(onClick = onClick) {
             Icon(
                 Icons.Outlined.MoreVert,
@@ -147,14 +152,14 @@ fun rememberHeaderState(
 @Composable
 fun Header(
     title: String,
-    icon: @Composable Fn = { },
+    icon: @Composable () -> Unit = { },
     state: HeaderState = rememberHeaderState(),
-    onSearchClick: Fn? = null,
-    onAdd: Fn? = null,
-    onCompose: Fn? = null,
-    onBackClicked: Fn? = null,
+    onSearchClick: (() -> Unit)? = null,
+    onAdd: (() -> Unit)? = null,
+    onCompose: (() -> Unit)? = null,
+    onBackClicked: (() -> Unit)? = null,
     menu: (OverflowMenuScope.() -> Unit)? = null,
-    endAction: @Composable Fn = { },
+    endAction: @Composable () -> Unit = { },
 ) {
     Header(
         title = { HeaderDefaults.Title(text = title) },
@@ -176,19 +181,19 @@ fun Header() {
 }
 
 @OptIn(
-    ExperimentalAnimationApi::class
+    ExperimentalAnimationApi::class, ExperimentalResourceApi::class
 )
 @Composable
 fun Header(
-    title: @Composable Fn = { },
-    icon: @Composable Fn = { },
+    title: @Composable () -> Unit = { },
+    icon: @Composable () -> Unit = { },
     state: HeaderState = rememberHeaderState(),
-    onSearchClick: Fn? = null,
-    onAdd: Fn? = null,
-    onCompose: Fn? = null,
-    onBackClick: Fn? = null,
+    onSearchClick: (() -> Unit)? = null,
+    onAdd: (() -> Unit)? = null,
+    onCompose: (() -> Unit)? = null,
+    onBackClick: (() -> Unit)? = null,
     menu: (OverflowMenuScope.() -> Unit)? = null,
-    endAction: @Composable Fn = { },
+    endAction: @Composable () -> Unit = { },
 ) {
     Row(
         modifier = Modifier
@@ -310,7 +315,7 @@ fun Header(
 }
 
 @Composable
-fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn) {
+fun HeaderButton(onClick: () -> Unit, transparent: Boolean = false, icon: @Composable () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
