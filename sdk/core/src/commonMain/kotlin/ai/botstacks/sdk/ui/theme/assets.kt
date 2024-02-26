@@ -37,18 +37,27 @@ sealed interface EmptyScreenType {
  * @param caption Text to be displayed below [image], if provided.
  * @param type The [EmptyScreenType] for this configuration.
  */
-@Stable
-data class EmptyScreenConfig(
-    val image: @Composable () -> ImageAsset? = { null },
-    val caption: String? = null,
-    val type: EmptyScreenType
+sealed class EmptyScreenConfig(
+    open val image: @Composable () -> ImageAsset? = { null },
+    open val caption: String? = null,
+    open val type: EmptyScreenType
 ) {
-    constructor(asset: ImageAssetIdentifier?, caption: String?, type: EmptyScreenType) : this(
-        image = @Composable {
-            asset?.toImageAsset()
-        },
+    data class Chats(
+        override val image: @Composable () -> ImageAsset? = { null },
+        override val caption: String? = null,
+    ) : EmptyScreenConfig(
+        image = image,
         caption = caption,
-        type = type,
+        type = EmptyScreenType.Chats,
+    )
+
+    data class Messages(
+        override val image: @Composable () -> ImageAsset? = { null },
+        override val caption: String? = null
+    ) : EmptyScreenConfig(
+        image = image,
+        caption = caption,
+        type = EmptyScreenType.Messages,
     )
 }
 
@@ -68,13 +77,11 @@ internal val EmptyScreenConfig.defaultImage: Painter
 @Stable
 data class Assets(
     val logo: ImageAssetIdentifier? = null,
-    val emptyChat: EmptyScreenConfig = EmptyScreenConfig(
+    val emptyChat: EmptyScreenConfig.Messages = EmptyScreenConfig.Messages(
         caption = "No messages",
-        type = EmptyScreenType.Messages
     ),
-    val emptyChats: EmptyScreenConfig = EmptyScreenConfig(
+    val emptyChats: EmptyScreenConfig.Chats = EmptyScreenConfig.Chats(
         caption = "You haven't added any chats yet",
-        type = EmptyScreenType.Chats
     ),
 )
 
