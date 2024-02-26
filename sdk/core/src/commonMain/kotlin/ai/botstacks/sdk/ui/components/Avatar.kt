@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.ui.components.OnlineStatusIndicator
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
@@ -41,7 +42,6 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import botstacks.sdk.core.generated.resources.Res
-import co.touchlab.kermit.Logger
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
@@ -184,7 +184,7 @@ fun Avatar(
                                             .crossfade(true)
                                             .build(),
                                         onError = {
-                                            Logger.e(throwable = it.result.throwable) { "failed to load user avatar" }
+                                            Monitoring.error(error = it.result.throwable, "failed to load user avatar")
                                         },
                                         fallback = type.emptyState,
                                         contentDescription = "user profile picture",
@@ -229,7 +229,7 @@ fun Avatar(
                             .build(),
                         fallback = type.emptyState,
                         onError = {
-                            Logger.e(throwable = it.result.throwable) { "failed to load user avatar" }
+                            Monitoring.error(error = it.result.throwable, "failed to load user avatar")
                         },
                         contentDescription = "user profile picture",
                         contentScale = ContentScale.Crop,

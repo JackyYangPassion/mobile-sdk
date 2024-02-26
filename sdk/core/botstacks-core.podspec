@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'botstacks-core'
-    spec.version                  = '0.0.1'
+    spec.version                  = '1.0.0'
     spec.homepage                 = 'https://botstacks.ai'
     spec.source                   = { :http=> ''}
     spec.authors                  = 'BotStacks'

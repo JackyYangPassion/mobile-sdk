@@ -20,6 +20,14 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import kotlin.experimental.ExperimentalObjCName
 
 
+/**
+ * Drop in Navigation Controller for a full end-to-end integration of the BotStacksSDK.
+ *
+ * All screen navigation is handled internally.
+ *
+ * @param onLogout Callback when a logout is confirmed and completes successfully. Utilize to send
+ * users back to your own log in screen.
+ */
 @OptIn(ExperimentalObjCName::class)
 @ObjCName("BotStacksChatController")
 fun BotStacksChatController(onLogout: () -> Unit) = BotStacksChatController(

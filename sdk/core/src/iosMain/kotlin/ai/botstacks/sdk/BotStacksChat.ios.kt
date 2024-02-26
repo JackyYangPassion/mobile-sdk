@@ -1,12 +1,12 @@
 package ai.botstacks.sdk
 
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
-import ai.botstacks.sdk.internal.utils.ui.Giphy
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.op
 import ai.botstacks.sdk.internal.utils.readPlist
 import ai.botstacks.sdk.internal.utils.retryIO
 import androidx.compose.runtime.Stable
+import cocoapods.Giphy.Giphy
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
@@ -15,13 +15,17 @@ import kotlinx.coroutines.launch
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
 
+/**
+ * Main iOS entry point for the BotStacks SDK.
+ *
+ * Setup/initialization is done via [setup], while login and log out are done
+ * via [login] and [BotStacksChat.logout], respectively.
+ *
+ * Registering an FCM token for push notification support is done
+ * via [BotStacksChat.registerFCMToken].
+ */
 @Stable
 actual class BotStacksChatPlatform : BotStacksChat() {
-
-    companion object {
-        private val TAG = "BotStacksIOS"
-    }
-
 
     private lateinit var _apiKey: String
     private lateinit var bundleIdentifier: String

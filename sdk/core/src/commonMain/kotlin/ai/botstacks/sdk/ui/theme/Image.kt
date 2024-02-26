@@ -7,10 +7,10 @@ expect class ImageAssetIdentifier
 expect class ImageAsset
 
 @Composable
-expect fun ImageAssetIdentifier.toImageAsset(): ImageAsset?
+internal expect fun ImageAssetIdentifier.toImageAsset(): ImageAsset?
 
 @Composable
-expect fun painterImageAsset(asset: ImageAssetIdentifier): Painter
+internal expect fun painterImageAsset(asset: ImageAssetIdentifier): Painter
 
 @Composable
-expect fun painterImageAsset(asset: ImageAsset): Painter
+internal expect fun painterImageAsset(asset: ImageAsset): Painter

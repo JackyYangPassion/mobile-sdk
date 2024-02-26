@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.*
 import androidx.compose.ui.unit.sp
@@ -54,7 +55,7 @@ internal fun MarkdownText(
                     try {
                         uriHandler.openUri(foundReference)
                     } catch (t: Throwable) {
-                        Monitoring.error("Could not open the provided url: $foundReference", t)
+                        Monitoring.error(message = "Could not open the provided url: $foundReference", error = t)
                     }
                 }
             }
@@ -64,11 +65,11 @@ internal fun MarkdownText(
     MarkdownBasicText(
         text = content,
         modifier = textModifier
-//            .onPlaced {
-//                it.parentLayoutCoordinates?.also { coordinates ->
-//                    imageState.setContainerSize(coordinates.size)
-//                }
-//            }
+            .onPlaced {
+                it.parentLayoutCoordinates?.also { coordinates ->
+                    imageState.setContainerSize(coordinates.size)
+                }
+            }
             .animateContentSize(),
         style = style,
         color = LocalMarkdownColors.current.text,

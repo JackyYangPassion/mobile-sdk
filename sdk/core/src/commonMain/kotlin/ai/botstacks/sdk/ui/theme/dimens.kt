@@ -9,8 +9,10 @@ import androidx.compose.ui.unit.dp
 
 internal val LocalBotStacksDimens = staticCompositionLocalOf<Dimensions> { error("No Dimensions provided") }
 
-
-private val staticGridPreset =
+/**
+ * Default grid system used for Components. We use a 4pt grid.
+  */
+val staticGridPreset =
     GridDimensionSet(
         x1 = 4.dp,
         x2 = 8.dp,
@@ -30,13 +32,21 @@ private val staticGridPreset =
         x16 = 64.dp,
     )
 
+/**
+ * Dimensions that drive spacing and padding within Components
+ *
+ * @param border Thickness of a border.
+ * @param thickBorder Thickness of a thick border.
+ * @param inset Spacing from edge of screen to content.
+ * @param widthWindowSizeClass size class for the width of the device.
+ * @param heightWindowSizeClass size class for the height of the device.
+ * @param imagePreviewSize Preview size for image attachments in chat.
+ * @param videoPreviewSize Preview size for video attachments in chat.
+ */
 class Dimensions(
-    val none: Dp = 0.dp,
     val border: Dp = 1.dp,
     val thickBorder: Dp = 2.dp,
     val inset: Dp,
-    val screenWidth: Dp = Dp.Unspecified,
-    val screenHeight: Dp = Dp.Unspecified,
     val widthWindowSizeClass: WindowWidthSizeClass = WindowWidthSizeClass.Compact,
     val heightWindowSizeClass: WindowHeightSizeClass = WindowHeightSizeClass.Compact,
     val imagePreviewSize: Size = Size(width = 178f, height = 152f),
@@ -58,6 +68,9 @@ class Dimensions(
         get() = widthWindowSizeClass == WindowWidthSizeClass.Expanded
 }
 
+/**
+ * Grid dimension set for proper UI scaling.
+ */
 data class GridDimensionSet(
     val x1: Dp,
     val x2: Dp,

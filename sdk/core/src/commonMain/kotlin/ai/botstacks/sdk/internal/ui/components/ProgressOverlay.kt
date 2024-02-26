@@ -32,7 +32,7 @@ internal fun ProgressOverlay(
     enter: EnterTransition = fadeIn(),
     exit: ExitTransition = fadeOut(),
     touchBlocking: Boolean = false,
-    overlayColor: Color = BotStacks.colorScheme.onBackground.copy(alpha = 0.5f),
+    scrim: Color = BotStacks.colorScheme.scrim
 ) {
     AnimatedVisibility(
         visible = visible,
@@ -41,12 +41,12 @@ internal fun ProgressOverlay(
     ) {
         Box(
             modifier = Modifier
-                .testTag("RediProgressOverlay")
+                .testTag("ProgressOverlay")
                 .fillMaxSize()
-                .background(color = overlayColor)
+                .background(color = scrim)
                 .disableInput(touchBlocking),
         ) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = BotStacks.colorScheme.primary)
         }
     }
 }

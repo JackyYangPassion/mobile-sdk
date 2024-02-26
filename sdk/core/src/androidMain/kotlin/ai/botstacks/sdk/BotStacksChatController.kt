@@ -13,6 +13,14 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 
+/**
+ * Drop in Navigation Controller for a full end-to-end integration of the BotStacksSDK.
+ *
+ * All screen navigation is handled internally.
+ *
+ * @param onLogout Callback when a logout is confirmed and completes successfully. Utilize to send
+ * users back to your own log in screen.
+ */
 @Composable
 fun BotStacksChatController(
     onLogout: () -> Unit

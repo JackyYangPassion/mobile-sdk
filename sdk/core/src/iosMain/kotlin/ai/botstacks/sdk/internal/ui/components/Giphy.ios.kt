@@ -1,7 +1,7 @@
 package ai.botstacks.sdk.internal.ui.components
 
 
-import ai.botstacks.sdk.internal.ui.rootViewController
+import ai.botstacks.sdk.internal.ui.utils.rootViewController
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cocoapods.Giphy.GPHContentType

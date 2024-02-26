@@ -6,7 +6,7 @@ package ai.botstacks.sdk.internal.ui.components
 
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.fragment.FMessage
-import ai.botstacks.sdk.state.Location
+import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens

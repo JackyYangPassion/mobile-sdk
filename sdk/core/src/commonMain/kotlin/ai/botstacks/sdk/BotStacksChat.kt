@@ -19,9 +19,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 abstract class BotStacksChat {
+    /**
+     * Whether or not the SDK has loaded initial data
+     */
     var loaded by mutableStateOf(false)
 
+    /**
+     * If currently logging in a user
+     */
     var loggingIn by mutableStateOf(false)
+
+    /**
+     * If a user is currently logged in.
+     */
     var isUserLoggedIn by mutableStateOf(false)
 
     internal abstract val prefs: Settings

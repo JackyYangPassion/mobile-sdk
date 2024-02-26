@@ -88,11 +88,3 @@ fun EmptyListView(
     }
   }
 }
-
-@IPreviews
-@Composable
-private fun EmptyListViewPreview() {
-  BotStacksThemeEngine {
-    EmptyListView(config = BotStacks.assets.emptyAllChannels, cta = CTA(null, "Create a Channel", {}))
-  }
-}

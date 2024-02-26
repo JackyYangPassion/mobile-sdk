@@ -36,6 +36,9 @@ internal val LocalBotStacksFonts = staticCompositionLocalOf {
     )
 }
 
+/**
+ * A Font "style" that drives our [Fonts]
+ */
 @Stable
 data class FontStyle(
     val size: TextUnit = 14.sp,
@@ -54,6 +57,19 @@ data class FontStyle(
     }
 }
 
+/**
+ * Typography system for our Components.
+ *
+ * @param h1 h1 is the largest headline, reserved for short, important text or numerals.
+ * @param h2 h2 is the second largest headline, reserved for short, important text or numerals.
+ * @param h3 h3 is the third largest headline, reserved for short, important text or numerals.
+ * @param body1 body1 is the largest body, and is typically used for long-form writing as it works well for small text sizes.
+ * @param body2 body2 is the smallest body, and is typically used for long-form writing as it works well for small text sizes.
+ * @param label1 label is the largest label, and is typically reserved for medium-emphasis text that is shorter in length.
+ * @param label2 label2 is the smallest label, and is typically reserved for medium-emphasis text that is shorter in length.
+ * @param caption1 caption1 is the largest caption, and it is used sparingly to annotate imagery or to introduce a headline.
+ * @param caption2 caption1 is the largest caption, and it is used sparingly to annotate imagery or to introduce a headline.
+ */
 @Stable
 class Fonts(
     val h1: FontStyle,
@@ -67,15 +83,6 @@ class Fonts(
     val button2: FontStyle,
     val caption1: FontStyle,
     val caption2: FontStyle,
-//    val title: FontStyle = FontStyle(size = 22.sp),
-//    val title2: FontStyle = FontStyle(size = 17.sp),
-//    val title3: FontStyle = FontStyle(size = 15.sp),
-//    val headline: FontStyle = FontStyle(size = 13.sp, weight = FontWeight.Bold),
-//    val body: FontStyle = FontStyle(size = 13.sp),
-//    val caption: FontStyle = FontStyle(size = 10.sp),
-//    val username: FontStyle = FontStyle(size = 12.sp, weight = FontWeight.ExtraBold),
-//    val timestamp: FontStyle = FontStyle(size = 12.sp),
-//    val mini: FontStyle = FontStyle(size = 10.sp)
 ) {
     @Stable
     fun merge(other: Fonts? = null): Fonts {

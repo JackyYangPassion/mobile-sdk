@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.internal.ui.components
 
+import ai.botstacks.sdk.internal.Monitoring
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +25,6 @@ import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.ift
-import co.touchlab.kermit.Logger
 import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -43,7 +43,7 @@ internal fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
 @Composable
 internal fun EmojiBar(
     current: String? = null,
-    onEmoji: (String) -> Unit = { Logger.d("Got Emoji $it") }
+    onEmoji: (String) -> Unit = { Monitoring.log("Got Emoji $it") }
 ) {
     var keyboard = remember {
         false

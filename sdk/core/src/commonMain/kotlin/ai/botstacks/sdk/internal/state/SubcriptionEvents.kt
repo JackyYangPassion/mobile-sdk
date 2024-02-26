@@ -8,7 +8,7 @@ import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.fragment.FUser
 import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.state.Member
+import ai.botstacks.sdk.state.Participant
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.DeleteEntity
@@ -82,7 +82,7 @@ internal fun BotStacksChatStore.onCoreEvent(event: CoreSubscription.Core) {
         }
         it.entity.onMember?.fMember?.let {
             Chat.get(it.chat_id)?.let { chat ->
-                val member = Member.get(it)
+                val member = Participant.get(it)
                 if (!isUpdate) {
                     chat.members.add(member)
                 } else {
