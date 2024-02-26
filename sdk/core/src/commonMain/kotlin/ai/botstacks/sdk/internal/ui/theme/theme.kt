@@ -15,8 +15,10 @@ import ai.botstacks.sdk.ui.theme.LocalBotStacksDimens
 import ai.botstacks.sdk.ui.theme.LocalBotStacksFonts
 import ai.botstacks.sdk.internal.ui.utils.FullAlphaRipple
 import ai.botstacks.sdk.internal.utils.ui.calculateScreenSize
+import ai.botstacks.sdk.ui.theme.ShapeDefinitions
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +39,7 @@ internal fun Theme(
     isDark: Boolean,
     colorScheme: DayNightColorScheme,
     fonts: Fonts,
-    shapes: Shapes,
+    shapeDefinitions: ShapeDefinitions,
     content: @Composable () -> Unit,
 ) {
     val _colorsScheme = remember(isDark, colorScheme) {
@@ -91,6 +93,14 @@ internal fun Theme(
         widthWindowSizeClass = windowSizeClass.widthSizeClass,
         heightWindowSizeClass = windowSizeClass.heightSizeClass,
     )
+
+    val shapes = remember(shapeDefinitions) {
+        Shapes(
+            small = RoundedCornerShape(shapeDefinitions.small),
+            medium = RoundedCornerShape(shapeDefinitions.medium),
+            large = RoundedCornerShape(shapeDefinitions.large)
+        )
+    }
 
     CompositionLocalProvider(
         LocalBotStacksAssets provides assets,

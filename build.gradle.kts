@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.tooling.core.withClosure
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -7,6 +6,11 @@ buildscript {
         // Make sure that you have the following two repositories
         google()  // Google's Maven repository
         mavenCentral()  // Maven Central repository
+        maven(url = "https://jitpack.io" ) {
+            credentials {
+                username = project.findProperty("jitpack_auth_token")?.toString() ?: System.getenv("jitpack_auth_token")?.toString()
+            }
+        }
     }
 
     dependencies {

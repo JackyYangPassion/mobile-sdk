@@ -62,7 +62,7 @@ internal fun Chat.send(
     }
 
     val m = Message(
-        id = uuid(),
+        id = uuid() + "-sending",
         createdAt = Clock.System.now(),
         userID = User.current!!.id,
         parentID = inReplyTo,
@@ -103,7 +103,7 @@ internal fun Chat.send(sendingMessage: Message) {
 
             API.send(
                 this@send.id,
-                id = sendingMessage.id,
+                id = sendingMessage.id.removeSuffix("-sending"),
                 inReplyTo = sendingMessage.parentID,
                 text = sendingMessage.text,
                 attachments = attachments
