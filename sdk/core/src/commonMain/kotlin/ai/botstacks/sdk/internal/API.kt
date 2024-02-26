@@ -176,7 +176,7 @@ internal object API {
             deviceId = uuid()
             BotStacksChat.shared.prefs.putString("device-id", deviceId)
         }
-        API.deviceId = deviceId
+        this.deviceId = deviceId
         authToken = BotStacksChat.shared.prefs.getStringOrNull("auth-token")
         if (authToken != null) {
             subscribe()

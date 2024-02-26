@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -89,6 +90,7 @@ internal fun TextInput2(
         keyboardActions = keyboardActions,
         textStyle = fontStyle.copy(textAlign = textAlign).asTextStyle().copy(color = color),
         lineLimits = lineLimit,
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorator = { innerTextField ->
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -179,6 +181,7 @@ internal fun SecureTextField2(
             }
             false
         },
+        cursorBrush = SolidColor(BotStacks.colorScheme.primary),
         decorator = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
