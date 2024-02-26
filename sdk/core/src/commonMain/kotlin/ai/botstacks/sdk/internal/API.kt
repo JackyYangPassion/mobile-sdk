@@ -602,4 +602,10 @@ internal object API {
     suspend fun markChatRead(id: String) =
         client.mutation(MarkChatReadMutation(id)).execute().dataOrThrow().markChatRead
 
+    suspend fun inviteUsers(chatId: String, userIds: List<String>) =
+        client.mutation(InviteUsersMutation(chatId, userIds)).execute().dataOrThrow().inviteMany
+            .map {
+                User.get(it.fMember.user.fUser)
+            }
+
 }

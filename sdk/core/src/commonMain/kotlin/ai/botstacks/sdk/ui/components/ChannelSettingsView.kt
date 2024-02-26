@@ -52,7 +52,6 @@ import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalFoundationApi::class)
 @Stable
 class ChannelSettingsState(private val chat: Chat) {
     internal var selectedImage by mutableStateOf<KmpFile?>(null)
@@ -94,9 +93,18 @@ class ChannelSettingsState(private val chat: Chat) {
             runCatching {
                 val imageUrl = selectedImage?.let { Upload(file = it) }?.await()
 
+                val existingUsers = chat.members.map { it.user }
+                if (participants != existingUsers) {
+                    val invites = participants.subtract(existingUsers.toSet()).toList()
+                        .map { it.id }
+
+                    val inviteResult = runCatching { API.inviteUsers(chat.id, invites) }
+                    inviteResult.exceptionOrNull()?.let { throw it }
+                }
+
                 API.updateChat(
                     id = chat.id,
-                    name = name.text.toString(),
+                    name = name.text,
                     private = private,
                     image = imageUrl,
                 )
