@@ -47,41 +47,6 @@ abstract class BotStacksChat {
     internal var hasCameraSupport by mutableStateOf(false)
 
 
-    /**
-     * login to BotStacks Backend
-     *
-     * @param accessToken BotStacks API key
-     * @param userId userId of user to associate session with
-     * @param username username for user
-     * @param displayName optional display name for user
-     * @param picture optional user image (avatar) URL
-     */
-    suspend fun login(
-        accessToken: String? = null,
-        userId: String,
-        username: String,
-        displayName: String?,
-        picture: String?
-    ) {
-        if (loggingIn) return
-        loggingIn = true
-        runCatching {
-            API.login(
-                accessToken = accessToken,
-                userId = userId,
-                username = username,
-                displayName = displayName,
-                picture = picture
-            )
-        }.onSuccess {
-            isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
-            loggingIn = false
-        }.onFailure { err ->
-            Monitoring.error(err)
-            loggingIn = false
-        }
-    }
-
     companion object {
         val shared = BotStacksChatPlatform()
 
@@ -116,6 +81,22 @@ expect class BotStacksChatPlatform(): BotStacksChat {
     val apiKey: String
     val appIdentifier: String
     val scope: CoroutineScope
+
+    /**
+     * login to BotStacks Backend
+     *
+     * @param accessToken BotStacks API key
+     * @param userId userId of user to associate session with
+     * @param username username for user
+     * @param displayName optional display name for user
+     * @param picture optional user image (avatar) URL
+     */
+    suspend fun login(
+        userId: String,
+        username: String,
+        displayName: String? = null,
+        picture: String? = null,
+    )
 
     suspend fun load()
 }

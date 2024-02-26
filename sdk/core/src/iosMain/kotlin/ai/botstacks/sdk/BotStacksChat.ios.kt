@@ -1,5 +1,7 @@
 package ai.botstacks.sdk
 
+import ai.botstacks.sdk.internal.API
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.op
@@ -90,6 +92,39 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
                 }
             }
+        }
+    }
+
+    /**
+    * login to BotStacks Backend
+    *
+    * @param userId userId of user to associate session with
+    * @param username username for user
+    * @param displayName optional display name for user
+    * @param picture optional user image (avatar) URL
+    */
+    actual suspend fun login(
+        userId: String,
+        username: String,
+        displayName: String?,
+        picture: String?
+    ) {
+        if (loggingIn) return
+        loggingIn = true
+        runCatching {
+            API.login(
+                accessToken = apiKey,
+                userId = userId,
+                username = username,
+                displayName = displayName,
+                picture = picture
+            )
+        }.onSuccess {
+            isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
+            loggingIn = false
+        }.onFailure { err ->
+            Monitoring.error(err)
+            loggingIn = false
         }
     }
 
