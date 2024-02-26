@@ -206,8 +206,8 @@ buildkonfig {
 
     defaultConfigs {
         buildConfigField(BOOLEAN, "DEBUG", "true")
-        buildConfigField(STRING, "ENV", "production")
-        buildConfigField(STRING, "HOST", "chat.botstacks.ai")
+        buildConfigField(STRING, "ENV", "dev")
+        buildConfigField(STRING, "HOST", "chat.dev.botstacks.ai")
         buildConfigField(BOOLEAN, "SSL", "true")
     }
 
