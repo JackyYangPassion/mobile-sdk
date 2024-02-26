@@ -14,7 +14,7 @@ import com.mikepenz.markdown.compose.LocalMarkdownColors
 import com.mikepenz.markdown.compose.LocalMarkdownDimens
 
 @Composable
-fun MarkdownDivider(
+internal fun MarkdownDivider(
     modifier: Modifier = Modifier,
     color: Color = LocalMarkdownColors.current.codeBackground,
     thickness: Dp = LocalMarkdownDimens.current.dividerThickness,

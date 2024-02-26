@@ -1,6 +1,7 @@
 # Gradle files
-.gradle/
-build/
+.gradle
+build
+**/build
 release
 gpp.json
 
@@ -39,6 +40,10 @@ google-services.json
 gen
 
 # iOS user data
-xcuserdata/
+*.xcuserstate
+**/xcuserdata
 Pods
 pod
+
+# docs
+docs/api

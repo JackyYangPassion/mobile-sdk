@@ -1,15 +1,15 @@
 package ai.botstacks.sdk
 
-import ai.botstacks.sdk.navigation.BotstacksRouter
-import ai.botstacks.sdk.navigation.LocalPlatformNavigator
-import ai.botstacks.sdk.navigation.screens.ChatListScreen
+import ai.botstacks.sdk.internal.navigation.BotstacksRouter
+import ai.botstacks.sdk.internal.navigation.LocalPlatformNavigator
+import ai.botstacks.sdk.internal.navigation.screens.ChatListScreen
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.ui.theme.Assets
 import ai.botstacks.sdk.ui.theme.Colors
 import ai.botstacks.sdk.ui.theme.Fonts
-import ai.botstacks.sdk.ui.theme.darkColors
-import ai.botstacks.sdk.ui.theme.lightColors
+import ai.botstacks.sdk.ui.theme.darkBotStacksColors
+import ai.botstacks.sdk.ui.theme.lightBotStacksColors
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +20,14 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import kotlin.experimental.ExperimentalObjCName
 
 
+/**
+ * Drop in Navigation Controller for a full end-to-end integration of the BotStacksSDK.
+ *
+ * All screen navigation is handled internally.
+ *
+ * @param onLogout Callback when a logout is confirmed and completes successfully. Utilize to send
+ * users back to your own log in screen.
+ */
 @OptIn(ExperimentalObjCName::class)
 @ObjCName("BotStacksChatController")
 fun BotStacksChatController(onLogout: () -> Unit) = BotStacksChatController(
@@ -45,10 +53,10 @@ fun BotStacksChatController(
 ) = ComposeUIViewController {
     BotStacksChat.shared.onLogout = onLogout
 
-    BotStacksChatContext(
+    BotStacksThemeEngine(
         useDarkTheme,
-        lightColorScheme ?: lightColors(),
-        darkColorScheme ?: darkColors(),
+        lightColorScheme ?: lightBotStacksColors(),
+        darkColorScheme ?: darkBotStacksColors(),
         shapes ?: BotStacks.shapes,
         assets ?: BotStacks.assets,
         fonts,

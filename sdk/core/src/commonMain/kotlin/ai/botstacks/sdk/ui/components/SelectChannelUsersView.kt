@@ -1,9 +1,10 @@
 package ai.botstacks.sdk.ui.components
 
-import ai.botstacks.sdk.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.components.internal.TextInput
+import ai.botstacks.sdk.internal.ui.components.PagerList
+import ai.botstacks.sdk.internal.ui.components.TextInput
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

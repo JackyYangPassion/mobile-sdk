@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import com.mohamedrejeb.calf.io.KmpFile
 
 @Composable
-expect fun rememberFilePickerLauncher(
+internal expect fun rememberFilePickerLauncher(
     type: FilePickerFileType = FilePickerFileType.All,
     selectionMode: FilePickerSelectionMode = FilePickerSelectionMode.Single,
     onResult: (List<KmpFile>) -> Unit,
 ): FilePickerLauncher
 
-sealed class FilePickerFileType(vararg val value: String) {
+internal sealed class FilePickerFileType(vararg val value: String) {
     data object Image: FilePickerFileType(ImageContentType)
     data object Video: FilePickerFileType(VideoContentType)
     data object ImageVideo: FilePickerFileType(ImageContentType, VideoContentType)
@@ -125,12 +125,12 @@ sealed class FilePickerFileType(vararg val value: String) {
     }
 }
 
-sealed class FilePickerSelectionMode {
+internal sealed class FilePickerSelectionMode {
     data object Single: FilePickerSelectionMode()
     data object Multiple: FilePickerSelectionMode()
 }
 
-expect class FilePickerLauncher(
+internal expect class FilePickerLauncher(
     type: FilePickerFileType,
     selectionMode: FilePickerSelectionMode,
     onLaunch: () -> Unit,

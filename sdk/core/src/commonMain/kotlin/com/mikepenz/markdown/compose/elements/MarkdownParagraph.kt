@@ -9,7 +9,7 @@ import com.mikepenz.markdown.utils.buildMarkdownAnnotatedString
 import org.intellij.markdown.ast.ASTNode
 
 @Composable
-fun MarkdownParagraph(
+internal fun MarkdownParagraph(
     content: String,
     node: ASTNode,
     modifier: Modifier = Modifier,

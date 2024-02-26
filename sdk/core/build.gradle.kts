@@ -1,5 +1,8 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.dokka.DokkaConfiguration
+import org.jetbrains.dokka.DokkaConfiguration.Visibility
+import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -11,6 +14,7 @@ plugins {
     alias(libs.plugins.apollo3)
     id("com.codingfeline.buildkonfig")
     id("co.touchlab.kmmbridge") version "0.5.2"
+    id("org.jetbrains.dokka") version "1.9.10"
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -51,11 +55,6 @@ kotlin {
             version = "8.4.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
-
-        pod("Sentry") {
-            version = "8.20.0"
-            linkOnly = true
-        }
     }
 
     compilerOptions {
@@ -94,13 +93,9 @@ kotlin {
                 implementation(libs.kotlinx.serialization.core)
                 implementation(libs.kotlinx.serialization.json)
 
-                implementation(libs.kermit)
-
                 implementation(libs.ktor.client.core)
 
                 implementation(libs.markdown)
-
-                api(libs.sentry)
 
                 implementation(libs.settings)
 
@@ -240,7 +235,7 @@ tasks.named("podPublishDebugXCFramework") {
     doLast {
         copy {
             from(project.file("src/commonMain/composeResources"))
-            into(project.file("../pod/debug/build/compose/ios/BotStacksSDK/compose-resources"))
+            into(project.file("../pod/debug/build/compose/ios/botstacks-core/compose-resources"))
         }
     }
 }
@@ -249,15 +244,46 @@ tasks.named("podPublishReleaseXCFramework") {
     doLast {
         copy {
             from(project.file("src/commonMain/composeResources"))
-            into(project.file("../pod/release/build/compose/ios/BotStacksSDK/compose-resources"))
+            into(project.file("../pod/release/build/compose/ios/botstacks-core/compose-resources"))
+        }
+    }
+}
+
+tasks.withType<DokkaTask>().configureEach {
+    moduleName.set("BotStacksSDK")
+    moduleVersion.set(libs.versions.libraryVersion.get())
+    outputDirectory.set(project.file("../docs/api"))
+    suppressObviousFunctions.set(true)
+    suppressInheritedMembers.set(true)
+    dokkaSourceSets.configureEach {
+        documentedVisibilities.set(
+            setOf(
+                Visibility.PUBLIC,
+                Visibility.PROTECTED,
+            )
+        )
+
+        perPackageOption {
+            matchingRegex.set(".*internal.*")
+            suppress.set(true)
+        }
+
+        perPackageOption {
+            matchingRegex.set("com.mikepenz.markdown.*")
+            suppress.set(true)
+        }
+
+        perPackageOption {
+            matchingRegex.set("com.mohamedrejeb.calf.*")
+            suppress.set(true)
         }
     }
 }
 
 kmmbridge {
 //    mavenPublishArtifacts()
-    // TODO: support SPM
-//    spm()
-    // TODO: switch to trunk
-    cocoapods("git@github.com:BotStacks/mobile-sdk.git")
+}
+
+dependencies {
+    dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
 }

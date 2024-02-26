@@ -1,8 +1,11 @@
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.components.internal.TextInput
+import ai.botstacks.sdk.internal.ui.components.TextInput
+import ai.botstacks.sdk.internal.state.Upload
+import ai.botstacks.sdk.type.UpdateProfileInput
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.core.generated.resources.Res
+import com.apollographql.apollo3.api.Optional
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
@@ -29,12 +33,36 @@ import org.jetbrains.compose.resources.painterResource
 
 @Stable
 class EditProfileState(private val user: User) {
-    var selectedImage by mutableStateOf<KmpFile?>(null)
-    var textState by mutableStateOf(TextFieldValue(user.username))
+    internal var selectedImage by mutableStateOf<KmpFile?>(null)
+    internal var textState by mutableStateOf(TextFieldValue(user.username))
 
 
-    val userImage: Any?
+    internal val userImage: Any?
         get() = selectedImage ?: user.avatar
+
+
+    var saving by mutableStateOf(false)
+        private set
+
+    suspend fun update(): Result<User?> {
+        val uploadFile = selectedImage?.let { Upload(file = it) }
+        val url = uploadFile?.await()
+        return runCatching {
+            API.updateProfile(
+                UpdateProfileInput(
+                    username = Optional.present(textState.text),
+                    image = Optional.presentIfNotNull(url)
+                )
+            )
+
+            User.current?.apply {
+                if (url != null) {
+                    avatar = url
+                }
+                username = textState.text
+            }
+        }.onFailure { saving = false }.onSuccess { saving = false }
+    }
 }
 
 @OptIn(ExperimentalResourceApi::class)

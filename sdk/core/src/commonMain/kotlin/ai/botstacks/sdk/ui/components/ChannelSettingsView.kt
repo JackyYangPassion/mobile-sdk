@@ -2,19 +2,20 @@
 
 package ai.botstacks.sdk.ui.components
 
-import ai.botstacks.sdk.API
+import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.state.Upload
+import ai.botstacks.sdk.internal.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.components.internal.EditableTextLabel
-import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
-import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
-import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.readBytes
-import ai.botstacks.sdk.utils.ui.onEnter
-import ai.botstacks.sdk.utils.ui.unboundedClickable
+import ai.botstacks.sdk.internal.ui.components.EditableTextLabel
+import ai.botstacks.sdk.internal.ui.components.Text
+import ai.botstacks.sdk.internal.ui.components.ToggleSwitch
+import ai.botstacks.sdk.internal.ui.components.settings.SettingsSection
+import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.internal.utils.readBytes
+import ai.botstacks.sdk.internal.utils.ui.onEnter
+import ai.botstacks.sdk.internal.utils.ui.unboundedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -54,7 +55,7 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalFoundationApi::class)
 @Stable
 class ChannelSettingsState(private val chat: Chat) {
-    var selectedImage by mutableStateOf<KmpFile?>(null)
+    internal var selectedImage by mutableStateOf<KmpFile?>(null)
 
     val channelImage: Any?
         @Composable get() = selectedImage?.readBytes() ?: chat.displayImage

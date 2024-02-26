@@ -16,14 +16,14 @@ import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.ast.findChildOfType
 import org.intellij.markdown.ast.getTextInNode
 
-typealias MarkdownComponent = @Composable ColumnScope.(MarkdownComponentModel) -> Unit
+internal typealias MarkdownComponent = @Composable ColumnScope.(MarkdownComponentModel) -> Unit
 
-typealias CustomMarkdownComponent = @Composable ColumnScope.(IElementType, MarkdownComponentModel) -> Unit
+internal typealias CustomMarkdownComponent = @Composable ColumnScope.(IElementType, MarkdownComponentModel) -> Unit
 
 /**
  * Model holding data relevant for a component
  */
-data class MarkdownComponentModel(
+internal data class MarkdownComponentModel(
     val content: String,
     val node: ASTNode,
     val typography: MarkdownTypography,
@@ -32,7 +32,7 @@ data class MarkdownComponentModel(
 private fun MarkdownComponentModel.getTextInNode() = node.getTextInNode(content)
 
 @Composable
-fun markdownComponents(
+internal fun markdownComponents(
     text: MarkdownComponent = CurrentComponentsBridge.text,
     eol: MarkdownComponent = CurrentComponentsBridge.eol,
     codeFence: MarkdownComponent = CurrentComponentsBridge.codeFence,
@@ -80,7 +80,7 @@ fun markdownComponents(
  * Interface defining all supported components.
  */
 @Stable
-interface MarkdownComponents {
+internal interface MarkdownComponents {
     val text: MarkdownComponent
     val eol: MarkdownComponent
     val codeFence: MarkdownComponent
@@ -129,7 +129,7 @@ private class DefaultMarkdownComponents(
 /**
  * Adapts the universal signature @Composable (MarkdownComponentModel) -> Unit to the existing components.
  */
-object CurrentComponentsBridge {
+internal object CurrentComponentsBridge {
     val text: MarkdownComponent = {
         MarkdownText(it.getTextInNode().toString())
     }

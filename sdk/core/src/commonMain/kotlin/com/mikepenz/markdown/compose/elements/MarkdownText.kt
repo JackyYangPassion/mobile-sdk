@@ -1,5 +1,6 @@
 package com.mikepenz.markdown.compose.elements
 
+import ai.botstacks.sdk.internal.Monitoring
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -10,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.*
 import androidx.compose.ui.unit.sp
@@ -24,7 +26,7 @@ import com.mikepenz.markdown.utils.TAG_URL
 
 
 @Composable
-fun MarkdownText(
+internal fun MarkdownText(
     content: String,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalMarkdownTypography.current.text
@@ -33,7 +35,7 @@ fun MarkdownText(
 }
 
 @Composable
-fun MarkdownText(
+internal fun MarkdownText(
     content: AnnotatedString,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalMarkdownTypography.current.text
@@ -53,7 +55,7 @@ fun MarkdownText(
                     try {
                         uriHandler.openUri(foundReference)
                     } catch (t: Throwable) {
-                        println("Could not open the provided url: $foundReference")
+                        Monitoring.error(message = "Could not open the provided url: $foundReference", error = t)
                     }
                 }
             }
@@ -63,11 +65,11 @@ fun MarkdownText(
     MarkdownBasicText(
         text = content,
         modifier = textModifier
-//            .onPlaced {
-//                it.parentLayoutCoordinates?.also { coordinates ->
-//                    imageState.setContainerSize(coordinates.size)
-//                }
-//            }
+            .onPlaced {
+                it.parentLayoutCoordinates?.also { coordinates ->
+                    imageState.setContainerSize(coordinates.size)
+                }
+            }
             .animateContentSize(),
         style = style,
         color = LocalMarkdownColors.current.text,

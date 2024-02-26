@@ -11,8 +11,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.theme.FontStyle
-import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
-import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
+import ai.botstacks.sdk.internal.utils.IPreviews
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -84,7 +84,7 @@ fun Badge(
 
 @IPreviews
 @Composable
-fun BadgePreview() {
+private fun BadgePreview() {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Badge(count = 1)
         Badge(count = 101)

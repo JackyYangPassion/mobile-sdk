@@ -4,6 +4,7 @@
 
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.internal.ui.components.EmptyListView
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Identifiable
 import ai.botstacks.sdk.state.Message
@@ -13,8 +14,9 @@ import ai.botstacks.sdk.ui.BotStacks.assets
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.shapes
-import ai.botstacks.sdk.utils.format
-import ai.botstacks.sdk.utils.minutesBetween
+import ai.botstacks.sdk.internal.ui.components.PagerListIndexed
+import ai.botstacks.sdk.internal.utils.format
+import ai.botstacks.sdk.internal.utils.minutesBetween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,8 +31,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MessageList(
+    modifier: Modifier = Modifier,
     chat: Chat,
-    modifier: Modifier,
     onPressUser: (User) -> Unit,
     onLongPress: (Message) -> Unit
 ) {
@@ -84,11 +86,10 @@ fun MessageList(
                 else -> PaddingValues(vertical = dimens.grid.x2)
             }
 
-            MessageView(
+            ChatMessage(
                 modifier = Modifier.padding(arrangement),
                 message = item,
                 shape = shapeForMessage(item.user.isCurrent, isPrevClose, isNextClose),
-                isGroup = chat.isGroup,
                 showTimestamp = !isNextClose,
                 showAvatar = !isNextClose,
                 onPressUser = onPressUser,

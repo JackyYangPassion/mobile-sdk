@@ -19,9 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import ai.botstacks.sdk.ui.components.internal.TextInput
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,10 +40,10 @@ fun BrowserModal(url: String, onClose: () -> Unit) {
                 .height(44.dp)
                 .padding(12.dp)
         ) {
-            TextInput(
+            TextField(
                 modifier = Modifier.weight(1f),
                 value = state,
-                onValueChanged = { state = it },
+                onValueChange = { state = it },
                 enabled = false
             )
             Box(

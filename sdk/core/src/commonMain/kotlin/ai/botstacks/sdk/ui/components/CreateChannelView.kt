@@ -1,16 +1,15 @@
 package ai.botstacks.sdk.ui.components
 
-import ai.botstacks.sdk.API
+import ai.botstacks.sdk.internal.API
+import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.state.Upload
+import ai.botstacks.sdk.internal.state.Upload
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.components.internal.TextInput
-import ai.botstacks.sdk.ui.components.internal.ToggleSwitch
-import ai.botstacks.sdk.ui.components.internal.settings.SettingsSection
-import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
-import ai.botstacks.sdk.ui.theme.dayNightColor
-import ai.botstacks.sdk.utils.bg
+import ai.botstacks.sdk.internal.ui.components.TextInput
+import ai.botstacks.sdk.internal.ui.components.ToggleSwitch
+import ai.botstacks.sdk.internal.ui.components.settings.SettingsSection
+import ai.botstacks.sdk.internal.utils.bg
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,8 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -31,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import botstacks.sdk.core.generated.resources.Res
 import com.mohamedrejeb.calf.io.KmpFile
@@ -77,7 +73,7 @@ class CreateChannelState {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun SetChannelDetailsView(
+fun CreateChannelView(
     state: CreateChannelState,
     onSelectUsers: () -> Unit,
 ) {
@@ -151,49 +147,6 @@ fun SetChannelDetailsView(
                     onRemove = { state.participants.remove(it) },
                     canRemove = true,
                 )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-fun UserSelectView(
-    modifier: Modifier = Modifier,
-    selectedUsers: List<User>,
-    canRemove: Boolean = false,
-    showAdd: Boolean = true,
-    onRemove: (User) -> Unit = { },
-    onAddSelected: () -> Unit = { },
-) {
-    val palette = LocalBotStacksColorPalette.current
-    LazyRow(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(BotStacks.dimens.inset),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        items(selectedUsers) {
-            Avatar(
-                modifier = Modifier
-                    .clickable { onRemove(it) },
-                user = it,
-                isRemovable = canRemove,
-            )
-        }
-        if (showAdd) {
-            item {
-                Avatar(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable { onAddSelected() },
-                    type = AvatarType.User(
-                        url = null,
-                        empty = painterResource(Res.drawable.plus),
-                    ),
-                    backgroundColor = dayNightColor(palette.dark._900, palette.dark._500),
-                    contentColor = Color.White,
-
-                    )
             }
         }
     }

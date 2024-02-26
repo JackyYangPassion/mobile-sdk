@@ -1,9 +1,10 @@
 package ai.botstacks.sdk
 
-import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.op
-import ai.botstacks.sdk.utils.retryIO
+import ai.botstacks.sdk.internal.Monitoring
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.internal.utils.op
+import ai.botstacks.sdk.internal.utils.retryIO
 import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
@@ -17,13 +18,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Main Android entry point for the BotStacks SDK.
+ *
+ * Setup/initialization is done via [setup], while login and log out are done
+ * via [login] and [BotStacksChat.logout], respectively.
+ *
+ * Registering an FCM token for push notification support is done
+ * via [BotStacksChat.registerFCMToken].
+ */
 @Stable
 actual class BotStacksChatPlatform : BotStacksChat() {
-
-    companion object {
-        private val TAG = "BotStacksAndroid"
-    }
-
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var _apiKey: String
@@ -40,19 +45,18 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
     actual val scope = CoroutineScope(Dispatchers.Main)
 
-    fun setup(context: Context, apiKey: String) {
-        setup(context, apiKey, giphyApiKey = null, googleMapsApiKey = null, delayLoad = false)
-    }
-
-    fun setup(context: Context, apiKey: String, giphyApiKey: String?, googleMapsApiKey: String?) {
-        setup(context, apiKey, giphyApiKey = giphyApiKey, googleMapsApiKey = googleMapsApiKey, delayLoad = false)
-    }
-
+    /**
+     * setup app instance for interfacing with the BotStacksSDK.
+     *
+     * @param context Application context
+     * @param apiKey BotStacks API key
+     * @param giphyApiKey optional API from Giphy for Gif selection support.
+     * @param delayLoad If enabled, you must call [load] prior to rendering UI.
+     */
     fun setup(
         context: Context,
         apiKey: String,
         giphyApiKey: String? = null,
-        googleMapsApiKey: String? = null,
         delayLoad: Boolean = false
     ) {
         this.sharedPreferences = context.getSharedPreferences("botstackschat", Context.MODE_PRIVATE)
@@ -71,6 +75,12 @@ actual class BotStacksChatPlatform : BotStacksChat() {
             hasGiphySupport = true
         }
 
+        // retrieve google maps key from merged manifest
+        // if present, enable map rendering support
+        val googleMapsApiKey = context.packageManager.getApplicationInfo(
+            appIdentifier,PackageManager.GET_META_DATA)
+            .metaData.getString("com.google.android.geo.API_KEY")
+
         if (!googleMapsApiKey.isNullOrEmpty()) {
             hasMapsSupport = true // runtime permission grants location access
         }
@@ -88,8 +98,14 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
     private var didStartLoading = false
 
+    /**
+     * Load trigger for loading user data. A logged in check is done during this phase to allow routing
+     * to login if needed.
+     *
+     * NOTE: An [apiKey] must be provided during [setup] prior to calling this.
+     */
     actual suspend fun load() {
-        println("Start load")
+        Monitoring.log("Start load")
         if (apiKey.isEmpty()) {
             throw Error("You must initialize BotStacksChat with BotStacksChat.init before calling load")
         }

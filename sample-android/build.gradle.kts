@@ -16,7 +16,6 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
                 implementation(compose.foundation)
-                implementation(compose.material)
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
                 implementation(compose.ui)
@@ -33,8 +32,6 @@ kotlin {
 
                 implementation(firebaseLibs.firebaseAnalyticsKtx)
                 implementation(firebaseLibs.firebaseMessagingKtx)
-
-                implementation(libs.giphy)
             }
         }
 
@@ -61,8 +58,8 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.compileSdk.get().toInt()
-        versionCode = 6
-        versionName = "1.0.2"
+        versionCode = 7
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

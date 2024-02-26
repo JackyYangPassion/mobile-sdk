@@ -5,9 +5,10 @@
 package ai.botstacks.sdk.state
 
 import androidx.compose.runtime.*
-import ai.botstacks.sdk.API
-import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.op
+import ai.botstacks.sdk.internal.API
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.internal.utils.op
 
 @Stable
 data class ChannelsPager(val list: String = "channels") : Pager<Chat>() {

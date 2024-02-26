@@ -18,7 +18,7 @@
 
     <application>
         <provider
-            android:name=".ui.components.internal.camera.ComposeFileProvider"
+            android:name=".internal.ui.components.camera.ComposeFileProvider"
             android:authorities="${applicationId}.botstacks.camera.provider"
             android:exported="false"
             android:grantUriPermissions="true">

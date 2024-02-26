@@ -14,16 +14,16 @@ import platform.posix.memcpy
  * A typealias representing a file in the platform specific implementation
  */
 @Suppress("CONFLICTING_OVERLOADS")
-actual typealias KmpFile = NSURL
+internal actual typealias KmpFile = NSURL
 
-actual fun createKmpFile(path: String): KmpFile? = NSURL.fileURLWithPath(path)
+internal actual fun createKmpFile(path: String): KmpFile? = NSURL.fileURLWithPath(path)
 
-actual fun KmpFile.exists(): Boolean {
+internal actual fun KmpFile.exists(): Boolean {
     return NSFileManager.defaultManager.fileExistsAtPath(this.path ?: return false)
 }
 
 @OptIn(ExperimentalForeignApi::class)
-actual fun KmpFile.readByteArray(): ByteArray {
+internal actual fun KmpFile.readByteArray(): ByteArray {
     val data = NSData.dataWithContentsOfURL(this) ?: return ByteArray(0)
     val byteArraySize: Int = if (data.length > Int.MAX_VALUE.toUInt()) Int.MAX_VALUE else data.length .toInt()
     return ByteArray(byteArraySize).apply {
@@ -33,11 +33,11 @@ actual fun KmpFile.readByteArray(): ByteArray {
     }
 }
 
-actual val KmpFile.name: String?
+internal actual val KmpFile.name: String?
     get() = this.lastPathComponent
 
-actual val KmpFile.path: String?
+internal actual val KmpFile.path: String?
     get() = this.path
 
-actual val KmpFile.isDirectory: Boolean
+internal actual val KmpFile.isDirectory: Boolean
     get() = !this.path.orEmpty().contains(".")

@@ -1,7 +1,7 @@
 package com.mohamedrejeb.calf.io
 
-import ai.botstacks.sdk.utils.readData
-import ai.botstacks.sdk.utils.uuid
+import ai.botstacks.sdk.internal.utils.readData
+import ai.botstacks.sdk.internal.utils.uuid
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSTemporaryDirectory
 import platform.Foundation.NSURL
@@ -10,11 +10,11 @@ import platform.Foundation.writeToURL
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 
-interface TemporaryURL {
+internal interface TemporaryURL {
     val contentURL: NSURL
 }
 
-class TemporaryFileURL(
+internal class TemporaryFileURL(
     private val content: NSURL,
     extension: String = content.pathExtension().orEmpty()
 ) : TemporaryURL {
@@ -24,7 +24,7 @@ class TemporaryFileURL(
         }
 }
 
-class TemporaryImageURL(
+internal class TemporaryImageURL(
     private val content: UIImage,
 ) : TemporaryURL {
 
