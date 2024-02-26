@@ -5,6 +5,7 @@ import ai.botstacks.sdk.internal.navigation.LocalPlatformNavigator
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.internal.navigation.ui.channels.ChannelDetailsScreen
+import ai.botstacks.sdk.internal.navigation.ui.channels.ChannelUserSelectionState
 import ai.botstacks.sdk.internal.navigation.ui.channels.CreateChannelScreen
 import ai.botstacks.sdk.internal.navigation.ui.channels.SelectChannelUsersScreen
 import ai.botstacks.sdk.internal.navigation.ui.chats.ChatsListScreen
@@ -14,6 +15,7 @@ import ai.botstacks.sdk.internal.navigation.ui.profile.ProfileView
 import ai.botstacks.sdk.ui.components.ChannelSettingsState
 import ai.botstacks.sdk.ui.components.CreateChannelState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.uniqueScreenKey
@@ -75,7 +77,6 @@ internal data object CreateChannelScreen : Screen {
             onSelectUsers = {
                 navigator.push(
                     SelectUsersScreen(
-                        existingSelections = state.participants,
                         onSelections = {
                             state.participants = it.toMutableStateList()
                         }
@@ -103,10 +104,7 @@ internal data class ChannelDetailsScreen(val chat: Chat) : Screen {
             onAddUsers = {
                 navigator.push(
                     SelectUsersScreen(
-                        existingSelections = state.participants,
-                        onSelections = {
-                            state.participants = it.toMutableStateList()
-                        }
+                        chat = chat,
                     )
                 )
             }
@@ -115,19 +113,31 @@ internal data class ChannelDetailsScreen(val chat: Chat) : Screen {
 }
 
 private data class SelectUsersScreen(
-    val existingSelections: List<User>,
-    val onSelections: (List<User>) -> Unit
+    val chat: Chat? = null,
+    val users: List<User> = emptyList(),
+    val onSelections: (List<User>) -> Unit = { },
 ) : Screen {
+
     override val key = uniqueScreenKey
 
     @Composable
     override fun Content() {
         val navigator = LocalPlatformNavigator.current
 
+        val state = remember {
+            if (chat != null) {
+                ChannelUserSelectionState(chat = chat,)
+            } else {
+                ChannelUserSelectionState(selections = users.toMutableStateList())
+            }
+        }
+
         SelectChannelUsersScreen(
-            selections = existingSelections,
-            onUsersSelected = onSelections,
-            onBackClicked = { navigator.pop() }
+            state = state,
+            onBackClicked = {
+                onSelections(state.selections)
+                navigator.pop()
+            }
         )
     }
 }
