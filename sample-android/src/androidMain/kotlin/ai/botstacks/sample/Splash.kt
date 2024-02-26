@@ -110,24 +110,3 @@ fun InAppChatLogo() {
             Spinner()
     }
 }
-
-@Composable
-fun InAppChatHeader() {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.inappchat_icon),
-            contentDescription = "InAppChat",
-            modifier = Modifier
-                .width(36.dp)
-                .height(36.dp)
-        )
-        Icon(
-            painter = painterResource(id = R.drawable.inappchat_text),
-            contentDescription = "InAppChat",
-            tint = Color.White,
-            modifier = Modifier.height(36.dp)
-        )
-    }
-}

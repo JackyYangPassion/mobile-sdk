@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.painter.Painter
 
-interface ImageTransformer {
+internal interface ImageTransformer {
     @Composable
     fun transform(link: String): ImageData?
 
@@ -19,7 +19,7 @@ interface ImageTransformer {
 }
 
 @Immutable
-data class ImageData(
+internal data class ImageData(
     val painter: Painter,
     val contentDescription: String? = "Image",
     val alignment: Alignment = Alignment.CenterStart,

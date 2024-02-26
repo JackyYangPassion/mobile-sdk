@@ -16,7 +16,6 @@ class App : Application() {
             context = this,
             apiKey = getString(R.string.botstacks_api_key),
             giphyApiKey = getString(R.string.giphy_api_key),
-            googleMapsApiKey = getString(R.string.google_maps_api_key)
         )
     }
 

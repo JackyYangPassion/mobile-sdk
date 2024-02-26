@@ -1,9 +1,9 @@
 package ai.botstacks.sdk
 
-import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.op
-import ai.botstacks.sdk.utils.retryIO
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.internal.utils.op
+import ai.botstacks.sdk.internal.utils.retryIO
 import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
@@ -20,11 +20,6 @@ import kotlinx.coroutines.launch
 @Stable
 actual class BotStacksChatPlatform : BotStacksChat() {
 
-    companion object {
-        private val TAG = "BotStacksAndroid"
-    }
-
-
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var _apiKey: String
     private lateinit var packageName: String
@@ -40,19 +35,10 @@ actual class BotStacksChatPlatform : BotStacksChat() {
 
     actual val scope = CoroutineScope(Dispatchers.Main)
 
-    fun setup(context: Context, apiKey: String) {
-        setup(context, apiKey, giphyApiKey = null, googleMapsApiKey = null, delayLoad = false)
-    }
-
-    fun setup(context: Context, apiKey: String, giphyApiKey: String?, googleMapsApiKey: String?) {
-        setup(context, apiKey, giphyApiKey = giphyApiKey, googleMapsApiKey = googleMapsApiKey, delayLoad = false)
-    }
-
     fun setup(
         context: Context,
         apiKey: String,
         giphyApiKey: String? = null,
-        googleMapsApiKey: String? = null,
         delayLoad: Boolean = false
     ) {
         this.sharedPreferences = context.getSharedPreferences("botstackschat", Context.MODE_PRIVATE)
@@ -70,6 +56,12 @@ actual class BotStacksChatPlatform : BotStacksChat() {
             Giphy.configure(context, giphyApiKey)
             hasGiphySupport = true
         }
+
+        // retrieve google maps key from merged manifest
+        // if present, enable map rendering support
+        val googleMapsApiKey = context.packageManager.getApplicationInfo(
+            appIdentifier,PackageManager.GET_META_DATA)
+            .metaData.getString("com.google.android.geo.API_KEY")
 
         if (!googleMapsApiKey.isNullOrEmpty()) {
             hasMapsSupport = true // runtime permission grants location access

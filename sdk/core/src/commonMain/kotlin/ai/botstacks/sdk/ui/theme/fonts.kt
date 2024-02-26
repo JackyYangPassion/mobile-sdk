@@ -6,7 +6,7 @@ package ai.botstacks.sdk.ui.theme
  * Copyright (c) 2023.
  */
 
-import ai.botstacks.sdk.utils.ifteq
+import ai.botstacks.sdk.internal.utils.ifteq
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -124,7 +124,7 @@ class Fonts(
 }
 
 @Composable
-fun fonts(
+fun botstacksFonts(
     h1: FontStyle = defaultAppFonts().h1,
     h2: FontStyle = defaultAppFonts().h2,
     h3: FontStyle = defaultAppFonts().h3,

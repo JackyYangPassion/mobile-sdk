@@ -1,11 +1,11 @@
 package ai.botstacks.sdk
 
-import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.utils.Giphy
-import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.op
-import ai.botstacks.sdk.utils.readPlist
-import ai.botstacks.sdk.utils.retryIO
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.utils.ui.Giphy
+import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.internal.utils.op
+import ai.botstacks.sdk.internal.utils.readPlist
+import ai.botstacks.sdk.internal.utils.retryIO
 import androidx.compose.runtime.Stable
 import com.russhwolf.settings.NSUserDefaultsSettings
 import com.russhwolf.settings.Settings

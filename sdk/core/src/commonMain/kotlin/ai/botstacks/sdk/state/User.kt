@@ -9,8 +9,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import ai.botstacks.sdk.fragment.FUser
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.type.OnlineStatus
-import ai.botstacks.sdk.utils.contains
+import ai.botstacks.sdk.internal.utils.contains
 import kotlinx.datetime.Instant
 import kotlin.math.min
 

@@ -4,6 +4,8 @@ package ai.botstacks.sdk.ui.theme
  * Copyright (c) 2023.
  */
 
+import ai.botstacks.sdk.internal.ui.theme.BotStacksColorPalette
+import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
@@ -17,16 +19,16 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.graphics.Color
 
-val LocalBotStacksDayNightColorScheme = staticCompositionLocalOf {
+internal val LocalBotStacksDayNightColorScheme = staticCompositionLocalOf {
     DayNightColorScheme(
-        lightColors(),
-        darkColors()
+        lightBotStacksColors(),
+        darkBotStacksColors()
     )
 }
 
-val LocalBotStacksColorScheme = staticCompositionLocalOf { lightColors() }
+internal val LocalBotStacksColorScheme = staticCompositionLocalOf { lightBotStacksColors() }
 
-data class DayNightColorScheme(
+internal data class DayNightColorScheme(
     val day: Colors,
     val night: Colors,
 ) {
@@ -188,7 +190,7 @@ class Colors(
     }
 }
 
-fun lightColors(
+fun lightBotStacksColors(
     primary: Color = BotStacksColorPalette.primary._800,
     onPrimary: Color = BotStacksColorPalette.light._900,
     header: Color = BotStacksColorPalette.primary._100,
@@ -235,7 +237,7 @@ fun lightColors(
     scrim = scrim,
 )
 
-fun darkColors(
+fun darkBotStacksColors(
     primary: Color = BotStacksColorPalette.primary._700,
     onPrimary: Color = BotStacksColorPalette.light._900,
     header: Color = BotStacksColorPalette.dark._900,
@@ -283,9 +285,9 @@ fun darkColors(
 )
 
 @Composable
-fun dayNightColor(day: Color, night: Color) = if (isSystemInDarkTheme()) night else day
+internal fun dayNightColor(day: Color, night: Color) = if (isSystemInDarkTheme()) night else day
 
-val Colors.dialogCancelBackground: Color
+internal val Colors.dialogCancelBackground: Color
     @Composable get() {
         val palette = LocalBotStacksColorPalette.current
         return dayNightColor(palette.dark._900, palette.dark._400)

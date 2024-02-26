@@ -21,12 +21,15 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.components.internal.GrowSpacer
-import ai.botstacks.sdk.utils.IPreviews
-import ai.botstacks.sdk.utils.annotated
-import ai.botstacks.sdk.utils.genU
-import ai.botstacks.sdk.utils.ift
+import ai.botstacks.sdk.ui.BotStacksThemeEngine
+import ai.botstacks.sdk.internal.ui.components.GrowSpacer
+import ai.botstacks.sdk.internal.ui.components.Space
+import ai.botstacks.sdk.internal.ui.components.Text
+import ai.botstacks.sdk.internal.ui.components.size
+import ai.botstacks.sdk.internal.utils.IPreviews
+import ai.botstacks.sdk.internal.utils.annotated
+import ai.botstacks.sdk.internal.utils.genU
+import ai.botstacks.sdk.internal.utils.ift
 import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -82,8 +85,8 @@ fun ContactRow(
 
 @IPreviews
 @Composable
-fun ContactRowPreview() {
-    BotStacksChatContext {
+private fun ContactRowPreview() {
+    BotStacksThemeEngine {
         Column {
             (0..10).map {
                 ContactRow(genU())

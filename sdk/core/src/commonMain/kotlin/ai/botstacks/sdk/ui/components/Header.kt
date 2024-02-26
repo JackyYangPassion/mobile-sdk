@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+@file:OptIn(ExperimentalResourceApi::class)
 
 package ai.botstacks.sdk.ui.components
 
@@ -20,14 +20,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
-import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.ui.components.internal.OverflowMenu
-import ai.botstacks.sdk.ui.components.internal.OverflowMenuScope
-import ai.botstacks.sdk.ui.components.internal.Pressable
-import ai.botstacks.sdk.ui.resources.botstacks_logo_daynight
-import ai.botstacks.sdk.utils.Fn
-import ai.botstacks.sdk.utils.IPreviews
-import ai.botstacks.sdk.utils.annotated
+import ai.botstacks.sdk.ui.BotStacksThemeEngine
+import ai.botstacks.sdk.internal.ui.components.OverflowMenu
+import ai.botstacks.sdk.internal.ui.components.OverflowMenuScope
+import ai.botstacks.sdk.internal.ui.components.Pressable
+import ai.botstacks.sdk.internal.ui.components.SearchField
+import ai.botstacks.sdk.internal.ui.components.Text
+import ai.botstacks.sdk.internal.ui.resources.botstacks_logo_daynight
+import ai.botstacks.sdk.internal.utils.Fn
+import ai.botstacks.sdk.internal.utils.IPreviews
+import ai.botstacks.sdk.internal.utils.annotated
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
@@ -52,7 +54,7 @@ import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-val HeaderHeight = 56.dp
+private val HeaderHeight = 56.dp
 
 object HeaderDefaults {
     @Composable
@@ -330,8 +332,8 @@ fun HeaderButton(onClick: Fn, transparent: Boolean = false, icon: @Composable Fn
 @OptIn(ExperimentalFoundationApi::class)
 @IPreviews
 @Composable
-fun HeaderPreviews() {
-    BotStacksChatContext {
+private fun HeaderPreviews() {
+    BotStacksThemeEngine {
         Column(
             modifier = Modifier
                 .fillMaxSize()

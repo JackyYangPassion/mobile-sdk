@@ -6,10 +6,18 @@ package ai.botstacks.sdk.state
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import ai.botstacks.sdk.API
+import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.fragment.FMessage
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.state.Upload
+import ai.botstacks.sdk.internal.utils.Reactions
+import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.internal.utils.linkLinks
+import ai.botstacks.sdk.internal.utils.linkMentions
+import ai.botstacks.sdk.internal.utils.linkPhones
+import ai.botstacks.sdk.internal.utils.op
+import ai.botstacks.sdk.internal.utils.parseReactions
 import ai.botstacks.sdk.type.AttachmentType
-import ai.botstacks.sdk.utils.*
 import kotlinx.datetime.Instant
 
 @Stable
@@ -28,6 +36,8 @@ data class Message(
     var favorite by mutableStateOf(false)
     var currentReaction by mutableStateOf<String?>(null)
     var parent by mutableStateOf<Message?>(null)
+
+    val isGroup = Chat.get(chatID)?.isGroup ?: false
 
     val replies by lazy { RepliesPager(this) }
     val user: User
@@ -94,7 +104,7 @@ data class Message(
     var favoriting by mutableStateOf(false)
     var editingText by mutableStateOf(false)
 
-    var upload: Upload? = null
+    internal var upload: Upload? = null
     var failed by mutableStateOf(false)
     var isSending by mutableStateOf(false)
 
@@ -114,25 +124,4 @@ data class Message(
         }
     }
 }
-
-fun FMessage.Attachment.vcard() =
-    if (type == AttachmentType.vcard) parseVcard(data) else null
-
-fun FMessage.Attachment.location() =
-    if (type == AttachmentType.location) Location(latitude, longitude, address) else null
-
-fun FMessage.Attachment.file() =
-    if (type == AttachmentType.file) File(data = data.orEmpty(), mimeString = mime.orEmpty()) else null
-
-data class Location(val latitude: Double?, val longitude: Double?, val address: String? = null) {
-    val link: String
-        get() = "https://www.google.com/maps/search/?api=1&query=" + urlEncode(
-            address ?: "${latitude!!},${longitude!!}", "utf-8"
-        )
-    val markdown: String
-        get() = "[Location${address?.let { ": $it" } ?: ""}](${link})"
-
-}
-
-data class File(val data: String, val mimeString: String)
 

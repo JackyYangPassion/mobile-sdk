@@ -24,7 +24,7 @@ import com.mikepenz.markdown.utils.TAG_URL
 
 
 @Composable
-fun MarkdownText(
+internal fun MarkdownText(
     content: String,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalMarkdownTypography.current.text
@@ -33,7 +33,7 @@ fun MarkdownText(
 }
 
 @Composable
-fun MarkdownText(
+internal fun MarkdownText(
     content: AnnotatedString,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalMarkdownTypography.current.text

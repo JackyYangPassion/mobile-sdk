@@ -4,13 +4,16 @@
 
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.internal.ui.components.OnlineStatusIndicator
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.dimens
-import ai.botstacks.sdk.ui.theme.LocalBotStacksColorPalette
+import ai.botstacks.sdk.internal.ui.components.RemoveIndicator
+import ai.botstacks.sdk.internal.ui.components.SelectedBadge
+import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
-import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.internal.utils.IPreviews
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -279,7 +282,7 @@ fun Avatar(
 
 @IPreviews
 @Composable
-fun AvatarPreview() {
+private fun AvatarPreview() {
     Row(
         modifier = Modifier.padding(20.dp),
         horizontalArrangement = Arrangement.spacedBy(20.dp)

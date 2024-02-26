@@ -22,7 +22,7 @@ import org.intellij.markdown.ast.findChildOfType
 import org.intellij.markdown.ast.getTextInNode
 
 @Composable
-fun MarkdownListItems(
+internal fun MarkdownListItems(
     content: String,
     node: ASTNode,
     style: TextStyle = LocalMarkdownTypography.current.list,

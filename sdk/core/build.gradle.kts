@@ -51,11 +51,6 @@ kotlin {
             version = "8.4.0"
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
-
-        pod("Sentry") {
-            version = "8.20.0"
-            linkOnly = true
-        }
     }
 
     compilerOptions {
@@ -99,8 +94,6 @@ kotlin {
                 implementation(libs.ktor.client.core)
 
                 implementation(libs.markdown)
-
-                api(libs.sentry)
 
                 implementation(libs.settings)
 
@@ -240,7 +233,7 @@ tasks.named("podPublishDebugXCFramework") {
     doLast {
         copy {
             from(project.file("src/commonMain/composeResources"))
-            into(project.file("../pod/debug/build/compose/ios/BotStacksSDK/compose-resources"))
+            into(project.file("../pod/debug/build/compose/ios/botstacks-core/compose-resources"))
         }
     }
 }
@@ -249,7 +242,7 @@ tasks.named("podPublishReleaseXCFramework") {
     doLast {
         copy {
             from(project.file("src/commonMain/composeResources"))
-            into(project.file("../pod/release/build/compose/ios/BotStacksSDK/compose-resources"))
+            into(project.file("../pod/release/build/compose/ios/botstacks-core/compose-resources"))
         }
     }
 }

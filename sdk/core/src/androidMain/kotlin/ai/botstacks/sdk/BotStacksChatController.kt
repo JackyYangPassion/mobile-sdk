@@ -1,8 +1,8 @@
 package ai.botstacks.sdk
 
-import ai.botstacks.sdk.navigation.BotstacksRouter
-import ai.botstacks.sdk.navigation.LocalPlatformNavigator
-import ai.botstacks.sdk.navigation.screens.ChatListScreen
+import ai.botstacks.sdk.internal.navigation.LocalPlatformNavigator
+import ai.botstacks.sdk.internal.navigation.screens.ChatListScreen
+import ai.botstacks.sdk.internal.navigation.BotstacksRouter
 import ai.botstacks.sdk.ui.BotStacks
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.LocalContentColor

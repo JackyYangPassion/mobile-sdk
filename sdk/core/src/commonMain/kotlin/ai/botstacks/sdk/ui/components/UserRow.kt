@@ -1,9 +1,10 @@
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.BotStacksChatContext
-import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.ui.BotStacksThemeEngine
+import ai.botstacks.sdk.internal.utils.IPreviews
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -78,8 +79,8 @@ fun UserRow(
 
 @IPreviews
 @Composable
-fun UserRow_Preview() {
-    BotStacksChatContext {
+private fun UserRow_Preview() {
+    BotStacksThemeEngine {
         Column(Modifier.background(BotStacks.colorScheme.background)) {
             UserRow(
                 modifier = Modifier.fillMaxWidth(),

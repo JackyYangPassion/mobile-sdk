@@ -4,11 +4,12 @@
 
 package ai.botstacks.sdk
 
-import ai.botstacks.sdk.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.API
+import ai.botstacks.sdk.internal.Monitoring
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.utils.Monitoring
-import ai.botstacks.sdk.utils.async
-import ai.botstacks.sdk.utils.opbg
+import ai.botstacks.sdk.internal.utils.async
+import ai.botstacks.sdk.internal.utils.opbg
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,20 +17,33 @@ import com.russhwolf.settings.Settings
 import kotlinx.coroutines.CoroutineScope
 
 abstract class BotStacksChat {
-    var loggingIn by mutableStateOf(false)
     var loaded by mutableStateOf(false)
+
+    var loggingIn by mutableStateOf(false)
     var isUserLoggedIn by mutableStateOf(false)
 
-    abstract val prefs: Settings
+    internal abstract val prefs: Settings
 
+    /**
+     * Register a callback for handling log out events
+     */
     var onLogout: (() -> Unit)? = null
 
-    var hasGiphySupport by mutableStateOf(false)
-    var hasMapsSupport by mutableStateOf(false)
-    var hasLocationSupport by mutableStateOf(false)
-    var hasCameraSupport by mutableStateOf(false)
+    internal var hasGiphySupport by mutableStateOf(false)
+    internal var hasMapsSupport by mutableStateOf(false)
+    internal var hasLocationSupport by mutableStateOf(false)
+    internal var hasCameraSupport by mutableStateOf(false)
 
 
+    /**
+     * login to BotStacks Backend
+     *
+     * @param accessToken BotStacks API key
+     * @param userId userId of user to associate session with
+     * @param username username for user
+     * @param displayName optional display name for user
+     * @param picture optional user image (avatar) URL
+     */
     suspend fun login(
         accessToken: String? = null,
         userId: String,
@@ -56,41 +70,12 @@ abstract class BotStacksChat {
         }
     }
 
-    suspend fun nftLogin(
-        wallet: String,
-        tokenID: String,
-        username: String,
-        signature: String,
-        picture: String?,
-        displayName: String? = null
-    ) {
-        if (loggingIn) {
-            return
-        }
-        loggingIn = true
-        try {
-            API.nftLogin(
-                wallet = wallet,
-                tokenID = tokenID,
-                signature = signature,
-                picture = picture,
-                username = username,
-                displayName = displayName
-            )
-            isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
-        } catch (err: Error) {
-            Monitoring.error(err)
-        }
-        loggingIn = false
-    }
-
     companion object {
         val shared = BotStacksChatPlatform()
 
-        suspend fun load() {
-            shared.load()
-        }
-
+        /**
+         * logout from BotStacks
+         */
         fun logout() {
             shared.onLogout?.invoke()
             BotStacksChatStore.current.currentUserID = null
@@ -105,6 +90,9 @@ abstract class BotStacksChat {
             }
         }
 
+        /**
+         * Register an Firebase Cloud Messaging (FCM) token with our Backend
+         */
         fun registerFCMToken(token: String) {
             BotStacksChatStore.current.fcmToken = token
             if (shared.isUserLoggedIn) {

@@ -13,22 +13,22 @@ import ai.botstacks.sdk.ui.theme.LocalBotStacksAssets
 import ai.botstacks.sdk.ui.theme.LocalBotStacksColorScheme
 import ai.botstacks.sdk.ui.theme.LocalBotStacksDimens
 import ai.botstacks.sdk.ui.theme.LocalBotStacksFonts
-import ai.botstacks.sdk.ui.theme.LocalBotStacksShapes
-import ai.botstacks.sdk.ui.theme.Theme
-import ai.botstacks.sdk.ui.theme.darkColors
-import ai.botstacks.sdk.ui.theme.lightColors
+import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksShapes
+import ai.botstacks.sdk.internal.ui.theme.Theme
+import ai.botstacks.sdk.ui.theme.darkBotStacksColors
+import ai.botstacks.sdk.ui.theme.lightBotStacksColors
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
-import ai.botstacks.sdk.ui.theme.fonts as defaultFonts
+import ai.botstacks.sdk.ui.theme.botstacksFonts as defaultFonts
 
 
 @Composable
-fun BotStacksChatContext(
+fun BotStacksThemeEngine(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    lightColorScheme: Colors = lightColors(),
-    darkColorScheme: Colors = darkColors(),
+    lightColorScheme: Colors = lightBotStacksColors(),
+    darkColorScheme: Colors = darkBotStacksColors(),
     shapes: Shapes = BotStacks.shapes,
     assets: Assets = BotStacks.assets,
     fonts: Fonts? = null,

@@ -7,10 +7,7 @@
 package ai.botstacks.sdk.ui.theme
 
 import androidx.compose.runtime.Stable
-import ai.botstacks.sdk.state.BotStacksChatStore
-import ai.botstacks.sdk.utils.ui.ImageAsset
-import ai.botstacks.sdk.utils.ui.ImageAssetIdentifier
-import ai.botstacks.sdk.utils.ui.toImageAsset
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.painter.Painter
@@ -63,12 +60,7 @@ data class Assets(
         caption = "No channels around here yet. Make one",
         type = EmptyScreenType.AllChannels
     ),
-) {
-    fun list(list: BotStacksChatStore.ChatList) = when (list) {
-        BotStacksChatStore.ChatList.dms -> emptyChats
-        BotStacksChatStore.ChatList.groups -> emptyChats
-    }
-}
+)
 
 internal val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }
 

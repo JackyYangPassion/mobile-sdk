@@ -6,9 +6,9 @@ package ai.botstacks.sdk.state
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import ai.botstacks.sdk.utils.bg
-import ai.botstacks.sdk.utils.op
-import ai.botstacks.sdk.utils.uuid
+import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.internal.utils.op
+import ai.botstacks.sdk.internal.utils.uuid
 
 interface Identifiable {
     val id: String

@@ -38,7 +38,7 @@ import kotlin.coroutines.resume
 
 @BetaInteropApi
 @Composable
-actual fun rememberFilePickerLauncher(
+internal actual fun rememberFilePickerLauncher(
     type: FilePickerFileType,
     selectionMode: FilePickerSelectionMode,
     onResult: (List<KmpFile>) -> Unit,
@@ -217,7 +217,7 @@ private fun createPHPickerViewController(
     return picker
 }
 
-actual class FilePickerLauncher actual constructor(
+internal actual class FilePickerLauncher actual constructor(
     type: FilePickerFileType,
     selectionMode: FilePickerSelectionMode,
     private val onLaunch: () -> Unit,

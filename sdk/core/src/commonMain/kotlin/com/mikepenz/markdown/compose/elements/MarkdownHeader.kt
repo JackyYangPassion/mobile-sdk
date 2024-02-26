@@ -10,7 +10,7 @@ import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.ast.findChildOfType
 
 @Composable
-fun MarkdownHeader(
+internal fun MarkdownHeader(
     content: String,
     node: ASTNode,
     style: TextStyle,

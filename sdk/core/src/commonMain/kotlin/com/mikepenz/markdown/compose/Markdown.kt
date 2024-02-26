@@ -33,7 +33,7 @@ import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
 
 @Composable
-fun Markdown(
+internal fun Markdown(
     content: String,
     colors: MarkdownColors,
     typography: MarkdownTypography,

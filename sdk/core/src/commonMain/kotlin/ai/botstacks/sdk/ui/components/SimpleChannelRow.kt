@@ -1,10 +1,11 @@
 package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.BotStacksChatContext
+import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.ui.theme.FontStyle
-import ai.botstacks.sdk.utils.IPreviews
+import ai.botstacks.sdk.internal.utils.IPreviews
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -80,8 +81,8 @@ fun SimpleChannelRow(
 
 @IPreviews
 @Composable
-fun ChannelRow_Preview() {
-    BotStacksChatContext {
+private fun ChannelRow_Preview() {
+    BotStacksThemeEngine {
         Column(Modifier.background(BotStacks.colorScheme.background)) {
             SimpleChannelRow(
                 modifier = Modifier
