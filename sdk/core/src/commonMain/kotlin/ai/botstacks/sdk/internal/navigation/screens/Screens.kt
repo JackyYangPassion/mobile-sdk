@@ -105,6 +105,10 @@ internal data class ChannelDetailsScreen(val chat: Chat) : Screen {
                 navigator.push(
                     SelectUsersScreen(
                         chat = chat,
+                        onSelections = {
+                            state.participants.clear()
+                            state.participants.addAll(it)
+                        }
                     )
                 )
             }

@@ -3,6 +3,7 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.internal.API
+import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.internal.state.Upload
 import ai.botstacks.sdk.state.User
@@ -95,11 +96,14 @@ class ChannelSettingsState(private val chat: Chat) {
 
                 val existingUsers = chat.members.map { it.user }
                 if (participants != existingUsers) {
-                    val invites = participants.subtract(existingUsers.toSet()).toList()
+                    val invites = participants.filterNot { existingUsers.contains(it) }
                         .map { it.id }
 
-                    val inviteResult = runCatching { API.inviteUsers(chat.id, invites) }
-                    inviteResult.exceptionOrNull()?.let { throw it }
+                    Monitoring.log("inviting ${invites.count()} users to channel")
+                    if (invites.isNotEmpty()) {
+                        val inviteResult = runCatching { API.inviteUsers(chat.id, invites) }
+                        inviteResult.exceptionOrNull()?.let { throw it }
+                    }
                 }
 
                 API.updateChat(
@@ -109,6 +113,7 @@ class ChannelSettingsState(private val chat: Chat) {
                     image = imageUrl,
                 )
             }.onFailure {
+                Monitoring.error(it)
                 saving = false
             }.onSuccess {
                 saving = false
