@@ -67,22 +67,22 @@ fun MessageActionSheet(
 //                        hide()
 //                    }
 //                )
-                ActionItem(
-                    text = "Reply in Chat",
-                    icon = Res.drawable.chat_dots,
-                ) {
-                    message?.let(onReply)
-                    hide()
-                }
+//                ActionItem(
+//                    text = "Reply in Chat",
+//                    icon = Res.drawable.chat_dots,
+//                ) {
+//                    message?.let(onReply)
+//                    hide()
+//                }
 
-                ActionItem(
-                    text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
-                    icon = Res.drawable.star_fill,
-                )
-                {
-                    message?.toggleFavorite()
-                    hide()
-                }
+//                ActionItem(
+//                    text = if (message?.favorite == true) "Remove from Favorites" else "Save to Favorites",
+//                    icon = Res.drawable.star_fill,
+//                )
+//                {
+//                    message?.toggleFavorite()
+//                    hide()
+//                }
 
                 ActionItem(
                     text = "Copy message text",
