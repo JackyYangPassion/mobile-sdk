@@ -16,7 +16,7 @@ fun ChannelList(modifier: Modifier = Modifier, channels: List<Chat>) {
         verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x4)
     ) {
         channels.fastForEach { channel ->
-            SimpleChannelRow(
+            ChannelRow(
                 modifier = Modifier.fillMaxWidth(),
                 chat = channel,
                 showMemberPreview = true,

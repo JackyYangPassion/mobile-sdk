@@ -5,6 +5,7 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.components.PagerList
 import ai.botstacks.sdk.internal.ui.components.TextInput
+import ai.botstacks.sdk.internal.ui.components.UserRow
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

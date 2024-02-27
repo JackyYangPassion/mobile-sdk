@@ -1,10 +1,11 @@
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.internal.ui.components
 
-import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.internal.utils.IPreviews
+import ai.botstacks.sdk.ui.components.Avatar
+import ai.botstacks.sdk.ui.components.AvatarType
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

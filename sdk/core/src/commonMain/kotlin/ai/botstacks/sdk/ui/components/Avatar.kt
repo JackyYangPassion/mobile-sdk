@@ -47,22 +47,41 @@ import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 
 
+/**
+ * Size constraint system for rendering the avatar component
+ */
 sealed interface AvatarSize {
     val value: Dp
 
+    /**
+     * Small definition - renders at 50 dp on Android and 50px on iOS
+     */
     data object Small : AvatarSize {
         override val value: Dp = 50.dp
     }
 
+    /**
+     * Large definition - renders at 100 dp on Android and 100px on iOS
+     */
     data object Large : AvatarSize {
         override val value: Dp = 100.dp
     }
 
+    /**
+     * Custom definition
+     */
     data class Custom(val dp: Dp) : AvatarSize {
         override val value: Dp = dp
     }
 }
 
+/**
+ * Defaults for the Avatar component
+ *
+ * @property Size - Defaults to [AvatarSize.Small]
+ * @property BackgroundColor - Defaults to #FCFCFD3 in light, #45454A in dark
+ * @property ContentColor - Defaults to [ai.botstacks.sdk.ui.theme.Colors.onSurface]
+ */
 object AvatarDefaults {
     val Size: AvatarSize = AvatarSize.Small
 
@@ -76,10 +95,19 @@ object AvatarDefaults {
 
 }
 
+/**
+ * Type definition for a given [Avatar] instance
+ */
 sealed interface AvatarType {
     val emptyState: Painter?
         @Composable get() = null
 
+    /**
+     * Renders an Avatar for a given [User]
+     * @param url The remote URL from [User.url]
+     * @param status The online status for the user - if left defaulted to UNKNOWN then will not show
+     * @param empty The empty state painter when fails to load
+     */
     data class User(
         val url: Any?,
         val status: OnlineStatus = OnlineStatus.UNKNOWN__,
@@ -90,6 +118,11 @@ sealed interface AvatarType {
             @Composable get() = empty ?: painterResource(Res.drawable.user_outlined)
     }
 
+    /**
+     * Renders an Avatar for a given [Chat] channel.
+     * @param urls The remote URLs for the users in the channel.
+     * @param empty The empty state painter when fails to load
+     */
     data class Channel(val urls: List<String?>, val empty: Painter? = null) : AvatarType {
         @OptIn(ExperimentalResourceApi::class)
         override val emptyState: Painter
@@ -98,7 +131,19 @@ sealed interface AvatarType {
 }
 
 /**
- * Convenience wrapper around [User] to handle [OnlineStatus] easily.
+ * Avatar
+ *
+ * Renders the display image for a user in a bordered circle at the specified size.
+ *
+ * This is a convenience wrapper around [User] to handle [OnlineStatus] easily.
+ *
+ * @param size Size to display
+ * @param user User for the avatar
+ * @param showOnlineStatus if enabled, the online status indicator will show if not UNKNOWN.
+ * @param isSelected Whether to show the selected state for this avatar (checkmark in bottom right).
+ * @param isRemovable Whether to show the removable state for this avatar (x in bottom right).
+ *
+ * NOTE: isSelected and isRemovable supersede online status indicator.
  */
 @Composable
 fun Avatar(
@@ -126,7 +171,15 @@ fun Avatar(
 }
 
 /**
- * Compatibility wrapper for new [Avatar] using [AvatarType]
+ * Avatar
+ *
+ * Renders the display image for a given URL in a bordered circle at the specified size.
+ *
+ * @param size Size to display
+ * @param status optional online status
+ * @param url The URL of the image to render.
+ * @param chat Whether or not this Avatar is for a chat. True for a channel, group, false for a user, DM.
+ *
  */
 @Composable
 fun Avatar(
@@ -148,6 +201,19 @@ fun Avatar(
     )
 }
 
+/**
+ * Avatar
+ *
+ * Renders the display image for a user in a bordered circle at the specified size.
+ *
+ * @param backgroundColor Background color to render behind images (will show in empty state depending on what empty state is).
+ * @param contentColor Content color for items rendered in empty state.
+ * @param size Size to display
+ * @param type Type definition for this Avatar.
+ * @param isSelected Whether to show the selected state for this avatar (checkmark in bottom right).
+ * @param isRemovable Whether to show the removable state for this avatar (x in bottom right).
+ *
+ */
 @Composable
 fun Avatar(
     modifier: Modifier = Modifier,
