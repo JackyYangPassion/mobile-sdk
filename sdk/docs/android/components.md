@@ -10,7 +10,7 @@ Outlined below are the components currently available and examples on how to use
 
 Our Avatar component renders an image for a given URL in a bordered circle at the specified size. This is utilized in our larger components to render user Avatars (as the component name claims).
 
-There is a few overload methods for this component dependent on your usage.
+There are a few overload methods for this component dependent on your usage.
 
 
 ```kotlin
