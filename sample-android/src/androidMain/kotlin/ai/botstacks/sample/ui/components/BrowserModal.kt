@@ -1,4 +1,4 @@
-package ai.botstacks.sample
+package ai.botstacks.sample.ui.components
 
 import android.view.ViewGroup
 import android.webkit.WebView

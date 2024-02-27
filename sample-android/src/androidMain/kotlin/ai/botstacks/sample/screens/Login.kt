@@ -1,5 +1,9 @@
-package ai.botstacks.sample
+package ai.botstacks.sample.screens
 
+import ai.botstacks.sample.service.AutoFillRequestHandler
+import ai.botstacks.sample.ui.components.BrowserModal
+import ai.botstacks.sample.service.connectNode
+import ai.botstacks.sample.service.defaultFocusChangeAutoFill
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import android.Manifest
@@ -28,7 +32,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults

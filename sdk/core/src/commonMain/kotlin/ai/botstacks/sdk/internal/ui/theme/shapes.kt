@@ -11,5 +11,5 @@ private val shapes = Shapes(
     large = RoundedCornerShape(20.dp)
 )
 
-internal val LocalBotStacksShapes = staticCompositionLocalOf { shapes }
+val LocalBotStacksShapes = staticCompositionLocalOf { shapes }
 

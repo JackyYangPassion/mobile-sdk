@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 
 enum class Example(val route: String) {
     Full("botstacks_full"),
+    ChatList_With_Header("chat_list_header")
 }
 
 @Composable
@@ -79,10 +80,12 @@ private fun ExampleRow(
     ) {
         val title = when (example) {
             Example.Full -> "Controller"
+            Example.ChatList_With_Header -> "ChatList with Header"
         }
 
         val description = when (example) {
             Example.Full -> "Example using our drop-in BotStacksChat Controller"
+            Example.ChatList_With_Header -> "Example of Header being customized with a chat list."
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(text = title, style = BotStacks.fonts.h3.asTextStyle())

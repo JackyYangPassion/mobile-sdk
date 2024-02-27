@@ -2,8 +2,6 @@
  * Copyright (c) 2023.
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package ai.botstacks.sdk.internal.navigation.ui.chats
 
 import androidx.compose.foundation.layout.Column
@@ -19,6 +17,7 @@ import ai.botstacks.sdk.internal.ui.components.IACList
 import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.ui.components.AlertActionStyle
 import ai.botstacks.sdk.internal.ui.components.BotStacksAlertDialog
+import ai.botstacks.sdk.ui.components.ChatList
 import ai.botstacks.sdk.ui.components.rememberHeaderState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -101,26 +100,18 @@ internal fun ChatsListScreen(
         }
     }
 
-
-    val items = BotStacksChatStore.current.chats
-        .filter { chat ->
+    ChatList(
+        header = header,
+        filter = filter@{ chat ->
             if (searchQuery.isEmpty()) return@filter true
             else chat.items.any {
                 it.msg.lowercase()
                     .contains(searchQuery.lowercase()) || it.user.displayNameFb.lowercase()
                     .contains(searchQuery.lowercase())
             } || chat.name.orEmpty().lowercase().contains(searchQuery.lowercase())
-        }.sortedByDescending { it.latest?.createdAt }.distinctBy { it.id }
-
-    IACList(
-        items = items,
-        header = header,
-        empty = @Composable {
-            EmptyListView(config = BotStacks.assets.emptyChats)
         },
-        scrollToTop = scrollToTop.toString(),
-    ) {
-        ChatMessagePreview(chat = it, onClick = { openChat(it) })
-    }
+        emptyState = @Composable { EmptyListView(config = BotStacks.assets.emptyChats) },
+        onChatClicked = openChat
+    )
 }
 

@@ -85,7 +85,7 @@ data class Assets(
     ),
 )
 
-internal val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }
+val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }
 
 internal val EmptyChatDefault: Painter
     @Composable get() = painterResource(Res.drawable.chat_multiple_outline)

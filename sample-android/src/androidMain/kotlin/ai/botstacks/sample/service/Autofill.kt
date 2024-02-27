@@ -1,4 +1,4 @@
-package ai.botstacks.sample
+package ai.botstacks.sample.service
 
 import android.view.autofill.AutofillManager
 import androidx.compose.runtime.Composable
