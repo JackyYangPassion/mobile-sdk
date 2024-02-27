@@ -1,5 +1,7 @@
-package ai.botstacks.sample
+package ai.botstacks.sample.service
 
+import ai.botstacks.sample.ui.MainActivity
+import ai.botstacks.sample.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent

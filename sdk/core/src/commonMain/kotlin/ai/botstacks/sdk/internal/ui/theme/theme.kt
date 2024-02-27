@@ -35,11 +35,11 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 internal fun Theme(
-    assets: Assets,
     isDark: Boolean,
     colorScheme: DayNightColorScheme,
     fonts: Fonts,
-    shapeDefinitions: ShapeDefinitions,
+    assets: Assets?,
+    shapeDefinitions: ShapeDefinitions?,
     content: @Composable () -> Unit,
 ) {
     val _colorsScheme = remember(isDark, colorScheme) {
@@ -94,16 +94,17 @@ internal fun Theme(
         heightWindowSizeClass = windowSizeClass.heightSizeClass,
     )
 
-    val shapes = remember(shapeDefinitions) {
+    val shapeDefs = shapeDefinitions ?: ShapeDefinitions()
+    val shapes = remember(shapeDefs) {
         Shapes(
-            small = RoundedCornerShape(shapeDefinitions.small),
-            medium = RoundedCornerShape(shapeDefinitions.medium),
-            large = RoundedCornerShape(shapeDefinitions.large)
+            small = RoundedCornerShape(shapeDefs.small),
+            medium = RoundedCornerShape(shapeDefs.medium),
+            large = RoundedCornerShape(shapeDefs.large)
         )
     }
 
     CompositionLocalProvider(
-        LocalBotStacksAssets provides assets,
+        LocalBotStacksAssets provides (assets ?: Assets()),
         LocalBotStacksDayNightColorScheme provides colorScheme,
         LocalBotStacksColorScheme provides _colorsScheme,
         LocalBotStacksDimens provides dimens,
@@ -119,9 +120,9 @@ internal fun Theme(
             ) {
                 Box(
                     modifier = Modifier
-                        .background(colorScheme.colors(isDark).background),
+                        .background(_colorsScheme.background),
                 ) {
-                    CompositionLocalProvider(LocalContentColor provides colorScheme.colors(isDark).onBackground) {
+                    CompositionLocalProvider(LocalContentColor provides _colorsScheme.onBackground) {
                         content()
                     }
                 }

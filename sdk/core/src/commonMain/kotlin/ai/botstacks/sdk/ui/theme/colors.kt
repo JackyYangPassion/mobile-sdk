@@ -6,6 +6,7 @@ package ai.botstacks.sdk.ui.theme
 
 import ai.botstacks.sdk.internal.ui.theme.BotStacksColorPalette
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
+import ai.botstacks.sdk.ui.BotStacks
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
@@ -26,7 +27,7 @@ internal val LocalBotStacksDayNightColorScheme = staticCompositionLocalOf {
     )
 }
 
-internal val LocalBotStacksColorScheme = staticCompositionLocalOf { lightBotStacksColors() }
+val LocalBotStacksColorScheme = staticCompositionLocalOf { lightBotStacksColors() }
 
 internal data class DayNightColorScheme(
     val day: Colors,
@@ -315,7 +316,7 @@ fun darkBotStacksColors(
 )
 
 @Composable
-internal fun dayNightColor(day: Color, night: Color) = if (isSystemInDarkTheme()) night else day
+internal fun dayNightColor(day: Color, night: Color) = if (BotStacks.colorScheme.isDark) night else day
 
 internal val Colors.dialogCancelBackground: Color
     @Composable get() {

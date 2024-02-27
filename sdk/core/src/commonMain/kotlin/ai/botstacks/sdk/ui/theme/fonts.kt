@@ -20,7 +20,7 @@ import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.Font
 
-internal val LocalBotStacksFonts = staticCompositionLocalOf {
+val LocalBotStacksFonts = staticCompositionLocalOf {
     Fonts(
         h1 = FontStyle(),
         h2 = FontStyle(),

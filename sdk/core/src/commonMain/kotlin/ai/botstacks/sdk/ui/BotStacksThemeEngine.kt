@@ -15,6 +15,7 @@ import ai.botstacks.sdk.ui.theme.LocalBotStacksDimens
 import ai.botstacks.sdk.ui.theme.LocalBotStacksFonts
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksShapes
 import ai.botstacks.sdk.internal.ui.theme.Theme
+import ai.botstacks.sdk.ui.theme.LocalBotStacksDayNightColorScheme
 import ai.botstacks.sdk.ui.theme.ShapeDefinitions
 import ai.botstacks.sdk.ui.theme.darkBotStacksColors
 import ai.botstacks.sdk.ui.theme.lightBotStacksColors
@@ -38,10 +39,10 @@ import ai.botstacks.sdk.ui.theme.botstacksFonts as defaultFonts
 @Composable
 fun BotStacksThemeEngine(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    lightColorScheme: Colors = lightBotStacksColors(),
-    darkColorScheme: Colors = darkBotStacksColors(),
-    shapes: ShapeDefinitions = ShapeDefinitions(),
-    assets: Assets = BotStacks.assets,
+    lightColorScheme: Colors = LocalBotStacksDayNightColorScheme.current.day,
+    darkColorScheme: Colors = LocalBotStacksDayNightColorScheme.current.night,
+    shapes: ShapeDefinitions? = null,
+    assets: Assets? = null,
     fonts: Fonts? = null,
     content: @Composable () -> Unit
 ) {
