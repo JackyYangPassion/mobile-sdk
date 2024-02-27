@@ -3,8 +3,8 @@ package ai.botstacks.sample.ui
 import ai.botstacks.sample.screens.Login
 import ai.botstacks.sample.screens.Splash
 import ai.botstacks.sample.screens.examples.ChatListWithHeader
-import ai.botstacks.sample.ui.theme.Example
-import ai.botstacks.sample.ui.theme.Router
+import ai.botstacks.sample.screens.Example
+import ai.botstacks.sample.screens.MaterialRouter
 import ai.botstacks.sdk.BotStacksChatController
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import android.os.Bundle
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("router") {
-                            Router(
+                            MaterialRouter(
                                 onOpenExample = { navController.navigate(it.route) },
                                 onLogout = { navController.navigate("login") }
                             )

@@ -25,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.components.Spinner
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.layout.ContentScale
 
 @Composable
 fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (() -> Unit)? = null) {
@@ -50,17 +53,11 @@ fun Splash(openLogin: () -> Unit, openChat: () -> Unit, content: @Composable (()
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.inappchat_icon),
-                contentDescription = "InAppChat",
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "BotStacks",
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .width(120.dp)
-                    .height(120.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.inappchat_text),
-                contentDescription = "InAppChat",
-                tint = Color.White,
-                modifier = Modifier.width(225.dp)
+                    .background(Color(0xFFEBEDFF), CircleShape)
             )
             Text("Simple and elegant chat services", fontSize = 20.sp, color = Color.White)
             if (!BotStacksChat.shared.loaded || BotStacksChat.shared.loggingIn)
@@ -93,17 +90,11 @@ fun InAppChatLogo() {
         modifier = Modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.inappchat_icon),
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = "InAppChat",
             modifier = Modifier
                 .width(120.dp)
                 .height(120.dp)
-        )
-        Icon(
-            painter = painterResource(id = R.drawable.inappchat_text),
-            contentDescription = "InAppChat",
-            tint = Color.White,
-            modifier = Modifier.width(225.dp)
         )
         Text("Simple and elegant chat services", fontSize = 20.sp, color = Color.White)
         if (!BotStacksChat.shared.loaded || BotStacksChat.shared.loggingIn)

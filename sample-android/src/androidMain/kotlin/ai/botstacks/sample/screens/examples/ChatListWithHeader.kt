@@ -25,7 +25,7 @@ fun ChatListWithHeader(onBackClicked: () -> Unit) {
             onHeader = Color.Black
         ),
         assets = BotStacks.assets.copy(
-            logo = R.drawable.inappchat_icon
+            logo = R.drawable.ic_launcher_foreground
         )
     ) {
         val context = LocalContext.current

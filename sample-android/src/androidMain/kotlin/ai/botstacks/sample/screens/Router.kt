@@ -1,9 +1,8 @@
-package ai.botstacks.sample.ui.theme
+package ai.botstacks.sample.screens
 
+import ai.botstacks.sample.R
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.components.Header
-import ai.botstacks.sdk.ui.components.HeaderDefaults
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,22 +13,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 
 enum class Example(val route: String) {
     Full("botstacks_full"),
     ChatList_With_Header("chat_list_header")
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Router(
+fun MaterialRouter(
     onOpenExample: (Example) -> Unit,
     onLogout: () -> Unit,
 ) {
@@ -37,11 +43,11 @@ fun Router(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Header(
-            icon = { HeaderDefaults.Logo() },
-            menu = {
-                label(onClick = { BotStacksChat.logout() }) {
-                    Text(text = "Log out", style = BotStacks.fonts.body1.asTextStyle())
+        TopAppBar(
+            title = { },
+            actions = {
+                IconButton(onClick = { BotStacksChat.logout() }) {
+                    Icon(Icons.AutoMirrored.Rounded.Logout, contentDescription = "Log out")
                 }
             }
         )
