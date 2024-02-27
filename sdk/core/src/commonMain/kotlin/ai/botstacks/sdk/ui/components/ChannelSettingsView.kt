@@ -12,6 +12,7 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.components.EditableTextLabel
 import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.ui.components.ToggleSwitch
+import ai.botstacks.sdk.internal.ui.components.UserRow
 import ai.botstacks.sdk.internal.ui.components.settings.SettingsSection
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.readBytes

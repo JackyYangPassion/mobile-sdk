@@ -2,7 +2,7 @@
  * Copyright (c) 2023.
  */
 
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.internal.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -22,21 +22,18 @@ import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
-import ai.botstacks.sdk.internal.ui.components.GrowSpacer
-import ai.botstacks.sdk.internal.ui.components.Space
-import ai.botstacks.sdk.internal.ui.components.Text
-import ai.botstacks.sdk.internal.ui.components.size
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.annotated
 import ai.botstacks.sdk.internal.utils.genU
 import ai.botstacks.sdk.internal.utils.ift
+import ai.botstacks.sdk.ui.components.Avatar
 import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ContactRow(
+internal fun ContactRow(
     user: User,
     modifier: Modifier = Modifier,
     right: @Composable () -> Unit = {}

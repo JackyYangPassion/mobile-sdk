@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SimpleChannelRow(
+fun ChannelRow(
     modifier: Modifier = Modifier,
     chat: Chat,
     showMemberPreview: Boolean = false,
@@ -30,7 +30,7 @@ fun SimpleChannelRow(
 
     onClick: () -> Unit = { },
 ) {
-    SimpleChannelRow(
+    ChannelRow(
         modifier = modifier,
         imageUrls = listOf(chat.image),
         title = chat.displayName,
@@ -44,7 +44,7 @@ fun SimpleChannelRow(
 }
 
 @Composable
-fun SimpleChannelRow(
+fun ChannelRow(
     modifier: Modifier,
     imageUrls: List<String?>,
     title: String,
@@ -84,7 +84,7 @@ fun SimpleChannelRow(
 private fun ChannelRow_Preview() {
     BotStacksThemeEngine {
         Column(Modifier.background(BotStacks.colorScheme.background)) {
-            SimpleChannelRow(
+            ChannelRow(
                 modifier = Modifier
                     .fillMaxWidth(),
                 imageUrls = listOf(null),
@@ -92,7 +92,7 @@ private fun ChannelRow_Preview() {
                 onClick = {}
 
             )
-            SimpleChannelRow(
+            ChannelRow(
                 modifier = Modifier
                     .fillMaxWidth(),
                 imageUrls = listOf(null),

@@ -25,7 +25,7 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
-import ai.botstacks.sdk.ui.components.ContactRow
+import ai.botstacks.sdk.internal.ui.components.ContactRow
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.internal.ui.components.PagerList
 import ai.botstacks.sdk.internal.ui.components.PagerListDefaults
