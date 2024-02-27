@@ -211,8 +211,7 @@ fun Header(
     ) {
         if (onBackClick != null) {
             HeaderButton(
-                onBackClick,
-                true
+                onClick = onBackClick,
             ) {
                 Icon(
                     painter = rememberVectorPainter(Icons.AutoMirrored.Outlined.ArrowBack),
@@ -270,7 +269,7 @@ fun Header(
                             }
                         }
                         if (onAdd != null) {
-                            HeaderButton(onAdd) {
+                            HeaderButton(onClick = onAdd) {
                                 Icon(
                                     painterResource(Res.drawable.plus),
                                     contentDescription = "Add",
@@ -317,19 +316,17 @@ fun Header(
 }
 
 @Composable
-fun HeaderButton(onClick: () -> Unit, transparent: Boolean = false, icon: @Composable () -> Unit) {
+internal fun HeaderButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit
+) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .padding(0.dp)
+        modifier = modifier
             .size(30.dp)
-            .background(
-                if (transparent) Color.Transparent else colorScheme.header,
-                CircleShape
-            )
             .clip(CircleShape)
             .clickable(onClick = onClick)
-            .border(0.dp, Color.Transparent, CircleShape)
     ) {
         icon()
     }
