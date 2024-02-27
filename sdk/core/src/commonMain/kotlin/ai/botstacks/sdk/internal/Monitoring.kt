@@ -7,7 +7,7 @@ package ai.botstacks.sdk.internal
 import ai.botstacks.sdk.SdkConfig
 
 internal object Monitoring {
-    val printLogs = SdkConfig.DEBUG
+    private val printLogs = SdkConfig.DEBUG
 
     fun setup() {
 //        Sentry.init {
@@ -17,7 +17,7 @@ internal object Monitoring {
 
     fun error(message: String, data: Map<String, Any>? = null) {
         if (printLogs) {
-            println(message + " ${data?.entries?.joinToString()}")
+            println(message + " ${data?.entries?.joinToString().orEmpty()}")
         }
 //        Sentry.captureMessage(
 //            if (data != null) message + " Data: ${data.entries.joinToString()}" else message,
@@ -38,7 +38,7 @@ internal object Monitoring {
 
     fun log(message: String, data: Map<String, Any>? = null) {
         if (printLogs) {
-            println(message + " ${data?.entries?.joinToString()}")
+            println(message + " ${data?.entries?.joinToString().orEmpty()}")
         }
 //        Sentry.captureMessage(
 //            if (data != null) message + " Data: ${data.entries.joinToString()}" else message,
@@ -47,7 +47,7 @@ internal object Monitoring {
 
     fun info(message: String, data: Map<String, Any>? = null) {
         if (printLogs) {
-            println(message + " ${data?.entries?.joinToString()}")
+            println(message + " ${data?.entries?.joinToString().orEmpty()}")
         }
 //        Sentry.captureMessage(
 //            if (data != null) message + " Data: ${data.entries.joinToString()}" else message,
@@ -56,7 +56,7 @@ internal object Monitoring {
 
     fun warning(message: String, data: Map<String, Any>? = null) {
         if (printLogs) {
-            println(message + " ${data?.entries?.joinToString()}")
+            println(message + " ${data?.entries?.joinToString().orEmpty()}")
         }
 //        Sentry.captureMessage(
 //            if (data != null) message + " Data: ${data.entries.joinToString()}" else message,
@@ -65,7 +65,7 @@ internal object Monitoring {
 
     fun critical(message: String, data: Map<String, Any>? = null) {
         if (printLogs) {
-            println(message + " ${data?.entries?.joinToString()}")
+            println(message + " ${data?.entries?.joinToString().orEmpty()}")
         }
 //        Sentry.captureMessage(
 //            if (data != null) message + " Data: ${data.entries.joinToString()}" else message,
