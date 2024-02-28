@@ -137,6 +137,7 @@ sealed interface AvatarType {
  *
  * This is a convenience wrapper around [User] to handle [OnlineStatus] easily.
  *
+ * @param modifier the Modifier to be applied to this Avatar
  * @param size Size to display
  * @param user User for the avatar
  * @param showOnlineStatus if enabled, the online status indicator will show if not UNKNOWN.
@@ -175,6 +176,7 @@ fun Avatar(
  *
  * Renders the display image for a given URL in a bordered circle at the specified size.
  *
+ * @param modifier the Modifier to be applied to this Avatar
  * @param size Size to display
  * @param status optional online status
  * @param url The URL of the image to render.
@@ -206,6 +208,7 @@ fun Avatar(
  *
  * Renders the display image for a user in a bordered circle at the specified size.
  *
+ * @param modifier the Modifier to be applied to this Avatar
  * @param backgroundColor Background color to render behind images (will show in empty state depending on what empty state is).
  * @param contentColor Content color for items rendered in empty state.
  * @param size Size to display

@@ -18,6 +18,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+/**
+ * ChannelRow
+ *
+ * Renders a given [Chat] in a Row.
+ *
+ * This is a convenience wrapper around [Chat] to handle extract the default information to display.
+ *
+ * This is utilized in the [ChannelList] within [UserDetailsView] to show channels the current user has in common with
+ * any other user.
+ *
+ * @param modifier the Modifier to be applied to this ChannelRow
+ * @param chat The channel to display
+ * @param showMemberPreview Whether to show a member preview as the subtitle.
+ * @param titleFontStyle [FontStyle] for the title (top text).
+ * @param titleColor [Color] for the title.
+ * @param subtitleFontStyle [FontStyle] for the subtitle (bottom text).
+ * @param subtitleColor [Color] for the subtitle.
+ * @param onClick called when this button is clicked
+ *
+ */
 @Composable
 fun ChannelRow(
     modifier: Modifier = Modifier,
@@ -27,7 +47,6 @@ fun ChannelRow(
     titleColor: Color = BotStacks.colorScheme.onBackground,
     subtitleFontStyle: FontStyle = BotStacks.fonts.body1,
     subtitleColor: Color = BotStacks.colorScheme.caption,
-
     onClick: () -> Unit = { },
 ) {
     ChannelRow(
@@ -43,6 +62,25 @@ fun ChannelRow(
     )
 }
 
+/**
+ * ChannelRow
+ *
+ * Used to render information about a [Chat].
+ *
+ * This is utilized in the [ChannelList] within [UserDetailsView] to show channels the current user has in common with
+ * any other user.
+ *
+ * @param modifier the Modifier to be applied to this ChannelRow
+ * @param imageUrls [User] image urls of members of the channel.
+ * @param title Text to display in title slot (top text).
+ * @param titleFontStyle [FontStyle] for the title (top text).
+ * @param titleColor [Color] for the title.
+ * @param subtitle Optional text to display in subtitle slot (bottom text).
+ * @param subtitleFontStyle [FontStyle] for the subtitle (bottom text).
+ * @param subtitleColor [Color] for the subtitle.
+ * @param onClick called when this button is clicked
+ *
+ */
 @Composable
 fun ChannelRow(
     modifier: Modifier,

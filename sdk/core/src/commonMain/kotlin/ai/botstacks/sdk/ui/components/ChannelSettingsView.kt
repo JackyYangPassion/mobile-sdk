@@ -54,29 +54,41 @@ import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * ChannelSettingsState
+ *
+ * State holder for a given [Chat] channel, used specifically within the [ChannelSettingsView].
+ *
+ * @param chat The channel to initialize this state holder with.
+ *
+ * To trigger an update/save once modifications are done within the view, simply call [update].
+ * This will return a Result with the updated chat if successful, or the error if it fails. While the
+ * save action is waiting for a result [saving] will be true.
+ *
+ */
 @Stable
 class ChannelSettingsState(private val chat: Chat) {
     internal var selectedImage by mutableStateOf<KmpFile?>(null)
 
-    val channelImage: Any?
+    internal val channelImage: Any?
         @Composable get() = selectedImage?.readBytes() ?: chat.displayImage
 
     @OptIn(ExperimentalFoundationApi::class)
-    var name by mutableStateOf(TextFieldValue(chat.displayName))
-    var isEditingName by mutableStateOf(false)
+    internal var name by mutableStateOf(TextFieldValue(chat.displayName))
+    internal var isEditingName by mutableStateOf(false)
 
-    var muted: Boolean by mutableStateOf(chat.notification_setting == NotificationSetting.none)
+    internal var muted: Boolean by mutableStateOf(chat.notification_setting == NotificationSetting.none)
 
-    var private by mutableStateOf(chat._private)
+    internal var private by mutableStateOf(chat._private)
 
-    var participants = mutableStateListOf<User>()
-    val participantCount get() = participants.count()
+    internal var participants = mutableStateListOf<User>()
+    internal val participantCount get() = participants.count()
 
-    val sortedParticipants
+    internal val sortedParticipants
         get() = participants.sortedWith(
             compareBy<User> { !it.isCurrent }.thenBy { !admins.contains(it.id) })
 
-    val admins get() = chat.admins.map { it.user.id }
+    internal val admins get() = chat.admins.map { it.user.id }
 
     var saving by mutableStateOf(false)
         private set
@@ -123,11 +135,18 @@ class ChannelSettingsState(private val chat: Chat) {
     }
 }
 
+/**
+ * ChannelSettingsView
+ *
+ * A screen content view for displaying settings and details for a given [Chat] channel.
+ *
+ * @param state The state for the view
+ * @param onAddUsers Callback when the add users icon button is clicked within the User select component.
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChannelSettingsView(
     state: ChannelSettingsState,
-    onOpenAnnouncements: () -> Unit,
     onAddUsers: () -> Unit
 ) {
     Column(

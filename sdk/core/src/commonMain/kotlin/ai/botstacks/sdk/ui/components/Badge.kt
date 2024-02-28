@@ -13,6 +13,8 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.theme.FontStyle
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.internal.utils.IPreviews
+import ai.botstacks.sdk.state.User
+import ai.botstacks.sdk.type.OnlineStatus
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +22,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.graphics.Shape
 
 
+/**
+ * Badge
+ *
+ * A "badge" to show a count.
+ *
+ * This is utilized in the [MessageList] component serving as the date separators,
+ * in the [ChatList] component to show unread counts, and in the [ChannelSettingsView] for displaying admins.
+ *
+ * @param count Count to display in the badge.
+ * @param modifier the Modifier to be applied to this Badge
+ *
+ */
 @Composable
 fun Badge(
     count: Int,
@@ -54,6 +68,48 @@ fun Badge(
     }
 }
 
+/**
+ * Badge
+ *
+ * A "badge" to show a label.
+ *
+ * This is utilized in the [MessageList] component serving as the date separators,
+ * in the [ChatList] component to show unread counts, and in the [ChannelSettingsView] for displaying admins.
+ *
+ * @param label The text to be displayed in the badge.
+ * @param modifier the Modifier to be applied to this Badge
+ *
+ */
+@Composable
+fun Badge(
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Badge(
+        modifier = modifier,
+        label = label,
+        fontStyle = BotStacks.fonts.caption2,
+    )
+}
+
+
+/**
+ * Badge
+ *
+ * A "badge" to show a label.
+ *
+ * This is utilized in the [MessageList] component serving as the date separators,
+ * in the [ChatList] component to show unread counts, and in the [ChannelSettingsView] for displaying admins.
+ *
+ * @param label The text to be displayed in the badge.
+ * @param modifier the Modifier to be applied to this Badge
+ * @param backgroundColor Background color of the badge.
+ * @param contentColor Text color of the badge.
+ * @param contentPadding Padding around the badge content.
+ * @param fontStyle Style for the text in the badge.
+ * @param shape Shape of the badge.
+ *
+ */
 @Composable
 fun Badge(
     label: String,

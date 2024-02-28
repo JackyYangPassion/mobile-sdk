@@ -1,6 +1,5 @@
 package ai.botstacks.sample.screens
 
-import ai.botstacks.sample.R
 import ai.botstacks.sdk.BotStacksChat
 import ai.botstacks.sdk.ui.BotStacks
 import androidx.compose.foundation.clickable
@@ -24,9 +23,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 
 enum class Example(val route: String) {
     Full("botstacks_full"),
@@ -40,6 +36,7 @@ fun MaterialRouter(
     onLogout: () -> Unit,
 ) {
     BotStacksChat.shared.onLogout = onLogout
+
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
