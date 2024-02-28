@@ -6,9 +6,7 @@
 
 package ai.botstacks.sdk.ui.components
 
-import ai.botstacks.sdk.type.OnlineStatus
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,6 +27,7 @@ import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.ui.resources.botstacks_logo_daynight
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.annotated
+import ai.botstacks.sdk.state.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.theme.LocalBotStacksAssets
 import ai.botstacks.sdk.ui.theme.painterImageAsset

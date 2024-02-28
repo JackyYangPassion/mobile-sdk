@@ -7,7 +7,6 @@ import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.internal.state.Upload
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.components.EditableTextLabel
 import ai.botstacks.sdk.internal.ui.components.Text
@@ -18,6 +17,7 @@ import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.readBytes
 import ai.botstacks.sdk.internal.utils.ui.onEnter
 import ai.botstacks.sdk.internal.utils.ui.unboundedClickable
+import ai.botstacks.sdk.state.NotificationSetting
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -77,7 +77,7 @@ class ChannelSettingsState(private val chat: Chat) {
     internal var name by mutableStateOf(TextFieldValue(chat.displayName))
     internal var isEditingName by mutableStateOf(false)
 
-    internal var muted: Boolean by mutableStateOf(chat.notification_setting == NotificationSetting.none)
+    internal var muted: Boolean by mutableStateOf(chat.notification_setting == NotificationSetting.None)
 
     internal var private by mutableStateOf(chat._private)
 

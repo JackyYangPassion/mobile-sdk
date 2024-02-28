@@ -18,7 +18,6 @@ import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
@@ -26,6 +25,7 @@ import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.annotated
 import ai.botstacks.sdk.internal.utils.genU
 import ai.botstacks.sdk.internal.utils.ift
+import ai.botstacks.sdk.state.OnlineStatus
 import ai.botstacks.sdk.ui.components.Avatar
 import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -66,7 +66,7 @@ internal fun ContactRow(
 //                }
             }
             Text(
-                text = user.status.rawValue.capitalize(Locale.current).annotated(),
+                text = user.status.name.capitalize(Locale.current).annotated(),
                 fontStyle = fonts.body1,
                 color = ift(
                     user.status == OnlineStatus.Online,

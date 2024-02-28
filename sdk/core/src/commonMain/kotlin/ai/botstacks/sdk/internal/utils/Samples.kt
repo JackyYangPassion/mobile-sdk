@@ -9,11 +9,9 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.state.toApolloType
+import ai.botstacks.sdk.internal.state.toAttachment
 import ai.botstacks.sdk.state.*
-import ai.botstacks.sdk.type.AttachmentType
-import ai.botstacks.sdk.type.ChatType
-import ai.botstacks.sdk.type.MemberRole
-import ai.botstacks.sdk.type.OnlineStatus
 import com.benasher44.uuid.uuid4
 import kotlinx.datetime.Clock
 import kotlin.random.Random
@@ -90,22 +88,22 @@ internal fun genG(): Chat {
 
 internal fun genA(
     kind: AttachmentType = listOf(
-        AttachmentType.video,
-        AttachmentType.audio,
-        AttachmentType.image,
-        AttachmentType.file
+//        AttachmentType.video,
+//        AttachmentType.audio,
+        AttachmentType.Image,
+//        AttachmentType.file
     ).random()
 ): FMessage.Attachment {
     val url = when (kind) {
-        AttachmentType.video ->
-            "https://download.samplelib.com/mp4/sample-5s.mp4"
-
-        AttachmentType.audio ->
-            "https://file-examples.com/storage/fe0358100863d05afed02d2/2017/11/file_example_MP3_5MG.mp3"
+//        AttachmentType.video ->
+//            "https://download.samplelib.com/mp4/sample-5s.mp4"
+//
+//        AttachmentType.audio ->
+//            "https://file-examples.com/storage/fe0358100863d05afed02d2/2017/11/file_example_MP3_5MG.mp3"
 
         else -> randomImage()
     }
-    return FMessage.Attachment(uuid(), kind, url, null, null, null, null, null, null, null, null)
+    return FMessage.Attachment(uuid(), kind.toApolloType(), url, null, null, null, null, null, null, null, null)
 }
 
 internal fun bool() = Random.nextBoolean()
@@ -123,7 +121,7 @@ internal fun genM(
         user.id,
         parent,
         chat,
-        _attachments ?: mutableStateListOf()
+        _attachments?.map { it.toAttachment() }.orEmpty().toMutableStateList()
     )
     m.updateText(faker.loremParagraph())
     if (parent == null && chance(1, 5)) {
@@ -149,9 +147,9 @@ internal fun genM(
 internal fun genChat() = if (bool()) genG() else genDM()
 
 internal fun genImageMessage(user: User = genU()) =
-    genM(attachments = mutableStateListOf(genA(AttachmentType.image)), user = user)
+    genM(attachments = mutableStateListOf(genA(AttachmentType.Image)), user = user)
 
-internal fun genFileMessage() = genM(attachments = mutableStateListOf(genA(AttachmentType.file)))
+//internal fun genFileMessage() = genM(attachments = mutableStateListOf(genA(AttachmentType.file)))
 
 internal fun genChatextMessage(user: User = randomUser(), chat: String = genG().id) = Message(
     uuid(), Clock.System.now().minus(Random.nextLong(100000L).seconds),

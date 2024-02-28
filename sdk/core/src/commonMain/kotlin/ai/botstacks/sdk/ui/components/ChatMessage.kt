@@ -8,7 +8,6 @@ import ai.botstacks.sdk.internal.ui.components.MessageMapContent
 import ai.botstacks.sdk.internal.ui.components.MessageTextContent
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
@@ -24,6 +23,8 @@ import ai.botstacks.sdk.internal.utils.genChatextMessage
 import ai.botstacks.sdk.internal.utils.genCurrentUser
 import ai.botstacks.sdk.internal.utils.genU
 import ai.botstacks.sdk.internal.utils.location
+import ai.botstacks.sdk.state.AttachmentType
+import ai.botstacks.sdk.state.MessageAttachment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -62,7 +63,7 @@ fun ChatMessage(
     showTimestamp: Boolean = true,
     onPressUser: (User) -> Unit,
     onLongPress: () -> Unit,
-    onClick: ((FMessage.Attachment?) -> Unit)? = null
+    onClick: ((MessageAttachment?) -> Unit)? = null
 ) {
     if (message.user.blocked) {
         return
@@ -130,7 +131,7 @@ private fun ChatMessage(
     avatar: String?,
     username: String,
     content: String? = null,
-    attachment: FMessage.Attachment? = null,
+    attachment: MessageAttachment? = null,
     date: Instant,
     isCurrentUser: Boolean,
     isGroup: Boolean,
@@ -142,7 +143,7 @@ private fun ChatMessage(
     hasError: Boolean = false,
     onPressUser: () -> Unit,
     onLongPress: () -> Unit,
-    onClick: ((FMessage.Attachment?) -> Unit)? = null
+    onClick: ((MessageAttachment?) -> Unit)? = null
 ) {
     BoxWithConstraints(
         modifier = modifier.fillMaxWidth(),
@@ -166,7 +167,7 @@ private fun ChatMessage(
                 }
 
                 when (attachment?.type) {
-                    AttachmentType.image -> MessageImageContent(
+                    AttachmentType.Image -> MessageImageContent(
                         modifier = Modifier
                             .fillMaxHeight()
                             .widthIn(max = maxWidth * 0.67f),
@@ -179,7 +180,7 @@ private fun ChatMessage(
                         onLongClick = onLongPress,
                     )
 
-                    AttachmentType.location -> MessageMapContent(
+                    AttachmentType.Location -> MessageMapContent(
                         modifier = Modifier
                             .fillMaxHeight()
                             .widthIn(max = maxWidth * 0.67f),

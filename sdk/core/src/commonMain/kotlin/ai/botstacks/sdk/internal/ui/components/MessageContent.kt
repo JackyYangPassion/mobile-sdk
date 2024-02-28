@@ -14,6 +14,7 @@ import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.internal.ui.components.location.MapPin
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.ift
+import ai.botstacks.sdk.state.MessageAttachment
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -77,7 +78,7 @@ internal fun MessageTextContent(
 @Composable
 internal fun MessageImageContent(
     username: String,
-    image: FMessage.Attachment,
+    image: MessageAttachment,
     isCurrentUser: Boolean,
     modifier: Modifier = Modifier,
     shape: CornerBasedShape = BotStacks.shapes.medium,
