@@ -229,6 +229,8 @@ apollo {
         )
         mapScalarToKotlinDouble("Latitude")
         mapScalarToKotlinDouble("Longitude")
+        // don't include apollo sources in output frameworks
+        generateAsInternal.set(true)
     }
 }
 

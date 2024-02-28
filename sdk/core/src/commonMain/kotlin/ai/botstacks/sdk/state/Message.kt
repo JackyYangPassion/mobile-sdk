@@ -10,6 +10,7 @@ import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.internal.state.Upload
+import ai.botstacks.sdk.internal.state.toAttachment
 import ai.botstacks.sdk.internal.utils.Reactions
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.linkLinks
@@ -17,7 +18,6 @@ import ai.botstacks.sdk.internal.utils.linkMentions
 import ai.botstacks.sdk.internal.utils.linkPhones
 import ai.botstacks.sdk.internal.utils.op
 import ai.botstacks.sdk.internal.utils.parseReactions
-import ai.botstacks.sdk.type.AttachmentType
 import kotlinx.datetime.Instant
 
 /**
@@ -30,7 +30,7 @@ data class Message(
     internal val userID: String,
     internal val parentID: String?,
     internal val chatID: String,
-    internal val attachments: SnapshotStateList<FMessage.Attachment> = mutableStateListOf(),
+    internal val attachments: SnapshotStateList<MessageAttachment> = mutableStateListOf(),
     internal val reactions: Reactions = mutableStateListOf()
 ) : Identifiable {
     var text by mutableStateOf("")
@@ -55,7 +55,7 @@ data class Message(
         msg.user.fUser.id,
         msg.parent_id,
         msg.chat_id,
-        msg.attachments?.toMutableStateList() ?: mutableStateListOf(),
+        msg.attachments?.map { it.toAttachment() }?.toMutableStateList() ?: mutableStateListOf(),
         msg.reactions?.let { parseReactions(it) } ?: mutableStateListOf()
     ) {
         update(msg)
@@ -75,7 +75,7 @@ data class Message(
         this.markdown = linkLinks(linkPhones(linkMentions(this.text)))
     }
 
-    fun update(msg: FMessage) {
+    internal fun update(msg: FMessage) {
         if (this.text != (msg.text ?: "")) {
             updateText(msg.text ?: "")
         }
@@ -92,12 +92,12 @@ data class Message(
     val msg: String
         get() = attachments.firstOrNull()?.let {
             when (it.type) {
-                AttachmentType.image -> "[Image] ${it.url}"
-                AttachmentType.video -> "[Video] ${it.url}"
-                AttachmentType.audio -> "[Audio] ${it.url}"
-                AttachmentType.file -> "[File] ${it.url}"
-                AttachmentType.location -> "[Location] ${it.latitude ?: 0.0},${it.longitude ?: 0.0}"
-                AttachmentType.vcard -> "[Contact]"
+                AttachmentType.Image -> "[Image] ${it.url}"
+//                AttachmentType.video -> "[Video] ${it.url}"
+//                AttachmentType.audio -> "[Audio] ${it.url}"
+//                AttachmentType.file -> "[File] ${it.url}"
+                AttachmentType.Location -> "[Location] ${it.latitude ?: 0.0},${it.longitude ?: 0.0}"
+//                AttachmentType.vcard -> "[Contact]"
                 else -> null
             }
         } ?: text

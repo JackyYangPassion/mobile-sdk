@@ -6,11 +6,11 @@ package ai.botstacks.sdk.internal.state
 
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.BotStacksChat
-import ai.botstacks.sdk.type.ChatType
 import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.utils.uuid
 import ai.botstacks.sdk.state.ChannelsPager
 import ai.botstacks.sdk.state.Chat
+import ai.botstacks.sdk.state.ChatType
 import ai.botstacks.sdk.state.ContactsPager
 import ai.botstacks.sdk.state.FavoritesPager
 import ai.botstacks.sdk.state.Participant

@@ -7,7 +7,6 @@ package ai.botstacks.sdk.ui.components
 import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.ui.components.OnlineStatusIndicator
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.internal.ui.components.RemoveIndicator
@@ -15,6 +14,7 @@ import ai.botstacks.sdk.internal.ui.components.SelectedBadge
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
 import ai.botstacks.sdk.internal.utils.IPreviews
+import ai.botstacks.sdk.state.OnlineStatus
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -110,7 +110,7 @@ sealed interface AvatarType {
      */
     data class User(
         val url: Any?,
-        val status: OnlineStatus = OnlineStatus.UNKNOWN__,
+        val status: OnlineStatus = OnlineStatus.Unknown,
         val empty: Painter? = null,
     ) : AvatarType {
         @OptIn(ExperimentalResourceApi::class)
@@ -159,7 +159,7 @@ fun Avatar(
     val type = remember(user.avatar, user.status) {
         AvatarType.User(
             url = user.avatar,
-            status = if (showIndicator) user.status else OnlineStatus.UNKNOWN__
+            status = if (showIndicator) user.status else OnlineStatus.Unknown
         )
     }
     Avatar(
@@ -187,7 +187,7 @@ fun Avatar(
 fun Avatar(
     modifier: Modifier = Modifier,
     size: AvatarSize = AvatarDefaults.Size,
-    status: OnlineStatus = OnlineStatus.UNKNOWN__,
+    status: OnlineStatus = OnlineStatus.Unknown,
     url: String?,
     chat: Boolean = false,
 ) {

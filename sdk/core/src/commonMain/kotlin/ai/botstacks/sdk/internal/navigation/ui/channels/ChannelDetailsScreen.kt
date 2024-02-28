@@ -52,7 +52,7 @@ internal fun ChannelDetailsScreen(
                 }
             )
 
-            ChannelSettingsView(state, onOpenAnnouncements, onAddUsers)
+            ChannelSettingsView(state, onAddUsers)
         }
         ProgressOverlay(visible = state.saving, touchBlocking = true)
     }

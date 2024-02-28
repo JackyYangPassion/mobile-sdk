@@ -10,7 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import ai.botstacks.sdk.fragment.FUser
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
-import ai.botstacks.sdk.type.OnlineStatus
+import ai.botstacks.sdk.internal.state.toStatus
+import ai.botstacks.sdk.internal.state.toType
 import ai.botstacks.sdk.internal.utils.contains
 import kotlinx.datetime.Instant
 import kotlin.math.min
@@ -41,7 +42,7 @@ data class User(
         this.displayName = user.display_name
         this.avatar = user.image
         this.lastSeen = user.last_seen
-        this.status = user.status
+        this.status = user.status.toStatus()
         this.blocked = blocked
         this.haveContact = haveContact
         this.muted = muted
@@ -51,11 +52,11 @@ data class User(
         BotStacksChatStore.current.cache.users[id] = this
     }
 
-    fun update(user: FUser) {
+    internal fun update(user: FUser) {
         username = user.username
         avatar = user.image
         lastSeen = user.last_seen
-        status = user.status
+        status = user.status.toStatus()
         description = user.description
         muted = user.is_muted ?: false
     }

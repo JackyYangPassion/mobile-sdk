@@ -6,6 +6,7 @@ package ai.botstacks.sdk.internal.actions
 
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
+import ai.botstacks.sdk.internal.state.toRole
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.Participant
 import ai.botstacks.sdk.state.User
@@ -35,7 +36,7 @@ fun Chat.join() {
         user_id = User.current!!.id,
         chat_id = id,
         created_at = Clock.System.now(),
-        role = MemberRole.Member,
+        role = MemberRole.Member.toRole(),
     )
     members.add(p)
     op({
