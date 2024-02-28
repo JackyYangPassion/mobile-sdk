@@ -2,7 +2,9 @@
  * Copyright (c) 2023.
  */
 
-package ai.botstacks.sdk.internal.ui.components
+@file:OptIn(ExperimentalMaterialApi::class)
+
+package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.actions.send
@@ -11,6 +13,11 @@ import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.internal.state.Location
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.internal.state.Upload
+import ai.botstacks.sdk.internal.ui.components.ActionItemDefaults
+import ai.botstacks.sdk.internal.ui.components.GiphyModalSheet
+import ai.botstacks.sdk.internal.ui.components.ProgressOverlay
+import ai.botstacks.sdk.internal.ui.components.Space
+import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.internal.ui.components.camera.rememberCameraManager
@@ -26,7 +33,9 @@ import ai.botstacks.sdk.internal.utils.imageAttachment
 import ai.botstacks.sdk.internal.utils.op
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.Button
@@ -44,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
@@ -51,7 +61,7 @@ import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import kotlinx.coroutines.launch
 
 
-enum class Media {
+internal enum class Media {
     pickPhoto,
     pickVideo,
     recordPhoto,
@@ -71,12 +81,34 @@ enum class Media {
     }
 }
 
+class MediaActionSheetState(internal val chat: Chat, sheetState: ModalBottomSheetState) :
+    ActionSheetState(sheetState)
+
+@Composable
+fun rememberMediaActionSheetState(chat: Chat): MediaActionSheetState {
+
+    val state = rememberModalBottomSheetState(
+        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
+    )
+
+    return remember(chat, state) { MediaActionSheetState(chat, state) }
+}
+
+/**
+ * MediaActionSheet
+ *
+ * A modal bottom sheet that displays attachments that can be sent in a chat. This is a top level
+ * scaffold that is designed to wrap your screen content.
+ *
+ * @param state the state for this action sheet.
+ * @param chat The chat the selected attachments will be sent to.
+ * @param content your screen content.
+ *
+ */
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 fun MediaActionSheet(
-    state: ModalBottomSheetState,
-    chat: Chat,
-    inReplyTo: Message?,
+    state: MediaActionSheetState,
     content: @Composable () -> Unit
 ) {
     var media by remember { mutableStateOf<Media?>(null) }
@@ -87,12 +119,11 @@ fun MediaActionSheet(
         media = null
         scope.launch { state.hide() }
         loading = false
-        Unit
     }
 
     val onFile = { file: KmpFile ->
         op({
-            chat.send(inReplyTo?.id, upload = Upload(file = file))
+            state.chat.send(null, upload = Upload(file = file))
         })
         media = null
     }
@@ -100,13 +131,13 @@ fun MediaActionSheet(
 
     Box {
         ModalBottomSheetLayout(
-            sheetState = state,
+            sheetState = state.sheetState,
             sheetBackgroundColor = BotStacks.colorScheme.background,
             sheetContentColor = BotStacks.colorScheme.onBackground,
             scrimColor = BotStacks.colorScheme.scrim,
             sheetContent = {
                 Column(modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
-                    Space(8f)
+                    Spacer(Modifier.height(8.dp))
                     val items = ActionItemDefaults.mediaItems { media = it }
                     items.onEachIndexed { index, item ->
                         item()
@@ -145,7 +176,7 @@ fun MediaActionSheet(
                     GifPicker(
                         onUri = {
                             hide()
-                            chat.send(inReplyTo?.id, attachments = listOf(it.imageAttachment()))
+                            state.chat.send(null, attachments = listOf(it.imageAttachment()))
                         },
                         onCancel = hide
                     )
@@ -153,7 +184,7 @@ fun MediaActionSheet(
 
                 Media.contact -> {
 //                        ContactPicker(onContact = {
-//                            chat.send(inReplyTo?.id, attachments = listOf(it))
+//                            chat.send(null, attachments = listOf(it))
 //                            hide()
 //                        }) {
 //                            hide()
@@ -175,7 +206,7 @@ fun MediaActionSheet(
                         onLoading = { loading = true },
                         onLocation = {
                             if (loading) {
-                                chat.send(inReplyTo?.id, attachments = listOf(it.attachment()))
+                                state.chat.send(null, attachments = listOf(it.attachment()))
                                 hide()
                             }
                         },
@@ -191,19 +222,14 @@ fun MediaActionSheet(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @IPreviews
 @Composable
 private fun MediaActionSheetPreview() {
     BotStacksThemeEngine {
-        val open = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-        val ctx = rememberCoroutineScope()
-        MediaActionSheet(
-            open,
-            genChat(),
-            inReplyTo = null
-        ) {
-            Button(onClick = { ctx.launch { open.show() } }) {
+        val composeScope = rememberCoroutineScope()
+        val state = rememberMediaActionSheetState(genChat(),)
+        MediaActionSheet(state,) {
+            Button(onClick = { composeScope.launch { state.show() } }) {
                 Text(text = "Open Sheet", fontStyle = BotStacks.fonts.body2)
             }
         }
@@ -211,7 +237,7 @@ private fun MediaActionSheetPreview() {
 }
 
 @Composable
-fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
+private fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
     val pickerLauncher = rememberFilePickerLauncher(
         type = if (video) FilePickerFileType.Video else FilePickerFileType.Image,
         selectionMode = FilePickerSelectionMode.Single,
@@ -228,7 +254,7 @@ fun AssetPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) 
 }
 
 @Composable
-fun FilePicker(onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
+private fun FilePicker(onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
     val pickerLauncher = rememberFilePickerLauncher(
         type = FilePickerFileType.Custom(
             listOf(
@@ -246,7 +272,7 @@ fun FilePicker(onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
 }
 
 @Composable
-fun CameraPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
+private fun CameraPicker(video: Boolean, onUri: (KmpFile) -> Unit, onCancel: () -> Unit) {
     val cameraManager = rememberCameraManager { result ->
         if (result != null) {
             onUri(result)
@@ -322,8 +348,7 @@ private fun LocationPicker(
 //}
 
 @Composable
-fun GifPicker(onUri: (String) -> Unit, onCancel: () -> Unit) {
+private fun GifPicker(onUri: (String) -> Unit, onCancel: () -> Unit) {
     GiphyModalSheet(onSelection = onUri, onCancel = onCancel)
-
     BackHandler(enabled = true) { onCancel() }
 }

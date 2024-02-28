@@ -13,8 +13,6 @@ import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.theme.FontStyle
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.internal.utils.IPreviews
-import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.OnlineStatus
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,7 +25,7 @@ import androidx.compose.ui.graphics.Shape
  *
  * A "badge" to show a count.
  *
- * This is utilized in the [MessageList] component serving as the date separators,
+ * This is utilized in the [MessageListView] component serving as the date separators,
  * in the [ChatList] component to show unread counts, and in the [ChannelSettingsView] for displaying admins.
  *
  * @param count Count to display in the badge.
@@ -73,7 +71,7 @@ fun Badge(
  *
  * A "badge" to show a label.
  *
- * This is utilized in the [MessageList] component serving as the date separators,
+ * This is utilized in the [MessageListView] component serving as the date separators,
  * in the [ChatList] component to show unread counts, and in the [ChannelSettingsView] for displaying admins.
  *
  * @param label The text to be displayed in the badge.
@@ -98,7 +96,7 @@ fun Badge(
  *
  * A "badge" to show a label.
  *
- * This is utilized in the [MessageList] component serving as the date separators,
+ * This is utilized in the [MessageListView] component serving as the date separators,
  * in the [ChatList] component to show unread counts, and in the [ChannelSettingsView] for displaying admins.
  *
  * @param label The text to be displayed in the badge.

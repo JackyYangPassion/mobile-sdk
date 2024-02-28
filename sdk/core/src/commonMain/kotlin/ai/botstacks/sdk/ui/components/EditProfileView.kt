@@ -1,6 +1,7 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.internal.API
+import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.components.TextInput
@@ -31,14 +32,29 @@ import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * EditProfileState
+ *
+ * State holder for editing the current user, used specifically within the [EditProfileView].
+ *
+ * To trigger an update once modifications are done within the view, simply call [update].
+ * This will return a Result with the updated User if successful, or the error if it fails. While the
+ * create action is waiting for a result [saving] will be true.
+ *
+ * Resulting changes are persisted internally and do not need to be saved manually.
+ *
+ */
 @Stable
-class EditProfileState(private val user: User) {
+class EditProfileState {
+
+    private val currentUser = User.current!!
+
     internal var selectedImage by mutableStateOf<KmpFile?>(null)
-    internal var textState by mutableStateOf(TextFieldValue(user.username))
+    internal var textState by mutableStateOf(TextFieldValue(currentUser.username))
 
 
     internal val userImage: Any?
-        get() = selectedImage ?: user.avatar
+        get() = selectedImage ?: currentUser.avatar
 
 
     var saving by mutableStateOf(false)
@@ -65,6 +81,14 @@ class EditProfileState(private val user: User) {
     }
 }
 
+/**
+ * EditProfileView
+ *
+ * A screen content view for editing the current user.
+ *
+ * @param state The state for the view
+ *
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun EditProfileView(

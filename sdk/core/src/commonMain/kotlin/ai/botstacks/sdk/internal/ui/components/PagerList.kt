@@ -103,35 +103,37 @@ internal fun <T : Identifiable> BotStacksLazyList(
         ) {
             val listState = rememberLazyListState()
             val coroutineScope = rememberCoroutineScope()
-            LazyColumn(
-                contentPadding = contentPadding,
-                state = listState,
-                reverseLayout = invert,
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = verticalArrangement,
-                horizontalAlignment = horizontalAlignment,
-            ) {
-                header?.let { item { it() } }
-                if (items.isEmpty()) {
-                    item {
-                        Box(
-                            modifier = Modifier.fillParentMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(color = colorScheme.primary)
+            Column {
+                header?.invoke()
+                LazyColumn(
+                    contentPadding = contentPadding,
+                    state = listState,
+                    reverseLayout = invert,
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = verticalArrangement,
+                    horizontalAlignment = horizontalAlignment,
+                ) {
+                    if (items.isEmpty()) {
+                        item {
+                            Box(
+                                modifier = Modifier.fillParentMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = colorScheme.primary)
+                            }
                         }
                     }
-                }
 
-                content(this)
+                    content(this)
 
-                // add last separator
-                // this isn't handled by paging separators due to no `beforeItem` to reference against
-                // at end of list due to reverseLayout
-                if (invert) {
-                    (items.getOrNull(items.count() - 1))?.let {
-                        item {
-                            separator(it, null)
+                    // add last separator
+                    // this isn't handled by paging separators due to no `beforeItem` to reference against
+                    // at end of list due to reverseLayout
+                    if (invert) {
+                        (items.getOrNull(items.count() - 1))?.let {
+                            item {
+                                separator(it, null)
+                            }
                         }
                     }
                 }
@@ -263,6 +265,7 @@ internal fun <T : Identifiable> PagerList(
     modifier: Modifier = Modifier,
     prefix: List<T> = listOf(),
     invert: Boolean = false,
+    filter: (T) -> Boolean = { true },
     header: @Composable (() -> Unit)? = null,
     footer: @Composable (() -> Unit)? = null,
     empty: @Composable () -> Unit = {},
@@ -282,9 +285,15 @@ internal fun <T : Identifiable> PagerList(
         pager.loadMoreIfEmpty()
     }
 
+    val filteredItems by remember(array) {
+        derivedStateOf {
+            array.filter(filter)
+        }
+    }
+
     IACList(
         modifier = modifier,
-        items = array,
+        items = filteredItems,
         invert = invert,
         header = header,
         footer = footer,

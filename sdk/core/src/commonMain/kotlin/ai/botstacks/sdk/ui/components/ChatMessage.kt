@@ -1,7 +1,6 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.internal.actions.react
-import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.internal.ui.components.ClickableText
 import ai.botstacks.sdk.internal.ui.components.MessageImageContent
 import ai.botstacks.sdk.internal.ui.components.MessageMapContent
@@ -54,6 +53,25 @@ import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * ChatMessage
+ *
+ * Renders the contents of a given [Message] from a [ai.botstacks.sdk.state.Chat].
+ * This is used by [MessageListView] to form the contents of a conversational chat, by properly aligning
+ * messages to left or right depending on sender (left aligned for incoming and right aligned for outgoing).
+ *
+ *
+ * @param modifier The modifier to apply to this message.
+ * @param message The message to display.
+ * @param shape corner-based shaped to render the "bubble" in. This defaults to [ai.botstacks.sdk.ui.theme.ShapeDefinitions.medium].
+ * @param showAvatar Whether to show the associated user's avatar along with this message.
+ * @param showTimestamp Whether to show the timestamp this message was sent or received.
+ * @param onPressUser callback for when a user's avatar (when visible) is clicked.
+ * @param onLongPress callback for when a message "bubble" is clicked.
+ * @param onClick callback for when an attachment is clicked. This is utlized by [MessageListView] to show
+ * images for full screen viewing.
+ *
+ */
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,

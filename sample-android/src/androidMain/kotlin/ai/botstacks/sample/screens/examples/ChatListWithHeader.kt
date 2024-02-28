@@ -31,7 +31,13 @@ fun ChatListWithHeader(onBackClicked: () -> Unit) {
         val context = LocalContext.current
         ChatList(
             header = {
-                Header(onBackClick = onBackClicked)
+                Header(onBackClick = onBackClicked,
+                    menu  = {
+                        item {
+                            Text(text = "Hi")
+                        }
+                    }
+                )
             },
             emptyState = {
                 Text(text = "Nothing here")
@@ -42,7 +48,7 @@ fun ChatListWithHeader(onBackClicked: () -> Unit) {
                     "chat named ${chat.displayName} clicked",
                     Toast.LENGTH_SHORT
                 ).show()
-            }
+            },
         )
     }
 }

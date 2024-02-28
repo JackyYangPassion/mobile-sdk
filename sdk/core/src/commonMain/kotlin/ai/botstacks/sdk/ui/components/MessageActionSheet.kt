@@ -2,14 +2,15 @@
  * Copyright (c) 2023.
  */
 
-package ai.botstacks.sdk.internal.ui.components
+package ai.botstacks.sdk.ui.components
 
+import ai.botstacks.sdk.internal.ui.components.ActionItem
+import ai.botstacks.sdk.internal.ui.components.Text
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
-import ai.botstacks.sdk.internal.actions.toggleFavorite
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
@@ -17,48 +18,70 @@ import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.annotated
 import ai.botstacks.sdk.internal.utils.genChatextMessage
+import androidx.compose.ui.unit.dp
 import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
+@OptIn(ExperimentalMaterialApi::class)
+class MessageActionSheetState(sheetState: ModalBottomSheetState) : ActionSheetState(sheetState) {
+    var messageForAction by mutableStateOf<Message?>(null)
+}
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-@OptIn(ExperimentalMaterialApi::class, ExperimentalResourceApi::class)
-fun MessageActionSheet(
-    message: Message?,
-    onReply: (Message) -> Unit,
-    hide: () -> Unit,
-    content: @Composable () -> Unit
-) {
+fun rememberMessageActionSheetState(message: Message? = null): MessageActionSheetState {
+
     val state = rememberModalBottomSheetState(
         ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true,
-        confirmStateChange = {
-            if (it == ModalBottomSheetValue.Hidden) {
-                hide()
-            }
-            true
-        }
     )
-    LaunchedEffect(message) {
-        if (message != null) {
+
+    return remember(message, state) {
+        MessageActionSheetState(state).apply {
+            messageForAction = message
+        }
+    }
+}
+
+/**
+ * MessageActionSheet
+ *
+ * A modal bottom sheet that allows contextual actions for a given messaged. This is a top level
+ * scaffold that is designed to wrap your screen content.
+ *
+ * This can be utilized in conjunction with [MessageListView] to show contextual actions fro the [MessageListView#onLongPress] callback
+ *
+ * @param state the state for the ModalBottomSheet. @see [ModalBottomSheetState]
+ * @param content your screen content.
+ *
+ */
+@Composable
+@OptIn(ExperimentalMaterialApi::class, ExperimentalResourceApi::class)
+fun MessageActionSheet(
+    state: MessageActionSheetState = rememberMessageActionSheetState(),
+    content: @Composable () -> Unit
+) {
+    val annotatedString = (state.messageForAction?.text ?: "").annotated()
+
+    val clipboardManager = LocalClipboardManager.current
+
+    LaunchedEffect(state.messageForAction) {
+        if (state.messageForAction != null) {
             state.show()
         } else {
             state.hide()
         }
     }
 
-    val annotatedString = (message?.text ?: "").annotated()
-
-    val clipboardManager = LocalClipboardManager.current
-
     ModalBottomSheetLayout(
         modifier = Modifier.fillMaxSize(),
-        sheetState = state,
+        sheetState = state.sheetState,
         sheetBackgroundColor = colorScheme.background,
         sheetContentColor = colorScheme.onBackground,
         scrimColor = colorScheme.scrim,
         sheetContent = {
             Column(modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
-                Space(8f)
+                Spacer(Modifier.height(8.dp))
                 // TODO: add back once emoji keyboard is KMP
 //                EmojiBar(
 //                    current = message?.currentReaction,
@@ -89,7 +112,7 @@ fun MessageActionSheet(
                     icon = Res.drawable.copy,
                 ) {
                     clipboardManager.setText(annotatedString)
-                    hide()
+                    state.messageForAction = null
                 }
             }
         },
@@ -101,11 +124,10 @@ fun MessageActionSheet(
 @Composable
 private fun MessageActionSheetPreview() {
     BotStacksThemeEngine {
-        var message by remember {
-            mutableStateOf<Message?>(genChatextMessage())
-        }
-        MessageActionSheet(message = message, hide = {}, onReply = {}) {
-            Button(onClick = { message = genChatextMessage() }) {
+        val state = rememberMessageActionSheetState()
+
+        MessageActionSheet(state) {
+            Button(onClick = {state.messageForAction = genChatextMessage() }) {
                 Text(text = "Open Sheet", fontStyle = fonts.body2)
             }
         }

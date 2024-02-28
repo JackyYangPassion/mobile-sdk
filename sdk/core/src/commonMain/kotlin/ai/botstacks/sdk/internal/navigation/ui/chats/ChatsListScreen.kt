@@ -110,7 +110,6 @@ internal fun ChatsListScreen(
                     .contains(searchQuery.lowercase())
             } || chat.name.orEmpty().lowercase().contains(searchQuery.lowercase())
         },
-        emptyState = @Composable { EmptyListView(config = BotStacks.assets.emptyChats) },
         onChatClicked = openChat
     )
 }

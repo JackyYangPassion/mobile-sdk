@@ -1,7 +1,8 @@
 package ai.botstacks.sdk.internal.ui.components
 
-import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksShapes
+import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.OverflowMenuScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -20,21 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
-
-interface OverflowMenuScope {
-
-    fun item(
-        content: @Composable (PaddingValues) -> Unit
-    )
-
-    fun label(
-        enabled: Boolean = true,
-        onClick: () -> Unit,
-        icon: (@Composable () -> Unit)? = null,
-        subtitle: @Composable () -> Unit = { },
-        title: @Composable () -> Unit,
-    )
-}
 
 @ExperimentalAnimationApi
 @Composable

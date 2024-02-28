@@ -43,7 +43,7 @@ fun UserDetailsView(
         contentPadding = PaddingValues(BotStacks.dimens.inset),
     ) {
         item {
-            UserProfile(user = user)
+            UserProfileView(user = user)
         }
 
         if (channelsInCommon.isNotEmpty()) {
@@ -62,7 +62,7 @@ fun UserDetailsView(
                         text = "${channelsInCommon.count()} channels in common",
                         fontStyle = BotStacks.fonts.label2
                     )
-                    ChannelList(channels = channelsInCommon)
+                    ChannelGroup(channels = channelsInCommon)
                 }
             }
         }

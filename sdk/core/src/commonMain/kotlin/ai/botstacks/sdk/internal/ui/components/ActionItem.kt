@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.Media
 import androidx.compose.ui.graphics.painter.Painter
 import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.DrawableResource

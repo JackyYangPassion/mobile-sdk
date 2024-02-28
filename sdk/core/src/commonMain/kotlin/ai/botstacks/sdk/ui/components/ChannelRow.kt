@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
  *
  * This is a convenience wrapper around [Chat] to handle extract the default information to display.
  *
- * This is utilized in the [ChannelList] within [UserDetailsView] to show channels the current user has in common with
+ * This is utilized in the [ChannelGroup] within [UserDetailsView] to show channels the current user has in common with
  * any other user.
  *
  * @param modifier the Modifier to be applied to this ChannelRow
@@ -67,7 +67,7 @@ fun ChannelRow(
  *
  * Used to render information about a [Chat].
  *
- * This is utilized in the [ChannelList] within [UserDetailsView] to show channels the current user has in common with
+ * This is utilized in the [ChannelGroup] within [UserDetailsView] to show channels the current user has in common with
  * any other user.
  *
  * @param modifier the Modifier to be applied to this ChannelRow

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.util.fastForEach
 
 /**
- * ChannelList
+ * ChannelGroup
  *
  * Renders a given list of [Chat] channels in a [Column].
  *
@@ -24,7 +24,7 @@ import androidx.compose.ui.util.fastForEach
  * @param channels List of channels to show in the list.
  */
 @Composable
-fun ChannelList(modifier: Modifier = Modifier, channels: List<Chat>) {
+fun ChannelGroup(modifier: Modifier = Modifier, channels: List<Chat>) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x4)

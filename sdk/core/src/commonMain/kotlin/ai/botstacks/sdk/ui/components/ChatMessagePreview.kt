@@ -48,7 +48,19 @@ import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-
+/**
+ * ChatMessagePreview
+ *
+ * Renders a "preview" for a given chat. This is based on the last message, if any, that was either
+ * sent or received in the chat. Attachments will be rendered as well.
+ *
+ * This is utilized in [ChatList] to show previews for all chats that a user is currently a member of.
+ *
+ * @param modifier the Modifier to be applied to this preview.
+ * @param chat The chat to extract info from for the preview.
+ * @param onClick callback when the contents is clicked.
+ *
+ */
 @Composable
 fun ChatMessagePreview(
     modifier: Modifier = Modifier,
