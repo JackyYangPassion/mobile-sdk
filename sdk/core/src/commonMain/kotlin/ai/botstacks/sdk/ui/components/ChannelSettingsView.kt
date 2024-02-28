@@ -65,6 +65,8 @@ import org.jetbrains.compose.resources.painterResource
  * This will return a Result with the updated chat if successful, or the error if it fails. While the
  * save action is waiting for a result [saving] will be true.
  *
+ * Resulting changes are persisted internally and do not need to be saved manually.
+ *
  */
 @Stable
 class ChannelSettingsState(private val chat: Chat) {
@@ -73,7 +75,6 @@ class ChannelSettingsState(private val chat: Chat) {
     internal val channelImage: Any?
         @Composable get() = selectedImage?.readBytes() ?: chat.displayImage
 
-    @OptIn(ExperimentalFoundationApi::class)
     internal var name by mutableStateOf(TextFieldValue(chat.displayName))
     internal var isEditingName by mutableStateOf(false)
 

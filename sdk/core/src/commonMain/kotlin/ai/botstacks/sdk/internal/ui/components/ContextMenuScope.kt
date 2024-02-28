@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.internal.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable

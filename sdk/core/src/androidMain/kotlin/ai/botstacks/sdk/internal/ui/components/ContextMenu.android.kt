@@ -1,7 +1,6 @@
 package ai.botstacks.sdk.internal.ui.components
 
 import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.components.ContextMenuScope
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksShapes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition

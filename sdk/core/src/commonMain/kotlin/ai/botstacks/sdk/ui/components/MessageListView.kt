@@ -45,13 +45,27 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 
-
+/**
+ * MessageList
+ *
+ * A conversational screen content view displaying the messages for a given [Chat] in an infinite scrolling list,
+ * as well as a [ChatInput] to respond and send messages within the chat.
+ *
+ * @param modifier the Modifier to be applied to this list.
+ * @param chat The chat to render messages for.
+ * @param onPressUser callback when a user's avatar is pressed when visible next to a given message.
+ * (only applicable in multi user based chats).
+ * @param onLongPress callback when a message is long pressed. This can be utilized with [MessageActionSheet] to show contextual actions.
+ *
+ */
 @Composable
-fun MessageList(
+fun MessageListView(
     modifier: Modifier = Modifier,
     chat: Chat,
+    header: @Composable () -> Unit = { },
+    emptyState: @Composable () -> Unit = { EmptyListView(config = assets.emptyChat) },
     onPressUser: (User) -> Unit,
-    onLongPress: (Message) -> Unit
+    onLongPress: (Message) -> Unit,
 ) {
     var attachmentToView by remember {
         mutableStateOf<MessageAttachment?>(null)
@@ -60,6 +74,7 @@ fun MessageList(
     val pager = chat as Pager<Identifiable>
     PagerListIndexed(
         pager = pager,
+        header = header,
         prefix = chat.sending,
         modifier = modifier,
         scrollToTop = chat.sending.firstOrNull()?.id ?: chat.items.firstOrNull()?.id,
@@ -86,7 +101,7 @@ fun MessageList(
             }
         },
         contentPadding = PaddingValues(dimens.inset),
-        empty = { EmptyListView(config = assets.emptyChat) }
+        empty = emptyState,
     ) { index, item ->
         if (item is Message) {
             val previousMessage = pager.items.getOrNull(index + 1)

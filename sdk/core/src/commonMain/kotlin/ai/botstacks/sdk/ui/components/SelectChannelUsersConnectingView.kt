@@ -20,8 +20,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 
+/**
+ * SelectChannelUserView
+ *
+ * A screen content view for selecting users within a channel. This is used in coordination with
+ * either a [CreateChannelView] or a [ChannelSettingsView] to set or update the users in a given channel.
+ *
+ * @param selectedUsers users to render as selected.
+ * @param onUserSelected callback for a when a user is selected.
+ * @param onUserRemoved callback for a when a user is removed.
+ *
+ */
 @Composable
-fun SelectChannelUsersView(
+fun SelectChannelUsersConnectingView(
     selectedUsers: List<User>,
     onUserSelected: (User) -> Unit,
     onUserRemoved: (User) -> Unit,
@@ -54,9 +65,14 @@ fun SelectChannelUsersView(
                 indicatorColor = BotStacks.colorScheme.caption,
             )
         }
+
         PagerList(
             modifier = Modifier.weight(1f),
             pager = BotStacksChatStore.current.users,
+            filter = filter@{
+                if (search.text.isEmpty()) return@filter true
+                it.displayNameFb.contains(search.text)
+            }
         ) { user ->
             var isSelected by remember(selectedUsers) {
                 mutableStateOf(selectedUsers.contains(user))

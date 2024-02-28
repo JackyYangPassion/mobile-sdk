@@ -49,7 +49,7 @@ private fun EditProfileScreen(
     onBackClicked: () -> Unit,
 ) {
     val composeScope = rememberCoroutineScope()
-    val state = remember(user) { EditProfileState(user) }
+    val state = remember(user) { EditProfileState() }
 
     val keyboardVisible by keyboardAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
