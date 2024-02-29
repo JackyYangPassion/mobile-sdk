@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.internal.ui.components.Text
@@ -10,6 +10,10 @@ import ai.botstacks.sdk.internal.ui.components.TextInput
 import ai.botstacks.sdk.internal.ui.components.ToggleSwitch
 import ai.botstacks.sdk.internal.ui.components.settings.SettingsSection
 import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.ui.components.Avatar
+import ai.botstacks.sdk.ui.components.AvatarSize
+import ai.botstacks.sdk.ui.components.AvatarType
+import ai.botstacks.sdk.ui.components.UserSelect
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

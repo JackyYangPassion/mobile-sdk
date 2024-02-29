@@ -22,11 +22,19 @@ import androidx.compose.ui.unit.dp
 import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
+/**
+ * MediaActionSheetState
+ *
+ * A state that drives visibility of the [MessageActionSheet].
+ */
 @OptIn(ExperimentalMaterialApi::class)
 class MessageActionSheetState(sheetState: ModalBottomSheetState) : ActionSheetState(sheetState) {
     var messageForAction by mutableStateOf<Message?>(null)
 }
 
+/**
+ * Creates a [MessageActionSheetState] and remembers it.
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun rememberMessageActionSheetState(message: Message? = null): MessageActionSheetState {
@@ -49,7 +57,7 @@ fun rememberMessageActionSheetState(message: Message? = null): MessageActionShee
  * A modal bottom sheet that allows contextual actions for a given messaged. This is a top level
  * scaffold that is designed to wrap your screen content.
  *
- * This can be utilized in conjunction with [MessageListView] to show contextual actions fro the [MessageListView#onLongPress] callback
+ * This can be utilized in conjunction with [MessageList] to show contextual actions fro the [MessageListView#onLongPress] callback
  *
  * @param state the state for the ModalBottomSheet. @see [ModalBottomSheetState]
  * @param content your screen content.

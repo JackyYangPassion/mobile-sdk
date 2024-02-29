@@ -6,12 +6,12 @@ package ai.botstacks.sdk.internal.navigation.ui.profile
 
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
-import ai.botstacks.sdk.ui.components.EditProfileState
-import ai.botstacks.sdk.ui.components.EditProfileView
+import ai.botstacks.sdk.ui.views.EditProfileState
+import ai.botstacks.sdk.ui.views.EditProfileView
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.HeaderDefaults
 import ai.botstacks.sdk.internal.ui.components.ProgressOverlay
-import ai.botstacks.sdk.ui.components.UserDetailsView
+import ai.botstacks.sdk.ui.views.UserDetailsView
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.genImageMessage
 import ai.botstacks.sdk.internal.utils.genU

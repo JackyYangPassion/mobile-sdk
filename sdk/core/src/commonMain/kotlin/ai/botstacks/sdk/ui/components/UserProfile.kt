@@ -12,16 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 
 /**
- * UserProfileView
+ * UserProfile
  *
- * A screen content view that renders an [Avatar] and the display name for a given [User] in a centered [Column].
+ * Renders an [Avatar] and the display name for a given [User] in a centered [Column].
  *
  * @param modifier The modifier to apply to the Column
  * @param user The user to show in the view
  *
  */
 @Composable
-fun UserProfileView(modifier : Modifier = Modifier, user: User) {
+fun UserProfile(modifier : Modifier = Modifier, user: User) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.inset),

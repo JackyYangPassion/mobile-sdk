@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.internal.Monitoring
@@ -18,6 +18,10 @@ import ai.botstacks.sdk.internal.utils.readBytes
 import ai.botstacks.sdk.internal.utils.ui.onEnter
 import ai.botstacks.sdk.internal.utils.ui.unboundedClickable
 import ai.botstacks.sdk.state.NotificationSetting
+import ai.botstacks.sdk.ui.components.Avatar
+import ai.botstacks.sdk.ui.components.AvatarSize
+import ai.botstacks.sdk.ui.components.AvatarType
+import ai.botstacks.sdk.ui.components.Badge
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

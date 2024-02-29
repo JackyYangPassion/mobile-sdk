@@ -28,7 +28,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param selectedUsers Currently selected users
  * @param canRemove If enabled, currently selected users can be removed on click (Will trigger [onRemove].
  * @param showAdd If enabled, a trailing add option will appear allowing you to handle [onAddSelected] to navigate to another
- * view to add users. @see [SelectChannelUsersConnectingView] for a use case.
+ * view to add users. @see [SelectChannelUsers] for a use case.
  * @param onRemove callback for when a user is removed.
  * @param onAddSelected callback when the trailing add option is clicked; requires [showAdd] to be true.
  *

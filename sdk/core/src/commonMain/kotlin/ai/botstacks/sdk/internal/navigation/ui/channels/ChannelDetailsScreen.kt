@@ -1,8 +1,8 @@
 package ai.botstacks.sdk.internal.navigation.ui.channels
 
 import ai.botstacks.sdk.internal.ui.components.ProgressOverlay
-import ai.botstacks.sdk.ui.components.ChannelSettingsState
-import ai.botstacks.sdk.ui.components.ChannelSettingsView
+import ai.botstacks.sdk.ui.views.ChannelSettingsState
+import ai.botstacks.sdk.ui.views.ChannelSettingsView
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.HeaderDefaults
 import ai.botstacks.sdk.internal.utils.ui.keyboardAsState

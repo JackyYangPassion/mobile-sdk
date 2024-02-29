@@ -1,12 +1,14 @@
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.internal.API
-import ai.botstacks.sdk.internal.state.BotStacksChatStore
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.components.TextInput
 import ai.botstacks.sdk.internal.state.Upload
 import ai.botstacks.sdk.type.UpdateProfileInput
+import ai.botstacks.sdk.ui.components.Avatar
+import ai.botstacks.sdk.ui.components.AvatarSize
+import ai.botstacks.sdk.ui.components.AvatarType
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize

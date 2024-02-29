@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.internal.actions.toggleBlock
 import ai.botstacks.sdk.internal.actions.toggleMute
@@ -7,6 +7,8 @@ import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.components.ToggleSwitch
 import ai.botstacks.sdk.internal.ui.components.settings.SettingsSection
+import ai.botstacks.sdk.ui.components.ChannelGroup
+import ai.botstacks.sdk.ui.components.UserProfile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,26 +29,51 @@ import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * UserDetailsState
+ *
+ * State holder for displaying details about a User, used specifically within the [UserDetailsView].
+ *
+ */
+class UserDetailsState(internal val user: User) {
+    internal val channelsInCommon
+        get() = user.channelsInCommon
+
+    internal val isMuted: Boolean
+        get() = user.muted
+
+    internal val isBlocked: Boolean
+        get() = user.blocked
+
+    internal fun toggleMute() {
+        user.toggleMute()
+    }
+
+    internal fun toggleBlock() {
+        user.toggleBlock()
+    }
+}
+
+/**
+ * UserDetailsView
+ *
+ * A screen content view for displaying details about a given [User].
+ *
+ * @param state the state for this details view.
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun UserDetailsView(
-    user: User
-) {
-    val channelsInCommon by remember(user) {
-        derivedStateOf {
-            user.channelsInCommon
-        }
-    }
+fun UserDetailsView(state: UserDetailsState) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(BotStacks.dimens.inset),
     ) {
         item {
-            UserProfileView(user = user)
+            UserProfile(user = state.user)
         }
 
-        if (channelsInCommon.isNotEmpty()) {
+        if (state.channelsInCommon.isNotEmpty()) {
             item {
                 Column(
                     modifier = Modifier
@@ -59,10 +86,10 @@ fun UserDetailsView(
                     verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x4)
                 ) {
                     Text(
-                        text = "${channelsInCommon.count()} channels in common",
+                        text = "${state.channelsInCommon.count()} channels in common",
                         fontStyle = BotStacks.fonts.label2
                     )
-                    ChannelGroup(channels = channelsInCommon)
+                    ChannelGroup(channels = state.channelsInCommon)
                 }
             }
         }
@@ -75,9 +102,9 @@ fun UserDetailsView(
                     icon = Res.drawable.bell_simple_fill,
                     title = "Notifications",
                     endSlot = {
-                        ToggleSwitch(checked = user.muted, onCheckedChange = null)
+                        ToggleSwitch(checked = state.isMuted, onCheckedChange = null)
                     },
-                    onClick = { user.toggleMute() }
+                    onClick = { state.toggleMute() }
                 )
                 divider()
                 item(
@@ -90,12 +117,12 @@ fun UserDetailsView(
                     },
                     title = {
                         Text(
-                            if (user.blocked) "Unblock" else "Block",
+                            if (state.isBlocked) "Unblock" else "Block",
                             fontStyle = BotStacks.fonts.label2,
                             color = BotStacks.colorScheme.error
                         )
                     },
-                    onClick = { user.toggleBlock() }
+                    onClick = { state.toggleBlock() }
                 )
             }
         }

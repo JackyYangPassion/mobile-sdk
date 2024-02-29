@@ -4,23 +4,23 @@
 
 package ai.botstacks.sdk.internal.navigation.ui.chats
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.runtime.*
-import ai.botstacks.sdk.internal.state.BotStacksChatStore
-import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.ui.BotStacks
-import ai.botstacks.sdk.ui.components.ChatMessagePreview
-import ai.botstacks.sdk.internal.ui.components.EmptyListView
-import ai.botstacks.sdk.ui.components.Header
-import ai.botstacks.sdk.ui.components.HeaderDefaults
-import ai.botstacks.sdk.internal.ui.components.IACList
-import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.ui.components.AlertActionStyle
 import ai.botstacks.sdk.internal.ui.components.BotStacksAlertDialog
+import ai.botstacks.sdk.internal.ui.components.Text
+import ai.botstacks.sdk.state.Chat
+import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.ChatList
+import ai.botstacks.sdk.ui.components.Header
+import ai.botstacks.sdk.ui.components.HeaderDefaults
 import ai.botstacks.sdk.ui.components.rememberHeaderState
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 @Composable
 internal fun ChatsListScreen(
