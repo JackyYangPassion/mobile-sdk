@@ -8,6 +8,7 @@ import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.ui.theme.Assets
 import ai.botstacks.sdk.ui.theme.Colors
 import ai.botstacks.sdk.ui.theme.Fonts
+import ai.botstacks.sdk.ui.theme.ShapeDefinitions
 import ai.botstacks.sdk.ui.theme.darkBotStacksColors
 import ai.botstacks.sdk.ui.theme.lightBotStacksColors
 import androidx.compose.foundation.layout.Box
@@ -46,7 +47,7 @@ fun BotStacksChatController(
     useDarkTheme: Boolean = false,
     lightColorScheme: Colors? = null,
     darkColorScheme: Colors? = null,
-    shapes: Shapes? = null,
+    shapes: ShapeDefinitions? = null,
     assets: Assets? = null,
     fonts: Fonts? = null,
     onLogout: () -> Unit
@@ -57,8 +58,8 @@ fun BotStacksChatController(
         useDarkTheme,
         lightColorScheme ?: lightBotStacksColors(),
         darkColorScheme ?: darkBotStacksColors(),
-        shapes ?: BotStacks.shapes,
-        assets ?: BotStacks.assets,
+        shapes,
+        assets,
         fonts,
     ) {
         BotstacksRouter {

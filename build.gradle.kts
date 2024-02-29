@@ -3,9 +3,9 @@ import java.util.Properties
 
 buildscript {
     repositories {
-        // Make sure that you have the following two repositories
-        google()  // Google's Maven repository
-        mavenCentral()  // Maven Central repository
+        google()
+        mavenCentral()
+        mavenLocal()
         maven(url = "https://jitpack.io" ) {
             credentials {
                 username = project.findProperty("jitpack_auth_token")?.toString() ?: System.getenv("jitpack_auth_token")?.toString()
