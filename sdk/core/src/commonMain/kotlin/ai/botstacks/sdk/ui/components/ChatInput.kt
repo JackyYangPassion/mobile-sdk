@@ -8,7 +8,6 @@ import ai.botstacks.sdk.internal.actions.send
 import ai.botstacks.sdk.internal.ui.components.Pressable
 import ai.botstacks.sdk.internal.ui.components.TextInput
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
@@ -45,15 +44,24 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-
-@OptIn(
-    ExperimentalResourceApi::class
-)
+/**
+ * ChatInput
+ *
+ * Text input that handles the sending of messages to a given [Chat] when the send button is pressed.
+ * This is generally used for [MessageList] as there is handling for an attachment sheet that will present
+ * from the callback [onMedia].
+ *
+ * @param modifier The modifier for this ChatInput
+ * @param chat The chat associated with this input
+ * @param onMedia when the media button is pressed.
+ *@param focusRequester An optional focus requester if you need to react to changes in focus of the
+ * TextInput.
+ */
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatInput(
     modifier: Modifier = Modifier,
     chat: Chat,
-    replyingTo: Message? = null,
     onMedia: () -> Unit,
     focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
@@ -70,7 +78,7 @@ fun ChatInput(
                     delay(300)
                 }
                 state = TextFieldValue()
-                chat.send(replyingTo?.id, text)
+                chat.send(inReplyTo = null, text)
             }
         }
     }
@@ -146,7 +154,7 @@ fun ChatInput(
 @Composable
 private fun MessageInputPreview() {
     BotStacksThemeEngine {
-        ChatInput(chat = genChat(), replyingTo = null, onMedia = {})
+        ChatInput(chat = genChat(), onMedia = {})
     }
 
 }

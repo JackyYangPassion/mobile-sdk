@@ -8,10 +8,8 @@ import androidx.compose.runtime.*
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.fragment.FChat
 import ai.botstacks.sdk.internal.state.BotStacksChatStore
-import ai.botstacks.sdk.type.ChatType
-import ai.botstacks.sdk.type.MemberRole
-import ai.botstacks.sdk.type.NotificationSetting
-import ai.botstacks.sdk.type.OnlineStatus
+import ai.botstacks.sdk.internal.state.toApolloType
+import ai.botstacks.sdk.internal.state.toType
 import ai.botstacks.sdk.internal.utils.op
 
 
@@ -101,14 +99,15 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
 
     var deleting by mutableStateOf(false)
 
-    var notification_setting by mutableStateOf<NotificationSetting?>(null)
+    internal var notification_setting by mutableStateOf<NotificationSetting?>(null)
+
     fun set(notifications: NotificationSetting, isSync: Boolean) {
         this.notification_setting = notifications
         if (isSync) {
             return
         }
         op({
-            API.updateChatNotifications(id, notifications)
+            API.updateChatNotifications(id, notifications.toApolloType())
         })
     }
 
@@ -116,7 +115,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
         return API.getMessages(id, skip, limit)
     }
 
-    constructor(chat: FChat) : this(chat.id, chat.kind) {
+    internal constructor(chat: FChat) : this(chat.id, chat.kind.toType()) {
         print("Chat Kind ${chat.kind}")
         update(chat)
     }
@@ -131,7 +130,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
         }
     }
 
-    fun update(chat: FChat) {
+    internal fun update(chat: FChat) {
         this.name = chat.name ?: ""
         this.description = chat.description
         this.image = chat.image
@@ -156,7 +155,7 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     companion object {
         fun get(id: String) = BotStacksChatStore.current.cache.chats[id]
 
-        fun get(chat: FChat): Chat {
+        internal fun get(chat: FChat): Chat {
             val g = get(chat.id)
             if (g != null) {
                 g.update(chat)

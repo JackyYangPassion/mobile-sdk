@@ -1,8 +1,8 @@
 package ai.botstacks.sdk.internal.ui.components
 
-import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
+import ai.botstacks.sdk.state.OnlineStatus
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -30,7 +30,7 @@ internal fun OnlineStatusIndicator(
                     OnlineStatus.DND -> BotStacks.colorScheme.background
                     OnlineStatus.Offline -> palette.red._500
                     OnlineStatus.Online -> palette.green._800
-                    OnlineStatus.UNKNOWN__ -> BotStacks.colorScheme.background
+                    OnlineStatus.Unknown -> BotStacks.colorScheme.background
                 }, CircleShape
             ).then(modifier)
     )

@@ -6,12 +6,12 @@ package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.state.Chat
-import ai.botstacks.sdk.type.AttachmentType
-import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.internal.utils.relativeTimeString
+import ai.botstacks.sdk.state.AttachmentType
+import ai.botstacks.sdk.state.NotificationSetting
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -48,7 +48,19 @@ import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
-
+/**
+ * ChatMessagePreview
+ *
+ * Renders a "preview" for a given chat. This is based on the last message, if any, that was either
+ * sent or received in the chat. Attachments will be rendered as well.
+ *
+ * This is utilized in [ChatList] to show previews for all chats that a user is currently a member of.
+ *
+ * @param modifier the Modifier to be applied to this preview.
+ * @param chat The chat to extract info from for the preview.
+ * @param onClick callback when the contents is clicked.
+ *
+ */
 @Composable
 fun ChatMessagePreview(
     modifier: Modifier = Modifier,
@@ -66,7 +78,7 @@ fun ChatMessagePreview(
             modifier = Modifier.fillMaxHeight(),
         ) {
             val isMuted by remember(chat.notification_setting) {
-                derivedStateOf { chat.notification_setting == NotificationSetting.none }
+                derivedStateOf { chat.notification_setting == NotificationSetting.None }
             }
 
             Row(
@@ -136,16 +148,17 @@ private val Chat.messagePreview: Pair<AnnotatedString, Map<String, InlineTextCon
         latest?.attachments.orEmpty().isNotEmpty() -> {
             val attachment = latest?.attachments.orEmpty().first()
             when (val type = attachment.type) {
-                AttachmentType.image,
-                AttachmentType.video,
-                AttachmentType.file -> buildAnnotatedString {
+                AttachmentType.Image,
+//                AttachmentType.video,
+//                AttachmentType.file
+                -> buildAnnotatedString {
                     appendInlineContent("imageId")
                     append(" ${type.name}")
                 } to mapOf(
                     "imageId" to InlineTextContent(Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.TextCenter)) {
                         val painter = when (type) {
-                            AttachmentType.image -> rememberVectorPainter(Icons.Rounded.Image)
-                            AttachmentType.video -> rememberVectorPainter(Icons.Rounded.VideoFile)
+                            AttachmentType.Image -> rememberVectorPainter(Icons.Rounded.Image)
+//                            AttachmentType.video -> rememberVectorPainter(Icons.Rounded.VideoFile)
                             else -> painterResource(Res.drawable.document_fill)
                         }
                         Image(
@@ -157,11 +170,11 @@ private val Chat.messagePreview: Pair<AnnotatedString, Map<String, InlineTextCon
                     }
                 )
 
-                AttachmentType.vcard -> AnnotatedString("Shared a contact") to emptyMap()
-                AttachmentType.location -> AnnotatedString("Shared a location") to emptyMap()
-                AttachmentType.audio -> AnnotatedString("Shared audio") to emptyMap()
+//                AttachmentType.vcard -> AnnotatedString("Shared a contact") to emptyMap()
+                AttachmentType.Location -> AnnotatedString("Shared a location") to emptyMap()
+//                AttachmentType.audio -> AnnotatedString("Shared audio") to emptyMap()
 
-                AttachmentType.UNKNOWN__ -> AnnotatedString("Unknown file") to emptyMap()
+                AttachmentType.Unknown -> AnnotatedString("Unknown file") to emptyMap()
             }
         }
 

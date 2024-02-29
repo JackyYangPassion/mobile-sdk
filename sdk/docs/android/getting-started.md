@@ -54,7 +54,7 @@ composeScope.launch {
 }
 ```
 
-### Step 23: Render the UI
+### Step 3: Render the UI
 
 The BotStacks UI Kit uses Jetpack Compose.
 You can add it to any `NavHost` by rendering inside an `BotStacksThemeEngine` and adding the `BotStacksChatController`. Customization controls for the Theme Engine are described below.

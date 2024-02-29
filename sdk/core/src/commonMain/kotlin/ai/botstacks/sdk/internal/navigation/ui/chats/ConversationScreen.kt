@@ -6,8 +6,6 @@ package ai.botstacks.sdk.internal.navigation.ui.chats
 
 import ai.botstacks.sdk.internal.actions.markRead
 import ai.botstacks.sdk.internal.ui.components.ChatCount
-import ai.botstacks.sdk.internal.ui.components.MediaActionSheet
-import ai.botstacks.sdk.internal.ui.components.MessageActionSheet
 import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.genChat
@@ -23,28 +21,25 @@ import ai.botstacks.sdk.ui.components.AvatarType
 import ai.botstacks.sdk.ui.components.ChatInput
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.HeaderDefaults
+import ai.botstacks.sdk.ui.components.MediaActionSheet
+import ai.botstacks.sdk.ui.components.MessageActionSheet
 import ai.botstacks.sdk.ui.components.MessageList
+import ai.botstacks.sdk.ui.components.rememberMediaActionSheetState
+import ai.botstacks.sdk.ui.components.rememberMessageActionSheetState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun ConversationScreen(
     chat: Chat,
@@ -56,12 +51,6 @@ internal fun ConversationScreen(
     back: () -> Unit
 ) {
     val composeScope = rememberCoroutineScope()
-    var messageForAction by remember {
-        mutableStateOf<Message?>(null)
-    }
-    val media = androidx.compose.material.rememberModalBottomSheetState(
-        ModalBottomSheetValue.Hidden, skipHalfExpanded = true
-    )
 
     DisposableEffect(chat.id) {
         Chat.currentlyViewed = chat.id
@@ -74,54 +63,49 @@ internal fun ConversationScreen(
         }
     }
 
-    MediaActionSheet(
-        state = media,
-        chat = chat,
-        inReplyTo = message
-    ) {
-        MessageActionSheet(
-            message = messageForAction,
-            hide = { messageForAction = null },
-            onReply = openReply
-        ) {
+    val mediaSheetState = rememberMediaActionSheetState(chat = chat)
+    val messageActionSheetState = rememberMessageActionSheetState()
 
+    MediaActionSheet(state = mediaSheetState,) {
+        MessageActionSheet(state = messageActionSheetState) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Header(
-                    icon = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(dimens.grid.x4)
-                        ) {
-                            Avatar(
-                                type = AvatarType.Channel(listOf(chat.displayImage)),
-                            )
-                            Column {
-                                Text(
-                                    text = chat.displayName,
-                                    fontStyle = fonts.h2,
-                                    color = colorScheme.onBackground,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                ChatCount(count = chat.members.size)
-                            }
-                        }
-                    },
-                    onBackClick = back,
-                    endAction = { HeaderDefaults.MenuAction { openEdit() } }
-                )
                 MessageList(
                     chat = chat,
+                    header = {
+                        Header(
+                            icon = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(dimens.grid.x4)
+                                ) {
+                                    Avatar(
+                                        type = AvatarType.Channel(listOf(chat.displayImage)),
+                                    )
+                                    Column {
+                                        Text(
+                                            text = chat.displayName,
+                                            fontStyle = fonts.h2,
+                                            color = colorScheme.onBackground,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        ChatCount(count = chat.members.size)
+                                    }
+                                }
+                            },
+                            onBackClicked = back,
+                            endAction = { HeaderDefaults.MenuAction { openEdit() } }
+                        )
+                    },
                     modifier = Modifier.weight(1f),
                     onPressUser = { openProfile(it) },
-                    onLongPress = { messageForAction = it },
+                    onLongPress = { messageActionSheetState.messageForAction = it },
                 )
                 ChatInput(
                     modifier = Modifier.padding(dimens.grid.x4)
                         .navigationBarsPadding(),
                     chat = chat,
-                    replyingTo = message,
-                    onMedia = { composeScope.launch { media.show() } }
+                    onMedia = { composeScope.launch { mediaSheetState.show() } }
                 )
             }
         }

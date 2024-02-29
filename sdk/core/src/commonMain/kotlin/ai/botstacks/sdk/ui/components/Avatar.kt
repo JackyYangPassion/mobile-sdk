@@ -7,7 +7,6 @@ package ai.botstacks.sdk.ui.components
 import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.ui.components.OnlineStatusIndicator
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.OnlineStatus
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.internal.ui.components.RemoveIndicator
@@ -15,6 +14,7 @@ import ai.botstacks.sdk.internal.ui.components.SelectedBadge
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksColorPalette
 import ai.botstacks.sdk.ui.theme.dayNightColor
 import ai.botstacks.sdk.internal.utils.IPreviews
+import ai.botstacks.sdk.state.OnlineStatus
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -110,7 +110,7 @@ sealed interface AvatarType {
      */
     data class User(
         val url: Any?,
-        val status: OnlineStatus = OnlineStatus.UNKNOWN__,
+        val status: OnlineStatus = OnlineStatus.Unknown,
         val empty: Painter? = null,
     ) : AvatarType {
         @OptIn(ExperimentalResourceApi::class)
@@ -137,6 +137,7 @@ sealed interface AvatarType {
  *
  * This is a convenience wrapper around [User] to handle [OnlineStatus] easily.
  *
+ * @param modifier the Modifier to be applied to this Avatar
  * @param size Size to display
  * @param user User for the avatar
  * @param showOnlineStatus if enabled, the online status indicator will show if not UNKNOWN.
@@ -158,7 +159,7 @@ fun Avatar(
     val type = remember(user.avatar, user.status) {
         AvatarType.User(
             url = user.avatar,
-            status = if (showIndicator) user.status else OnlineStatus.UNKNOWN__
+            status = if (showIndicator) user.status else OnlineStatus.Unknown
         )
     }
     Avatar(
@@ -175,6 +176,7 @@ fun Avatar(
  *
  * Renders the display image for a given URL in a bordered circle at the specified size.
  *
+ * @param modifier the Modifier to be applied to this Avatar
  * @param size Size to display
  * @param status optional online status
  * @param url The URL of the image to render.
@@ -185,7 +187,7 @@ fun Avatar(
 fun Avatar(
     modifier: Modifier = Modifier,
     size: AvatarSize = AvatarDefaults.Size,
-    status: OnlineStatus = OnlineStatus.UNKNOWN__,
+    status: OnlineStatus = OnlineStatus.Unknown,
     url: String?,
     chat: Boolean = false,
 ) {
@@ -206,6 +208,7 @@ fun Avatar(
  *
  * Renders the display image for a user in a bordered circle at the specified size.
  *
+ * @param modifier the Modifier to be applied to this Avatar
  * @param backgroundColor Background color to render behind images (will show in empty state depending on what empty state is).
  * @param contentColor Content color for items rendered in empty state.
  * @param size Size to display

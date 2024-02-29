@@ -1,4 +1,4 @@
-package ai.botstacks.sdk.ui.components
+package ai.botstacks.sdk.ui.views
 
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.internal.ui.components.Text
@@ -10,6 +10,10 @@ import ai.botstacks.sdk.internal.ui.components.TextInput
 import ai.botstacks.sdk.internal.ui.components.ToggleSwitch
 import ai.botstacks.sdk.internal.ui.components.settings.SettingsSection
 import ai.botstacks.sdk.internal.utils.bg
+import ai.botstacks.sdk.ui.components.Avatar
+import ai.botstacks.sdk.ui.components.AvatarSize
+import ai.botstacks.sdk.ui.components.AvatarType
+import ai.botstacks.sdk.ui.components.UserSelect
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,16 +41,28 @@ import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * CreateChannelState
+ *
+ * State holder for creating a channel, used specifically within the [CreateChannelView].
+ *
+ * To trigger a channel creation once modifications are done within the view, simply call [create].
+ * This will return a Result with the created chat if successful, or the error if it fails. While the
+ * create action is waiting for a result [saving] will be true.
+ *
+ * Resulting changes are persisted internally and do not need to be saved manually.
+ *
+ */
 @Stable
 class CreateChannelState {
-    var selectedImage by mutableStateOf<KmpFile?>(null)
+    internal var selectedImage by mutableStateOf<KmpFile?>(null)
 
-    var name by mutableStateOf(TextFieldValue())
+    internal var name by mutableStateOf(TextFieldValue())
 
-    var private by mutableStateOf(false)
+    internal var private by mutableStateOf(false)
 
-    var participants = mutableStateListOf<User>()
-    val participantCount get() = participants.count()
+    internal var participants = mutableStateListOf<User>()
+    internal val participantCount get() = participants.count()
 
     var saving by mutableStateOf(false)
         private set
@@ -71,6 +87,18 @@ class CreateChannelState {
     }
 }
 
+/**
+ * CreateChannelView
+ *
+ * A screen content view for creating a new Channel.
+ *
+ * @param state The state for the view
+ * @param onSelectUsers Callback when the add users icon button is clicked within the User select component. Use this to navigate to a new screen
+ * where a user will select participants for this new channel
+ *
+ * @see [SelectChannelUsersConnectingView]
+ *
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun CreateChannelView(
@@ -140,7 +168,7 @@ fun CreateChannelView(
                 verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.inset)
             ) {
                 Text("Participant: ${state.participantCount}", fontStyle = BotStacks.fonts.label2)
-                UserSelectView(
+                UserSelect(
                     modifier = Modifier.fillMaxWidth(),
                     selectedUsers = state.participants,
                     onAddSelected = onSelectUsers,

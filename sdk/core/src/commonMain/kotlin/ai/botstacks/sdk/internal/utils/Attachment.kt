@@ -1,15 +1,14 @@
 package ai.botstacks.sdk.internal.utils
 
-import ai.botstacks.sdk.fragment.FMessage
-import ai.botstacks.sdk.internal.state.File
 import ai.botstacks.sdk.internal.state.Location
-import ai.botstacks.sdk.type.AttachmentType
+import ai.botstacks.sdk.state.AttachmentType
+import ai.botstacks.sdk.state.MessageAttachment
 
-internal fun FMessage.Attachment.vcard() =
-    if (type == AttachmentType.vcard) parseVcard(data) else null
+internal fun MessageAttachment.vcard() = null
+//    if (type == AttachmentType.vcard) parseVcard(data) else null
 
-internal fun FMessage.Attachment.location() =
-    if (type == AttachmentType.location) Location(latitude, longitude, address) else null
+internal fun MessageAttachment.location() =
+    if (type == AttachmentType.Location) Location(latitude, longitude, address) else null
 
-internal fun FMessage.Attachment.file() =
-    if (type == AttachmentType.file) File(data = data.orEmpty(), mimeString = mime.orEmpty()) else null
+internal fun MessageAttachment.file() = null
+//    if (type == AttachmentType.file) File(data = data.orEmpty(), mimeString = mime.orEmpty()) else null

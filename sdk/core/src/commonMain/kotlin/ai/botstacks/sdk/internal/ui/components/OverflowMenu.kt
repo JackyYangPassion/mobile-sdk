@@ -1,7 +1,8 @@
 package ai.botstacks.sdk.internal.ui.components
 
-import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.internal.ui.theme.LocalBotStacksShapes
+import ai.botstacks.sdk.ui.BotStacks
+import ai.botstacks.sdk.ui.components.OverflowMenuScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -11,6 +12,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -20,21 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
-
-interface OverflowMenuScope {
-
-    fun item(
-        content: @Composable (PaddingValues) -> Unit
-    )
-
-    fun label(
-        enabled: Boolean = true,
-        onClick: () -> Unit,
-        icon: (@Composable () -> Unit)? = null,
-        subtitle: @Composable () -> Unit = { },
-        title: @Composable () -> Unit,
-    )
-}
 
 @ExperimentalAnimationApi
 @Composable
@@ -88,6 +75,7 @@ private fun DropdownOverflowMenu(
         ) {
             DropdownMenu(
                 modifier = Modifier
+                    .widthIn(min = BotStacks.dimens.grid.x16)
                     .background(BotStacks.colorScheme.background),
                 expanded = visible,
                 onDismissRequest = onDismissRequest,

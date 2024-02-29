@@ -1,14 +1,12 @@
 package ai.botstacks.sdk.ui.components
 
 import ai.botstacks.sdk.internal.actions.react
-import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.internal.ui.components.ClickableText
 import ai.botstacks.sdk.internal.ui.components.MessageImageContent
 import ai.botstacks.sdk.internal.ui.components.MessageMapContent
 import ai.botstacks.sdk.internal.ui.components.MessageTextContent
 import ai.botstacks.sdk.state.Message
 import ai.botstacks.sdk.state.User
-import ai.botstacks.sdk.type.AttachmentType
 import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.dimens
 import ai.botstacks.sdk.ui.BotStacks.fonts
@@ -24,6 +22,8 @@ import ai.botstacks.sdk.internal.utils.genChatextMessage
 import ai.botstacks.sdk.internal.utils.genCurrentUser
 import ai.botstacks.sdk.internal.utils.genU
 import ai.botstacks.sdk.internal.utils.location
+import ai.botstacks.sdk.state.AttachmentType
+import ai.botstacks.sdk.state.MessageAttachment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +53,25 @@ import kotlinx.datetime.Instant
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * ChatMessage
+ *
+ * Renders the contents of a given [Message] from a [ai.botstacks.sdk.state.Chat].
+ * This is used by [MessageList] to form the contents of a conversational chat, by properly aligning
+ * messages to left or right depending on sender (left aligned for incoming and right aligned for outgoing).
+ *
+ *
+ * @param modifier The modifier to apply to this message.
+ * @param message The message to display.
+ * @param shape corner-based shaped to render the "bubble" in. This defaults to [ai.botstacks.sdk.ui.theme.ShapeDefinitions.medium].
+ * @param showAvatar Whether to show the associated user's avatar along with this message.
+ * @param showTimestamp Whether to show the timestamp this message was sent or received.
+ * @param onPressUser callback for when a user's avatar (when visible) is clicked.
+ * @param onLongPress callback for when a message "bubble" is clicked.
+ * @param onClick callback for when an attachment is clicked. This is utlized by [MessageList] to show
+ * images for full screen viewing.
+ *
+ */
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
@@ -62,7 +81,7 @@ fun ChatMessage(
     showTimestamp: Boolean = true,
     onPressUser: (User) -> Unit,
     onLongPress: () -> Unit,
-    onClick: ((FMessage.Attachment?) -> Unit)? = null
+    onClick: ((MessageAttachment?) -> Unit)? = null
 ) {
     if (message.user.blocked) {
         return
@@ -130,7 +149,7 @@ private fun ChatMessage(
     avatar: String?,
     username: String,
     content: String? = null,
-    attachment: FMessage.Attachment? = null,
+    attachment: MessageAttachment? = null,
     date: Instant,
     isCurrentUser: Boolean,
     isGroup: Boolean,
@@ -142,7 +161,7 @@ private fun ChatMessage(
     hasError: Boolean = false,
     onPressUser: () -> Unit,
     onLongPress: () -> Unit,
-    onClick: ((FMessage.Attachment?) -> Unit)? = null
+    onClick: ((MessageAttachment?) -> Unit)? = null
 ) {
     BoxWithConstraints(
         modifier = modifier.fillMaxWidth(),
@@ -166,7 +185,7 @@ private fun ChatMessage(
                 }
 
                 when (attachment?.type) {
-                    AttachmentType.image -> MessageImageContent(
+                    AttachmentType.Image -> MessageImageContent(
                         modifier = Modifier
                             .fillMaxHeight()
                             .widthIn(max = maxWidth * 0.67f),
@@ -179,7 +198,7 @@ private fun ChatMessage(
                         onLongClick = onLongPress,
                     )
 
-                    AttachmentType.location -> MessageMapContent(
+                    AttachmentType.Location -> MessageMapContent(
                         modifier = Modifier
                             .fillMaxHeight()
                             .widthIn(max = maxWidth * 0.67f),

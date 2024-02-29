@@ -2,7 +2,7 @@ package ai.botstacks.sdk.state
 
 import androidx.compose.runtime.Stable
 import ai.botstacks.sdk.fragment.FMember
-import ai.botstacks.sdk.type.MemberRole
+import ai.botstacks.sdk.internal.state.toRole
 import kotlinx.datetime.Instant
 
 /**
@@ -48,7 +48,7 @@ data class Participant(
     companion object {
         internal fun get(props: FMember): Participant {
             User.get(props.user.fUser)
-            return Participant(props.user.fUser.id, props.chat_id, props.created_at, props.role)
+            return Participant(props.user.fUser.id, props.chat_id, props.created_at, props.role.toRole())
         }
     }
 }

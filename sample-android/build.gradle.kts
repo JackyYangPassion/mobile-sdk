@@ -25,12 +25,9 @@ kotlin {
 
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.core)
-                implementation(libs.androidx.core.splashscreen)
                 implementation(libs.androidx.lifecycle.runtime)
                 implementation(libs.androidx.navigation.compose)
-                implementation(libs.androidx.work.runtime)
 
-                implementation(firebaseLibs.firebaseAnalyticsKtx)
                 implementation(firebaseLibs.firebaseMessagingKtx)
             }
         }

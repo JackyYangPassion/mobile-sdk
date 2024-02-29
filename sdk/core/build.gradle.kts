@@ -113,10 +113,7 @@ kotlin {
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
 
-                implementation(libs.paho.mqtt.client)
                 implementation(libs.apache.commons.text)
-                implementation(libs.moshi.kotlin)
-                implementation(libs.moshi.adapters)
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.core)
@@ -129,8 +126,6 @@ kotlin {
 
                 implementation(libs.ktor.engine.android)
 
-                implementation(libs.hive.mqtt.client)
-
                 implementation(libs.contacts.async)
                 implementation(libs.contacts.core)
                 implementation(libs.contacts.vcard)
@@ -139,14 +134,11 @@ kotlin {
                 implementation(libs.google.maps.compose.utils)
 
                 implementation(libs.datafaker)
-                implementation(libs.emoji.picker)
                 implementation(libs.giphy)
 
                 implementation(libs.google.play.services.location)
 
                 implementation(firebaseLibs.firebaseMessagingKtx)
-
-                implementation(libs.ok2curl)
             }
         }
 
@@ -169,6 +161,10 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        aarMetadata {
+            minSdk = libs.versions.android.minSdk.get().toInt()
+        }
     }
 
     packaging {
@@ -197,6 +193,12 @@ android {
     }
     kotlin {
         jvmToolchain(17)
+    }
+
+    publishing {
+        singleVariant("release") {
+            withJavadocJar()
+        }
     }
 }
 
@@ -229,6 +231,8 @@ apollo {
         )
         mapScalarToKotlinDouble("Latitude")
         mapScalarToKotlinDouble("Longitude")
+        // don't include apollo sources in output frameworks
+        generateAsInternal.set(true)
     }
 }
 
@@ -281,9 +285,9 @@ tasks.withType<DokkaTask>().configureEach {
     }
 }
 
-kmmbridge {
+//kmmbridge {
 //    mavenPublishArtifacts()
-}
+//}
 
 dependencies {
     dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
@@ -291,15 +295,17 @@ dependencies {
 
 publishing {
     publications {
-        create<MavenPublication>("release") {
+        register<MavenPublication>("release") {
             groupId = "ai.botstacks"
-            artifactId = "sdk"
+            artifactId = "chat-sdk"
             version = libs.versions.libraryVersion.get()
 
-//            from(components.getByName("release"))
+            afterEvaluate {
+                from(components["release"])
+            }
 
             pom {
-                name.set("BotStacksChat")
+                name.set("BotStacksSDK")
                 description.set("BotStacks Multiplatform Mobile SDK")
                 url.set("https://github.com/botstacks/mobile-sdk")
 

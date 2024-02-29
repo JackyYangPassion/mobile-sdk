@@ -9,8 +9,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.util.fastForEach
 
+/**
+ * ChannelGroup
+ *
+ * Renders a given list of [Chat] channels in a [Column].
+ *
+ * This renders each chat in its own [ChannelRow], with the [Chat.displayName] as the title
+ * and the subtitle showing a preview of the members with in it.
+ *
+ * This is utilized in the [UserDetailsView] to show channels the current user has in common with
+ * any other user.
+ *
+ * @param modifier the Modifier to be applied to this ChannelList
+ * @param channels List of channels to show in the list.
+ */
 @Composable
-fun ChannelList(modifier: Modifier = Modifier, channels: List<Chat>) {
+fun ChannelGroup(modifier: Modifier = Modifier, channels: List<Chat>) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(BotStacks.dimens.grid.x4)

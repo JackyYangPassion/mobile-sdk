@@ -9,9 +9,10 @@ import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.fragment.FMessage
 import ai.botstacks.sdk.internal.Monitoring
 import ai.botstacks.sdk.internal.state.Upload
+import ai.botstacks.sdk.internal.state.toApolloType
+import ai.botstacks.sdk.internal.state.toAttachment
 import ai.botstacks.sdk.state.*
 import ai.botstacks.sdk.type.AttachmentInput
-import ai.botstacks.sdk.type.NotificationSetting
 import ai.botstacks.sdk.internal.utils.bg
 import ai.botstacks.sdk.internal.utils.op
 import ai.botstacks.sdk.internal.utils.opbg
@@ -33,12 +34,12 @@ internal fun AttachmentInput.toAttachment() = FMessage.Attachment(
     mime = mime.getOrNull()
 )
 
-internal fun FMessage.Attachment.toInput(): AttachmentInput {
+internal fun MessageAttachment.toInput(): AttachmentInput {
     return AttachmentInput(
         id = id,
         url = url,
         data = Optional.presentIfNotNull(data),
-        type = type,
+        type = type.toApolloType(),
         width = Optional.presentIfNotNull(width),
         height = Optional.presentIfNotNull(height),
         duration = Optional.presentIfNotNull(duration),
@@ -49,6 +50,8 @@ internal fun FMessage.Attachment.toInput(): AttachmentInput {
     )
 }
 
+
+
 internal fun Chat.send(
     inReplyTo: String?,
     text: String? = null,
@@ -57,7 +60,6 @@ internal fun Chat.send(
 ) {
     val atts = (attachments?.toMutableList() ?: mutableListOf())
     if (upload != null) {
-        val local = upload.localAttachment()
         atts.add(upload.localAttachment())
     }
 
@@ -67,7 +69,7 @@ internal fun Chat.send(
         userID = User.current!!.id,
         parentID = inReplyTo,
         chatID = id,
-        attachments = atts.map { it.toAttachment() }.toMutableStateList(),
+        attachments = atts.map { it.toAttachment().toAttachment() }.toMutableStateList(),
     )
     m.updateText(text.orEmpty())
     m.upload = upload
@@ -133,7 +135,7 @@ internal fun Chat.setNotifications(settings: NotificationSetting, isSync: Boolea
         return
     }
     op({
-        API.updateChatNotifications(id, settings)
+        API.updateChatNotifications(id, settings.toApolloType())
     }) {
         this.notification_setting = og
     }

@@ -18,9 +18,24 @@ import botstacks.sdk.core.generated.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * UserSelect
+ *
+ * A component that renders [User]'s in a horizontally scrolling Row. This is primarily used in [CreateChannelView]
+ * for showing currently selected [User]s and allowing the ability to add more if desired.
+ *
+ * @param modifier The modifier to apply to this component
+ * @param selectedUsers Currently selected users
+ * @param canRemove If enabled, currently selected users can be removed on click (Will trigger [onRemove].
+ * @param showAdd If enabled, a trailing add option will appear allowing you to handle [onAddSelected] to navigate to another
+ * view to add users. @see [SelectChannelUsers] for a use case.
+ * @param onRemove callback for when a user is removed.
+ * @param onAddSelected callback when the trailing add option is clicked; requires [showAdd] to be true.
+ *
+ */
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun UserSelectView(
+fun UserSelect(
     modifier: Modifier = Modifier,
     selectedUsers: List<User>,
     canRemove: Boolean = false,
