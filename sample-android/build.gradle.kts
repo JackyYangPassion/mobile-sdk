@@ -11,7 +11,7 @@ kotlin {
     sourceSets {
         val androidMain by getting {
             dependencies {
-                implementation("ai.botstacks:sdk:1.0.0")
+                implementation(project(":sdk:core"))
                 
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
