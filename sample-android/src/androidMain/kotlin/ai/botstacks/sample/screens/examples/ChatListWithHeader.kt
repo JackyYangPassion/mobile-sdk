@@ -9,8 +9,10 @@ import ai.botstacks.sdk.ui.components.ChatList
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.theme.lightBotStacksColors
 import android.widget.Toast
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
@@ -31,10 +33,10 @@ fun ChatListWithHeader(onBackClicked: () -> Unit) {
         val context = LocalContext.current
         ChatList(
             header = {
-                Header(onBackClick = onBackClicked,
+                Header(onBackClicked = onBackClicked,
                     menu  = {
                         item {
-                            Text(text = "Hi")
+                            Text(modifier = Modifier.padding(it), text = "Hi")
                         }
                     }
                 )

@@ -17,6 +17,7 @@ import ai.botstacks.sdk.internal.utils.genImageMessage
 import ai.botstacks.sdk.internal.utils.genU
 import ai.botstacks.sdk.internal.utils.random
 import ai.botstacks.sdk.internal.utils.ui.keyboardAsState
+import ai.botstacks.sdk.ui.views.UserDetailsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -90,7 +91,8 @@ private fun UserDetailsScreen(user: User, onBackClicked: () -> Unit) {
                 onBackClicked = onBackClicked,
             )
 
-            UserDetailsView(user)
+            val state = remember(user) { UserDetailsState(user) }
+            UserDetailsView(state)
         }
     }
 }

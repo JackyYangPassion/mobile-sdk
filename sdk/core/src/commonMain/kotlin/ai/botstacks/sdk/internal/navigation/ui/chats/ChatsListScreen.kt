@@ -49,7 +49,7 @@ internal fun ChatsListScreen(
                 icon = { HeaderDefaults.Logo() },
                 state = headerState,
                 onCompose = onCreateChannel,
-                onBackClick = { headerState.searchActive = false }
+                onBackClicked = { headerState.searchActive = false }
                     .takeIf { headerState.searchActive },
                 menu = {
 //                    label(onClick = openFavorites) {

@@ -5,7 +5,6 @@ import ai.botstacks.sdk.internal.navigation.LocalPlatformNavigator
 import ai.botstacks.sdk.state.Chat
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.internal.navigation.ui.channels.ChannelDetailsScreen
-import ai.botstacks.sdk.internal.navigation.ui.channels.ChannelUserSelectionState
 import ai.botstacks.sdk.internal.navigation.ui.channels.CreateChannelScreen
 import ai.botstacks.sdk.internal.navigation.ui.channels.SelectChannelUsersScreen
 import ai.botstacks.sdk.internal.navigation.ui.chats.ChatsListScreen
@@ -13,6 +12,7 @@ import ai.botstacks.sdk.internal.navigation.ui.chats.ConversationRouter
 import ai.botstacks.sdk.internal.navigation.ui.chats.FavoritesMessagesScreen
 import ai.botstacks.sdk.internal.navigation.ui.profile.ProfileView
 import ai.botstacks.sdk.ui.views.ChannelSettingsState
+import ai.botstacks.sdk.ui.views.ChannelUserSelectionState
 import ai.botstacks.sdk.ui.views.CreateChannelState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
