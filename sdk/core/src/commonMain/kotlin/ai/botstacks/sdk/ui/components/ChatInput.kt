@@ -65,11 +65,11 @@ fun ChatInput(
         if (state.text.isNotBlank()) {
             composeScope.launch {
                 val text = state.text
-                state = TextFieldValue()
                 if (keyboardVisible) {
                     keyboardController?.hide()
-                    delay(500)
+                    delay(300)
                 }
+                state = TextFieldValue()
                 chat.send(replyingTo?.id, text)
             }
         }
