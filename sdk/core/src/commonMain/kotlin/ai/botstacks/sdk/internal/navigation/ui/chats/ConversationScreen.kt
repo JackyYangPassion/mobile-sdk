@@ -23,7 +23,7 @@ import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.components.HeaderDefaults
 import ai.botstacks.sdk.ui.components.MediaActionSheet
 import ai.botstacks.sdk.ui.components.MessageActionSheet
-import ai.botstacks.sdk.ui.components.MessageListView
+import ai.botstacks.sdk.ui.components.MessageList
 import ai.botstacks.sdk.ui.components.rememberMediaActionSheetState
 import ai.botstacks.sdk.ui.components.rememberMessageActionSheetState
 import androidx.compose.foundation.layout.Arrangement
@@ -69,7 +69,7 @@ internal fun ConversationScreen(
     MediaActionSheet(state = mediaSheetState,) {
         MessageActionSheet(state = messageActionSheetState) {
             Column(modifier = Modifier.fillMaxSize()) {
-                MessageListView(
+                MessageList(
                     chat = chat,
                     header = {
                         Header(
@@ -93,7 +93,7 @@ internal fun ConversationScreen(
                                     }
                                 }
                             },
-                            onBackClick = back,
+                            onBackClicked = back,
                             endAction = { HeaderDefaults.MenuAction { openEdit() } }
                         )
                     },

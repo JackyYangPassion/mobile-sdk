@@ -12,8 +12,8 @@ import ai.botstacks.sdk.internal.navigation.ui.chats.ChatsListScreen
 import ai.botstacks.sdk.internal.navigation.ui.chats.ConversationRouter
 import ai.botstacks.sdk.internal.navigation.ui.chats.FavoritesMessagesScreen
 import ai.botstacks.sdk.internal.navigation.ui.profile.ProfileView
-import ai.botstacks.sdk.ui.components.ChannelSettingsState
-import ai.botstacks.sdk.ui.components.CreateChannelState
+import ai.botstacks.sdk.ui.views.ChannelSettingsState
+import ai.botstacks.sdk.ui.views.CreateChannelState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList

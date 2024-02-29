@@ -48,7 +48,7 @@ import org.jetbrains.compose.resources.painterResource
  * ChatInput
  *
  * Text input that handles the sending of messages to a given [Chat] when the send button is pressed.
- * This is generally used for [MessageListView] as there is handling for an attachment sheet that will present
+ * This is generally used for [MessageList] as there is handling for an attachment sheet that will present
  * from the callback [onMedia].
  *
  * @param modifier The modifier for this ChatInput

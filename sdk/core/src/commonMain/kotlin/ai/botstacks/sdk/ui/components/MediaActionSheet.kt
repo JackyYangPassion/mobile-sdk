@@ -81,9 +81,17 @@ internal enum class Media {
     }
 }
 
+/**
+ * MediaActionSheetState
+ *
+ * A state that drives visibility of the [MediaActionSheet].
+ */
 class MediaActionSheetState(internal val chat: Chat, sheetState: ModalBottomSheetState) :
     ActionSheetState(sheetState)
 
+/**
+ * Creates a [MediaActionSheetState] and remembers it.
+ */
 @Composable
 fun rememberMediaActionSheetState(chat: Chat): MediaActionSheetState {
 

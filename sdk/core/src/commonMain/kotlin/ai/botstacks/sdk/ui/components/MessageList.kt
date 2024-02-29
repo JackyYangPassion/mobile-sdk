@@ -48,8 +48,7 @@ import androidx.compose.ui.window.Popup
 /**
  * MessageList
  *
- * A conversational screen content view displaying the messages for a given [Chat] in an infinite scrolling list,
- * as well as a [ChatInput] to respond and send messages within the chat.
+ * A conversational component displaying the messages for a given [Chat] in an infinite scrolling list.
  *
  * @param modifier the Modifier to be applied to this list.
  * @param chat The chat to render messages for.
@@ -59,7 +58,7 @@ import androidx.compose.ui.window.Popup
  *
  */
 @Composable
-fun MessageListView(
+fun MessageList(
     modifier: Modifier = Modifier,
     chat: Chat,
     header: @Composable () -> Unit = { },
