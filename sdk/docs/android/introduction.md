@@ -43,12 +43,12 @@ dependencyResolutionManagement {
 
 &nbsp;
 
-Add `io.inappchat:sdk:1.0.1` to your dependencies
+Add `ai.botstacks:chat-sdk:1.0.0` to your dependencies
 
 ```gradle
 
 dependencies {
-    implementation 'ai.botstacks:sdk:1.0.0'
+    implementation("ai.botstacks:chat-sdk:1.0.0")
 }
 
 ```

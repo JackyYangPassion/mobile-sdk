@@ -161,6 +161,10 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        aarMetadata {
+            minSdk = libs.versions.android.minSdk.get().toInt()
+        }
     }
 
     packaging {
@@ -189,6 +193,12 @@ android {
     }
     kotlin {
         jvmToolchain(17)
+    }
+
+    publishing {
+        singleVariant("release") {
+            withJavadocJar()
+        }
     }
 }
 
@@ -285,12 +295,14 @@ dependencies {
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        register<MavenPublication>("release") {
             groupId = "ai.botstacks"
-            artifactId = "sdk"
+            artifactId = "chat-sdk"
             version = libs.versions.libraryVersion.get()
 
-//            from(components.getByName("release"))
+            afterEvaluate {
+                from(components["release"])
+            }
 
             pom {
                 name.set("BotStacksSDK")
