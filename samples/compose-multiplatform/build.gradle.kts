@@ -74,9 +74,9 @@ kotlin {
     // iOS TBD
 
     sourceSets {
-        val androidMain by getting {
+        val commonMain by getting {
             dependencies {
-                implementation(projects.samples.shared)
+                implementation("ai.botstacks:chat-sdk:1.0.0")
 
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
@@ -87,7 +87,11 @@ kotlin {
                 implementation(compose.animation)
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
+            }
+        }
 
+        val androidMain by getting {
+            dependencies {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.core)
                 implementation(libs.androidx.lifecycle.runtime)
