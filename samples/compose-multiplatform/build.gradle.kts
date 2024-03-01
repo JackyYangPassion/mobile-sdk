@@ -56,6 +56,12 @@ android {
         compose = true
     }
 
+    buildTypes {
+        create("dev") {
+            initWith(getByName("debug"))
+        }
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
@@ -76,7 +82,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("ai.botstacks:chat-sdk:1.0.0")
+                implementation(projects.chatSdk)
 
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)

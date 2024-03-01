@@ -53,7 +53,6 @@ internal data class BotStacksChatStore(val id: String = uuid()) {
             "user-id",
         )
     ) { _, _, newValue ->
-        Monitoring.log("user newV=$newValue")
         if (newValue != null) {
             BotStacksChat.shared.prefs.putString("user-id", newValue)
         }

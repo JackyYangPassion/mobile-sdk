@@ -136,7 +136,7 @@ actual class BotStacksChatPlatform : BotStacksChat() {
         }
         if (didStartLoading) throw Error("SDK Already initialized")
         didStartLoading = true
-        retryIO {
+        retryIO(times = 3) {
             BotStacksChatStore.current.loadAsync()
             isUserLoggedIn = BotStacksChatStore.current.currentUserID != null
             loaded = true

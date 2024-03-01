@@ -33,10 +33,12 @@ This SDK integrates a fully serviced chat experience on the [BotStacks](https://
 Add `ai.botstacks:chat-sdk:1.0.0` to your dependencies
 
 ```gradle
-dependencies {
-    [...]
-+   implementation("ai.botstacks:chat-sdk:1.0.0")
-    [...]
+val commonMain by getting {
+    dependencies {
+        [...]
++       implementation("ai.botstacks:chat-sdk:1.0.0")
+        [...]
+    }
 }
 ```
 
