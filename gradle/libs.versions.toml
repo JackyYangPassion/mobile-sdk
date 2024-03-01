@@ -58,8 +58,6 @@ coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3
 coil3-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil3" }
 coil3-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil3" }
 
-contacts-core = { module = "com.github.vestrel00.contacts-android:core", version.ref = "contacts" }
-contacts-async = { module = "com.github.vestrel00.contacts-android:async", version.ref = "contacts" }
 contacts-vcard = { module = "com.googlecode.ez-vcard:ez-vcard", version = "0.12.0" }
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

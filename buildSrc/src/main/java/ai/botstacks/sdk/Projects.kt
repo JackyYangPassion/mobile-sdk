@@ -43,9 +43,7 @@ fun Project.androidLibrary(
         srcDirs("src/commonMain/resources", "src/jvmCommonMain/resources")
     }
 
-    println("p=${project.name}")
     if (project.name in publicModules) {
-        println("setting up publishing")
         apply(plugin = "org.jetbrains.dokka")
         apply(plugin = "com.vanniktech.maven.publish.base")
         apply(plugin = "signing")

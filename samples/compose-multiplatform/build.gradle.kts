@@ -56,6 +56,12 @@ android {
         compose = true
     }
 
+    buildTypes {
+        create("dev") {
+            initWith(getByName("debug"))
+        }
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
@@ -74,9 +80,9 @@ kotlin {
     // iOS TBD
 
     sourceSets {
-        val androidMain by getting {
+        val commonMain by getting {
             dependencies {
-                implementation(projects.samples.shared)
+                implementation(projects.chatSdk)
 
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
@@ -87,7 +93,11 @@ kotlin {
                 implementation(compose.animation)
                 implementation(compose.preview)
                 implementation(compose.uiTooling)
+            }
+        }
 
+        val androidMain by getting {
+            dependencies {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.core)
                 implementation(libs.androidx.lifecycle.runtime)

@@ -20,7 +20,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://jitpack.io")
     }
 
     versionCatalogs {
@@ -45,6 +44,5 @@ include(
 
 // private
 include(
-    "samples:compose-multiplatform",
-    "samples:shared"
+    "samples:compose-multiplatform"
 )

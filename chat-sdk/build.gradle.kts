@@ -26,6 +26,12 @@ androidLibrary(name = "ai.botstacks.sdk") {
     kotlin {
         jvmToolchain(17)
     }
+
+    buildTypes {
+        create("dev") {
+            initWith(getByName("debug"))
+        }
+    }
 }
 
 @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
@@ -114,8 +120,6 @@ kotlin {
 
                 implementation(libs.ktor.engine.android)
 
-                implementation(libs.contacts.async)
-                implementation(libs.contacts.core)
                 implementation(libs.contacts.vcard)
 
                 implementation(libs.google.maps.compose)
@@ -143,6 +147,13 @@ buildkonfig {
     objectName = "SdkConfig"
 
     defaultConfigs {
+        buildConfigField(BOOLEAN, "DEBUG", "true")
+        buildConfigField(STRING, "ENV", "production")
+        buildConfigField(STRING, "HOST", "chat.botstacks.ai")
+        buildConfigField(BOOLEAN, "SSL", "true")
+    }
+
+    defaultConfigs("dev") {
         buildConfigField(BOOLEAN, "DEBUG", "true")
         buildConfigField(STRING, "ENV", "dev")
         buildConfigField(STRING, "HOST", "chat.dev.botstacks.ai")
@@ -194,6 +205,6 @@ nmcp {
     publishAllPublications {
         username = tryReadProperty("mavenCentralUsername")
         password = tryReadProperty("mavenCentralPassword")
-        publicationType = "USER_MANAGED"
+        publicationType = if (versionName.endsWith("SNAPSHOT")) "AUTOMATIC" else "USER_MANAGED"
     }
 }
