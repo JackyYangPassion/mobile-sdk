@@ -1,5 +1,3 @@
-import ai.botstacks.sdk.androidApplication
-
 plugins {
     id("com.android.application")
     id("kotlin-multiplatform")
@@ -8,7 +6,18 @@ plugins {
     alias(libs.plugins.github.triplet.play)
 }
 
-androidApplication("ai.botstacks.sample") {
+android {
+    namespace = "ai.botstacks.sample"
+    compileSdk = 34
+
+    defaultConfig {
+        minSdk = 26
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
     signingConfigs {
         create("release") {
             val keyFile = file("../playstore")
@@ -61,10 +70,13 @@ androidApplication("ai.botstacks.sample") {
 
 kotlin {
     androidTarget()
+
+    // iOS TBD
+
     sourceSets {
         val androidMain by getting {
             dependencies {
-                implementation(project(":chat-sdk"))
+                implementation(projects.samples.shared)
 
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
