@@ -30,13 +30,13 @@ This SDK integrates a fully serviced chat experience on the [BotStacks](https://
 
 ### Compose Multiplatform
 
-Add `ai.botstacks:chat-sdk:1.0.0` to your dependencies
+Add `ai.botstacks:chat-sdk:1.0.1` to your dependencies
 
 ```gradle
 val commonMain by getting {
     dependencies {
         [...]
-+       implementation("ai.botstacks:chat-sdk:1.0.0")
++       implementation("ai.botstacks:chat-sdk:1.0.1")
         [...]
     }
 }
@@ -49,7 +49,7 @@ If you are only targeting Android the dependency is:
 ```gradle
 dependencies {
     [...]
-+   implementation("ai.botstacks:chat-sdk-android:1.0.0")
++   implementation("ai.botstacks:chat-sdk-android:1.0.1")
     [...]
 }
 ```
