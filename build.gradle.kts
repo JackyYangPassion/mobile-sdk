@@ -1,52 +1,105 @@
-import java.io.FileInputStream
-import java.util.Properties
+import ai.botstacks.sdk.groupId
+import ai.botstacks.sdk.versionName
+import org.jetbrains.dokka.DokkaConfiguration
+import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 buildscript {
     repositories {
         google()
         mavenCentral()
         mavenLocal()
-        maven(url = "https://jitpack.io" ) {
-            credentials {
-                username = project.findProperty("jitpack_auth_token")?.toString() ?: System.getenv("jitpack_auth_token")?.toString()
-            }
-        }
+        maven(url = "https://jitpack.io")
     }
 
     dependencies {
         // Add the dependency for the Google services Gradle plugin
+        classpath(libs.gradlePlugin.android)
+        classpath(libs.gradlePlugin.compose)
+        classpath(libs.gradlePlugin.kotlin)
+        classpath(libs.gradlePlugin.mavenPublish)
         classpath(libs.google.services)
         classpath(libs.buildkonfig)
     }
 }
-
 plugins {
-    //trick: for the same plugin versions in all sub-modules
-    alias(libs.plugins.android.application).apply(false)
-    alias(libs.plugins.android.library).apply(false)
-    alias(libs.plugins.kotlin.android).apply(false) version libs.versions.kotlin.get()
-    alias(libs.plugins.kotlin.multiplatform).apply(false)
-    alias(libs.plugins.compose).apply(false)
     alias(libs.plugins.ksp).apply(false)
-    alias(libs.plugins.gradle.nexus.publish)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.nmcp).apply(false)
 }
 
-// Create variables with empty default values
-val secretPropsFile = file("local.properties")
-if (secretPropsFile.exists()) {
-    // Read local.properties file first if it exists
-    val p = Properties()
-    FileInputStream(secretPropsFile).use { p.load(it) }
 
-    p.forEach { name, value ->
-        ext[name.toString()] = value
+tasks.withType<DokkaMultiModuleTask>().configureEach {
+    outputDirectory = layout.projectDirectory.dir("docs/api")
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven(url = "https://jitpack.io")
     }
-} else {
-    // Use system environment variables
-    ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
-    ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
-    ext["sonatypeStagingProfileId"] = System.getenv("SONATYPE_STAGING_PROFILE_ID")
-    ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
-    ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
-    ext["signing.key"] = System.getenv("SIGNING_KEY")
+
+    // Necessary to publish to Maven.
+    group = groupId
+    version = versionName
+
+    tasks.withType<DokkaTaskPartial>().configureEach {
+        dokkaSourceSets.configureEach {
+            jdkVersion = 17
+            failOnWarning = true
+            skipDeprecated = true
+            suppressInheritedMembers = true
+
+            externalDocumentationLink(
+                url = "https://developer.android.com/reference/",
+            )
+            externalDocumentationLink(
+                url = "https://kotlinlang.org/api/kotlinx.coroutines/",
+            )
+            externalDocumentationLink(
+                url = "https://square.github.io/okio/3.x/okio/",
+                packageListUrl = "https://square.github.io/okio/3.x/okio/okio/package-list",
+            )
+            externalDocumentationLink(
+                url = "https://jetbrains.github.io/skiko/",
+                packageListUrl = "https://jetbrains.github.io/skiko/skiko/package-list",
+            )
+            externalDocumentationLink(
+                url = "https://api.ktor.io/",
+            )
+        }
+    }
+
+    tasks.withType<DokkaTask>().configureEach {
+        moduleName.set("BotStacks Chat SDK")
+        moduleVersion.set(versionName)
+        outputDirectory.set(project.file("../docs/api"))
+        suppressObviousFunctions.set(true)
+        suppressInheritedMembers.set(true)
+        dokkaSourceSets.configureEach {
+            documentedVisibilities.set(
+                setOf(
+                    DokkaConfiguration.Visibility.PUBLIC,
+                    DokkaConfiguration.Visibility.PROTECTED,
+                )
+            )
+
+            perPackageOption {
+                matchingRegex.set(".*internal.*")
+                suppress.set(true)
+            }
+
+            perPackageOption {
+                matchingRegex.set("com.mikepenz.markdown.*")
+                suppress.set(true)
+            }
+
+            perPackageOption {
+                matchingRegex.set("com.mohamedrejeb.calf.*")
+                suppress.set(true)
+            }
+        }
+    }
 }

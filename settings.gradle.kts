@@ -36,6 +36,14 @@ plugins {
     id("dev.aga.gradle.version-catalog-generator") version("1.1.0")
 }
 
-rootProject.name = "botstacks"
-include(":sdk:core")
-include(":sample-android")
+rootProject.name = "botstacks-root"
+
+// public
+include(
+    "chat-sdk"
+)
+
+// private
+include(
+    "samples:compose"
+)
