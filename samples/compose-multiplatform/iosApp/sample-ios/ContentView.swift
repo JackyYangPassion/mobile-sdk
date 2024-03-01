@@ -5,7 +5,7 @@
 //  Created by Brandon McAnsh on 2/13/24.
 //
 
-import 
+import BotStacks_ChatSDK
 import SwiftUI
 
 struct ContentView: View {
@@ -22,3 +22,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+

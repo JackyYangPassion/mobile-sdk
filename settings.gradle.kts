@@ -45,5 +45,6 @@ include(
 
 // private
 include(
-    "samples:compose"
+    "samples:compose-multiplatform",
+    "samples:shared"
 )

@@ -4,8 +4,8 @@
 
 package ai.botstacks.sample
 
-import android.app.Application
 import ai.botstacks.sdk.BotStacksChat
+import android.app.Application
 
 class App : Application() {
 

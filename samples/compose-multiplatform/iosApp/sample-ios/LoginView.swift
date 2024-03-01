@@ -5,7 +5,7 @@
 //  Created by Brandon McAnsh on 2/18/24.
 //
 
-import BotStacksSDK
+import BotStacks_ChatSDK
 import SwiftUI
 
 struct LoginView: View {

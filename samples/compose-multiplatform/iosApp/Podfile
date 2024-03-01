@@ -6,6 +6,6 @@ target 'sample-ios' do
   use_frameworks!
   platform :ios, '15.0'
 
-  pod 'BotStacksSDK', :path => "../../sdk"
+  pod 'BotStacks_ChatSDK', :path => "../../../chat-sdk"
 end
 
