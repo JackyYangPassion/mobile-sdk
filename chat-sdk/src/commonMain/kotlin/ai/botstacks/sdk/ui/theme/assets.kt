@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.painter.Painter
 import ai.botstacks.`chat-sdk`.generated.resources.Res
 import ai.botstacks.`chat-sdk`.generated.resources.chat_multiple_outline
 import ai.botstacks.`chat-sdk`.generated.resources.empty_all_channels
+import ai.botstacks.sdk.internal.ui.resources.botstacks_logo_daynight
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -84,9 +86,17 @@ data class Assets(
     val emptyChats: EmptyScreenConfig.Chats = EmptyScreenConfig.Chats(
         caption = "You haven't added any chats yet",
     ),
-)
+){
+    var logoResource: DrawableResource? = null
+}
 
 val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }
+
+@Composable
+internal fun Assets.logoPainter(): Painter? {
+    return logoResource?.let { painterResource(it) }
+        ?: logo?.let { painterImageAsset(it) }
+}
 
 internal val EmptyChatDefault: Painter
     @Composable get() = painterResource(Res.drawable.chat_multiple_outline)
