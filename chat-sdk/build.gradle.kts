@@ -74,6 +74,7 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.animation)
                 implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
 
                 implementation(libs.compose.windowSizeClass)
 
@@ -104,7 +105,6 @@ kotlin {
         androidMain {
             dependsOn(commonMain.get())
             dependencies {
-                implementation(compose.preview)
                 implementation(compose.uiTooling)
 
                 implementation(libs.apache.commons.text)

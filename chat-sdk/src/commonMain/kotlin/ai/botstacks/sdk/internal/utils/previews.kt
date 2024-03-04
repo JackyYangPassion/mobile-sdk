@@ -4,6 +4,8 @@
 
 package ai.botstacks.sdk.internal.utils
 
+import org.jetbrains.compose.ui.tooling.preview.Preview
+
 //import android.content.res.Configuration
 //import androidx.compose.ui.tooling.preview.Preview
 
@@ -21,4 +23,5 @@ package ai.botstacks.sdk.internal.utils
 //    showBackground = true,
 //    backgroundColor = 0xFFFFFFFF
 //)
+@Preview
 internal annotation class IPreviews
