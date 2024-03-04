@@ -1,21 +1,23 @@
-package ai.botstacks.sample.screens.examples
+package ai.botstacks.sample.kmp.screens.examples
 
-import ai.botstacks.sample.R
-import ai.botstacks.sample.ui.theme.Purple40
-import ai.botstacks.sample.ui.theme.PurpleGrey80
+import ai.botstacks.`compose-multiplatform`.generated.resources.Res
+import ai.botstacks.`compose-multiplatform`.generated.resources.ic_launcher_foreground
+import ai.botstacks.sample.kmp.ui.LocalToastManager
+import ai.botstacks.sample.kmp.ui.theme.Purple40
+import ai.botstacks.sample.kmp.ui.theme.PurpleGrey80
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.ui.components.ChatList
 import ai.botstacks.sdk.ui.components.Header
 import ai.botstacks.sdk.ui.theme.lightBotStacksColors
-import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatListWithHeader(onBackClicked: () -> Unit) {
     BotStacksThemeEngine(
@@ -26,11 +28,11 @@ fun ChatListWithHeader(onBackClicked: () -> Unit) {
             header = PurpleGrey80,
             onHeader = Color.Black
         ),
-        assets = BotStacks.assets.copy(
-            logo = R.drawable.ic_launcher_foreground
-        )
+        assets = BotStacks.assets.apply {
+            logoResource = Res.drawable.ic_launcher_foreground
+        }
     ) {
-        val context = LocalContext.current
+        val toaster = LocalToastManager.current
         ChatList(
             header = {
                 Header(onBackClicked = onBackClicked,
@@ -45,11 +47,7 @@ fun ChatListWithHeader(onBackClicked: () -> Unit) {
                 Text(text = "Nothing here")
             },
             onChatClicked = { chat ->
-                Toast.makeText(
-                    context,
-                    "chat named ${chat.displayName} clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
+                toaster?.toast( "chat named ${chat.displayName} clicked")
             },
         )
     }
