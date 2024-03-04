@@ -134,7 +134,7 @@ kotlin {
             }
         }
 
-        named("nonAndroidMain") {
+        iosMain {
             dependencies {
                 implementation(libs.ktor.engine.darwin)
             }

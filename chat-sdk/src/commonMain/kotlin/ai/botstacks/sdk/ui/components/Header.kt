@@ -64,6 +64,7 @@ import ai.botstacks.`chat-sdk`.generated.resources.Res
 import ai.botstacks.`chat-sdk`.generated.resources.edit_outlined
 import ai.botstacks.`chat-sdk`.generated.resources.magnifying_glass
 import ai.botstacks.`chat-sdk`.generated.resources.plus
+import ai.botstacks.sdk.ui.theme.logoPainter
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -94,7 +95,7 @@ object HeaderDefaults {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     fun Logo() {
-        val icon = LocalBotStacksAssets.current.logo?.let { painterImageAsset(it) }
+        val icon = LocalBotStacksAssets.current.logoPainter()
             ?: painterResource(resource = Res.drawable.botstacks_logo_daynight)
 
         Icon(
