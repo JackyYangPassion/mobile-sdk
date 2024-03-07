@@ -15,7 +15,7 @@ Try the demo, download [BotStacks Android](https://play.google.com/store/apps/de
 
 - [Overview](#-overview)
 - [Installation](#-installation)
-- [Getting Started](android-getting-started.md)
+- [Getting Started](android/android-getting-started.md)
 - [Help](#-help)
 
 &nbsp;
@@ -30,13 +30,13 @@ This SDK integrates a fully serviced chat experience on the [BotStacks](https://
 
 ### Compose Multiplatform
 
-Add `ai.botstacks:chat-sdk:1.0.1` to your dependencies
+Add `ai.botstacks:chat-sdk:1.0.2` to your dependencies
 
 ```gradle
 val commonMain by getting {
     dependencies {
         [...]
-+       implementation("ai.botstacks:chat-sdk:1.0.1")
++       implementation("ai.botstacks:chat-sdk:1.0.2")
         [...]
     }
 }
@@ -45,11 +45,12 @@ val commonMain by getting {
 ### Android Only
 
 If you are only targeting Android the dependency is:
+Add `ai.botstacks:chat-sdk-android:1.0.2` to your dependencies
 
 ```gradle
 dependencies {
     [...]
-+   implementation("ai.botstacks:chat-sdk-android:1.0.1")
++   implementation("ai.botstacks:chat-sdk-android:1.0.2")
     [...]
 }
 ```
