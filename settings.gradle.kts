@@ -41,8 +41,3 @@ rootProject.name = "botstacks-root"
 include(
     "chat-sdk"
 )
-
-// private
-include(
-    "samples:compose-multiplatform",
-)
