@@ -22,12 +22,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.TextFieldValue
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.check
-import ai.botstacks.`chat-sdk`.generated.resources.edit_outlined
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun EditableTextLabel(
     modifier: Modifier = Modifier,
@@ -59,7 +55,7 @@ internal fun EditableTextLabel(
                         modifier = Modifier
                             .size(BotStacks.dimens.staticGrid.x4)
                             .unboundedClickable { onEditComplete() },
-                        painter = painterResource(Res.drawable.check),
+                        painter = painterResource(Res.images.check),
                         tint = BotStacks.colorScheme.primary,
                         contentDescription = "Save name change"
                     )
@@ -79,7 +75,7 @@ internal fun EditableTextLabel(
             ) {
                 Text(value.text, fontStyle = BotStacks.fonts.h3, color = BotStacks.colorScheme.onBackground)
                 Icon(
-                    painterResource(Res.drawable.edit_outlined),
+                    painterResource(Res.images.edit_outlined),
                     contentDescription = null,
                     tint = BotStacks.colorScheme.primary
                 )

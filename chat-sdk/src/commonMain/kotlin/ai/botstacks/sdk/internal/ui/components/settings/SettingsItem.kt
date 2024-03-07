@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalResourceApi::class)
-
 package ai.botstacks.sdk.internal.ui.components.settings
 
 import ai.botstacks.sdk.ui.BotStacks
@@ -19,13 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.ImageResource
+import dev.icerock.moko.resources.compose.painterResource
 
 internal interface SettingsSectionScope {
     fun item(
-        icon: DrawableResource? = null,
+        icon: ImageResource? = null,
         title: String,
         subtitle: String? = null,
         endSlot: @Composable () -> Unit = { },
@@ -58,7 +55,7 @@ private class SettingsSectionScopeImpl : SettingsSectionScope {
     val items = mutableListOf<@Composable () -> Unit>()
 
     override fun item(
-        icon: DrawableResource?,
+        icon: ImageResource?,
         title: String,
         subtitle: String?,
         endSlot: @Composable () -> Unit,

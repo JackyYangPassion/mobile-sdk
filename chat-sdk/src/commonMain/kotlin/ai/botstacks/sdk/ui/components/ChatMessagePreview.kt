@@ -44,9 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.document_fill
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 /**
  * ChatMessagePreview
@@ -138,7 +136,6 @@ private val Chat.messagePreviewColor: Color
         else -> colorScheme.caption
     }
 
-@OptIn(ExperimentalResourceApi::class)
 private val Chat.messagePreview: Pair<AnnotatedString, Map<String, InlineTextContent>>?
     @Composable get() = when {
         typingUsers.isNotEmpty() -> AnnotatedString("Typing...") to emptyMap()
@@ -159,7 +156,7 @@ private val Chat.messagePreview: Pair<AnnotatedString, Map<String, InlineTextCon
                         val painter = when (type) {
                             AttachmentType.Image -> rememberVectorPainter(Icons.Rounded.Image)
 //                            AttachmentType.video -> rememberVectorPainter(Icons.Rounded.VideoFile)
-                            else -> painterResource(Res.drawable.document_fill)
+                            else -> painterResource(Res.images.document_fill)
                         }
                         Image(
                             painter = painter,

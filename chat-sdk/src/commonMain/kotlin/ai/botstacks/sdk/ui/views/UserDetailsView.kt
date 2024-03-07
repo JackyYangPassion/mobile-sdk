@@ -23,10 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.bell_simple_fill
-import ai.botstacks.`chat-sdk`.generated.resources.block_fill
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 /**
  * UserDetailsState
@@ -60,7 +57,6 @@ class UserDetailsState(internal val user: User) {
  *
  * @param state the state for this details view.
  */
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun UserDetailsView(state: UserDetailsState) {
     LazyColumn(
@@ -98,7 +94,7 @@ fun UserDetailsView(state: UserDetailsState) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 item(
-                    icon = Res.drawable.bell_simple_fill,
+                    icon = Res.images.bell_simple_fill,
                     title = "Notifications",
                     endSlot = {
                         ToggleSwitch(checked = state.isMuted, onCheckedChange = null)
@@ -109,7 +105,7 @@ fun UserDetailsView(state: UserDetailsState) {
                 item(
                     icon = {
                         Image(
-                            painter = painterResource(Res.drawable.block_fill),
+                            painter = painterResource(Res.images.block_fill),
                             colorFilter = ColorFilter.tint(BotStacks.colorScheme.error),
                             contentDescription = null,
                         )

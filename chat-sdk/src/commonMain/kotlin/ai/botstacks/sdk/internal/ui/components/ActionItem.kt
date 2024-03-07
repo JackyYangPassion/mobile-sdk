@@ -5,14 +5,6 @@
 package ai.botstacks.sdk.internal.ui.components
 
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.address_book
-import ai.botstacks.`chat-sdk`.generated.resources.camera
-import ai.botstacks.`chat-sdk`.generated.resources.file_arrow_down_fill
-import ai.botstacks.`chat-sdk`.generated.resources.file_video
-import ai.botstacks.`chat-sdk`.generated.resources.gif
-import ai.botstacks.`chat-sdk`.generated.resources.image_square
-import ai.botstacks.`chat-sdk`.generated.resources.map_pin
-import ai.botstacks.`chat-sdk`.generated.resources.video_camera
 import ai.botstacks.sdk.BotStacksChat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -26,14 +18,12 @@ import androidx.compose.ui.unit.dp
 import ai.botstacks.sdk.ui.BotStacks
 import ai.botstacks.sdk.ui.components.Media
 import androidx.compose.ui.graphics.painter.Painter
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.ImageResource
+import dev.icerock.moko.resources.compose.painterResource
 
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
-internal fun ActionItem(text: String, icon: DrawableResource, action: () -> Unit) {
+internal fun ActionItem(text: String, icon: ImageResource, action: () -> Unit) {
     ActionItem(text, painterResource(icon), action)
 }
 
@@ -65,7 +55,6 @@ internal fun ActionItem(text: String, icon: Painter, action: () -> Unit) {
 }
 
 internal object ActionItemDefaults {
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     fun mediaItems(onItemSelected: (Media) -> Unit): List<@Composable () -> Unit> = Media.supportedMediaTypes
         .filter {
@@ -85,7 +74,7 @@ internal object ActionItemDefaults {
                 when (it) {
                     Media.pickPhoto -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.image_square),
+                            icon = painterResource(Res.images.image_square),
                             text = "Upload Photo",
                             action = action,
                         )
@@ -93,7 +82,7 @@ internal object ActionItemDefaults {
 
                     Media.pickVideo -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.file_video),
+                            icon = painterResource(Res.images.file_video),
                             text = "Upload Video",
                             action = action,
                         )
@@ -101,7 +90,7 @@ internal object ActionItemDefaults {
 
                     Media.recordPhoto -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.camera),
+                            icon = painterResource(Res.images.camera),
                             text = "Take Photo",
                             action = action,
                         )
@@ -109,7 +98,7 @@ internal object ActionItemDefaults {
 
                     Media.recordVideo -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.video_camera),
+                            icon = painterResource(Res.images.video_camera),
                             text = "Video Camera",
                             action = action,
                         )
@@ -117,7 +106,7 @@ internal object ActionItemDefaults {
 
                     Media.gif -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.gif),
+                            icon = painterResource(Res.images.gif),
                             text = "Send a GIF",
                             action = action,
                         )
@@ -125,7 +114,7 @@ internal object ActionItemDefaults {
 
                     Media.file -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.file_arrow_down_fill),
+                            icon = painterResource(Res.images.file_upload),
                             text = "Send a file",
                             action = action,
                         )
@@ -133,7 +122,7 @@ internal object ActionItemDefaults {
 
                     Media.contact -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.address_book),
+                            icon = painterResource(Res.images.address_book),
                             text = "Share Contact",
                             action = action,
                         )
@@ -141,7 +130,7 @@ internal object ActionItemDefaults {
 
                     Media.location -> {
                         ActionItem(
-                            icon = painterResource(Res.drawable.map_pin),
+                            icon = painterResource(Res.images.map_pin),
                             text = "Send Location",
                             action = action,
                         )

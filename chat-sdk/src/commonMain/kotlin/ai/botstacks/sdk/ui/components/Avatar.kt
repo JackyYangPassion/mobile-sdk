@@ -42,9 +42,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.user_outlined
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 import kotlin.math.roundToInt
 
 
@@ -114,9 +112,8 @@ sealed interface AvatarType {
         val status: OnlineStatus = OnlineStatus.Unknown,
         val empty: Painter? = null,
     ) : AvatarType {
-        @OptIn(ExperimentalResourceApi::class)
         override val emptyState: Painter
-            @Composable get() = empty ?: painterResource(Res.drawable.user_outlined)
+            @Composable get() = empty ?: painterResource(Res.images.user_outlined)
     }
 
     /**
@@ -125,9 +122,8 @@ sealed interface AvatarType {
      * @param empty The empty state painter when fails to load
      */
     data class Channel(val urls: List<String?>, val empty: Painter? = null) : AvatarType {
-        @OptIn(ExperimentalResourceApi::class)
         override val emptyState: Painter
-            @Composable get() = empty ?: painterResource(Res.drawable.user_outlined)
+            @Composable get() = empty ?: painterResource(Res.images.user_outlined)
     }
 }
 

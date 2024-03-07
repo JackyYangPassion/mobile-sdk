@@ -1,5 +1,6 @@
 package ai.botstacks.sdk.ui.views
 
+import ai.botstacks.`chat-sdk`.generated.resources.Res
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.state.User
 import ai.botstacks.sdk.ui.BotStacks
@@ -25,15 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.TextFieldValue
-import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.camera
 import com.apollographql.apollo3.api.Optional
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 /**
  * EditProfileState
@@ -92,7 +90,6 @@ class EditProfileState {
  * @param state The state for the view
  *
  */
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun EditProfileView(
     state: EditProfileState,
@@ -117,7 +114,7 @@ fun EditProfileView(
                     .clickable { pickerLauncher.launch() },
                 type = AvatarType.User(
                     url = state.userImage,
-                    empty = painterResource(Res.drawable.camera)
+                    empty = painterResource(Res.images.camera)
                 ),
                 size = AvatarSize.Large
             )

@@ -39,9 +39,9 @@ fun Project.androidLibrary(
         compose = true
         buildConfig = true
     }
-    sourceSets["main"].resources {
-        srcDirs("src/commonMain/resources", "src/jvmCommonMain/resources")
-    }
+//    sourceSets["main"].resources {
+//        srcDirs("src/commonMain/resources", "src/jvmCommonMain/resources")
+//    }
 
     if (project.name in publicModules) {
         apply(plugin = "org.jetbrains.dokka")
@@ -81,7 +81,7 @@ private fun <T : BaseExtension> Project.androidBase(
         namespace = name
         compileSdkVersion(project.compileSdkVersion)
         sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-        sourceSets["main"].res.srcDirs("src/commonMain/composeResources")
+//        sourceSets["main"].res.srcDirs("src/commonMain/composeResources")
 
         defaultConfig {
             minSdk = this@androidBase.minSdkVersion

@@ -49,10 +49,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.star
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.datetime.Instant
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
 /**
  * ChatMessage
@@ -295,20 +293,19 @@ private fun ReplyCount(count: Int) {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-private fun Favorite(favorite: Boolean) {
-    if (favorite) {
-        Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center) {
-            Icon(
-                painter = painterResource(Res.drawable.star),
-                contentDescription = "favorite",
-                tint = colorScheme.primary,
-                modifier = Modifier.size(20),
-            )
-        }
-    }
-}
+//@Composable
+//private fun Favorite(favorite: Boolean) {
+//    if (favorite) {
+//        Box(modifier = Modifier.size(35.dp), contentAlignment = Alignment.Center) {
+//            Icon(
+//                painter = painterResource(Res.drawable.star),
+//                contentDescription = "favorite",
+//                tint = colorScheme.primary,
+//                modifier = Modifier.size(20),
+//            )
+//        }
+//    }
+//}
 
 @Composable
 private fun Spinner(loading: Boolean) {

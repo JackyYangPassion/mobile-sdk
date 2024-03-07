@@ -17,16 +17,14 @@ import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.annotated
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.users_fill
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
+
 @Composable
 internal fun ChatCount(count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
-            painter = painterResource(Res.drawable.users_fill),
+            painter = painterResource(Res.images.users_fill),
             contentDescription = "members",
             modifier = Modifier.size(16.dp),
             tint = BotStacks.colorScheme.caption

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'BotStacks_ChatSDK'
-    spec.version                  = '1.0.2-SNAPSHOT'
+    spec.version                  = '1.0.3-SNAPSHOT'
     spec.homepage                 = 'https://botstacks.ai'
     spec.source                   = { :http=> ''}
     spec.authors                  = 'BotStacks'
@@ -47,5 +47,5 @@ Pod::Spec.new do |spec|
             SCRIPT
         }
     ]
-    spec.resources = ['build/compose/ios/BotStacks_ChatSDK/compose-resources']
+                
 end

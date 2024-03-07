@@ -39,12 +39,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.paper_plane_tilt_fill
-import ai.botstacks.`chat-sdk`.generated.resources.paperclip_fill
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
 /**
  * ChatInput
@@ -59,7 +56,6 @@ import org.jetbrains.compose.resources.painterResource
  *@param focusRequester An optional focus requester if you need to react to changes in focus of the
  * TextInput.
  */
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChatInput(
     modifier: Modifier = Modifier,
@@ -114,7 +110,7 @@ fun ChatInput(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(Res.drawable.paperclip_fill),
+                        painter = painterResource(Res.images.paperclip_fill),
                         contentDescription = "send attachment",
                         modifier = Modifier.requiredIconSize(),
                         tint = colorScheme.caption
@@ -142,7 +138,7 @@ fun ChatInput(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.paper_plane_tilt_fill),
+                    painter = painterResource(Res.images.send),
                     contentDescription = "send message",
                     modifier = Modifier.requiredIconSize(),
                     tint = contentColor

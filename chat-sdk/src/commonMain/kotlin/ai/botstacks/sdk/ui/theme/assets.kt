@@ -2,21 +2,14 @@
  * Copyright (c) 2023.
  */
 
-@file:OptIn(ExperimentalResourceApi::class)
-
 package ai.botstacks.sdk.ui.theme
 
-import androidx.compose.runtime.Stable
+import ai.botstacks.`chat-sdk`.generated.resources.Res
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.painter.Painter
-import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.chat_multiple_outline
-import ai.botstacks.`chat-sdk`.generated.resources.empty_all_channels
-import ai.botstacks.sdk.internal.ui.resources.botstacks_logo_daynight
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 /**
  * Type determination for empty states for certain components
@@ -86,21 +79,25 @@ data class Assets(
     val emptyChats: EmptyScreenConfig.Chats = EmptyScreenConfig.Chats(
         caption = "You haven't added any chats yet",
     ),
-){
-    var logoResource: DrawableResource? = null
+) {
+    /**
+     * Compose Multiplatform [Painter] override for [logo].
+     *
+     * This allows use of Compose Multiplatform Resources or Moko Resources.
+     */
+    var logoPainter: Painter? = null
 }
 
 val LocalBotStacksAssets = staticCompositionLocalOf { Assets() }
 
 @Composable
 internal fun Assets.logoPainter(): Painter? {
-    return logoResource?.let { painterResource(it) }
-        ?: logo?.let { painterImageAsset(it) }
+    return logoPainter ?: logo?.let { painterImageAsset(it) }
 }
 
 internal val EmptyChatDefault: Painter
-    @Composable get() = painterResource(Res.drawable.chat_multiple_outline)
+    @Composable get() = painterResource(Res.images.chat_multiple_outline)
 internal val EmptyChatsDefault: Painter
-    @Composable get() = painterResource(Res.drawable.chat_multiple_outline)
+    @Composable get() = painterResource(Res.images.chat_multiple_outline)
 internal val EmptyAllChannelsDefault: Painter
-    @Composable get() = painterResource(Res.drawable.empty_all_channels)
+    @Composable get() = painterResource(Res.images.empty_all_channels)

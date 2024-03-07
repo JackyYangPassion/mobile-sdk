@@ -5,7 +5,7 @@ import platform.Foundation.NSBundle
 import platform.Foundation.NSDictionary
 import platform.Foundation.create
 
-fun <T> readPlist(name: String, key: String): T? {
+internal fun <T> readPlist(name: String, key: String): T? {
     val bundle = NSBundle.mainBundle.pathForResource(name, "plist")
     if (bundle == null) {
         Monitoring.log("Unable to read $name.plist")
@@ -16,11 +16,11 @@ fun <T> readPlist(name: String, key: String): T? {
     return readPlist(plist, key)
 }
 
-fun <T> readPlist(plist: NSDictionary?, key: String): T? {
+internal fun <T> readPlist(plist: NSDictionary?, key: String): T? {
     return plist?.objectForKey(key) as? T
 }
 
-fun hasKeysInPlist(name: String, vararg key: String): Boolean {
+internal fun hasKeysInPlist(name: String, vararg key: String): Boolean {
     val bundle = NSBundle.mainBundle.pathForResource(name, "plist")
     if (bundle == null) {
         Monitoring.log("Unable to read $name.plist")
