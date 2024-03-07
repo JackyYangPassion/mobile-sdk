@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "ai.botstacks.sample.kmp"
+    namespace = "ai.botstacks.sample"
     compileSdk = 34
 
     defaultConfig {
@@ -73,24 +73,11 @@ android {
         }
     }
 }
-dependencies {
-    implementation(project(":chat-sdk"))
-}
 
 kotlin {
-    applyDefaultHierarchyTemplate()
     androidTarget()
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "shared"
-            isStatic = true
-        }
-    }
+    // iOS TBD
 
     sourceSets {
         val commonMain by getting {
@@ -100,19 +87,12 @@ kotlin {
                 implementation(compose.runtime)
                 implementation(compose.runtimeSaveable)
                 implementation(compose.foundation)
-                implementation(compose.material)
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
                 implementation(compose.ui)
                 implementation(compose.animation)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
-
-                implementation(libs.voyager.navigator)
-                implementation(libs.voyager.navigator.tabs)
-                implementation(libs.voyager.transitions)
-
-                implementation(libs.webview)
+                implementation(compose.preview)
+                implementation(compose.uiTooling)
             }
         }
 

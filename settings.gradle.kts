@@ -44,5 +44,6 @@ include(
 
 // private
 include(
+    "samples:android",
     "samples:compose-multiplatform"
 )
