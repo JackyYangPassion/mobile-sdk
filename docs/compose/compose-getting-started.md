@@ -31,8 +31,15 @@ kotlin {
     [...]
     sourceSets {
         [...]
-        
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+            
         iosMain {
+            dependsOn(commonMain.get())
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 // required for now to include resources from Chat SDK
 +               implementation(libs.moko.resources)
