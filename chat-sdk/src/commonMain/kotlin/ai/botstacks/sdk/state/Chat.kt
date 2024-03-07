@@ -116,7 +116,6 @@ class Chat(id: String, val kind: ChatType) : Pager<Message>(id), Identifiable {
     }
 
     internal constructor(chat: FChat) : this(chat.id, chat.kind.toType()) {
-        print("Chat Kind ${chat.kind}")
         update(chat)
     }
 
