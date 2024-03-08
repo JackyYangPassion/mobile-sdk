@@ -2,7 +2,7 @@
 
 date="$(date '+%m.%d.%y')"
 
-./gradlew assembleDebug -Pbuildkonfig.flavor=release
+./gradlew assembleDev -Pbuildkonfig.flavor=dev
 
 build_num=$1
 
