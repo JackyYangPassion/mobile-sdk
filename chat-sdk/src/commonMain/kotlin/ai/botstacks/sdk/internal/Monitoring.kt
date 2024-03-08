@@ -10,6 +10,7 @@ internal object Monitoring {
     private val printLogs = SdkConfig.DEBUG
 
     fun setup() {
+        println("Monitoring :: printLogs=$printLogs")
 //        Sentry.init {
 //            it.dsn = "https://17891a46f1414379ab8dee14743c15a6@o4505121822801920.ingest.sentry.io/4505121983168512"
 //        }

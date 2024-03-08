@@ -146,7 +146,7 @@ internal object API {
                 )
             }
         })
-        .addHttpInterceptor(LoggingInterceptor())
+        .addHttpInterceptor(LoggingInterceptor(log = { Monitoring.log(it) }))
         .addInterceptor(object : ApolloInterceptor {
             override fun <D : Operation.Data> intercept(
                 request: ApolloRequest<D>,
