@@ -40,7 +40,6 @@ val commonMain by getting {
     }
 }
 ```
-[Get Started](compose/compose-getting-started.md)
 
 ### Android Only
 
@@ -53,7 +52,6 @@ dependencies {
     [...]
 }
 ```
-[Get Started](android/android-getting-started.md)
 
 &nbsp;
 
