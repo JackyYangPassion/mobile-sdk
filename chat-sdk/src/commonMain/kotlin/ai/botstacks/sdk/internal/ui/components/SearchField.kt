@@ -23,11 +23,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.x
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun SearchField(
     modifier: Modifier = Modifier,
@@ -68,7 +65,7 @@ internal fun SearchField(
                     ) {
                         Icon(
                             modifier = Modifier.requiredIconSize(),
-                            painter = painterResource(Res.drawable.x),
+                            painter = painterResource(Res.images.x),
                             contentDescription = "close search"
                         )
                     }
@@ -78,7 +75,7 @@ internal fun SearchField(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchField2(
     modifier: Modifier = Modifier,
@@ -116,7 +113,7 @@ fun SearchField2(
                     ) {
                         Icon(
                             modifier = Modifier.requiredIconSize(),
-                            painter = painterResource(Res.drawable.x),
+                            painter = painterResource(Res.images.x),
                             contentDescription = "close search"
                         )
                     }

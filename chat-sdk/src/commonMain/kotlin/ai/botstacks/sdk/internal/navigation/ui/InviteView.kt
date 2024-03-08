@@ -5,8 +5,6 @@
 package ai.botstacks.sdk.internal.navigation.ui
 
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.caret_left
-import ai.botstacks.`chat-sdk`.generated.resources.check
 import ai.botstacks.sdk.internal.API
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -45,8 +43,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Stable
@@ -105,7 +102,6 @@ internal data class CreateChatState(val chat: Chat? = null) {
     }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) {
     val selected = remember {
@@ -132,7 +128,7 @@ internal fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) 
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        painter = painterResource(Res.drawable.check),
+                        painter = painterResource(Res.images.check),
                         contentDescription = "Check mark",
                         tint = colorScheme.background,
                         modifier = Modifier.size(14.dp)
@@ -152,7 +148,7 @@ internal fun InviteView(chat: Chat, back: () -> Unit, openChat: (Chat) -> Unit) 
                     .clickable { back() }, contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.caret_left),
+                    painter = painterResource(Res.images.caret_left),
                     contentDescription = "back",
                     tint = colorScheme.background,
                     modifier = Modifier.size(22.dp)

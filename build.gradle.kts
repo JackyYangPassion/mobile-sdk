@@ -21,6 +21,7 @@ buildscript {
         classpath(libs.gradlePlugin.mavenPublish)
         classpath(libs.google.services)
         classpath(libs.buildkonfig)
+        classpath(libs.moko.resources.generator)
     }
 }
 plugins {

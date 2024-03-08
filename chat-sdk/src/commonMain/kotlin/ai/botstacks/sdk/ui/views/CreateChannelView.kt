@@ -1,5 +1,6 @@
 package ai.botstacks.sdk.ui.views
 
+import ai.botstacks.`chat-sdk`.generated.resources.Res
 import ai.botstacks.sdk.internal.API
 import ai.botstacks.sdk.internal.ui.components.Text
 import ai.botstacks.sdk.state.Chat
@@ -33,15 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.TextFieldValue
-import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.camera
-import ai.botstacks.`chat-sdk`.generated.resources.lock_fill
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 /**
  * CreateChannelState
@@ -101,7 +98,6 @@ class CreateChannelState {
  * @see [SelectChannelUsersConnectingView]
  *
  */
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun CreateChannelView(
     state: CreateChannelState,
@@ -127,7 +123,7 @@ fun CreateChannelView(
                     .clickable { pickerLauncher.launch() },
                 type = AvatarType.User(
                     url = state.selectedImage,
-                    empty = painterResource(Res.drawable.camera)
+                    empty = painterResource(Res.images.camera)
                 ),
                 size = AvatarSize.Large
             )
@@ -151,7 +147,7 @@ fun CreateChannelView(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 item(
-                    icon = Res.drawable.lock_fill,
+                    icon = Res.images.lock_fill,
                     title = "Private channel",
                     endSlot = {
                         ToggleSwitch(checked = state.private, onCheckedChange = null)

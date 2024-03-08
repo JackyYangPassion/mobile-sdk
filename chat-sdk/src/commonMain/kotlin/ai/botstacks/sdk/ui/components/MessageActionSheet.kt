@@ -20,8 +20,6 @@ import ai.botstacks.sdk.internal.utils.annotated
 import ai.botstacks.sdk.internal.utils.genChatextMessage
 import androidx.compose.ui.unit.dp
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.copy
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 /**
  * MediaActionSheetState
@@ -65,7 +63,7 @@ fun rememberMessageActionSheetState(message: Message? = null): MessageActionShee
  *
  */
 @Composable
-@OptIn(ExperimentalMaterialApi::class, ExperimentalResourceApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 fun MessageActionSheet(
     state: MessageActionSheetState = rememberMessageActionSheetState(),
     content: @Composable () -> Unit
@@ -118,7 +116,7 @@ fun MessageActionSheet(
 
                 ActionItem(
                     text = "Copy message text",
-                    icon = Res.drawable.copy,
+                    icon = Res.images.copy,
                 ) {
                     clipboardManager.setText(annotatedString)
                     state.messageForAction = null

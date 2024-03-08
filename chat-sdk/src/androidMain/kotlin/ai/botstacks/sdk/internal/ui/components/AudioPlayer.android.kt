@@ -34,14 +34,10 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.pause_fill
-import ai.botstacks.`chat-sdk`.generated.resources.play_fill
+import dev.icerock.moko.resources.compose.painterResource
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
 @IPreviews
-@kotlin.OptIn(ExperimentalResourceApi::class)
 @OptIn(UnstableApi::class)
 @Composable
 internal actual fun AudioPlayer(url: String) {
@@ -93,18 +89,20 @@ internal actual fun AudioPlayer(url: String) {
     exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
 
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(contentAlignment = Alignment.Center,
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .clickable {
                     if (exoPlayer.isPlaying) exoPlayer.pause() else exoPlayer.play()
                 }
                 .size(44)
-                .background(BotStacks.colorScheme.primary, CircleShape)) {
+                .background(BotStacks.colorScheme.primary, CircleShape)
+        ) {
             Icon(
                 painter = ift(
                     playing,
-                    painterResource(Res.drawable.play_fill),
-                    painterResource(Res.drawable.pause_fill),
+                    painterResource(Res.images.play_fill),
+                    painterResource(Res.images.pause_fill),
                 ),
                 contentDescription = "play audio",
                 tint = Color.White,

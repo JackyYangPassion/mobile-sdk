@@ -2,7 +2,6 @@
  * Copyright (c) 2023.
  */
 
-@file:OptIn(ExperimentalResourceApi::class)
 
 package ai.botstacks.sdk.ui.components
 
@@ -18,7 +17,6 @@ import ai.botstacks.sdk.ui.BotStacks.colorScheme
 import ai.botstacks.sdk.ui.BotStacks.fonts
 import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.ui.theme.LocalBotStacksAssets
-import ai.botstacks.sdk.ui.theme.painterImageAsset
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
@@ -61,12 +59,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.edit_outlined
-import ai.botstacks.`chat-sdk`.generated.resources.magnifying_glass
-import ai.botstacks.`chat-sdk`.generated.resources.plus
 import ai.botstacks.sdk.ui.theme.logoPainter
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 private val HeaderHeight = 56.dp
 
@@ -92,11 +86,10 @@ object HeaderDefaults {
      *
      * This will use the [ai.botstacks.sdk.ui.theme.Assets.logo] if provided otherwise will default to the BotStacks Logo.
      */
-    @OptIn(ExperimentalResourceApi::class)
     @Composable
     fun Logo() {
         val icon = LocalBotStacksAssets.current.logoPainter()
-            ?: painterResource(resource = Res.drawable.botstacks_logo_daynight)
+            ?: painterResource(Res.images.botstacks_logo_daynight)
 
         Icon(
             painter = icon,
@@ -266,7 +259,7 @@ fun Header() {
  *
  */
 @OptIn(
-    ExperimentalAnimationApi::class, ExperimentalResourceApi::class
+    ExperimentalAnimationApi::class
 )
 @Composable
 fun Header(
@@ -345,7 +338,7 @@ fun Header(
                         if (state.showSearch) {
                             HeaderButton(onClick = onSearchClick?.let { { it.invoke() } } ?: { state.searchActive = true }) {
                                 Icon(
-                                    painterResource(Res.drawable.magnifying_glass),
+                                    painterResource(Res.images.magnifying_glass),
                                     contentDescription = "Search",
                                     tint = colorScheme.onBackground,
                                     modifier = Modifier.requiredIconSize()
@@ -355,7 +348,7 @@ fun Header(
                         if (onAdd != null) {
                             HeaderButton(onClick = onAdd) {
                                 Icon(
-                                    painterResource(Res.drawable.plus),
+                                    painterResource(Res.images.plus),
                                     contentDescription = "Add",
                                     tint = colorScheme.onBackground,
                                     modifier = Modifier.requiredIconSize()
@@ -365,7 +358,7 @@ fun Header(
                         if (onCompose != null) {
                             HeaderButton(onClick = onCompose) {
                                 Icon(
-                                    painterResource(Res.drawable.edit_outlined),
+                                    painterResource(Res.images.edit_outlined),
                                     contentDescription = "Compose",
                                     tint = colorScheme.onBackground,
                                     modifier = Modifier.requiredIconSize()

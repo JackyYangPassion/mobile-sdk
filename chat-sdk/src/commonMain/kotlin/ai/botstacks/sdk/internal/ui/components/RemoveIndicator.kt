@@ -13,11 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.x
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun RemoveIndicator(
     modifier: Modifier = Modifier,
@@ -32,7 +29,7 @@ internal fun RemoveIndicator(
     ) {
         Icon(
             modifier = Modifier.padding(BotStacks.dimens.staticGrid.x1),
-            painter = painterResource(Res.drawable.x),
+            painter = painterResource(Res.images.x),
             contentDescription = "remove",
             tint = Color.White
         )

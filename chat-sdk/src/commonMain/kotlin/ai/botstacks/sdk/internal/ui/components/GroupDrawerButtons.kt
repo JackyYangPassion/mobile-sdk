@@ -30,152 +30,147 @@ import ai.botstacks.sdk.internal.utils.genG
 import ai.botstacks.sdk.internal.utils.ift
 import ai.botstacks.sdk.internal.utils.op
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.archive_box_fill
-import ai.botstacks.`chat-sdk`.generated.resources.gear_fill
-import ai.botstacks.`chat-sdk`.generated.resources.trash_fill
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-internal fun ChatDrawerButtons(
-    chat: Chat,
-    openEdit: () -> Unit,
-    openInvite: (Chat) -> Unit,
-    dismiss: () -> Unit,
-    back: () -> Unit
-) {
-    val dialog = remember {
-        mutableStateOf(false)
-    }
-    Box(modifier = Modifier.padding(bottom = 12.dp)) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(3.dp),
-            modifier = Modifier
-                .height(60.dp)
-                .background(colorScheme.surface.copy(0.3f), RoundedCornerShape(16.dp))
-                .padding(8.dp, 0.dp)
-        ) {
-            if (chat.isAdmin) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.clickable {
-                        dismiss()
-                        openEdit()
-                    }) {
-                    Image(
-                        painter = painterResource(Res.drawable.gear_fill),
-                        contentDescription = "settings",
-                        colorFilter = ColorFilter.tint(colorScheme.border),
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Text(text = "Edit", fontStyle = fonts.caption2, color = colorScheme.border)
-                }
-                Space()
-            }
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable {
-                    dismiss()
-                    openInvite(chat)
-                }) {
-                Image(
-                    painterResource(Res.drawable.archive_box_fill),
-                    contentDescription = "settings",
-                    colorFilter = ColorFilter.tint(colorScheme.border),
-                    modifier = Modifier.size(24.dp)
-                )
-                Text(text = "Invite", fontStyle = fonts.caption2, color = colorScheme.border)
-            }
-            Space()
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable {
-                    dismiss()
-                    dialog.value = true
-                }) {
-                Image(
-                    painter = painterResource(Res.drawable.trash_fill),
-                    contentDescription = "settings",
-                    colorFilter = ColorFilter.tint(colorScheme.border),
-                    modifier = Modifier.size(24.dp)
-                )
-                Text(text = "Leave", fontStyle = fonts.caption2, color = colorScheme.border)
-            }
-        }
-    }
-    if (dialog.value) {
-
-        AlertDialog(
-            onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onCloseRequest.
-                dialog.value = false
-            },
-            title = {
-                Text(
-                    text = ift(chat.isAdmin, "Delete ${chat.name}", "Leave ${chat.name}"),
-                    fontStyle = fonts.h2
-                )
-            },
-            text = {
-                Text(
-                    "Are you sure you want to ${
-                        ift(
-                            chat.isAdmin,
-                            "delete",
-                            "leave"
-                        )
-                    } this channel?", fonts.body2
-                )
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        if (chat.isAdmin) {
-                            op(
-                                {
-                                    bg {
-                                        chat.delete()
-                                    }
-                                    back()
-                                })
-                        } else {
-                            chat.leave()
-                        }
-                        dialog.value = false
-                        dismiss()
-                    }) {
-                    Text(
-                        ift(chat.isAdmin, "Delete", "Leave"),
-                        fonts.body2,
-                        color = colorScheme.error
-                    )
-                }
-            },
-            dismissButton = {
-                Button(
-
-                    onClick = {
-                        dialog.value = false
-                    }) {
-                    Text("Cancel", fonts.body2)
-                }
-            }
-        )
-    }
-}
-
-@IPreviews
-@Composable
-private fun ChatDrawerButtonsPreview() {
-    BotStacksThemeEngine {
-        ChatDrawerButtons(chat = genG(), {}, {}, {}, {})
-    }
-}
+//@Composable
+//internal fun ChatDrawerButtons(
+//    chat: Chat,
+//    openEdit: () -> Unit,
+//    openInvite: (Chat) -> Unit,
+//    dismiss: () -> Unit,
+//    back: () -> Unit
+//) {
+//    val dialog = remember {
+//        mutableStateOf(false)
+//    }
+//    Box(modifier = Modifier.padding(bottom = 12.dp)) {
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(3.dp),
+//            modifier = Modifier
+//                .height(60.dp)
+//                .background(colorScheme.surface.copy(0.3f), RoundedCornerShape(16.dp))
+//                .padding(8.dp, 0.dp)
+//        ) {
+//            if (chat.isAdmin) {
+//                Column(
+//                    verticalArrangement = Arrangement.Center,
+//                    horizontalAlignment = Alignment.CenterHorizontally,
+//                    modifier = Modifier.clickable {
+//                        dismiss()
+//                        openEdit()
+//                    }) {
+//                    Image(
+//                        painter = painterResource(Res.images.gear_fill),
+//                        contentDescription = "settings",
+//                        colorFilter = ColorFilter.tint(colorScheme.border),
+//                        modifier = Modifier.size(24.dp)
+//                    )
+//                    Text(text = "Edit", fontStyle = fonts.caption2, color = colorScheme.border)
+//                }
+//                Space()
+//            }
+//            Column(
+//                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.clickable {
+//                    dismiss()
+//                    openInvite(chat)
+//                }) {
+//                Image(
+//                    painterResource(Res.drawable.archive_box_fill),
+//                    contentDescription = "settings",
+//                    colorFilter = ColorFilter.tint(colorScheme.border),
+//                    modifier = Modifier.size(24.dp)
+//                )
+//                Text(text = "Invite", fontStyle = fonts.caption2, color = colorScheme.border)
+//            }
+//            Space()
+//            Column(
+//                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.clickable {
+//                    dismiss()
+//                    dialog.value = true
+//                }) {
+//                Image(
+//                    painter = painterResource(Res.drawable.trash_fill),
+//                    contentDescription = "settings",
+//                    colorFilter = ColorFilter.tint(colorScheme.border),
+//                    modifier = Modifier.size(24.dp)
+//                )
+//                Text(text = "Leave", fontStyle = fonts.caption2, color = colorScheme.border)
+//            }
+//        }
+//    }
+//    if (dialog.value) {
+//
+//        AlertDialog(
+//            onDismissRequest = {
+//                // Dismiss the dialog when the user clicks outside the dialog or on the back
+//                // button. If you want to disable that functionality, simply use an empty
+//                // onCloseRequest.
+//                dialog.value = false
+//            },
+//            title = {
+//                Text(
+//                    text = ift(chat.isAdmin, "Delete ${chat.name}", "Leave ${chat.name}"),
+//                    fontStyle = fonts.h2
+//                )
+//            },
+//            text = {
+//                Text(
+//                    "Are you sure you want to ${
+//                        ift(
+//                            chat.isAdmin,
+//                            "delete",
+//                            "leave"
+//                        )
+//                    } this channel?", fonts.body2
+//                )
+//            },
+//            confirmButton = {
+//                Button(
+//                    onClick = {
+//                        if (chat.isAdmin) {
+//                            op(
+//                                {
+//                                    bg {
+//                                        chat.delete()
+//                                    }
+//                                    back()
+//                                })
+//                        } else {
+//                            chat.leave()
+//                        }
+//                        dialog.value = false
+//                        dismiss()
+//                    }) {
+//                    Text(
+//                        ift(chat.isAdmin, "Delete", "Leave"),
+//                        fonts.body2,
+//                        color = colorScheme.error
+//                    )
+//                }
+//            },
+//            dismissButton = {
+//                Button(
+//
+//                    onClick = {
+//                        dialog.value = false
+//                    }) {
+//                    Text("Cancel", fonts.body2)
+//                }
+//            }
+//        )
+//    }
+//}
+//
+//@IPreviews
+//@Composable
+//private fun ChatDrawerButtonsPreview() {
+//    BotStacksThemeEngine {
+//        ChatDrawerButtons(chat = genG(), {}, {}, {}, {})
+//    }
+//}

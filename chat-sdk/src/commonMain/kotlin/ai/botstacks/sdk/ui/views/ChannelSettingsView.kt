@@ -51,16 +51,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.TextFieldValue
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.add_user
-import ai.botstacks.`chat-sdk`.generated.resources.camera
-import ai.botstacks.`chat-sdk`.generated.resources.lock_fill
-import ai.botstacks.`chat-sdk`.generated.resources.users_fill
 import com.mohamedrejeb.calf.io.KmpFile
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 /**
  * ChannelSettingsState
@@ -152,7 +147,6 @@ class ChannelSettingsState(private val chat: Chat) {
  * @param state The state for the view
  * @param onAddUsers Callback when the add users icon button is clicked within the User select component.
  */
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChannelSettingsView(
     state: ChannelSettingsState,
@@ -178,7 +172,7 @@ fun ChannelSettingsView(
                 .clickable { pickerLauncher.launch() },
             type = AvatarType.User(
                 url = state.channelImage,
-                empty = painterResource(Res.drawable.camera)
+                empty = painterResource(Res.images.camera)
             ),
             size = AvatarSize.Large
         )
@@ -214,7 +208,7 @@ fun ChannelSettingsView(
 //                onClick = { state.toggleMute() }
 //            )
             item(
-                icon = Res.drawable.lock_fill,
+                icon = Res.images.lock_fill,
                 title = "Private channel",
                 endSlot = {
                     ToggleSwitch(checked = state.private, onCheckedChange = null)
@@ -247,7 +241,7 @@ fun ChannelSettingsView(
                     ) {
                         Icon(
                             modifier = Modifier.size(BotStacks.dimens.staticGrid.x6),
-                            painter = painterResource(Res.drawable.users_fill),
+                            painter = painterResource(Res.images.users_fill),
                             contentDescription = null
                         )
                         Text(
@@ -257,7 +251,7 @@ fun ChannelSettingsView(
                         Spacer(Modifier.weight(1f))
                         Icon(
                             modifier = Modifier.unboundedClickable { onAddUsers() },
-                            painter = painterResource(Res.drawable.add_user),
+                            painter = painterResource(Res.images.add_user),
                             contentDescription = "Add user"
                         )
                         // TODO: add search

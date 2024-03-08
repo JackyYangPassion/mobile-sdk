@@ -26,9 +26,7 @@ import ai.botstacks.sdk.ui.BotStacksThemeEngine
 import ai.botstacks.sdk.internal.utils.IPreviews
 import ai.botstacks.sdk.internal.utils.ift
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.plus
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 @Composable
 internal fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
@@ -40,7 +38,6 @@ internal fun EmojiKeyboard(onEmoji: (String) -> Unit = {}) {
 //    }
 }
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun EmojiBar(
     current: String? = null,
@@ -87,7 +84,7 @@ internal fun EmojiBar(
                 .clickable { keyboard = true }
         ) {
             Icon(
-                painter = painterResource(Res.drawable.plus),
+                painter = painterResource(Res.images.plus),
                 contentDescription = "more reactions",
                 tint = colorScheme.onBackground,
                 modifier = Modifier.size(

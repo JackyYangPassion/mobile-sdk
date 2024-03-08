@@ -4,6 +4,7 @@ import ai.botstacks.sdk.iosDeploymentTarget
 import ai.botstacks.sdk.versionName
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import dev.icerock.gradle.MRVisibility
 
 plugins {
     id("com.android.library")
@@ -16,6 +17,7 @@ plugins {
     id("com.codingfeline.buildkonfig")
     alias(libs.plugins.dokka)
     alias(libs.plugins.nmcp)
+    id("dev.icerock.mobile.multiplatform-resources")
 }
 
 addAllMultiplatformTargets()
@@ -73,8 +75,11 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(compose.ui)
                 implementation(compose.animation)
-                implementation(compose.components.resources)
+//                implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
+
+                api(libs.moko.resources)
+                implementation(libs.moko.resources.compose)
 
                 implementation(libs.compose.windowSizeClass)
 
@@ -142,6 +147,13 @@ kotlin {
     }
 }
 
+multiplatformResources {
+    multiplatformResourcesPackage = "ai.botstacks.`chat-sdk`.generated.resources"
+    multiplatformResourcesClassName = "Res"
+    multiplatformResourcesVisibility = MRVisibility.Internal
+    iosBaseLocalizationRegion = "en"
+}
+
 buildkonfig {
     packageName = "ai.botstacks.sdk"
     objectName = "SdkConfig"
@@ -183,22 +195,40 @@ apollo {
     }
 }
 
-tasks.named("podPublishDebugXCFramework") {
-    doLast {
-        copy {
-            from(project.file("src/commonMain/composeResources"))
-            into(project.file("../pod/debug/build/compose/ios/botstacks-core/compose-resources"))
-        }
+project.afterEvaluate {
+    tasks.named("androidReleaseSourcesJar") {
+        dependsOn("generateMRcommonMain")
+        dependsOn("generateMRandroidMain")
+    }
+
+    tasks.named("dokkaGfm") {
+        dependsOn("generateMRiosArm64Main")
+        dependsOn("generateMRiosSimulatorArm64Main")
+        dependsOn("generateMRiosX64Main")
+    }
+
+    tasks.named("iosArm64SourcesJar") {
+        dependsOn("generateMRcommonMain")
+        dependsOn("generateMRiosArm64Main")
+    }
+
+    tasks.named("iosSimulatorArm64SourcesJar") {
+        dependsOn("generateMRcommonMain")
+        dependsOn("generateMRiosSimulatorArm64Main")
+    }
+
+    tasks.named("iosX64SourcesJar") {
+        dependsOn("generateMRcommonMain")
+        dependsOn("generateMRiosX64Main")
+    }
+
+    tasks.named("sourcesJar") {
+        dependsOn("generateMRcommonMain")
     }
 }
 
-tasks.named("podPublishReleaseXCFramework") {
-    doLast {
-        copy {
-            from(project.file("src/commonMain/composeResources"))
-            into(project.file("../pod/release/build/compose/ios/botstacks-core/compose-resources"))
-        }
-    }
+tasks.register("copyBotStacksResourcesToApp") {
+    dependsOn("copyFrameworkResourcesToApp")
 }
 
 nmcp {

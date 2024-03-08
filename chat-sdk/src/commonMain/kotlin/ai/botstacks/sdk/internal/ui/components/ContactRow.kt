@@ -28,11 +28,8 @@ import ai.botstacks.sdk.internal.utils.ift
 import ai.botstacks.sdk.state.OnlineStatus
 import ai.botstacks.sdk.ui.components.Avatar
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.address_book
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun ContactRow(
     user: User,
@@ -59,7 +56,7 @@ internal fun ContactRow(
                 )
 //                if (user.haveContact) {
                 Image(
-                    painterResource(Res.drawable.address_book),
+                    painterResource(Res.images.address_book),
                     contentDescription = "contact",
                     modifier = Modifier.size(18),
                     colorFilter = ColorFilter.tint(Color(0xFF488AC7))

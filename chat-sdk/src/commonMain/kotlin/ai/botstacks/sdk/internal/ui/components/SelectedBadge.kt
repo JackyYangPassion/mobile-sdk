@@ -12,11 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.check
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 internal fun SelectedBadge(
     modifier: Modifier = Modifier,
@@ -29,7 +26,7 @@ internal fun SelectedBadge(
     ) {
         Icon(
             modifier = Modifier.padding(BotStacks.dimens.staticGrid.x1),
-            painter = painterResource(Res.drawable.check),
+            painter = painterResource(Res.images.check),
             contentDescription = "is selected",
             tint = Color.White
         )

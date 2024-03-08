@@ -15,9 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.plus
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import dev.icerock.moko.resources.compose.painterResource
 
 /**
  * UserSelect
@@ -34,7 +32,6 @@ import org.jetbrains.compose.resources.painterResource
  * @param onAddSelected callback when the trailing add option is clicked; requires [showAdd] to be true.
  *
  */
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun UserSelect(
     modifier: Modifier = Modifier,
@@ -66,7 +63,7 @@ fun UserSelect(
                         .clickable { onAddSelected() },
                     type = AvatarType.User(
                         url = null,
-                        empty = painterResource(Res.drawable.plus),
+                        empty = painterResource(Res.images.plus),
                     ),
                     backgroundColor = dayNightColor(palette.dark._900, palette.dark._500),
                     contentColor = Color.White,

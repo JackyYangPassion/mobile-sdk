@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalResourceApi::class)
-
 package ai.botstacks.sdk.ui.theme
 
 /*
@@ -17,12 +15,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import ai.botstacks.`chat-sdk`.generated.resources.Res
-import ai.botstacks.`chat-sdk`.generated.resources.inter_w400
-import ai.botstacks.`chat-sdk`.generated.resources.inter_w500
-import ai.botstacks.`chat-sdk`.generated.resources.inter_w600
-import ai.botstacks.`chat-sdk`.generated.resources.inter_w700
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.Font
+import androidx.compose.ui.text.font.Font
+import dev.icerock.moko.resources.compose.asFont
 
 val LocalBotStacksFonts = staticCompositionLocalOf {
     Fonts(
@@ -221,13 +215,13 @@ private fun defaultAppFonts() = Fonts(
 )
 
 private val interW400: FontFamily
-    @Composable get() = FontFamily(Font(Res.font.inter_w400))
+    @Composable get() = FontFamily(Res.fonts.inter_w400.inter_w400.asFont()!!)
 
 private val interW500: FontFamily
-    @Composable get() = FontFamily(Font(Res.font.inter_w500))
+    @Composable get() = FontFamily(Res.fonts.inter_w500.inter_w500.asFont()!!)
 
 private val interW600: FontFamily
-    @Composable get() = FontFamily(Font(Res.font.inter_w600))
+    @Composable get() = FontFamily(Res.fonts.inter_w600.inter_w600.asFont()!!)
 
 private val interW700: FontFamily
-    @Composable get() = FontFamily(Font(Res.font.inter_w700))
+    @Composable get() = FontFamily(Res.fonts.inter_w700.inter_w700.asFont()!!)
