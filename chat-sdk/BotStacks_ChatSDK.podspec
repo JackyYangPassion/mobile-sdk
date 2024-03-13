@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'BotStacks_ChatSDK'
-    spec.version                  = '1.0.3-SNAPSHOT'
+    spec.version                  = '1.0.3'
     spec.homepage                 = 'https://botstacks.ai'
     spec.source                   = { :http=> ''}
     spec.authors                  = 'BotStacks'
