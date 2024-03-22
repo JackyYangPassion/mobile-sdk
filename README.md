@@ -42,7 +42,8 @@ val commonMain by getting {
 }
 ```
 
-> [!TIP] To setup Compose Multiplatform click [here](docs/compose/compose-getting-started.md)
+> [!TIP]
+> To setup Compose Multiplatform click [here](docs/compose/compose-getting-started.md)
 
 ### Android Only
 
@@ -56,7 +57,8 @@ dependencies {
 }
 ```
 
-> [!TIP] To setup Android click [here](docs/android/android-getting-started.md)
+> [!TIP]
+>  To setup Android click [here](docs/android/android-getting-started.md)
 
 &nbsp;
 
