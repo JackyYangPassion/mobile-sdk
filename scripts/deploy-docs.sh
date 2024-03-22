@@ -7,6 +7,7 @@
 #./gradlew clean :chat-sdk:dokka
 
 # Copy outside files into the docs folder.
+sed -e '/full configuration details and documentation here/ { N; d; }' < README.md > docs/introduction.md
 cp botstacks-logo.png docs/
 
 # Deploy to Github pages.
