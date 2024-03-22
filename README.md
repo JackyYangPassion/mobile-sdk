@@ -1,8 +1,5 @@
 ![Maven Central](https://img.shields.io/maven-central/v/ai.botstacks/chat-sdk) ![GitHub issues](https://img.shields.io/github/issues/botstacks/mobile-sdk)
 
-![BotStacks](https://github.com/BotStacks/mobile-sdk/assets/1652321/3c9b2037-0e18-4a59-9faa-d46e1e76a449)
-
-
 ![BotStacks](botstacks-logo.png)
 
 
