@@ -1,3 +1,8 @@
+# 模仿分支
+git checkout 623c736
+git checkout -b 新分支名称
+
+
 ![Maven Central](https://img.shields.io/maven-central/v/ai.botstacks/chat-sdk) ![GitHub issues](https://img.shields.io/github/issues/botstacks/mobile-sdk)
 
 ![BotStacks](botstacks-logo.png)
